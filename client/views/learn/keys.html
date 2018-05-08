@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <title>Learn</title>
+  <link rel = "stylesheet" type = "text/css" href = "../../stylesheets/style.css" />
+  <link href='https://fonts.googleapis.com/css?family=Alegreya:400,700,700i' rel='stylesheet'>
+  <link href="https://fonts.googleapis.com/css?family=Merriweather:400,700" rel="stylesheet">
+</head>
+<body>
+
+  <nav class="nav-menu">
+    <ul>
+      <!--WCDB is temp until logo is done-->
+      <li style="background-color: #4CAF50; width: 15%;"><a href = "http://localhost:3000/" style="font-size:1.3em;font-weight:bold;padding:9px;margin:0;">W C D B</a></li>
+      <li><a href="http://localhost:3000/">Home</a></li>
+      <li><a href="../workshop.html">Workshop</a></li>
+      <li><a class="active" href="./learn.html">Learn</a></li>
+      <li style="float:right"><a style="float:right" href="../account/profile.html">Account</a></li>
+    </ul>
+  </nav>
+
+  <div class="vertical-menu">
+    <h3 style="background-color:#333;margin-top:0;padding:10px;margin-bottom:0;color:white;">SQL Tutorials</h3>
+    <a href="./learn.html">What is SQL?</a>
+    <a href="./relationalDatabases.html">Relational Databases</a>
+    <a href="./keys.html" class="active">Primary and Foreign Keys</a>
+    <a href="./select.html">Basic Select Statements</a>
+    <a href="./where.html">Use of Where</a>
+    <a href="./order.html">Order BY</a>
+    <a href="./distict.html">Distinct</a>
+    <a href="./as.html">As Clause</a>
+    <a href="./predicateOperators.html">Predicate Operators</a>
+    <a href="./expressions.html">Expressions</a>
+    <a href="./scalar.html">Scalar Function</a>
+    <a href="./aggregate.html">Aggregate Functions</a>
+    <a href="./group.html">Group By</a>
+    <a href="./having.html">Having with Group By</a>
+    <a href="./insert.html">Insert Into</a>
+    <a href="./update.html">Update</a>
+    <a href="./delete.html">Delete From</a>
+    <a href="./rollback.html">Rollback and Commit</a>
+    <a href="./types.html">Data Types</a>
+    <a href="./tableCreation.html">Table Creation</a>
+    <a href="./addAttributes.html">Adding/Removing Attributes</a>
+    <a href="./selectInto.html">Select into</a>
+    <a href="./views.html">Views</a>
+    <a href="./union.html">Union</a>
+    <a href="./intersect.html">Intersect and Except</a>
+    <a href="./sub.html">Sub-Queries</a>
+    <a href="./derived.html">Derived Tables</a>
+    <a href="./joins.html">Joins</a>
+    <a href="./transactions.html">Transactions</a>
+    <a href="./cursors.html">Cursors</a>
+    <a href="./functions.html">Functions</a>
+    <a href="./triggers.html">Triggers</a>
+  </div>
+
+  <div class="learn">
+    <h1>Primary and Foriegn Keys</h1>
+    <p>Each row in a table has its own unique key.
+      Rows in a table can be linked to rows in other tables by adding a column for the unique key of the linked row (such columns are known as foreign keys).
+      Codd showed that data relationships of arbitrary complexity can be represented by a simple set of concepts.
+      </br>
+      </br>
+      Part of this processing involves consistently being able to select or modify one and only one row in a table.
+      Therefore, most physical implementations have a unique primary key (PK) for each table.
+      When a new row is written to the table, a new unique value for the primary key is generated;
+      this is the key that the system uses primarily for accessing the table. System performance is optimized for PKs.
+      Other, more natural keys may also be identified and defined as alternate keys (AK).
+      Often several columns are needed to form an AK (this is one reason why a single integer column is usually made the PK).
+      Both PKs and AKs have the ability to uniquely identify a row within a table.
+      Additional technology may be applied to ensure a unique ID across the world,
+      a globally unique identifier, when there are broader system requirements.
+      </br>
+      </br>
+      The primary keys within a database are used to define the relationships among the tables.
+      When a PK migrates to another table, it becomes a foreign key in the other table.
+      When each cell can contain only one value and the PK migrates into a regular entity table,
+      this design pattern can represent either a one-to-one or one-to-many relationship.
+      Most relational database designs resolve many-to-many relationships by
+      creating an additional table that contains the PKs from both of the other entity tables—the relationship becomes an entity;
+      the resolution table is then named appropriately and the two FKs are combined to form a PK.
+      The migration of PKs to other tables is the second major reason why system-assigned integers are used normally as PKs;
+      there's seldom efficiency nor clarity in migrating a bunch of other types of columns.
+    </p>
+    <h3>Not my own work, only meant to be as example. Has to be rewritten before publishing</h3>
+</body>
+</html>

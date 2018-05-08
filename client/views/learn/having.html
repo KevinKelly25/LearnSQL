@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <title>Learn</title>
+  <link rel = "stylesheet" type = "text/css" href = "../../stylesheets/style.css" />
+  <link href='https://fonts.googleapis.com/css?family=Alegreya:400,700,700i' rel='stylesheet'>
+  <link href="https://fonts.googleapis.com/css?family=Merriweather:400,700" rel="stylesheet">
+</head>
+<body>
+
+  <nav class="nav-menu">
+    <ul>
+      <!--WCDB is temp until logo is done-->
+      <li style="background-color: #4CAF50; width: 15%;"><a href = "http://localhost:3000/" style="font-size:1.3em;font-weight:bold;padding:9px;margin:0;">W C D B</a></li>
+      <li><a href="http://localhost:3000/">Home</a></li>
+      <li><a href="../workshop.html">Workshop</a></li>
+      <li><a class="active" href="./learn.html">Learn</a></li>
+      <li style="float:right"><a style="float:right" href="../account/profile.html">Account</a></li>
+    </ul>
+  </nav>
+
+  <div class="vertical-menu">
+    <h3 style="background-color:#333;margin-top:0;padding:10px;margin-bottom:0;color:white;">SQL Tutorials</h3>
+    <a href="./learn.html">What is SQL?</a>
+    <a href="./relationalDatabases.html">Relational Databases</a>
+    <a href="./keys.html">Primary and Foreign Keys</a>
+    <a href="./select.html">Basic Select Statements</a>
+    <a href="./where.html">Use of Where</a>
+    <a href="./order.html">Order BY</a>
+    <a href="./distict.html">Distinct</a>
+    <a href="./as.html">As Clause</a>
+    <a href="./predicateOperators.html">Predicate Operators</a>
+    <a href="./expressions.html">Expressions</a>
+    <a href="./scalar.html">Scalar Function</a>
+    <a href="./aggregate.html">Aggregate Functions</a>
+    <a href="./group.html">Group By</a>
+    <a href="./having.html" class="active">Having with Group By</a>
+    <a href="./insert.html">Insert Into</a>
+    <a href="./update.html">Update</a>
+    <a href="./delete.html">Delete From</a>
+    <a href="./rollback.html">Rollback and Commit</a>
+    <a href="./types.html">Data Types</a>
+    <a href="./tableCreation.html">Table Creation</a>
+    <a href="./addAttributes.html">Adding/Removing Attributes</a>
+    <a href="./selectInto.html">Select into</a>
+    <a href="./views.html">Views</a>
+    <a href="./union.html">Union</a>
+    <a href="./intersect.html">Intersect and Except</a>
+    <a href="./sub.html">Sub-Queries</a>
+    <a href="./derived.html">Derived Tables</a>
+    <a href="./joins.html">Joins</a>
+    <a href="./transactions.html">Transactions</a>
+    <a href="./cursors.html">Cursors</a>
+    <a href="./functions.html">Functions</a>
+    <a href="./triggers.html">Triggers</a>
+  </div>
+
+  <div class="learn">
+    <h1>SQL SELECT</h1>
+    <p>SELECT is a clause used to return data from a database.
+       The data returned is stored in a result table, called the result-set.
+       To use Select in an SQL statement you write SELECT then the name of the attribute
+       columns, each seperated by a comma. SELECT has to be used with the
+       FROM clause, which designates which table the SELECT attributes
+       are coming from. This is shown here:
+    </p>
+    <div class="example-title">
+      <p>Example</p>
+      <div class="example">
+          SELECT <em>attribute1,</em> <em>attribute2,</em> <em>attribute3,</em> <em>...</em> <br>
+          FROM <em>table_name;</em>
+      </div>
+    </div>
+    <p>Here, column1, column2, ... are the field/attribute names of the table you want to select data from.
+      If you want to select all the fields available in the table, use * in place of the attributes. As shown here:</p>
+    <div class="example-title">
+      <p>Example</p>
+      <div class="example">
+        SELECT <em>*</em> <br>
+        FROM <em>table_name;</em>
+      </div>
+    </div>
+    <div ng-app="nodeQuestion">
+      <h3>Practice Questions</h3>
+      <div ng-controller="Question">
+        <div class="question">
+          <h3>Question 1</h3>
+          <p>From a table named <em>Customer</em> that has the following attributes:
+             Name, Age, ID, Street, City, State, and ZIP. <br>
+             Write a SELECT Statement that returns Name, Street, City, State, and ZIP.
+          </p>
+        </div>
+          <form>
+            <textarea style="width:96.5%;height:60px;background-color:white;"type="text" class="form-control input-lg" placeholder="Write your answer here.." ng-model="formData.text"></textarea>
+            <br>
+            <button  style="width:20%;align:center;height:30px;"type="submit" class="btn btn-primary btn-lg btn-block" ng-init="statementInHTML = 'select * from users'"ng-click="answerQuestion()">Submit</button>
+          </form>
+            <h3 style="color:{{backgroundColor}};font-size:2em;">{{ answer }}</h3>
+          <br>
+      </div>
+      <div ng-controller="Question">
+        <div class="question">
+          <h3>Question 2</h3>
+          <p>From a table named <em>Customer</em> that has the following attributes:
+             Name, Age, ID, Street, City, State, and ZIP. <br>
+             Write a SELECT Statement that returns Name, Street, City, State, and ZIP.
+          </p>
+        </div>
+          <form>
+            <textarea style="width:96.5%;height:60px;background-color:white;"type="text" class="form-control input-lg" placeholder="Write your answer here.." ng-model="formData.text"></textarea>
+            <br>
+            <button  style="width:20%;align:center;height:30px;"type="submit" class="btn btn-primary btn-lg btn-block" ng-init="statementInHTML = 'select ID from users'"ng-click="answerQuestion()">Submit</button>
+          </form>
+            <h3 style="color:{{backgroundColor}};font-size:2em;">{{ answer }}</h3>
+          <br>
+      </div>
+      <div ng-controller="Question">
+        <div class="question">
+          <h3>Question 3</h3>
+          <p>From a table named <em>Customer</em> that has the following attributes:
+             Name, Age, ID, Street, City, State, and ZIP. <br>
+             Write a SELECT Statement that returns Name, Street, City, State, and ZIP.
+          </p>
+        </div>
+          <form>
+            <textarea style="width:96.5%;height:60px;background-color:white;"type="text" class="form-control input-lg" placeholder="Write your answer here.." ng-model="formData.text"></textarea>
+            <br>
+            <button  style="width:20%;align:center;height:30px;"type="submit" class="btn btn-primary btn-lg btn-block" ng-init="statementInHTML = 'select password from users'"ng-click="answerQuestion()">Submit</button>
+          </form>
+            <h3 style="color:{{backgroundColor}};font-size:2em;">{{ answer }}</h3>
+          <br>
+      </div>
+  </div>
+  <script src="//code.jquery.com/jquery-2.2.4.min.js" type="text/javascript"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.6/angular.min.js"></script>
+  <script src="../../javascripts/app.js"></script>
+</body>
+</html>
