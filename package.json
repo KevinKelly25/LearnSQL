@@ -1,22 +1,42 @@
 {
-  "name": "WCDB",
-  "version": "0.0.0",
-  "private": true,
+  "name": "bootstrap4starter",
+  "version": "1.1.0",
+  "description": "bootstrap4starter",
+  "main": "gulpfile.js",
   "scripts": {
-    "start": "supervisor ./bin/www"
+    "start": "npm run gulp && nodemon ./bin/www",
+    "gulp" : "gulp"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kptkarl/bootstrap4starter.git"
+  },
+  "keywords": [
+    "bootstrap"
+  ],
+  "author": "Kevin Kelly",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kptkarl/bootstrap4starter/issues"
+  },
+  "homepage": "https://github.com/kptkarl/bootstrap4starter#readme",
   "dependencies": {
-    "body-parser": "~1.15.1",
-    "cookie-parser": "~1.4.3",
-    "debug": "~2.2.0",
-    "express": "~4.13.4",
-    "jade": "~1.11.0",
-    "lodash": "^4.17.10",
-    "morgan": "~1.7.0",
-    "pg": "^6.1.0",
-    "serve-favicon": "~2.3.0"
+    "body-parser": "^1.18.3",
+    "bootstrap": "^4.1.0",
+    "cookie-parser": "^1.4.3",
+    "express": "^4.16.3",
+    "font-awesome": "^4.7.0",
+    "jade": "^1.11.0",
+    "jquery": "^3.3.1",
+    "morgan": "^1.9.0",
+    "nodemon": "^1.17.5",
+    "pg": "^7.4.3",
+    "popper.js": "^1.14.3",
+    "serve-favicon": "^2.5.0"
   },
   "devDependencies": {
-    "@types/lodash": "^4.14.108"
+    "browser-sync": "^2.23.6",
+    "gulp": "^3.9.1",
+    "gulp-sass": "^4.0.1"
   }
 }

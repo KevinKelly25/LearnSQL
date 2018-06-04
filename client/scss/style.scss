@@ -1,0 +1,294 @@
+body {
+  margin:0;
+  padding:0;
+  height:100%;
+  width: 100%;
+}
+
+
+.not-yet-available {
+  position: absolute;
+  top: 300px;
+  text-align: center;
+  background-color: red;
+  color: white;
+  font-size: 3em;
+  border-style: solid;
+  border-width: 2px;
+  border-color: black;
+}
+
+.learn {
+  position: absolute;
+  top: 12%;
+  left:20%;
+  z-index: -1;
+}
+
+.question {
+  background-color: #D3D3D3;
+  padding: 3px 30px 0px 20px;
+  margin-right: 3%;
+}
+
+.question-answer {
+  padding: 20px;
+  width: 98%;
+  float: right;
+  font-size: 1.2em;
+  background-color: white;
+}
+
+.example-title {
+  font-size: 1.3em;
+  background-color: #D3D3D3;
+  padding: 3px 30px 20px 20px;
+  margin-right: 3%;
+}
+
+.example {
+  font-size: .8em;
+  color: blue;
+  border: 1px solid gray;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  background-color: white;
+  text-align: left;
+  padding: 8px;
+}
+
+.example em {
+  color: black;
+}
+
+.profile {
+  position: absolute;
+  top: 10%;
+  left: 20%;
+}
+
+.nav-menu ul {
+    list-style-type: none;
+    position: fixed;
+    margin: 0;
+    padding: 0;
+    float: left;
+    clear: left;
+    overflow: hidden;
+    background: linear-gradient(#333 70%, #5B5B5B 90%);
+    width: 100%;
+    height: 5%;
+    bottom: 95%;
+}
+
+.nav-menu li {
+    float: left;
+    border-right:1px solid #bbb;
+    width: 10%;
+}
+
+.nav-menu li:last-child {
+    border-right: none;
+}
+
+.nav-menu li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 15px 20px 23px 16px;
+    text-decoration: none;
+    font-weight: bold;
+    font-family: 'Alegreya','Open Sans', Helvetica, Arial, sans-serif;
+}
+
+.nav-menu li a:hover:not(.active) {
+    text-decoration: underline;
+}
+
+.nav-menu a.active {
+    background-color: #676767;
+}
+
+.vertical-menu {
+  bottom:0px;
+  width: 15%;
+  position: fixed;
+  z-index: 1;
+  top: 5%;
+  left: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding-top: 0;
+}
+
+.vertical-menu a {
+  background-color: #eee;
+  color: black;
+  text-decoration: none;
+  padding: 10% 8px 6px 16px;
+  font-size: 1em;
+  display: block;
+}
+
+.vertical-menu a:hover {
+    background-color: #ccc;
+}
+
+.vertical-menu a.active {
+    background-color: #4CAF50;
+    color: white;
+}
+
+h1, h2{
+  font-weight: bold;
+  font-style: italic;
+  font-family: 'Alegreya','Open Sans', Helvetica, Arial, sans-serif;
+  color: #27272E;
+}
+
+h1 span {
+    font-family: 'Alegreya','Merriweather', Georgia, 'Times New Roman', Times, serif;
+    font-style:italic;
+}
+
+h1 {
+    font-size: 3.0em;
+    margin: 0;
+    line-height:1.1;
+    text-transform: uppercase;
+    text-align: center;
+    padding: 15px;
+}
+
+h1 span:nth-of-type(1) {
+    font-size:0.63em;
+    display:block;
+    margin: 1em auto 0 auto;
+    text-transform: none;
+}
+
+h2 {
+    text-transform: uppercase;
+    border-top: 1px solid darkgrey;
+    font-size: .874em;
+    text-align: center;
+    line-height:1;
+    margin-top:1.953em;
+}
+
+h2 span {
+    background:#FFFAFD;
+    position:relative;
+    top:-.45em;
+    padding: 0 5%;
+    margin-top:-1em;
+}
+
+h3 {
+    font-family: 'Merriweather', Georgia, 'Times New Roman', Times, serif;
+    font-weight:bold;
+    font-size:1.2em;
+    text-align: center;
+}
+
+p {
+    margin-bottom: 1em;
+    max-width:76em;
+    margin:auto;
+    padding-bottom:5px;
+    font-size:1em;
+    line-height:2;
+    font-family: 'Merriweather', Georgia, 'Times New Roman', Times, serif;
+}
+
+@import url(https://fonts.googleapis.com/css?family=Roboto:300);
+
+.login-page {
+  width: 360px;
+  padding: 8% 0 0;
+  margin: auto;
+}
+.form {
+  position: relative;
+  z-index: 1;
+  background: #FFFFFF;
+  max-width: 360px;
+  margin: 0 auto 100px;
+  padding: 40px;
+  text-align: center;
+  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+}
+.form input {
+  font-family: "Roboto", sans-serif;
+  outline: 0;
+  background: #f2f2f2;
+  width: 100%;
+  border: 0;
+  margin: 0 0 15px;
+  padding: 15px;
+  box-sizing: border-box;
+  font-size: 14px;
+}
+.form button {
+  font-family: "Roboto", sans-serif;
+  text-transform: uppercase;
+  outline: 0;
+  background: #4CAF50;
+  width: 100%;
+  border: 0;
+  padding: 15px;
+  color: #FFFFFF;
+  font-size: 14px;
+  -webkit-transition: all 0.3 ease;
+  transition: all 0.3 ease;
+  cursor: pointer;
+}
+.form button:hover,.form button:active,.form button:focus {
+  background: #43A047;
+}
+.form .message {
+  margin: 15px 0 0;
+  color: #b3b3b3;
+  font-size: 12px;
+}
+.form .message a {
+  color: #4CAF50;
+  text-decoration: none;
+}
+.form .register-form {
+  display: none;
+}
+.container {
+  position: relative;
+  z-index: 1;
+  max-width: 300px;
+  margin: 0 auto;
+}
+.container:before, .container:after {
+  content: "";
+  display: block;
+  clear: both;
+}
+.container .info {
+  margin: 50px auto;
+  text-align: center;
+}
+.container .info h1 {
+  margin: 0 0 15px;
+  padding: 0;
+  font-size: 36px;
+  font-weight: 300;
+  color: #1a1a1a;
+}
+.container .info span {
+  color: #4d4d4d;
+  font-size: 12px;
+}
+.container .info span a {
+  color: #000000;
+  text-decoration: none;
+}
+.container .info span .fa {
+  color: #EF3B3A;
+}

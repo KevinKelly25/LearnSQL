@@ -1,13 +1,21 @@
-# LearnSQL
+# Bootstrap 4.1 Starter Pack
 
-LearnSQL aims to create a website for users to learn and practice SQL. These topics will range from the very basics to the very complex of SQL
+**Includes complete Bootstrap 4.1.0 dev environment with Gulp and Sass**
 
-This site would include an area, broken into sections, where you can learn about specific topics and then after learning section there
-would be a multitude of questions for each topic that ask you to write SQL statements to answer a question.
-Postgres is being used because it uses the SQL standard for most operations, which would probably be what most students would be learning
-in an introductory class.
+## Install Dependencies
 
-While there are some sites that offer similar concepts most of them either offer a lot of explanation with little practice or some practice with little explanation. The goal of this website would be to create a lot of explaining and a large amount of questions per topic.
-Front end development would be built using HTML, CSS and Node.JS(which I have been taking an online course to learn since beginning of winter break). The backend would be Node.js and Postgres connected by the node modules Express and pg (a Postgres module).
+`npm install`
+## Compile Sass and Run Dev Server
 
-something
+`npm start`
+
+
+**Note: Browser-Sync is set with default browser as Firefox.**
+
+`gulp.task("serve", ["sass"], function() {
+	browserSync.init({
+		server: "./src",
+		browser: "firefox"
+	});`
+
+  **Remove:**  , browser: "firefox"* to use your default browser or set to a browser of your choice.
