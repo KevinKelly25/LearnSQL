@@ -5,7 +5,7 @@ const sass = require("gulp-sass");
 // Compile Sass & Inject Into Browser
 gulp.task("sass", function() {
 	return gulp
-    .src(["node_modules/bootstrap/scss/bootstrap.scss", "src/scss/*.scss"])
+    .src(["node_modules/bootstrap/scss/bootstrap.scss", "client/scss/*.scss"])
     .pipe(sass().on("error", sass.logError))
     .pipe(gulp.dest("client/stylesheets"))
     .pipe(browserSync.stream());
@@ -41,4 +41,4 @@ gulp.task("fa", function() {
 		.pipe(gulp.dest("client/stylesheets"));
 });
 
-gulp.task("default", ["js", "fa", "fonts"]);
+gulp.task("default", ["js",'sass', "fa", "fonts"]);
