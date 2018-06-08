@@ -1,1 +1,6 @@
 node_modules/
+client/fonts
+client/stylesheets
+client/javascripts/bootstrap.min.js
+client/javascripts/jquery.min.js
+client/javascripts/popper.min.js
