@@ -1,0 +1,38 @@
+$bg-color:#333;
+$font-color:#fff;
+$dark-overlay: rgba(0,0,0,0.7);
+$primary-color:#008ed6;
+$icon-size:30px;
+
+body {
+  background: $bg-color;
+  color: $font-color;
+}
+
+#home-section{
+  background: url('../views/imgs/home-background.jpg') no-repeat;
+  background-size: cover;
+  background-attachment:fixed;
+  min-height: 800px;
+
+  .dark-overlay{
+    background-color: $dark-overlay;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    min-height: 800px;
+  }
+
+  .home-inner {
+    padding-top: 120px;
+  }
+
+  .fa {
+    color: $primary-color;
+    background-color: #fff;
+    padding: 4px;
+    border-radius: 5px;
+    font-size: $icon-size;
+  }
+}
