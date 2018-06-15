@@ -4,46 +4,83 @@
   <meta charset="utf-8"/>
   <title>Home</title>
   <link rel="stylesheet" href="./stylesheets/style.css" media="screen">
+  <link rel="stylesheet" href="./stylesheets/font-awesome.min.css">
+  <link rel="stylesheet" href="./stylesheets/bootstrap.css">
   <link href='https://fonts.googleapis.com/css?family=Alegreya:400,700,700i' rel='stylesheet'>
   <link href="https://fonts.googleapis.com/css?family=Merriweather:400,700" rel="stylesheet">
 </head>
 <body>
-
-  <nav class="nav-menu">
-    <ul>
-      <!--WCDB is temp until logo is done-->
-      <li style="background-color: #4CAF50; width: 15%;"><a href = "http://localhost:3000/" style="font-size:1.3em;font-weight:bold;padding:9px;margin:0;">W C D B</a></li>
-      <li><a class="active" href="http://localhost:3000/">Home</a></li>
-      <li><a href="views/workshop.html">Workshop</a></li>
-      <li><a href="views/learn/learn.html">Learn</a></li>
-      <li style="float:right"><a style="float:right" href="views/account/signIn.html">Sign In</a></li>
-    </ul>
+  <nav class="navbar navbar-expand-sm bg-primary navbar-dark fixed-top">
+    <div class="container-fluid">
+      <a href="index.html" class="navbar-brand mr-auto">LearnSQL</a>
+      <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarCollapse">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a href="http://localhost:3000/" class="nav-link">Home</a>
+          </li>
+          <li class="nav-item">
+            <a href="views/workshop.html" class="nav-link">Workshop</a>
+          </li>
+          <li class="nav-item">
+            <a href="views/learn/learn.html" class="nav-link">Learn</a>
+          </li>
+          <li class="nav-item">
+            <a href="views/quizes.html" class="nav-link">Quizes</a>
+          </li>
+          <li class="nav-item">
+            <a href="views/account/signIn.html" class="nav-link">Sign in</a>
+          </li>
+        </ul>
+      </div>
+    </div>
   </nav>
 
-  <div>
-    <img src="views/imgs/sql-banner.jpg" style="width:100%;height:400px;" alt="Can't find Home page image"/>
-  </div>
+  <!-- Home Section  -->
 
-  <div class="front-page">
-    <h1>What is WCDB?</h1>
-    <p>
-      WCDB is an easy to use and easy to access Web Class Database that is specialized for learning SQL.
-      This site has two main sections, the learning section where there is a large amount of tutorials about SQL.
-      In these tutorials we bring students the SQL standard definitions. After the written tutorial there
-      is questions based on the tutorial the student just did. In these questions the students
-      will write there own SQL statements and submit these statments to a live database to see if their
-      answers are correct. These answers will provide real database responses so students are exposed
-      to the real situations they may see out in the working world.
-    </p>
-    <p>These statements range from creating simple tables like this:</p>
-    <img src="./views/imgs/createTablePic.png" style="padding:20px;display:block;margin-left:auto;margin-right:auto" alt="Can't find Home page image"/>
-    <p>To more complex statements like this:</p>
-    <img src="./views/imgs/complexSQL.png" style="padding:20px;display:block;margin-left:auto;margin-right:auto" alt="Can't find Home page image"/>
-    <p style="padding-bottom:100px">
-      The second section, which is still undeveloped, is going to be an area for students to be able to test and practice thier own SQL code
-      in a sandbox envirment of thier own database. Teachers will also be able to look at these databases to check thier activity
-      and help with thier progress.
-    </p>
-  </div>
+    <header id="home-section">
+      <div class="dark-overlay">
+        <div class="home-inner">
+          <div class="container">
+            <div class="row">
+              <div class="col-lg d-none d-lg-block text-white">
+                <h1 class="display-4 "> Learn SQL And How To Build Relation Databases</h1>
+                  <div class="d-flex flex-row">
+                    <div class="p-4 align-self-start">
+                      <i class="fa fa-check"></i>
+                    </div>
+                    <div class="p-4 align-self-send">
+                      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Doloribus ex ab, inventore iusto corrupti exercitationem vel earum officia voluptates iure quia quaerat asperiores velit assumenda accusantium odio aliquid quo expedita?
+                    </div>
+                  </div>
+                  <div class="d-flex flex-row">
+                    <div class="p-4 align-self-start">
+                      <i class="fa fa-check"></i>
+                    </div>
+                    <div class="p-4 align-self-send">
+                      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Doloribus ex ab, inventore iusto corrupti exercitationem vel earum officia voluptates iure quia quaerat asperiores velit assumenda accusantium odio aliquid quo expedita?
+                    </div>
+                  </div>
+                  <div class="d-flex flex-row">
+                    <div class="p-4 align-self-start">
+                      <i class="fa fa-check"></i>
+                    </div>
+                    <div class="p-4 align-self-send">
+                      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Doloribus ex ab, inventore iusto corrupti exercitationem vel earum officia voluptates iure quia quaerat asperiores velit assumenda accusantium odio aliquid quo expedita?
+                    </div>
+                  </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+
+  <script src="js/jquery.min.js"></script>
+  <script src="js/popper.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
 </body>
 </html>
