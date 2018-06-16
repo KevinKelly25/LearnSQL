@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <title>Home</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>LearnSQL</title>
   <link rel="stylesheet" href="./stylesheets/style.css" media="screen">
   <link rel="stylesheet" href="./stylesheets/font-awesome.min.css">
   <link rel="stylesheet" href="./stylesheets/bootstrap.css">
@@ -12,26 +14,26 @@
 <body>
   <nav class="navbar navbar-expand-sm bg-primary navbar-dark fixed-top">
     <div class="container-fluid">
-      <a href="index.html" class="navbar-brand mr-auto">LearnSQL</a>
+      <a href="http://localhost:3000/" class="navbar-brand mr-auto">LearnSQL</a>
       <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarCollapse">
         <ul class="navbar-nav ml-auto">
-          <li class="nav-item">
-            <a href="http://localhost:3000/" class="nav-link">Home</a>
+          <li class="nav-item active">
+            <a href="http://localhost:3000/" class="nav-link border-right border-left px-4">Home</a>
           </li>
           <li class="nav-item">
-            <a href="views/workshop.html" class="nav-link">Workshop</a>
+            <a href="views/workshop.html" class="nav-link border-right px-3">Workshop</a>
           </li>
           <li class="nav-item">
-            <a href="views/learn/learn.html" class="nav-link">Learn</a>
+            <a href="views/learn/learn.html" class="nav-link border-right px-4">Learn</a>
           </li>
           <li class="nav-item">
-            <a href="views/quizes.html" class="nav-link">Quizes</a>
+            <a href="views/quizes.html" class="nav-link border-right px-3">Quizzes</a>
           </li>
           <li class="nav-item">
-            <a href="views/account/signIn.html" class="nav-link">Sign in</a>
+            <a href="views/account/signIn.html" class="nav-link pl-3">Sign in</a>
           </li>
         </ul>
       </div>
@@ -46,7 +48,7 @@
           <div class="container">
             <div class="row">
               <div class="col-lg d-none d-lg-block text-white">
-                <h1 class="display-4 "> Learn SQL And How To Build Relation Databases</h1>
+                <h1 class="display-4 "> Learn SQL And How To Build Relational Databases</h1>
                   <div class="d-flex flex-row">
                     <div class="p-4 align-self-start">
                       <i class="fa fa-check"></i>
@@ -78,6 +80,53 @@
       </div>
     </header>
 
+    <!-- Learn on Live SQL Server Section -->
+
+    <section id="explore-section" class="bg-light text-muted py-5">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-6">
+            <img src="views/imgs/complexSQL.png" alt="hello" class="img-fluid mb-3 rounded">
+          </div>
+          <div class="col-md-6">
+            <h3>Learn On Live SQL Database</h3>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+            <div class="d-flex flex-row">
+              <div class="p-4 align-self-start">
+                <i class="fa fa-check"></i>
+              </div>
+              <div class="p-4 align-self-send">
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Doloribus ex ab, inventore iusto corrupti exercitationem vel earum officia voluptates iure quia quaerat asperiores velit assumenda accusantium odio aliquid quo expedita?
+              </div>
+            </div>
+            <div class="d-flex flex-row">
+              <div class="p-4 align-self-start">
+                <i class="fa fa-check"></i>
+              </div>
+              <div class="p-4 align-self-send">
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Doloribus ex ab, inventore iusto corrupti exercitationem vel earum officia voluptates iure quia quaerat asperiores velit assumenda accusantium odio aliquid quo expedita?
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- main footer -->
+
+    <footer id="main-footer" class="bg-primary">
+      <div class="container">
+        <div class="row">
+          <div class="col text-center text-light">
+            <div class="py-4">
+              <h1 class="h3">LearnSQL</h1>
+              <p>Copyright &copy; 2018</p>
+              <a href="contact.html" class="btn btn-primary" role="button">Contact Us</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
 
   <script src="js/jquery.min.js"></script>
   <script src="js/popper.min.js"></script>
