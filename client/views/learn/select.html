@@ -60,7 +60,7 @@
           <div id="select-sidebar-height" class="align-content-center bg-light">
             <ul class="nav nav-pills nav-stacked anyClass">
               <li class="nav-item w-100">
-                <a href="./learn.html" id="what-is-sql" class="nav-link active text-center text-dark">What is SQL?</a>
+                <a href="./learn.html" id="what-is-sql" class="nav-link active text-center text-white">What is SQL?</a>
               </li>
               <li class="nav-item w-100">
                 <a href="./relationalDatabases.html" class="nav-link text-center text-dark">Relational Databases</a>
@@ -165,7 +165,7 @@
           </div>
         </div>
         <div id="select-page-content" class="learn">
-          <h1 class="text-center bg-warning font-weight-bold">BASIC SELECT STATEMENTS</h1>
+          <h1 class="text-center font-weight-bold">BASIC SELECT STATEMENTS</h1>
           <p class="lead">SELECT is a clause used to return data from a database.
             The data returned is stored in a result table, called the result-set.
             To use Select in an SQL statement you write SELECT then the name of the attribute
@@ -174,109 +174,174 @@
             are coming from. This is shown here:
           </p>
 
-          <div class="bg-light text-dark">
-            <h4 class="text-center font-weight-bold">Example 1</h4>
+          <div class="bg-light text-dark border border-dark">
+            <h4 class="font-weight-bold">Example 1</h4>
             <div class="example">
-              <p class="font-weight-bold">SELECT <em>attribute1, attribute2, attribute3, ... <br>
+              <p class="font-weight-bold">
+              <pre>
+                SELECT <em>attribute1, attribute2, attribute3, ... <br>
                 FROM table_name;</em>
+              </pre>
               </p>
-            </div>
-          </div>
-            
-          <p class="bg-light text-primary">Here, column1, column2, ... are the field/attribute names of the table you want to select data from.
-            If you want to select all the fields available in the table, use * in place of the attributes. As shown in the next example.
-          </p>
-      
-          <div class="bg-light text-dark">
-            <h4 class="text-center font-weight-bold">Example 2</h4>
-            <div class="example">
-              <p class="font-weight-bold">SELECT <em>*</em> <br>
-                FROM <em>table_name;</em>
-              </p>
-            </div>
-          </div>
-              
-          <p class="bg-light text-primary">
-            Here, all fields in the table are selected because of the use of * in place of the attributes.
-          </p>
 
-          <!-- PRACTICE QUESTIONS -->
-          <section id="practiceQuestions" class="bg-light">
-            <div ng-app="nodeQuestion">
-              <h2 class="text-center font-weight-bold text-monospace">Practice Questions</h2>
-              <div class="row text-center">
-                <div ng-controller="Question" class="mx-auto w-100">
-                  <div class="question dropdown">
-                    <button type="button" class="btn btn-danger dropdown-toggle mb-2" data-toggle="dropdown">Question 1</button>
-                    <div class="dropdown-menu">
-                      <p class="bg-dark text-white">From a table named <em>customer_t</em> that has the following attributes:
-                        Customerid, Customername, CustomerAddress, CustomerCity, CustomerState, and CustomerPostalCode. <br>
-                        Write a SELECT Statement that returns all attributes.
-                      </p>
-      
-                      <form>
-                        <textarea style="width:96.5%;height:60px;background-color:white;"type="text" class="form-control input-lg" placeholder="Write your answer here.." ng-model="formData.text"></textarea>
-                        <br>
-                        <button type="submit" class="btn btn-danger btn-lg btn-block" ng-init="statementInHTML = 'select * from customer_t'" ng-click="answerQuestion()">Submit</button>
-                      </form>
-      
-                      <h3 style="color:{{backgroundColor}};font-size:2em;">{{ answer }}</h3>
-                      <br>
-                    </div>
-                  </div>
+              <p class="bg-light lead">
+              <pre>
+                Here, column1, column2, ... are the field/attribute names of the table you want to select data from.
+                If you want to select all the fields available in the table, use * in place of the attributes. 
+                As shown in the next example.
+              </pre>
+              </p>
+            </div>
+          </div>
+          <br>
+          <div class="bg-light text-dark border border-dark">
+            <h4 class="font-weight-bold">Example 2</h4>
+            <div class="example">
+              <p class="font-weight-bold">
+              <pre>
+                SELECT <em>*</em> <br>
+                FROM <em>table_name;</em>
+              </pre>
+              </p>
+
+              <p class="bg-light lead">
+              <pre>
+                Here, all fields in the table are selected because of the use of * in place of the attributes.
+              </pre>
+              </p>
+            </div>
+          </div>
+          <br>
+          
+
+          <div id="accordion">
+            <div class="card">
+              <div class="card-header">
+                <h5 class="mb-0">
+                <div href="#parent-collapse" data-toggle="collapse" data-parent="#accordion">
+                  Practice Questions <i class="fas fa-angle-right"></i>
                 </div>
-    
-                <div ng-controller="Question" class="mx-auto w-100">
-                  <div class="question dropdown">
-                    <button type="button" class="btn btn-danger dropdown-toggle mb-2" data-toggle="dropdown">Question 2</button>
-                    <div class="dropdown-menu">
-                      <p class="bg-dark text-white">From a table named <em>Customer</em> that has the following attributes:
-                        Customerid, Customername, CustomerAddress, CustomerCity, CustomerState, and CustomerPostalCode. <br>
-                        Write a SELECT Statement that returns all the CustomerIDs
-                      </p>
-    
-                      <form>
-                        <textarea style="width:96.5%;height:60px;background-color:white;"type="text" class="form-control input-lg" placeholder="Write your answer here.." ng-model="formData.text"></textarea>
-                        <br>
-                        <button type="submit" class="btn btn-danger btn-lg btn-block" ng-init="statementInHTML = 'select customerid from customer_t'" ng-click="answerQuestion()">Submit</button>
-                      </form>
-    
-                      <h3 style="color:{{backgroundColor}};font-size:2em;">{{ answer }}</h3><br>
+                </h5>
+              </div>
+              <div id="parent-collapse" class="collapse">
+                <div class="card-body">
+                  <div ng-app="nodeQuestion">
+                    
+                    <div class="card mb-1">
+                      <div class="card-header">
+                        <h5 class="mb-0">
+                        <div href="#collapse1" data-toggle="collapse" data-parent="#accordion">
+                          problem 1 <i class="fas fa-angle-right"></i>
+                        </div>
+                        </h5>
+                      </div>
+                      <div id="collapse1" class="collapse">
+                        <div class="card-body">
+                          <div ng-controller="Question">
+                            <div class="question">
+                              <pre>
+                                From a table named customer_t that has the following attributes: 
+                                CustomerId, CustomerName, CustomerAddress, CustomerState, and CustomerPostalCode
+                                Write a select statement that returns all attributes.
+                              </pre>
+                            </div>
+                            <form>
+                              <textarea style="width:96.5%; height:60px; background-color:white;" type="text" class="form-control input-lg" placeholder="Write your answer here..." ng-model="formData.text"></textarea>
+                                <br>
+                                <button type="submit" class="btn btn-primary btn-lg btn-block" ng-init="statementInHTML = 'select * from customer_t'" ng-click="answerQuestion()">Submit</button>
+                            </form>
+                            <h3 style="color:{{backgroundColor}};font-size:2em;">{{ answer }}</h3>
+                          </div>
+                        </div>
+                      </div>
+                    </div>  
+              
+                    <div class="card mb-1">
+                      <div class="card-header">
+                        <h5 class="mb-0">
+                          <div href="#collapse2" data-toggle="collapse" data-parent="#accordion">
+                            problem 2 <i class="fas fa-angle-right"></i>
+                          </div>
+                        </h5>
+                      </div>
+                      <div id="collapse2" class="collapse">
+                        <div class="card-body">
+                          <div ng-controller="Question">
+                            <div class="question">
+                              <pre>
+                                From a table named <em>Customer</em> that has the following attributes:
+                                Customerid, Customername, CustomerAddress, CustomerCity, CustomerState, and CustomerPostalCode. <br>
+                                Write a SELECT Statement that returns all the CustomerIDs
+                              </pre>
+                            </div>
+                            <form>
+                              <textarea style="width:96.5%; height:60px; background-color:white;" type="text" class="form-control input-lg" placeholder="Write your answer here..." ng-model="formData.text"></textarea>
+                              <br>
+                              <button type="submit" class="btn btn-primary btn-lg btn-block" ng-init="statementInHTML = 'select * from customer_t'" ng-click="answerQuestion()">Submit</button>
+                            </form>
+                            <h3 style="color:{{backgroundColor}};font-size:2em;">{{ answer }}</h3>
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
-    
-                <div ng-controller="Question" class="mx-auto w-100">
-                  <div class="question dropdown">
-                    <button class="btn btn-danger dropdown-toggle mb-2" type="button" data-toggle="dropdown">Question 3</button>
-                    <div class="dropdown-menu">
-                      <p class="bg-dark text-white">From a table named <em>Customer</em> that has the following attributes:
-                        Customerid, Customername, CustomerAddress, CustomerCity, CustomerState, and CustomerPostalCode. <br>
-                        Write a SELECT Statement that returns Customername, CustomerAddress, CustomerCity, CustomerState, and CustomerPostalCode.
-                      </p>
-    
-                      <form>
-                        <textarea style="width:96.5%;height:60px;background-color:white;"type="text" class="form-control input-lg" placeholder="Write your answer here.." ng-model="formData.text"></textarea>
-                        <br>
-                        <button type="submit" class="btn btn-danger btn-lg btn-block" ng-init="statementInHTML = 'select customerid from customer_t'"ng-click="answerQuestion()">Submit</button>
-                      </form>
-    
-                      <h3 style="color:{{backgroundColor}};font-size:2em;">{{ answer }}</h3><br>
+              
+                    <div class="card mb-1">
+                      <div class="card-header">
+                        <h5 class="mb-0">
+                          <div href="#collapse3" data-toggle="collapse" data-parent="#accordion">
+                            problem 3 <i class="fas fa-angle-right"></i>
+                          </div>
+                        </h5>
+                      </div>
+                      <div id="collapse3" class="collapse">
+                        <div class="card-body">
+                          <div ng-controller="Question">
+                            <div class="question">
+                              <pre>
+                                From a table named <em>Customer</em> that has the following attributes:
+                                Customerid, Customername, CustomerAddress, CustomerCity, CustomerState, and CustomerPostalCode. <br>
+                                Write a SELECT Statement that returns all the CustomerIDs
+                              </pre>
+                            </div>
+                            <form>
+                              <textarea style="width:96.5%; height:60px; background-color:white;" type="text" class="form-control input-lg" placeholder="Write your answer here..." ng-model="formData.text"></textarea>
+                              <br>
+                              <button type="submit" class="btn btn-primary btn-lg btn-block" ng-init="statementInHTML = 'select * from customer_t'" ng-click="answerQuestion()">Submit</button>
+                            </form>
+                            <h3 style="color:{{backgroundColor}};font-size:2em;">{{ answer }}</h3>
+                          </div>
+                        </div>
+                      </div>
                     </div>
+
                   </div>
                 </div>
               </div>
             </div>
-          </section>
+          </div>
+
+        </div>
+      </div>
+  </section>
+
+  <footer id="select-footer" class="container-fluid bg-dark">
+    <div class="container">
+      <div class="row">
+        <div class="col text-center text-light">
+          <div class="py-4">
+            <h1 class="h3">LearnSQL</h1>
+            <p>Copyright &copy; 2018</p>
+            <a href="contact.html" class="btn btn-primary" role="button">Contact Us</a>
+          </div>
         </div>
       </div>
     </div>
-  </section>
+  </footer>
 
+  <!-- Switch back to commented code if it doesn't not work -->
+  <!-- main footer
   <nav class="navbar navbar-expand-sm navbar-dark fixed-bottom">
-
-  <!-- main footer -->
-  <footer id="select-footer" class="container-fluid">
+    <footer id="select-footer" class="container-fluid bg-dark">
       <div class="container">
         <div class="row">
           <div class="col text-center text-light">
@@ -289,7 +354,7 @@
         </div>
       </div>
     </footer>
-    </nav>
+  </nav> -->
 
   <script src="//code.jquery.com/jquery-2.2.4.min.js" type="text/javascript"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.6/angular.min.js"></script>
