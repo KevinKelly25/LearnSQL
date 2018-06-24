@@ -47,30 +47,36 @@
         <div class="home-inner">
           <div class="container">
             <div class="row">
-              <div class="col-lg d-none d-lg-block text-white">
-                <h1 class="display-4 "> Learn SQL And How To Build Relational Databases</h1>
+              <div class="col text-white">
+                <h1 class="display-4 text-center"> Learn SQL And How To Build <br/>Relational Databases</h1>
                   <div class="d-flex flex-row">
-                    <div class="p-4 align-self-start">
-                      <i class="fa fa-check"></i>
+                    <div class="p-5 align-self-start d-none d-lg-block">
+                      <i style="position: relative; top: 20px" class="fa fa-check"></i>
                     </div>
-                    <div class="p-4 align-self-send">
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Doloribus ex ab, inventore iusto corrupti exercitationem vel earum officia voluptates iure quia quaerat asperiores velit assumenda accusantium odio aliquid quo expedita?
+                    <div class="p-5 align-self-send">
+                      Go to our Learn section to see our wide variety of topics on SQL that covers all topics from Beginner to Expert.
+                      Each section covers a specific topic on SQL that starts with an overview of the topic. After the overview there will
+                      be examples of how to use the information that you just learned. After that there is a section of questions that will
+                      test what you have just learned
                     </div>
                   </div>
                   <div class="d-flex flex-row">
-                    <div class="p-4 align-self-start">
-                      <i class="fa fa-check"></i>
+                    <div class="p-5 align-self-start d-none d-lg-block">
+                      <i style="position: relative; top: 20px" class="fa fa-check"></i>
                     </div>
-                    <div class="p-4 align-self-send">
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Doloribus ex ab, inventore iusto corrupti exercitationem vel earum officia voluptates iure quia quaerat asperiores velit assumenda accusantium odio aliquid quo expedita?
+                    <div class="p-5 align-self-send">
+                      Use our live database in our Workshop where students and teachers are in a secure sandbox environment.
+                      Here you can practice creating mock databases that can behave exactly like many commercial grade Databases without the
+                      worry of messing up and effecting other parts of the database
                     </div>
                   </div>
                   <div class="d-flex flex-row">
-                    <div class="p-4 align-self-start">
-                      <i class="fa fa-check"></i>
+                    <div class="p-5 align-self-start d-none d-lg-block">
+                      <i style="position: relative; top: 10px" class="fa fa-check"></i>
                     </div>
-                    <div class="p-4 align-self-send">
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Doloribus ex ab, inventore iusto corrupti exercitationem vel earum officia voluptates iure quia quaerat asperiores velit assumenda accusantium odio aliquid quo expedita?
+                    <div class="p-5 align-self-send">
+                      Put your knowledge of SQL to the test with our Quiz section that can be configured to test the basics or more complex questions.
+                      All of our questions use a real time queries to check your answers vs ours on a pre-configured database
                     </div>
                   </div>
               </div>
@@ -85,18 +91,26 @@
     <section id="explore-section" class="bg-light text-muted py-5">
       <div class="container">
         <div class="row">
-          <div class="col-md-6">
-            <img src="views/imgs/complexSQL.png" alt="hello" class="img-fluid mb-3 rounded">
+          <div class="col-md-6 d-none d-md-block">
+            <img src="views/imgs/Pretty-ER.jpeg" alt="hello" class="img-fluid mb-3 rounded front-page-image">
           </div>
           <div class="col-md-6">
             <h3>Learn On Live SQL Database</h3>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+            <p>
+              We take advantage of the fact we have a live PostgreSQL database running in the background.
+              Postgres is a SQL Database Management System that is free and open source. What makes it
+              special is that it uses to the SQL standard for most features. This means that using Postgres to
+              learn SQL is very easy and useful
+            </p>
             <div class="d-flex flex-row">
               <div class="p-4 align-self-start">
                 <i class="fa fa-check"></i>
               </div>
               <div class="p-4 align-self-send">
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Doloribus ex ab, inventore iusto corrupti exercitationem vel earum officia voluptates iure quia quaerat asperiores velit assumenda accusantium odio aliquid quo expedita?
+                All of our questions use this Postgres database to preform queries against the current
+                tables of the database. This means that the answers and results are dynamic depending on the
+                current status of the tables. Since we compare results rather then syntax the tables can change
+                all they want but the correct answer will never change
               </div>
             </div>
             <div class="d-flex flex-row">
@@ -104,7 +118,9 @@
                 <i class="fa fa-check"></i>
               </div>
               <div class="p-4 align-self-send">
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Doloribus ex ab, inventore iusto corrupti exercitationem vel earum officia voluptates iure quia quaerat asperiores velit assumenda accusantium odio aliquid quo expedita?
+                The Workshop uses this live database to provide students with a sandbox environment to do
+                whatever SQL work they want without the worry of effecting anyone else's work. Instructors
+                are also able to monitor students work and provide feedback to the students
               </div>
             </div>
           </div>
@@ -128,8 +144,8 @@
       </div>
     </footer>
 
-  <script src="js/jquery.min.js"></script>
-  <script src="js/popper.min.js"></script>
-  <script src="js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 </body>
 </html>
