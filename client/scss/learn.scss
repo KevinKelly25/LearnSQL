@@ -1,0 +1,43 @@
+#page-content {
+    margin: 75px;
+    margin-left: 75px;
+}
+
+.anyClass {
+    height: 100%;
+    overflow-y: auto; 
+}
+
+#page-content {
+    height: 75%;
+}
+
+/* Is probably not needed */
+#select-page-content {
+    height: 600px;
+    padding-left: 10px;
+}
+
+.col-height {
+    height: 800px;
+}
+
+#select-footer {
+    height: 150px;
+}
+
+.scrollbar {
+    margin-left: -70px;
+    height: 645px;
+    overflow-y: scroll;
+}
+
+.scrollbar-light-grey::-webkit-scrollbar {
+  width: 18px;
+  background: #f8f9fa;
+}
+
+.scrollbar-light-grey::-webkit-scrollbar-thumb {
+  border-radius: -20px;
+  background-color: rgb(197, 194, 194);
+}
