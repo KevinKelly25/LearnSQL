@@ -52,6 +52,7 @@
   <section id="page-content">
     <div class="col-height">
       <div class="d-flex">
+        <!-- scrollbar -->
         <div class="scrollbar scrollbar-light-grey w-50">
           <div id="select-sidebar-height" class="align-content-center bg-light">
             <ul class="nav nav-pills nav-stacked anyClass">
@@ -160,6 +161,7 @@
             </ul>
           </div>
         </div>
+        <!-- intro to basic select statements -->
         <div id="select-page-content" class="learn">
           <h1 class="text-center font-weight-bold">BASIC SELECT STATEMENTS</h1>
           <p class="lead">SELECT is a clause used to return data from a database.
@@ -170,6 +172,7 @@
             are coming from. This is shown here:
           </p>
 
+          <!-- example 1 -->
           <div class="bg-light text-dark border border-dark">
             <h4 class="font-weight-bold">Example 1</h4>
             <div class="example">
@@ -188,6 +191,7 @@
             </div>
           </div>
 
+          <!-- example 2 -->
           <p>If you want to select all the fields available in the table, use * in place of the attributes. As shown in the next example.</p>
           
           <div class="bg-light text-dark border border-dark">
@@ -209,7 +213,7 @@
           </div>
           <br>
           
-
+          <!-- practice questions -->
           <div id="accordion">
             <div class="card">
               <div class="card-header">
@@ -223,6 +227,7 @@
                 <div class="card-body">
                   <div ng-app="nodeQuestion">
                     
+                    <!-- problem 1 -->
                     <div class="card mb-1">
                       <div class="card-header">
                         <h5 class="mb-0">
@@ -251,7 +256,8 @@
                         </div>
                       </div>
                     </div>  
-              
+                    
+                    <!-- problem 2 -->
                     <div class="card mb-1">
                       <div class="card-header">
                         <h5 class="mb-0">
@@ -273,14 +279,15 @@
                             <form>
                               <textarea style="width:96.5%; height:60px; background-color:white;" type="text" class="form-control input-lg" placeholder="Write your answer here..." ng-model="formData.text"></textarea>
                               <br>
-                              <button type="submit" class="btn btn-primary btn-lg btn-block" ng-init="statementInHTML = 'select * from customer_t'" ng-click="answerQuestion()">Submit</button>
+                              <button type="submit" class="btn btn-primary btn-lg btn-block" ng-init="statementInHTML = 'select customerid from customer_t'" ng-click="answerQuestion()">Submit</button>
                             </form>
                             <h3 style="color:{{backgroundColor}};font-size:2em;">{{ answer }}</h3>
                           </div>
                         </div>
                       </div>
                     </div>
-              
+                    
+                    <!-- problem 3 -->
                     <div class="card mb-1">
                       <div class="card-header">
                         <h5 class="mb-0">
@@ -296,13 +303,13 @@
                               <pre>
                                 From a table named <em>Customer</em> that has the following attributes:
                                 Customerid, Customername, CustomerAddress, CustomerCity, CustomerState, and CustomerPostalCode. <br>
-                                Write a SELECT Statement that returns all the CustomerIDs
+                                Write a SELECT Statement that returns CustomerName, CustomerAddress, CustomerCity, CustomerState, and CustomerPostalCode
                               </pre>
                             </div>
                             <form>
                               <textarea style="width:96.5%; height:60px; background-color:white;" type="text" class="form-control input-lg" placeholder="Write your answer here..." ng-model="formData.text"></textarea>
                               <br>
-                              <button type="submit" class="btn btn-primary btn-lg btn-block" ng-init="statementInHTML = 'select * from customer_t'" ng-click="answerQuestion()">Submit</button>
+                              <button type="submit" class="btn btn-primary btn-lg btn-block" ng-init="statementInHTML = 'select CustomerName, CustomerAddress, CustomerCity, CustomerState, CustomerPostalCode from customer_t'" ng-click="answerQuestion()">Submit</button>
                             </form>
                             <h3 style="color:{{backgroundColor}};font-size:2em;">{{ answer }}</h3>
                           </div>
