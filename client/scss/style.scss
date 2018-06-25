@@ -11,9 +11,10 @@ body {
 
 #home-section{
   background: url('../views/imgs/home-background.jpg') no-repeat;
-  background-size: cover;
+  background-size: 100% 100%;
   background-attachment:fixed;
   min-height: 800px;
+
 
   .dark-overlay{
     background-color: $dark-overlay;
@@ -35,4 +36,8 @@ body {
     border-radius: 5px;
     font-size: $icon-size;
   }
+}
+
+li.active a{
+   background-color: #bf0000;
 }
