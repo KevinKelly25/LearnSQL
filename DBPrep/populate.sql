@@ -1,6 +1,6 @@
 --Dr. Sean Murthy
 --Script to add sample data to PVFC tables: tables should have already been created
---Removes all existing data and adds some initial 
+--Removes all existing data and adds some initial
 --This script can only modify data for tables in your dedicated schema
 
 --The script was ported from the Oracle version provided by the textbook authors
@@ -32,9 +32,6 @@ DELETE FROM Users;
 
 --add sample data: there is a better way than what is shown here to insert bulk data
 
-
-INSERT INTO Users (ID, Password, Email, DateJoined)
-VALUES ('Kevin', 'Password', 'Kelly263@connect.wcsu.edu', DATE '12/Apr/18');
 
 INSERT INTO Customer_T  (CustomerID, CustomerName, CustomerAddress, CustomerCity, CustomerState, CustomerPostalCode)
 VALUES  (1, 'Contemporary Casuals', '1355 S Hines Blvd', 'Gainesville', 'FL', '32601-2871');
@@ -280,4 +277,3 @@ SELECT * FROM RawMaterial_T;
 SELECT * FROM Territory_T;
 SELECT * FROM Employee_T;
 SELECT * FROM Customer_T;
-
