@@ -21,7 +21,6 @@ router.post('/api/v1/WCDB', (req, res, next) => {
     // Handle connection errors
     if(err) {
       done();
-      console.log(err);
       return res.status(500).json({success: false, data: err});
     }
     // SQL Query > Select Data
@@ -33,7 +32,6 @@ router.post('/api/v1/WCDB', (req, res, next) => {
         response.rows.forEach(row =>{
           results.push(row)
         })
-        var JSONobject = JSON.stringify(results);
         pool.end()
         return res.json(results);
       }
