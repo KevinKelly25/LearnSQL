@@ -32,7 +32,6 @@ router.post('/api/v1/WCDB', (req, res, next) => {
         response.rows.forEach(row =>{
           results.push(row)
         })
-        pool.end()
         return res.json(results);
       }
     })
