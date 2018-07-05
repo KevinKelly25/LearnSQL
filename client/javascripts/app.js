@@ -2,11 +2,11 @@ angular.module('nodeQuestion', [])
 .controller('Question', ($scope, $http) => {
   $scope.answerQuestion = () => {
     $scope.statement = {"text":$scope.statementInHTML};
-    $http.post('/api/v1/WCDB', $scope.formData)//The submitted answer
+    $http.post('/api/v1/questions', $scope.formData)//The submitted answer
     .success((data1) => {
       delete $scope.formData;
       $scope.answerData = data1;
-      $http.post('/api/v1/WCDB', $scope.statement)//the correct answer
+      $http.post('/api/v1/questions', $scope.statement)//the correct answer
       .success((data2) => {
         delete $scope.statement;
         $scope.correctData = data2;

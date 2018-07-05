@@ -3,24 +3,26 @@ const LocalStrategy = require('passport-local').Strategy;
 const authHelpers = require('./_helpers');
 
 const init = require('./passport');
-const knex = require('../db/connection');//have to replace with pg
 
-const options = {};
 
 init();
 
-passport.use(new LocalStrategy(options, (username, password, done) => {
-  // check to see if the username exists
-  knex('users').where({ username }).first()
-  .then((user) => {
-    if (!user) return done(null, false);
-    if (!authHelpers.comparePass(password, user.password)) {
-      return done(null, false);
-    } else {
-      return done(null, user);
-    }
+passport.use(new LocalStrategy({
+  usernameField: 'email',
+  passwordField: 'pass'
+  },
+  (username, password, done) => {
+  log.debug("Login process:", username);
+  return db.one("SELECT * " +
+    "FROM Users " +
+    "WHERE Email=$1 AND Password=$2", [username, password])
+  .then((result)=> {
+    return done(null, result);
   })
-  .catch((err) => { return done(err); });
+  .catch((err) => {
+    log.error("/login: " + err);
+    return done(null, false, {message:'Wrong user name or password'});
+  });
 }));
 
 module.exports = passport;

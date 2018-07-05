@@ -1,10 +1,11 @@
-Create Table IF NOT EXISTS User (
+Create Table IF NOT EXISTS Users (
   UserID			   VARCHAR(30) NOT NULL PRIMARY KEY,
-  FullName       VARCHAR(60),
-  Password       VARCHAR(60),
-  Email		       VARCHAR(60),
-  DateJoined	   DATE,
-  isTeacher      BOOLEAN
+  FullName       VARCHAR(60) NOT NULL,
+  Password       VARCHAR(60) NOT NULL,
+  Email		       VARCHAR(60) NOT NULL,
+  DateJoined	   DATE DEFAULT CURRENT_DATE,
+  isTeacher      BOOLEAN DEFAULT FALSE
+  isAdmin      BOOLEAN DEFAULT FALSE
 );
 
 Create Table IF NOT EXISTS Class (
