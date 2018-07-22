@@ -241,16 +241,20 @@
                           <div ng-controller="Question">
                             <div class="question">
                               <pre>
-  From a table named customer_t that has the following attributes: 
-  CustomerId, CustomerName, CustomerAddress, CustomerState, and CustomerPostalCode<p class="font-weight-bold">
-  Write a select statement that returns all attributes.</pre></p>
+                                From a table named customer_t that has the following attributes: 
+                                CustomerId, CustomerName, CustomerAddress, CustomerState, and CustomerPostalCode
+                                Write a select statement that returns all attributes.
+                              </pre>
                             </div>
                             <form>
-                              <textarea style="width:96.5%; height:60px;" type="text" class="bg-white form-control input-lg" placeholder="Write your answer here..." ng-model="formData.text"></textarea>
+                              <textarea style="width:96.5%; height:60px; background-color:white;" type="text" class="form-control input-lg" placeholder="Write your answer here..." ng-model="formData.text"></textarea>
                                 <br>
                                 <button type="submit" class="btn btn-primary btn-lg btn-block" ng-init="statementInHTML = 'select * from customer_t'" ng-click="answerQuestion()">Submit</button>
                             </form>
-                            <h3 id="problem-one-font" style="color:{{backgroundColor}}" class="text-center">{{ answer }}</h3>
+                            <!--
+                            <h3 style="color:{{backgroundColor}};font-size:2em;">{{ answer }}</h3>
+                            -->
+                            <h3 id="problem-one-font" style="color:{{backgroundColor}}">{{ answer }}</h3>
                           </div>
                         </div>
                       </div>
@@ -270,16 +274,17 @@
                           <div ng-controller="Question">
                             <div class="question">
                               <pre>
-  From a table named <em>Customer</em> that has the following attributes:
-  Customerid, Customername, CustomerAddress, CustomerCity, CustomerState, and CustomerPostalCode. <p class="font-weight-bold">
-  Write a SELECT Statement that returns all the CustomerIDs </pre></p>
+                                From a table named <em>Customer</em> that has the following attributes:
+                                Customerid, Customername, CustomerAddress, CustomerCity, CustomerState, and CustomerPostalCode. <br>
+                                Write a SELECT Statement that returns all the CustomerIDs
+                              </pre>
                             </div>
                             <form>
-                              <textarea style="width:96.5%; height:60px;" type="text" class="bg-white form-control input-lg" placeholder="Write your answer here..." ng-model="formData.text"></textarea>
+                              <textarea style="width:96.5%; height:60px; background-color:white;" type="text" class="form-control input-lg" placeholder="Write your answer here..." ng-model="formData.text"></textarea>
                               <br>
                               <button type="submit" class="btn btn-primary btn-lg btn-block" ng-init="statementInHTML = 'select customerid from customer_t'" ng-click="answerQuestion()">Submit</button>
                             </form>
-                            <h3 id="problem-two-font" style="color:{{backgroundColor}}" class="text-center">{{ answer }}</h3>
+                            <h3 style="color:{{backgroundColor}};font-size:2em;">{{ answer }}</h3>
                           </div>
                         </div>
                       </div>
@@ -299,16 +304,17 @@
                           <div ng-controller="Question">
                             <div class="question">
                               <pre>
-  From a table named <em>Customer</em> that has the following attributes:
-  Customerid, Customername, CustomerAddress, CustomerCity, CustomerState, and CustomerPostalCode. <p class="font-weight-bold">
-  Write a SELECT Statement that returns CustomerName, CustomerAddress, CustomerCity, CustomerState, and CustomerPostalCode </pre></p>
+                                From a table named <em>Customer</em> that has the following attributes:
+                                Customerid, Customername, CustomerAddress, CustomerCity, CustomerState, and CustomerPostalCode. <br>
+                                Write a SELECT Statement that returns CustomerName, CustomerAddress, CustomerCity, CustomerState, and CustomerPostalCode
+                              </pre>
                             </div>
                             <form>
-                              <textarea style="width:96.5%; height:60px;" type="text" class="bg-white form-control input-lg" placeholder="Write your answer here..." ng-model="formData.text"></textarea>
+                              <textarea style="width:96.5%; height:60px; background-color:white;" type="text" class="form-control input-lg" placeholder="Write your answer here..." ng-model="formData.text"></textarea>
                               <br>
                               <button type="submit" class="btn btn-primary btn-lg btn-block" ng-init="statementInHTML = 'select CustomerName, CustomerAddress, CustomerCity, CustomerState, CustomerPostalCode from customer_t'" ng-click="answerQuestion()">Submit</button>
                             </form>
-                            <h3 id="problem-three-font" style="color:{{backgroundColor}};" class="text-center">{{ answer }}</h3>
+                            <h3 style="color:{{backgroundColor}};font-size:2em;">{{ answer }}</h3>
                           </div>
                         </div>
                       </div>
