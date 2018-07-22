@@ -1,36 +1,37 @@
 #page-content {
-  margin-left: 75px;
-  margin-top: 65px;
-  margin-bottom: 10px; }
-
-.anyClass {
-  overflow-y: auto; }
-
-#select-page-content {
-  padding-left: 30px;
-  padding-right: 30px; }
-
-.scrollbar {
-  margin-left: -70px;
-  height: 645px;
-  overflow-y: scroll; }
-
-.scrollbar-light-grey::-webkit-scrollbar {
-  width: 18px;
-  background: #fff; }
-
-.scrollbar-light-grey::-webkit-scrollbar-thumb {
-  border-radius: 3px;
-  background-color: #bdbdbd; }
-
-#main-footer {
-  position: relative; }
-
-#problem-one-font {
-  font-size: 2em; }
-
-#problem-two-font {
-  font-size: 2em; }
-
-#problem-three-font {
-  font-size: 2em; }
+    margin-left: 75px;
+    margin-top: 75px;
+    margin-bottom: 10px;
+  }
+  
+  .anyClass {
+    overflow-y: auto; }
+  
+  #select-page-content {
+    padding-left: 30px;
+    padding-right: 30px; 
+  }
+  
+  .scrollbar {
+    margin-left: -70px;
+    height: 645px;
+    overflow-y: scroll; 
+  }
+  
+  .scrollbar-light-grey::-webkit-scrollbar {
+    width: 18px;
+    background: #fff; 
+  }
+  
+  .scrollbar-light-grey::-webkit-scrollbar-thumb {
+    border-radius: 3px;
+    background-color: #bdbdbd ; 
+  }
+  
+  #main-footer {
+    position: relative;
+  }
+  
+  #problem-one-font {
+    font-size: 2em;
+  }
