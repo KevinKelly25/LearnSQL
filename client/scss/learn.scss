@@ -1,37 +1,43 @@
 #page-content {
+    margin: 75px;
     margin-left: 75px;
-    margin-top: 75px;
-    margin-bottom: 10px;
-  }
-  
-  .anyClass {
-    overflow-y: auto; }
-  
-  #select-page-content {
-    padding-left: 30px;
-    padding-right: 30px; 
-  }
-  
-  .scrollbar {
+}
+
+.anyClass {
+    height: 100%;
+    overflow-y: auto; 
+}
+
+#page-content {
+    height: 75%;
+}
+
+/* Is probably not needed */
+#select-page-content {
+    height: 600px;
+    padding-left: 10px;
+}
+
+.col-height {
+    height: 800px;
+}
+
+#select-footer {
+    height: 150px;
+}
+
+.scrollbar {
     margin-left: -70px;
     height: 645px;
-    overflow-y: scroll; 
-  }
-  
-  .scrollbar-light-grey::-webkit-scrollbar {
-    width: 18px;
-    background: #fff; 
-  }
-  
-  .scrollbar-light-grey::-webkit-scrollbar-thumb {
-    border-radius: 3px;
-    background-color: #bdbdbd ; 
-  }
-  
-  #main-footer {
-    position: relative;
-  }
-  
-  #problem-one-font {
-    font-size: 2em;
-  }
+    overflow-y: scroll;
+}
+
+.scrollbar-light-grey::-webkit-scrollbar {
+  width: 18px;
+  background: #f8f9fa;
+}
+
+.scrollbar-light-grey::-webkit-scrollbar-thumb {
+  border-radius: -20px;
+  background-color: rgb(197, 194, 194);
+}
