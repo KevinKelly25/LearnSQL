@@ -11,8 +11,8 @@
   <link href='https://fonts.googleapis.com/css?family=Alegreya:400,700,700i' rel='stylesheet'>
   <link href="https://fonts.googleapis.com/css?family=Merriweather:400,700" rel="stylesheet">
 </head>
-<body>
-  <nav class="navbar navbar-expand-sm bg-primary navbar-dark fixed-top">
+<body ng-app="LearnSQL">
+  <nav class="navbar navbar-expand-sm bg-primary navbar-dark fixed-top" ng-controller="NavCtrl">
     <div class="container-fluid">
       <a href="http://localhost:3000/" class="navbar-brand mr-auto">LearnSQL</a>
       <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
@@ -32,9 +32,19 @@
           <li class="nav-item">
             <a href="views/quizes.html" class="nav-link border-right px-3">Quizzes</a>
           </li>
+          <span ng-show="!currentUser">
           <li class="nav-item">
-            <a href="views/account/signIn.html" class="nav-link pl-3">Sign in</a>
+            <a href="views/account/signIn.html" class="nav-link pl-3"> Sign in</a>
           </li>
+          </span>
+          <span ng-show="currentUser">
+          <li class="nav-item">
+            <a href="views/account/profile.html" class="nav-link pl-3">Profile</a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link pl-3" ng-click="logout()">Logout</a>
+          </li>
+          </span>
         </ul>
       </div>
     </div>
@@ -145,6 +155,7 @@
       </div>
     </footer>
 
+    <!-- original modal credit goes to https://bootsnipp.com/snippets/featured/modal-login-with-jquery-effects -->
     <!-- BEGIN # MODAL LOGIN -->
     <div class="modal fade" id="login-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
         	<div class="modal-dialog">
@@ -213,12 +224,14 @@
                       <span id="text-register-msg">Register an account.</span>
                     </div>
     		    				<input id="register_username" class="form-control" type="text" placeholder="Username" required>
+                    <input id="register_password" class="form-control" type="password" placeholder="Password" required>
                     <input id="register_email" class="form-control" type="text" placeholder="E-Mail" required>
                     <input id="register_password" class="form-control" type="password" placeholder="Password" required>
+                    <input id="register_password" class="form-control" type="password" placeholder="Retype Password" required>
                 	</div>
     		    		  <div class="modal-footer">
                     <div>
-                        <button type="submit" class="btn btn-primary btn-lg btn-block">Register</button>
+                        <button type="submit" class="btn btn-primary btn-lg btn-block" ng-click="register()">Register</button>
                     </div>
                     <div>
                         <button id="register_login_btn" type="button" class="btn btn-link">Log In</button>
@@ -234,6 +247,8 @@
     	</div>
         <!-- END # MODAL LOGIN -->
     <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.6/angular.min.js"></script>
+    <script src="../../javascripts/controllers.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
@@ -253,32 +268,35 @@
             case "login-form":
                 var $lg_username=$('#login_username').val();
                 var $lg_password=$('#login_password').val();
-                if ($lg_username == "ERROR") {
+                //login function needed
+                /*if ($lg_username == "ERROR") {
                     msgChange($('#div-login-msg'), $('#icon-login-msg'), $('#text-login-msg'), "error", "glyphicon-remove", "Username or Password was Incorrect");
                 } else {
                     msgChange($('#div-login-msg'), $('#icon-login-msg'), $('#text-login-msg'), "success", "glyphicon-ok", "Login OK");
                 }
-                return false;
+                return false;*/
                 break;
             case "lost-form":
                 var $ls_email=$('#lost_email').val();
-                if ($ls_email == "ERROR") {
-                    msgChange($('#div-lost-msg'), $('#icon-lost-msg'), $('#text-lost-msg'), "error", "glyphicon-remove", "Send error");
-                } else {
-                    msgChange($('#div-lost-msg'), $('#icon-lost-msg'), $('#text-lost-msg'), "success", "glyphicon-ok", "Send OK");
-                }
-                return false;
+                //lost email function
+                // if ($ls_email == "ERROR") {
+                //     msgChange($('#div-lost-msg'), $('#icon-lost-msg'), $('#text-lost-msg'), "error", "glyphicon-remove", "Send error");
+                // } else {
+                //     msgChange($('#div-lost-msg'), $('#icon-lost-msg'), $('#text-lost-msg'), "success", "glyphicon-ok", "Send OK");
+                // }
+                //return false;
                 break;
             case "register-form":
                 var $rg_username=$('#register_username').val();
                 var $rg_email=$('#register_email').val();
                 var $rg_password=$('#register_password').val();
-                if ($rg_username == "ERROR") {
-                    msgChange($('#div-register-msg'), $('#icon-register-msg'), $('#text-register-msg'), "error", "glyphicon-remove", "Register error");
-                } else {
-                    msgChange($('#div-register-msg'), $('#icon-register-msg'), $('#text-register-msg'), "success", "glyphicon-ok", "Register OK");
-                }
-                return false;
+                //register function
+                // if ($rg_username == "ERROR") {
+                //     msgChange($('#div-register-msg'), $('#icon-register-msg'), $('#text-register-msg'), "error", "glyphicon-remove", "Register error");
+                // } else {
+                //     msgChange($('#div-register-msg'), $('#icon-register-msg'), $('#text-register-msg'), "success", "glyphicon-ok", "Register OK");
+                // }
+                // return false;
                 break;
             default:
                 return false;
@@ -286,6 +304,7 @@
         return false;
     });
 
+    //animate functions
     $('#login_register_btn').click( function () { modalAnimate($formLogin, $formRegister) });
     $('#register_login_btn').click( function () { modalAnimate($formRegister, $formLogin); });
     $('#login_lost_btn').click( function () { modalAnimate($formLogin, $formLost); });
