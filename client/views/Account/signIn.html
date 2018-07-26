@@ -5,50 +5,98 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>LearnSQL</title>
-  <link rel="stylesheet" href="./stylesheets/style.css" media="screen">
-  <link rel="stylesheet" href="./stylesheets/font-awesome.min.css">
-  <link rel="stylesheet" href="./stylesheets/bootstrap.css">
+  <link rel="stylesheet" href="../../stylesheets/style.css" media="screen">
+  <link rel="stylesheet" href="../../stylesheets/font-awesome.min.css">
+  <link rel="stylesheet" href="../../stylesheets/bootstrap.css">
   <link href='https://fonts.googleapis.com/css?family=Alegreya:400,700,700i' rel='stylesheet'>
   <link href="https://fonts.googleapis.com/css?family=Merriweather:400,700" rel="stylesheet">
 </head>
 <body ng-app="LearnSQL">
-  <nav class="navbar navbar-expand-sm bg-primary navbar-dark fixed-top" ng-controller="NavCtrl">
+  <nav class="navbar navbar-expand-sm bg-primary navbar-dark fixed-top py-0" ng-controller="NavCtrl">
     <div class="container-fluid">
-      <a href="http://localhost:3000/" class="navbar-brand mr-auto">LearnSQL</a>
+      <a href="http://localhost:3000/" class="navbar-brand mr-auto my-0">LearnSQL</a>
       <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarCollapse">
-        <ul class="navbar-nav ml-auto">
-          <li class="nav-item active">
-            <a href="http://localhost:3000/" class="nav-link border-right border-left px-4">Home</a>
+        <ul class="nav navbar-nav ml-auto">
+          <li class="nav-item active py-0 my-0">
+            <a href="http://localhost:3000/" class="nav-link border-right border-left px-4 ">Home</a>
           </li>
-          <li class="nav-item">
-            <a href="views/workshop.html" class="nav-link border-right px-3">Workshop</a>
+          <li class="nav-item py-0 my-0">
+            <a href="views/workshop.html" class="nav-link border-right px-3 my-0">Workshop</a>
           </li>
-          <li class="nav-item">
-            <a href="views/learn/learn.html" class="nav-link border-right px-4">Learn</a>
+          <li class="nav-item py-0 my-0">
+            <a href="views/learn/learn.html" class="nav-link border-right px-4 my-0">Learn</a>
           </li>
-          <li class="nav-item">
-            <a href="views/quizes.html" class="nav-link border-right px-3">Quizzes</a>
+          <li class="nav-item py-0 my-0">
+            <a href="views/quizes.html" class="nav-link border-right px-3 my-0">Quizzes</a>
           </li>
           <span ng-show="!currentUser">
-          <li class="nav-item">
-            <a href="views/account/singIn.html" class="nav-link pl-3" > Sign in</a>
+          <li class="nav-item py-0 my-0">
+            <a href="views/account/singIn.html" class="nav-link pl-3 my-0" >Sign in</a>
           </li>
           </span>
           <span ng-show="currentUser">
           <li class="nav-item">
-            <a href="views/account/profile.html" class="nav-link pl-3">Profile</a>
+            <a href="views/account/profile.html" class="nav-link pl-3 py-0 my-0">Profile</a>
           </li>
           <li class="nav-item">
-            <a href="#" class="nav-link pl-3" ng-click="logout()">Logout</a>
+            <a href="#" class="nav-link pl-3" ng-click="logout() py-0 my-0">Logout</a>
           </li>
           </span>
         </ul>
       </div>
     </div>
   </nav>
+
+	<!-- Login form -->
+	<div class="py-5" ng-controller="LoginCtrl">
+		<form class="form-signin" >
+			<!-- TODO: add a logo here	 -->
+			<!-- <img class="mb-4" src="../../assets/brand/bootstrap-solid.svg" alt="" width="72" height="72"> -->
+			<span ng-show="form == 'login'">
+				<h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+				<label for="inputEmail" class="sr-only">Email address</label>
+				<input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
+				<label for="inputPassword" class="sr-only">Password</label>
+				<input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+				<!-- TODO: Add a remember me when we can support it -->
+				<!-- <div class="checkbox mb-3">
+					<label>
+						<input type="checkbox" value="remember-me"> Remember me
+					</label>
+				</div> -->
+				<button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+				<a class="pl-4 pr-5" href="#">Register</a>
+				<a class="pl-4" href="#">Forgot Password?</a>
+			</span>
+			<span ng-show="form == 'register'">
+				<h1 class="h3 mb-3 font-weight-normal">Register</h1>
+				<label for="inputEmail" class="sr-only">Email address</label>
+				<input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
+				<label for="inputEmail" class="sr-only">Email address</label>
+				<input type="email" id="inputFullName" class="form-control" placeholder="Full Name" required autofocus>
+				<label for="inputPassword" class="sr-only">Password</label>
+				<input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+				<label for="inputPassword2" class="sr-only">Password2</label>
+				<input type="password" id="inputPassword2" class="form-control" placeholder="Re-type Password" required>
+				<button class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
+				<a class="pl-4 pr-5" href="#">Sign In</a>
+				<a class="pl-4" href="#">Forgot Password?</a>
+			</span>
+			<span ng-show="form == 'forgotPassword'">
+				<h1 class="h3 mb-3 font-weight-normal">Forgot Password?</h1>
+				<label for="inputEmail" class="sr-only">Email address</label>
+				<input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
+				<button class="btn btn-lg btn-primary btn-block" type="submit">Send Email</button>
+				<a class="pl-4 pr-5" href="#">Sign In</a>
+				<a class="pl-4" href="#">Register</a>
+			</span>
+			<p class="mt-5 mb-3 text-muted">&copy; 2017-2018</p>
+		</form>
+	</div>
+
 
     <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.6/angular.min.js"></script>

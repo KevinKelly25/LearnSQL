@@ -79,3 +79,16 @@ app.controller('NavCtrl', ($scope, $http) => {
 
   };
 });
+
+/**
+ * This controller is used to display and use the login operations
+ */
+app.controller('LoginCtrl', ($scope, $http) => {
+  $scope.form = 'login';
+  $scope.register = () => {
+
+  };
+  $scope.Login = () => {
+    $scope.test = "Works!!!";
+  };
+});
