@@ -9,10 +9,7 @@
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" 
     integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" 
     crossorigin="anonymous">
-
-  <!-- ADDED THIS -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
-
   <link rel="stylesheet" href="../../stylesheets/font-awesome.min.css">
   <link rel="stylesheet" href="../../stylesheets/bootstrap.css">
   <link rel="stylesheet" href="../../stylesheets/learn.css">
@@ -20,10 +17,13 @@
 <body>
 
   <div class="wrapper">
-    <!-- Sidebar  -->
+
+    <!-- SIDEBAR  -->
     <nav id="sidebar">
       <ul class="list-unstyled components">
+        <!-- SIDEBAR HEADER -->
         <h2 class="text-dark text-center font-weight-bold mt-4">Sections</h2>
+        <!-- SIDEBAR SECTIONS -->
         <li class="nav-item w-100">
           <a href="./learn.html" class="nav-link text-center">What is SQL?</a>
         </li>
@@ -123,14 +123,19 @@
       </ul>
     </nav>
 
-    <!-- Page Content  -->
+    <!-- PAGE CONTENT  -->
     <div id="content">
-
-      <nav class="navbar navbar-expand-lg navbar-light border-bottom border-danger bg-white">
+      <!-- NAVBAR -->
+      <nav class="navbar navbar-expand-lg navbar-light bg-white">
         <div class="container-fluid">
-          <h2 class="text-danger font-weight-bold ml-3 mt-2">LearnSQL</h2>
+          <!-- NAVBAR HEADER -->
+          <h2 id="navbarTitle" class="text-danger font-weight-bold ml-3 mt-2">LearnSQL</h2>
 
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <!-- NAVBAR SECTIONS -->
+          <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="nav navbar-nav ml-auto">
               <li class="nav-item">
                 <a class="nav-link text-dark" href="#">Home</a>
@@ -152,13 +157,15 @@
         </div>
       </nav>
 
-      <h2 class="text-center font-weight-bold">
+      <!-- PAGE TITLE -->
+      <h2 id="pageTitle" class="text-center font-weight-bold">
+        <!-- TOGGLE SIDEBAR BUTTON -->
         <button type="button" id="sidebarCollapse" class="btn btn-dark float-left ml-2">
           <i class="fas fa-align-left"></i>
           <span></span>
         </button>Basic Select Statements
       </h2>
-        
+      <!-- INTRODUCTION TO BASIC SELECT STATEMENTS -->
       <p class="lead text-center">SELECT is a clause used to return data from a database.
           The data returned is stored in a result table, called the result-set.
           To use Select in an SQL statement you write SELECT then the name of the attribute
@@ -166,7 +173,7 @@
           FROM clause, which designates which table the SELECT attributes
           are coming from. This is shown here:</p>
 
-      <!-- example 1 -->
+      <!-- EXAMPLE 1 -->
       <div class="bg-light text-dark border border-dark">
         <h4 class="font-weight-bold">Example 1</h4>
         <div class="example">
@@ -177,7 +184,7 @@
             </pre>
           </p>
       
-          <p class="bg-light lead">
+          <p class="lead">
             <pre>
   Here, column1, column2, ... are the field/attribute names of the table you want to select data from.
             </pre>
@@ -185,7 +192,7 @@
         </div>
       </div>
           
-      <!-- example 2 -->
+      <!-- EXAMPLE 2 -->
       <p class="lead">If you want to select all the fields available in the table, use * in place of the        attributes. As shown in the next example.</p>
       <div class="bg-light text-dark border border-dark">
         <h4 class="font-weight-bold">Example 2</h4>
@@ -197,7 +204,7 @@
             </pre>
           </p>
         
-          <p class="bg-light lead">
+          <p class="lead">
             <pre>
   Here, all fields in the table are selected because of the use of * in place of the attributes.
             </pre>
@@ -207,9 +214,10 @@
           
       <br>
           
-      <!-- practice questions -->
+      <!-- PRACTICE QUESTIONS -->
       <div id="accordion">
         <div class="card bg-dark">
+          <!-- PARENT HEADING -->
           <div class="card-header">
             <h5 class="mb-0">
               <div href="#parent-collapse" data-toggle="collapse" data-parent="#accordion" class="text-white">
@@ -218,10 +226,11 @@
             </h5>
           </div>
 
+          <!-- PROBLEMS -->
           <div id="parent-collapse" class="collapse">
             <div class="card-body">
               <div ng-app="nodeQuestion">
-                  
+              
                 <!-- PROBLEM 1 -->
                 <div class="card mb-1">
                   <div class="card-header">
@@ -239,7 +248,7 @@
   From a table named customer_t that has the following attributes:
   CustomerId, CustomerName, CustomerAddress, CustomerState, and CustomerPostalCode
                           </pre>
-                          <p class="text-center text-primary">
+                          <p class="text-center font-weight-bold">
                             Write a select statement that returns all attributes.
                           </p>
                         </div>
@@ -254,7 +263,7 @@
                   </div>
                 </div>
       
-                <!-- problem 2 -->
+                <!-- PROBLEM 2 -->
                 <div class="card mb-1">
                   <div class="card-header">
                     <h5 class="mb-0">
@@ -271,7 +280,7 @@
   From a table named <em>Customer</em> that has the following attributes:
   Customerid, Customername, CustomerAddress, CustomerCity, CustomerState, and CustomerPostalCode. 
                           </pre>
-                          <p class="text-center text-primary">
+                          <p class="text-center font-weight-bold">
                             Write a SELECT Statement that returns all the CustomerIDs 
                           </p>
                         </div>
@@ -286,7 +295,7 @@
                   </div>
                 </div>
 
-                <!-- problem 3 -->
+                <!-- PROBLEM 3 -->
                 <div class="card mb-1">
                   <div class="card-header">
                     <h5 class="mb-0">
@@ -303,7 +312,7 @@
 From a table named <em>Customer</em> that has the following attributes:
 Customerid, Customername, CustomerAddress, CustomerCity, CustomerState, and CustomerPostalCode. 
                           </pre>
-                          <p class="text-center text-primary">
+                          <p class="text-center font-weight-bold">
                             Write a SELECT Statement that returns CustomerName, CustomerAddress, CustomerCity, CustomerState, and CustomerPostalCode 
                           </p>
                         </div>
@@ -324,20 +333,20 @@ Customerid, Customername, CustomerAddress, CustomerCity, CustomerState, and Cust
         </div>
       </div>
 
-        <!-- main footer -->
-        <footer id="main-footer" class="border-top border-danger bg-white mt-3">
-            <div class="container">
-            <div class="row">
-                <div class="col text-center">
-                <div class="py-4">
-                    <h1 class="h3 text-danger">LearnSQL</h1>
-                    <p>Copyright &copy; 2018</p>
-                    <a href="contact.html" class="btn btn-danger" role="button">Contact Us</a>
-                </div>
-                </div>
+      <!-- MAIN FOOTER -->
+      <footer id="main-footer" class="bg-white mt-3">
+        <div class="container">
+          <div class="row">
+            <div class="col text-center">
+              <div class="py-4">
+                <h1 class="h3 text-danger">LearnSQL</h1>
+                <p>Copyright &copy; 2018</p>
+                <a href="contact.html" class="btn btn-danger" role="button">Contact Us</a>
+              </div>
             </div>
-            </div>
-        </footer>
+          </div>
+        </div>
+      </footer>
 
     </div>
 </div>
@@ -356,24 +365,35 @@ Customerid, Customername, CustomerAddress, CustomerCity, CustomerState, and Cust
   <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.6/angular.min.js"></script>
   <script src="../../javascripts/app.js"></script>
 
+  <!-- THE CURRENT YEAR OF THE COPYRIGHT -->
   <script>
-    // The the current year for the copyright
     $('#year').text(new Date().getFullYear());
   </script>
 
-<script type="text/javascript">
-  $(document).ready(function () {
-  $("#sidebar").mCustomScrollbar({
-  theme: "minimal"
-  });
-  
-  $('#sidebarCollapse').on('click', function () {
-  $('#sidebar, #content').toggleClass('active');
-  $('.collapse.in').toggleClass('in');
-  $('a[aria-expanded=true]').attr('aria-expanded', 'false');
-  });
-  });
-  </script>
+  <!-- ADDED SCRIPT THAT ALLOWS THE BUTTON TO BE PRESSED TO TOGGLE THE SIDEBAR TO OPEN AND CLOSE -->
+  <script type="text/javascript">
+    $(document).ready(function () {
+      $("#sidebar").mCustomScrollbar({
+        theme: "minimal"
+      });
+    
+      $('#sidebarCollapse').on('click', function () {
+        $('#sidebar, #content').toggleClass('active');
+        $('.collapse.in').toggleClass('in');
+        $('a[aria-expanded=true]').attr('aria-expanded', 'false');
+      });
+    });
+</script>
+
+<!-- ADDED SCRIPT FOR PAGE TO SCROLL AUTOMATICALLY WHEN THE ACCORDION IS OPENED AND TO THE CLOSEST OPENED CARD -->
+<script>
+$('.collapse').on('shown.bs.collapse', function(e) {
+  var $card = $(this).closest('.card');
+  $('html,body').animate({
+    scrollTop: $card.offset().top - 50
+  }, 500);
+});
+</script>
 
 </body>
 </html>
