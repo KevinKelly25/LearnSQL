@@ -85,6 +85,8 @@ app.controller('NavCtrl', ($scope, $http) => {
  */
 app.controller('LoginCtrl', ($scope, $http) => {
   $scope.form = 'login';
+  $scope.error = false;
+  $scope.errorMessage = 'Email or Password was incorrect';
   $scope.register = () => {
 
   };
