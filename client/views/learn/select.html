@@ -9,343 +9,370 @@
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" 
     integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" 
     crossorigin="anonymous">
+
+  <!-- ADDED THIS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
+
   <link rel="stylesheet" href="../../stylesheets/font-awesome.min.css">
   <link rel="stylesheet" href="../../stylesheets/bootstrap.css">
-  <link rel="stylesheet" href="../../stylesheets/style.css">
   <link rel="stylesheet" href="../../stylesheets/learn.css">
 </head>
 <body>
 
-  <!-- NAVBAR -->
-  <section id="select-navbar">
-    <nav class="navbar navbar-expand-sm bg-light navbar-dark fixed-top">
-      <div class="container-fluid">
-        <a href="http://localhost:3000/" class="navbar-brand mr-auto text-danger font-weight-bold">LearnSQL</a>
-        <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarCollapse">
-          <ul class="navbar-nav ml-auto">
-            <li class="nav-item">
-              <a href="http://localhost:3000/" class="nav-link text-body px-4">Home</a>
-            </li>
-            <li class="nav-item">
-              <a href="views/workshop.html" class="nav-link text-body px-3">Workshop</a>
-            </li>
-            <li class="nav-item active">
-              <a href="views/learn/learn.html" class="nav-link bg-info text-body font-weight-bold px-4">Learn</a>
-            </li>
-            <li class="nav-item">
-              <a href="views/quizes.html" class="nav-link text-body px-3">Quizzes</a>
-            </li>
-            <li class="nav-item">
-              <a href="views/account/signIn.html" class="nav-link text-body pl-3">Sign in</a>
-            </li>
-          </ul>
-        </div>
-      </div>
+  <div class="wrapper">
+    <!-- Sidebar  -->
+    <nav id="sidebar">
+      <ul class="list-unstyled components">
+        <h2 class="text-dark text-center font-weight-bold mt-4">Sections</h2>
+        <li class="nav-item w-100">
+          <a href="./learn.html" class="nav-link text-center">What is SQL?</a>
+        </li>
+        <li class="nav-item w-100">
+          <a href="./relationalDatabases.html" class="nav-link text-center">Relational Databases</a>
+        </li>
+        <li class="nav-item w-100">
+          <a href="./keys.html" class="nav-link text-center">Primary and Foreign Keys</a>
+        </li>
+        <li class="nav-item w-100">
+          <a href="./select.html" class="active nav-link text-center text-light bg-dark text-light mr-2 ml-2 font-weight-bold">Basic Select Statements</a>
+        </li>
+        <li class="nav-item w-100">
+          <a href="./where.html" class="nav-link text-center">Use of Where</a>
+        </li>
+        <li class="nav-item w-100">
+          <a href="./order.html" class="nav-link text-center">Order By</a>
+        </li>
+        <li class="nav-item w-100">
+          <a href="./distict.html" class="nav-link text-center">Distinct</a>
+        </li>
+        <li class="nav-item w-100">
+          <a href="./as.html" class="nav-link text-center">As Clause</a>
+        </li>
+        <li class="nav-item w-100">
+          <a href="./predicateOperators.html" class="nav-link text-center">Predicate Operators</a>
+        </li>
+        <li class="nav-item w-100">
+          <a href="./expressions.html" class="nav-link text-center">Expressions</a>
+        </li>
+        <li class="nav-item w-100">
+          <a href="./scalar.html" class="nav-link text-center">Scalar Function</a>
+        </li>
+        <li class="nav-item w-100">
+          <a href="./aggregate.html" class="nav-link text-center">Aggregate Functions</a>
+        </li>
+        <li class="nav-item w-100">
+          <a href="./group.html" class="nav-link text-center">Group By</a>
+        </li>
+        <li class="nav-item w-100">
+          <a href="./having.html" class="nav-link text-center">Having with Group By</a>
+        </li>
+        <li class="nav-item w-100">
+          <a href="./insert.html" class="nav-link text-center">Insert Into</a>
+        </li>
+        <li class="nav-item w-100">
+          <a href="./update.html" class="nav-link text-center">Update</a>
+        </li>
+        <li class="nav-item w-100">
+          <a href="./delete.html" class="nav-link text-center">Delete From</a>
+        </li>
+        <li class="nav-item w-100">
+          <a href="./rollback.html" class="nav-link text-center">Rollback and Commit</a>
+        </li>
+        <li class="nav-item w-100">
+          <a href="./types.html" class="nav-link text-center">Data Types</a>
+        </li>
+        <li class="nav-item w-100">
+          <a href="./tableCreation.html" class="nav-link text-center">Table Creation</a>
+        </li>
+        <li class="nav-item w-100">
+          <a href="./addAttributes.html" class="nav-link text-center">Adding/Removing Attributes</a>
+        </li>
+        <li class="nav-item w-100">
+          <a href="./selectInto.html" class="nav-link text-center">Select Into</a>
+        </li>
+        <li class="nav-item w-100">
+          <a href="./views.html" class="nav-link text-center">Views</a>
+        </li>
+        <li class="nav-item w-100">
+          <a href="./union.html" class="nav-link text-center">Union</a>
+        </li>
+        <li class="nav-item w-100">
+          <a href="./intersect.html" class="nav-link text-center">Intersect and Except</a>
+        </li>
+        <li class="nav-item w-100">
+          <a href="./sub.html" class="nav-link text-center">Sub-Queries</a>
+        </li>
+        <li class="nav-item w-100">
+          <a href="./derived.html" class="nav-link text-center">Derived Tables</a>
+        </li>
+        <li class="nav-item w-100">
+          <a href="./joins.html" class="nav-link text-center">Joins</a>
+        </li>
+        <li class="nav-item w-100">
+          <a href="./transactions.html" class="nav-link text-center">Transactions</a>
+        </li>
+        <li class="nav-item w-100">
+          <a href="./cursors.html" class="nav-link text-center">Cursors</a>
+        </li>
+        <li class="nav-item w-100">
+          <a href="./functions.html" class="nav-link text-center">Functions</a>
+        </li>
+        <li class="nav-item w-100">
+          <a href="./triggers.html" class="nav-link text-center">Triggers</a>
+        </li>
+      </ul>
     </nav>
-  </section>
-  
-  
-  <!-- PAGE-CONTENT -->
-  <section id="page-content">
-    <div class="col-height">
-      <div class="d-flex">
-        <!-- scrollbar -->
-        <div class="scrollbar scrollbar-light-grey w-50">
-          <div id="select-sidebar-height" class="align-content-center bg-light">
-            <ul class="nav nav-pills nav-stacked anyClass">
-              <li class="nav-item w-100">
-                <a href="./learn.html" class="nav-link text-center text-dark">What is SQL?</a>
+
+    <!-- Page Content  -->
+    <div id="content">
+
+      <nav class="navbar navbar-expand-lg navbar-light border-bottom border-danger bg-white">
+        <div class="container-fluid">
+          <h2 class="text-danger font-weight-bold ml-3 mt-2">LearnSQL</h2>
+
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="nav navbar-nav ml-auto">
+              <li class="nav-item">
+                <a class="nav-link text-dark" href="#">Home</a>
               </li>
-              <li class="nav-item w-100">
-                <a href="./relationalDatabases.html" class="nav-link text-center text-dark">Relational Databases</a>
+              <li class="nav-item">
+                <a class="nav-link text-dark" href="#">Workshop</a>
               </li>
-              <li class="nav-item w-100">
-                <a href="./learn.html" class="nav-link text-center text-dark">What is SQL?</a>
+              <li class="nav-item active">
+                <a href="#" class="nav-link bg-danger text-white">Learn</a>
               </li>
-              <li class="nav-item w-100">
-                <a href="./relationalDatabases.html" class="nav-link text-center text-dark">Relational Databases</a>
+              <li class="nav-item">
+                <a class="nav-link text-dark" href="#">Quizzes</a>
               </li>
-              <li class="nav-item w-100">
-                <a href="./keys.html" class="nav-link text-center text-dark">Primary and Foreign Keys</a>
-              </li>
-              <li class="nav-item w-100">
-                <a href="./select.html" class="active nav-link text-center text-dark bg-info font-weight-bold">Basic Select Statements</a>
-              </li>
-              <li class="nav-item w-100">
-                <a href="./where.html" class="nav-link text-center text-dark">Use of Where</a>
-              </li>
-              <li class="nav-item w-100">
-                <a href="./order.html" class="nav-link text-center text-dark">Order By</a>
-              </li>
-              <li class="nav-item w-100">
-                <a href="./distict.html" class="nav-link text-center text-dark">Distinct</a>
-              </li>
-              <li class="nav-item w-100">
-                <a href="./as.html" class="nav-link text-center text-dark">As Clause</a>
-              </li>
-              <li class="nav-item w-100">
-                <a href="./predicateOperators.html" class="nav-link text-center text-dark">Predicate Operators</a>
-              </li>
-              <li class="nav-item w-100">
-                <a href="./expressions.html" class="nav-link text-center text-dark">Expressions</a>
-              </li>
-              <li class="nav-item w-100">
-                <a href="./scalar.html" class="nav-link text-center text-dark">Scalar Function</a>
-              </li>
-              <li class="nav-item w-100">
-                <a href="./aggregate.html" class="nav-link text-center text-dark">Aggregate Functions</a>
-              </li>
-              <li class="nav-item w-100">
-                <a href="./group.html" class="nav-link text-center text-dark">Group By</a>
-              </li>
-              <li class="nav-item w-100">
-                <a href="./having.html" class="nav-link text-center text-dark">Having with Group By</a>
-              </li>           
-              <li class="nav-item w-100">
-                <a href="./insert.html" class="nav-link text-center text-dark">Insert Into</a>
-              </li>
-              <li class="nav-item w-100">
-                <a href="./update.html" class="nav-link text-center text-dark">Update</a>
-              </li>
-              <li class="nav-item w-100">
-                <a href="./delete.html" class="nav-link text-center text-dark">Delete From</a>
-              </li>
-              <li class="nav-item w-100">
-                <a href="./rollback.html" class="nav-link text-center text-dark">Rollback and Commit</a>
-              </li>
-              <li class="nav-item w-100">
-                <a href="./types.html" class="nav-link text-center text-dark">Data Types</a>
-              </li>
-              <li class="nav-item w-100">
-                <a href="./tableCreation.html" class="nav-link text-center text-dark">Table Creation</a>
-              </li>
-              <li class="nav-item w-100">
-                <a href="./addAttributes.html" class="nav-link text-center text-dark">Adding/Removing Attributes</a>
-              </li>
-              <li class="nav-item w-100">
-                <a href="./selectInto.html" class="nav-link text-center text-dark">Select Into</a>
-              </li>
-              <li class="nav-item w-100">
-                <a href="./views.html" class="nav-link text-center text-dark">Views</a>
-              </li>
-              <li class="nav-item w-100">
-                <a href="./union.html" class="nav-link text-center text-dark">Union</a>
-              </li>
-              <li class="nav-item w-100">
-                <a href="./intersect.html" class="nav-link text-center text-dark">Intersect and Except</a>
-              </li>
-              <li class="nav-item w-100">
-                <a href="./sub.html" class="nav-link text-center text-dark">Sub-Queries</a>
-              </li>
-              <li class="nav-item w-100">
-                <a href="./derived.html" class="nav-link text-center text-dark">Derived Tables</a>
-              </li>
-              <li class="nav-item w-100">
-                <a href="./joins.html" class="nav-link text-center text-dark">Joins</a>
-              </li>
-              <li class="nav-item w-100">
-                <a href="./transactions.html" class="nav-link text-center text-dark">Transactions</a>
-              </li>
-              <li class="nav-item w-100">
-                <a href="./cursors.html" class="nav-link text-center text-dark">Cursors</a>
-              </li>
-              <li class="nav-item w-100">
-                <a href="./functions.html" class="nav-link text-center text-dark">Functions</a>
-              </li>
-              <li class="nav-item w-100">
-                <a href="./triggers.html" class="nav-link text-center text-dark">Triggers</a>
+              <li class="nav-item">
+                <a class="nav-link text-dark" href="#">Sign in</a>
               </li>
             </ul>
           </div>
         </div>
-        <!-- intro to basic select statements -->
-        <div id="select-page-content" class="learn">
-          <h1 class="text-center font-weight-bold">BASIC SELECT STATEMENTS</h1>
-          <p class="lead">SELECT is a clause used to return data from a database.
-            The data returned is stored in a result table, called the result-set.
-            To use Select in an SQL statement you write SELECT then the name of the attribute
-            columns, each seperated by a comma. SELECT has to be used with the
-            FROM clause, which designates which table the SELECT attributes
-            are coming from. This is shown here:
+      </nav>
+
+      <h2 class="text-center font-weight-bold">
+        <button type="button" id="sidebarCollapse" class="btn btn-dark float-left ml-2">
+          <i class="fas fa-align-left"></i>
+          <span></span>
+        </button>Basic Select Statements
+      </h2>
+        
+      <p class="lead text-center">SELECT is a clause used to return data from a database.
+          The data returned is stored in a result table, called the result-set.
+          To use Select in an SQL statement you write SELECT then the name of the attribute
+          columns, each seperated by a comma. SELECT has to be used with the
+          FROM clause, which designates which table the SELECT attributes
+          are coming from. This is shown here:</p>
+
+      <!-- example 1 -->
+      <div class="bg-light text-dark border border-dark">
+        <h4 class="font-weight-bold">Example 1</h4>
+        <div class="example">
+          <p class="font-weight-bold">
+            <pre id="code-one" class="text-black font-weight-bold">
+  SELECT <em>attribute1, attribute2, attribute3, ...
+  FROM table_name;</em>
+            </pre>
           </p>
-
-          <!-- example 1 -->
-          <div class="bg-light text-dark border border-dark">
-            <h4 class="font-weight-bold">Example 1</h4>
-            <div class="example">
-              <p class="font-weight-bold">
-              <pre id="code-one" class="text-black font-weight-bold">
-                SELECT <em>attribute1, attribute2, attribute3, ...
-                FROM table_name;</em>
-              </pre>
-              </p>
-
-              <p class="bg-light lead">
-              <pre>
-                Here, column1, column2, ... are the field/attribute names of the table you want to select data from.
-              </pre>
-              </p>
-            </div>
-          </div>
-
-          <!-- example 2 -->
-          <p>If you want to select all the fields available in the table, use * in place of the attributes. As shown in the next example.</p>
-          
-          <div class="bg-light text-dark border border-dark">
-            <h4 class="font-weight-bold">Example 2</h4>
-            <div class="example">
-              <p class="font-weight-bold">
-              <pre id="code-two" class="text-black font-weight-bold">
-                SELECT <em>*</em>
-                FROM <em>table_name;</em>
-              </pre>
-              </p>
-
-              <p class="bg-light lead">
-              <pre>
-                Here, all fields in the table are selected because of the use of * in place of the attributes.
-              </pre>
-              </p>
-            </div>
-          </div>
-          <br>
-          
-          <!-- practice questions -->
-          <div id="accordion">
-            <div class="card">
-              <div class="card-header">
-                <h5 class="mb-0">
-                <div href="#parent-collapse" data-toggle="collapse" data-parent="#accordion">
-                  Practice Questions <i class="fas fa-angle-right"></i>
-                </div>
-                </h5>
-              </div>
-              <div id="parent-collapse" class="collapse">
-                <div class="card-body">
-                  <div ng-app="nodeQuestion">
-                    
-                    <!-- problem 1 -->
-                    <div class="card mb-1">
-                      <div class="card-header">
-                        <h5 class="mb-0">
-                        <div href="#collapse1" data-toggle="collapse" data-parent="#accordion">
-                          problem 1 <i class="fas fa-angle-right"></i>
-                        </div>
-                        </h5>
-                      </div>
-                      <div id="collapse1" class="collapse">
-                        <div class="card-body">
-                          <div ng-controller="Question">
-                            <div class="question">
-                              <pre>
-                                From a table named customer_t that has the following attributes: 
-                                CustomerId, CustomerName, CustomerAddress, CustomerState, and CustomerPostalCode
-                                Write a select statement that returns all attributes.
-                              </pre>
-                            </div>
-                            <form>
-                              <textarea style="width:96.5%; height:60px; background-color:white;" type="text" class="form-control input-lg" placeholder="Write your answer here..." ng-model="formData.text"></textarea>
-                                <br>
-                                <button type="submit" class="btn btn-primary btn-lg btn-block" ng-init="statementInHTML = 'select * from customer_t'" ng-click="answerQuestion()">Submit</button>
-                            </form>
-                            <h3 style="color:{{backgroundColor}};font-size:2em;">{{ answer }}</h3>
-                          </div>
-                        </div>
-                      </div>
-                    </div>  
-                    
-                    <!-- problem 2 -->
-                    <div class="card mb-1">
-                      <div class="card-header">
-                        <h5 class="mb-0">
-                          <div href="#collapse2" data-toggle="collapse" data-parent="#accordion">
-                            problem 2 <i class="fas fa-angle-right"></i>
-                          </div>
-                        </h5>
-                      </div>
-                      <div id="collapse2" class="collapse">
-                        <div class="card-body">
-                          <div ng-controller="Question">
-                            <div class="question">
-                              <pre>
-                                From a table named <em>Customer</em> that has the following attributes:
-                                Customerid, Customername, CustomerAddress, CustomerCity, CustomerState, and CustomerPostalCode. <br>
-                                Write a SELECT Statement that returns all the CustomerIDs
-                              </pre>
-                            </div>
-                            <form>
-                              <textarea style="width:96.5%; height:60px; background-color:white;" type="text" class="form-control input-lg" placeholder="Write your answer here..." ng-model="formData.text"></textarea>
-                              <br>
-                              <button type="submit" class="btn btn-primary btn-lg btn-block" ng-init="statementInHTML = 'select customerid from customer_t'" ng-click="answerQuestion()">Submit</button>
-                            </form>
-                            <h3 style="color:{{backgroundColor}};font-size:2em;">{{ answer }}</h3>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <!-- problem 3 -->
-                    <div class="card mb-1">
-                      <div class="card-header">
-                        <h5 class="mb-0">
-                          <div href="#collapse3" data-toggle="collapse" data-parent="#accordion">
-                            problem 3 <i class="fas fa-angle-right"></i>
-                          </div>
-                        </h5>
-                      </div>
-                      <div id="collapse3" class="collapse">
-                        <div class="card-body">
-                          <div ng-controller="Question">
-                            <div class="question">
-                              <pre>
-                                From a table named <em>Customer</em> that has the following attributes:
-                                Customerid, Customername, CustomerAddress, CustomerCity, CustomerState, and CustomerPostalCode. <br>
-                                Write a SELECT Statement that returns CustomerName, CustomerAddress, CustomerCity, CustomerState, and CustomerPostalCode
-                              </pre>
-                            </div>
-                            <form>
-                              <textarea style="width:96.5%; height:60px; background-color:white;" type="text" class="form-control input-lg" placeholder="Write your answer here..." ng-model="formData.text"></textarea>
-                              <br>
-                              <button type="submit" class="btn btn-primary btn-lg btn-block" ng-init="statementInHTML = 'select CustomerName, CustomerAddress, CustomerCity, CustomerState, CustomerPostalCode from customer_t'" ng-click="answerQuestion()">Submit</button>
-                            </form>
-                            <h3 style="color:{{backgroundColor}};font-size:2em;">{{ answer }}</h3>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
+      
+          <p class="bg-light lead">
+            <pre>
+  Here, column1, column2, ... are the field/attribute names of the table you want to select data from.
+            </pre>
+          </p>
         </div>
       </div>
-  </section>
+          
+      <!-- example 2 -->
+      <p class="lead">If you want to select all the fields available in the table, use * in place of the        attributes. As shown in the next example.</p>
+      <div class="bg-light text-dark border border-dark">
+        <h4 class="font-weight-bold">Example 2</h4>
+        <div class="example">
+          <p class="font-weight-bold">
+            <pre id="code-two" class="text-black font-weight-bold">
+  SELECT <em>*</em>
+  FROM <em>table_name;</em>
+            </pre>
+          </p>
+        
+          <p class="bg-light lead">
+            <pre>
+  Here, all fields in the table are selected because of the use of * in place of the attributes.
+            </pre>
+          </p>
+        </div>
+      </div>
+          
+      <br>
+          
+      <!-- practice questions -->
+      <div id="accordion">
+        <div class="card bg-dark">
+          <div class="card-header">
+            <h5 class="mb-0">
+              <div href="#parent-collapse" data-toggle="collapse" data-parent="#accordion" class="text-white">
+              Practice Questions <i class="fas fa-angle-down"></i>
+              </div>
+            </h5>
+          </div>
 
-  <script src="//code.jquery.com/jquery-2.2.4.min.js" type="text/javascript"></script>
+          <div id="parent-collapse" class="collapse">
+            <div class="card-body">
+              <div ng-app="nodeQuestion">
+                  
+                <!-- PROBLEM 1 -->
+                <div class="card mb-1">
+                  <div class="card-header">
+                    <h5 class="mb-0">
+                      <div href="#collapse1" data-toggle="collapse" data-parent="#accordion">
+                        problem 1 <i class="fas fa-angle-down"></i>
+                      </div>
+                    </h5>
+                  </div>
+                  <div id="collapse1" class="collapse">
+                    <div class="card-body">
+                      <div ng-controller="Question">
+                        <div class="question">
+                          <pre>
+  From a table named customer_t that has the following attributes:
+  CustomerId, CustomerName, CustomerAddress, CustomerState, and CustomerPostalCode
+                          </pre>
+                          <p class="text-center text-primary">
+                            Write a select statement that returns all attributes.
+                          </p>
+                        </div>
+                        <form>
+                          <textarea style="width:96.5%; height:60px;" type="text" class="bg-white form-control input-lg" placeholder="Write your answer here..." ng-model="formData.text"></textarea>
+                          <br>
+                          <button type="submit" class="btn btn-primary btn-lg btn-block" ng-init="statementInHTML = 'select * from customer_t'" ng-click="answerQuestion()">Submit</button>
+                        </form>
+                        <h3 id="problem-one-font" style="color:{{backgroundColor}}" class="text-center">{{ answer }}</h3>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+      
+                <!-- problem 2 -->
+                <div class="card mb-1">
+                  <div class="card-header">
+                    <h5 class="mb-0">
+                      <div href="#collapse2" data-toggle="collapse" data-parent="#accordion">
+                        problem 2 <i class="fas fa-angle-down"></i>
+                      </div>
+                    </h5>
+                  </div>
+                  <div id="collapse2" class="collapse">
+                    <div class="card-body">
+                      <div ng-controller="Question">
+                        <div class="question">
+                          <pre>
+  From a table named <em>Customer</em> that has the following attributes:
+  Customerid, Customername, CustomerAddress, CustomerCity, CustomerState, and CustomerPostalCode. 
+                          </pre>
+                          <p class="text-center text-primary">
+                            Write a SELECT Statement that returns all the CustomerIDs 
+                          </p>
+                        </div>
+                        <form>
+                          <textarea style="width:96.5%; height:60px;" type="text" class="bg-white form-control input-lg" placeholder="Write your answer here..." ng-model="formData.text"></textarea>
+                          <br>
+                          <button type="submit" class="btn btn-primary btn-lg btn-block" ng-init="statementInHTML = 'select customerid from customer_t'" ng-click="answerQuestion()">Submit</button>
+                        </form>
+                        <h3 id="problem-two-font" style="color:{{backgroundColor}}" class="text-center">{{ answer }}</h3>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- problem 3 -->
+                <div class="card mb-1">
+                  <div class="card-header">
+                    <h5 class="mb-0">
+                      <div href="#collapse3" data-toggle="collapse" data-parent="#accordion">
+                        problem 3 <i class="fas fa-angle-down"></i>
+                      </div>
+                    </h5>
+                  </div>
+                  <div id="collapse3" class="collapse">
+                    <div class="card-body">
+                      <div ng-controller="Question">
+                        <div class="question">
+                          <pre>
+From a table named <em>Customer</em> that has the following attributes:
+Customerid, Customername, CustomerAddress, CustomerCity, CustomerState, and CustomerPostalCode. 
+                          </pre>
+                          <p class="text-center text-primary">
+                            Write a SELECT Statement that returns CustomerName, CustomerAddress, CustomerCity, CustomerState, and CustomerPostalCode 
+                          </p>
+                        </div>
+                        <form>
+                          <textarea style="width:96.5%; height:60px;" type="text" class="bg-white form-control input-lg" placeholder="Write your answer here..." ng-model="formData.text"></textarea>
+                          <br>
+                          <button type="submit" class="btn btn-primary btn-lg btn-block" ng-init="statementInHTML = 'select CustomerName, CustomerAddress, CustomerCity, CustomerState, CustomerPostalCode from customer_t'" ng-click="answerQuestion()">Submit</button>
+                        </form>
+                        <h3 id="problem-three-font" style="color:{{backgroundColor}};" class="text-center">{{ answer }}</h3>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+        <!-- main footer -->
+        <footer id="main-footer" class="border-top border-danger bg-white mt-3">
+            <div class="container">
+            <div class="row">
+                <div class="col text-center">
+                <div class="py-4">
+                    <h1 class="h3 text-danger">LearnSQL</h1>
+                    <p>Copyright &copy; 2018</p>
+                    <a href="contact.html" class="btn btn-danger" role="button">Contact Us</a>
+                </div>
+                </div>
+            </div>
+            </div>
+        </footer>
+
+    </div>
+</div>
+
+  <script src="http://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" 
+  integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" 
+  crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" 
+  integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" 
+  crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
+  
   <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.6/angular.min.js"></script>
   <script src="../../javascripts/app.js"></script>
-
-  <script
-    src="http://code.jquery.com/jquery-3.3.1.min.js"
-    integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-    crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" 
-    integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" 
-    crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" 
-    integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" 
-    crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/5.3.0/ekko-lightbox.min.js"></script>
 
   <script>
     // The the current year for the copyright
     $('#year').text(new Date().getFullYear());
+  </script>
+
+<script type="text/javascript">
+  $(document).ready(function () {
+  $("#sidebar").mCustomScrollbar({
+  theme: "minimal"
+  });
+  
+  $('#sidebarCollapse').on('click', function () {
+  $('#sidebar, #content').toggleClass('active');
+  $('.collapse.in').toggleClass('in');
+  $('a[aria-expanded=true]').attr('aria-expanded', 'false');
+  });
+  });
   </script>
 
 </body>
