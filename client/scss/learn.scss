@@ -1,8 +1,9 @@
 /* FONT STYLE */
 @import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
-body {
+html, body {
   font-family: 'Poppins', sans-serif;
-  background: whitesmoke; }
+  background: whitesmoke;
+  height: 100%; }
 
 p {
   font-family: 'Poppins', sans-serif;
@@ -31,8 +32,12 @@ a:focus {
   box-shadow: 1px 1px 3px black, -5px 0 5px -5px black; }
 
 #navbarTitle {
-  font-family: cursive;
-}
+  color: #ac4142;
+  letter-spacing: .5em;
+  text-shadow: -1px -1px 1px #111, 1px 1px 0px #ac4142; }
+
+#learnTab {
+  background-color: #ac4142; }
 
 .navbar-btn {
   box-shadow: none;
@@ -56,14 +61,23 @@ a:focus {
 #sidebar {
   width: 250px;
   position: fixed;
+  box-shadow: 1px 1px 3px black;
   top: 0;
   left: 0;
   height: 100vh;
   z-index: 999;
-  background: white;
-  color: black;
+  background: #ac4142;
+  color: white;
   transition: all 0.3s;
   font-family: cursive; }
+
+#sidebarHeader {
+  color: white;
+  letter-spacing: .1em;
+  text-shadow: -3px -3px 3px #111, 1px 1px 0px #ac4142; }
+
+#bss {
+  color: black; }
 
 /* HIDES SIDEBAR BY WHEN MONITOR RESIZES SMALLER */
 #sidebar.active {
@@ -80,7 +94,7 @@ a:focus {
 
 #sidebar ul li a:hover {
   color: black;
-  background: gray; }
+  background: ghostwhite; }
 
 /* ---------------------------------------------------
     CONTENT STYLE
@@ -88,9 +102,9 @@ a:focus {
 /* ADDED STYLE TO ALIGN WITH THE SIDEBAR */
 #content {
   width: calc(100% - 250px);
-  padding-left: 2px;
-  padding-right: 2px;
-  min-height: 100vh;
+  padding-left: 10px;
+  padding-right: 10px;
+  height: 100vh;
   transition: all 0.3s;
   position: absolute;
   top: 0;
@@ -101,18 +115,40 @@ a:focus {
   width: 100%; }
 
 #pageTitle {
-  font-family: cursive;
-}
+  letter-spacing: .1em;
+  font-size: 3em; }
+
+#example {
+  margin-right: .1em;
+  box-shadow: 1px 1px 3px black, 0 -5px 5px -5px black, 5px 0 5px -5px black, -5px 0 5px -5px black; }
+
+#exampleComment {
+  color: black;
+  background-color: antiquewhite; }
+
+#problem {
+  box-shadow: 1px 1px 3px black, 0 -5px 5px -5px black, 5px 0 5px -5px black, -5px 0 5px -5px black; }
+
+#submitButton {
+  background-color: #ac4142; }
 
 /* NAVBAR RESPONSIVE TO ACCORDION AND DROPS DOWN ON PAGE WHEN ACCORDION IS OPENED. */
 #main-footer {
-  padding: 15px 10px;
+  bottom: 0;
   background: #fff;
+  position: relative;
   border: none;
   border-radius: 0;
-  position: relative;
   /* ADDED A SHADOW TO CREATE A 3D CSS EFFECT ON THE MAIN FOOTER */
   box-shadow: 0 -5px 5px -5px black, 5px 0 5px -5px black, -5px 0 5px -5px black; }
+
+#learnSQLFooterHeader {
+  color: #ac4142;
+  letter-spacing: .2em; }
+
+#contactUsButton {
+  background-color: #ac4142;
+  color: white; }
 
 #problem-one-font {
   font-size: 2em; }
