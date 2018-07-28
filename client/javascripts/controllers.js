@@ -87,10 +87,16 @@ app.controller('LoginCtrl', ($scope, $http) => {
   $scope.form = 'login';
   $scope.error = false;
   $scope.errorMessage = 'Email or Password was incorrect';
+
+  this.user = {
+     email: '',
+     password:''
+  };
   $scope.register = () => {
 
   };
-  $scope.Login = () => {
-    $scope.test = "Works!!!";
+  $scope.login = () => {
+    $scope.error = true;
+    $scope.errorMessage = this.user;
   };
 });
