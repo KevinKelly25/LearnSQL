@@ -54,7 +54,7 @@
 
 	<!-- Login form -->
 	<div class="py-5" ng-controller="LoginCtrl as ctrl">
-		<form class="form-signin" ng-submit="ctrl.login()" >
+		<form class="form-signin">
 			<!-- TODO: add a logo here	 -->
 			<!-- <img class="mb-4" src="../../assets/brand/bootstrap-solid.svg" alt="" width="72" height="72"> -->
 			<span ng-show="error">
@@ -63,18 +63,18 @@
 				</div>
 			</span>
 			<span ng-show="form == 'login'">
-				<h1 class="h3 mb-3 font-weight-bold">Please sign in</h1>
+				<h1 class="h3 mb-3 font-weight-bold">Please sign in {{ test }}</h1>
 				<label for="inputEmail" class="sr-only">Email address</label>
-				<input type="email" class="form-control" ng-model="ctrl.user.email" placeholder="Email address" required autofocus>
+				<input type="email" class="form-control" ng-model="email" placeholder="Email address" required autofocus>
 				<label for="inputPassword" class="sr-only">Password</label>
-				<input type="password" class="form-control" ng-model="ctrl.user.password" placeholder="Password" required>
+				<input type="password" class="form-control" ng-model="password" placeholder="Password" required>
 				<!-- TODO: Add a remember me when we can support it -->
 				<!-- <div class="checkbox mb-3">
 					<label>
 						<input type="checkbox" value="remember-me"> Remember me
 					</label>
 				</div> -->
-				<button class="btn btn-lg btn-primary btn-block" value="login" type="submit">Sign in</button>
+				<button class="btn btn-lg btn-primary btn-block" value="login" type="submit" ng-click="login()">Sign in</button>
 				<a class="pl-4 pr-5" href="#">Register</a>
 				<a class="pl-4" href="#">Forgot Password?</a>
 			</span>

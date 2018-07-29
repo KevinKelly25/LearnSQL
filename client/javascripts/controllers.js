@@ -96,6 +96,8 @@ app.controller('LoginCtrl', ($scope, $http) => {
 
   };
   $scope.login = () => {
+    this.user.email = $scope.email;
+    this.user.password = $scope.password;
     $scope.error = true;
     $scope.errorMessage = this.user;
   };

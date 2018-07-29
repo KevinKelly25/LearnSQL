@@ -4,7 +4,7 @@ Create Table IF NOT EXISTS Users (
   Password                VARCHAR(60) NOT NULL,
   Email                   VARCHAR(60) NOT NULL,
   DateJoined              DATE DEFAULT CURRENT_DATE,
-  isTeacher               BOOLEAN DEFAULT FALSE
+  isTeacher               BOOLEAN DEFAULT FALSE,
   isAdmin                 BOOLEAN DEFAULT FALSE
 );
 
@@ -16,7 +16,7 @@ Create Table IF NOT EXISTS Class (
 
 Create Table IF NOT EXISTS Attends (
   ClassID                 VARCHAR(30) NOT NULL REFERENCES Class,
-  UserID                  VARCHAR(30) NOT NULL PRIMARY KEY,
+  UserID                  VARCHAR(30) NOT NULL REFERENCES Users,
   isTeacher               BOOLEAN,
   PRIMARY KEY (ClassID, UserID)
 );

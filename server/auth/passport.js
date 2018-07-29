@@ -7,7 +7,7 @@ module.exports = () => {
   });
 
   passport.deserializeUser((id, done)=>{
-    log.debug("deserualize ", id);
+    log.debug("deserialize ", id);
     db.one("SELECT * FROM User " +
             "WHERE user_id = $1", [id])
     .then((user)=>{
