@@ -1,16 +1,7 @@
 /* FONT STYLE */
 @import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
 html, body {
-  font-family: 'Poppins', sans-serif;
-  background: whitesmoke;
   height: 100%; }
-
-p {
-  font-family: 'Poppins', sans-serif;
-  font-size: 1.1em;
-  font-weight: 300;
-  line-height: 1.7em;
-  color: black; }
 
 a,
 a:hover,
@@ -29,12 +20,11 @@ a:focus {
   border-radius: 0;
   margin-bottom: 40px;
   /* ADDED A SHADOW TO CREATE A 3D CSS EFFECT ON THE NAVBAR */
-  box-shadow: 1px 1px 3px black, -5px 0 5px -5px black; }
+  box-shadow: 1px 1px 3px black, -1px 0 1px -1px black; }
 
 #navbarTitle {
   color: #ac4142;
-  letter-spacing: .5em;
-  text-shadow: -1px -1px 1px #111, 1px 1px 0px #ac4142; }
+  letter-spacing: .5em; }
 
 #learnTab {
   background-color: #ac4142; }
@@ -68,8 +58,7 @@ a:focus {
   z-index: 999;
   background: #ac4142;
   color: white;
-  transition: all 0.3s;
-  font-family: cursive; }
+  transition: all 0.3s; }
 
 #sidebarHeader {
   color: white;
@@ -122,9 +111,28 @@ a:focus {
   margin-right: .1em;
   box-shadow: 1px 1px 3px black, 0 -5px 5px -5px black, 5px 0 5px -5px black, -5px 0 5px -5px black; }
 
-#exampleComment {
+/* OVERRIDES DEFAULT FONT-SIZE AND COLOR */
+pre {
+  margin-left: 1.4em;
+  font-size: 18px;
+  color: white; }
+
+/* ADD BACKGROUND COLOR TO CODE IN EXAMPLES */
+code {
+  background-color: #1C2331;
+  border-radius: 3px;
+  font-family: courier, monospace;
+  padding: 0 3px; }
+
+#practiceQ {
   color: black;
-  background-color: antiquewhite; }
+}
+
+#exampleComment {
+  background-color: #e0e0e0;
+  margin-left: 1.5em;
+  margin-right: 10em;
+  overflow-x: auto; }
 
 #problem {
   box-shadow: 1px 1px 3px black, 0 -5px 5px -5px black, 5px 0 5px -5px black, -5px 0 5px -5px black; }
@@ -143,8 +151,7 @@ a:focus {
   box-shadow: 0 -5px 5px -5px black, 5px 0 5px -5px black, -5px 0 5px -5px black; }
 
 #learnSQLFooterHeader {
-  color: #ac4142;
-  letter-spacing: .2em; }
+  color: #ac4142; }
 
 #contactUsButton {
   background-color: #ac4142;
