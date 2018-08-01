@@ -1,6 +1,9 @@
 /* FONT STYLE */
 @import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
+@import "bourbon";
+
 html, body {
+  font-family: "Arial";
   height: 100%; }
 
 a,
@@ -11,6 +14,18 @@ a:focus {
   transition: all 0.3s; }
 
 /* ---------------------------------------------------
+    rotate arrow icons when clicked for clarity when opening and closing the accordion
+----------------------------------------------------- */
+[data-toggle="collapse"][aria-expanded="true"] > .js-rotate-if-collapsed
+{
+    -webkit-transform: rotate(180deg);
+    -moz-transform:    rotate(180deg);
+    -ms-transform:     rotate(180deg);
+    -o-transform:      rotate(180deg);
+    transform:         rotate(180deg);
+}
+
+/* ---------------------------------------------------
     NAVBAR STYLE
 ----------------------------------------------------- */
 .navbar {
@@ -19,6 +34,7 @@ a:focus {
   border: none;
   border-radius: 0;
   margin-bottom: 40px;
+
   /* ADDED A SHADOW TO CREATE A 3D CSS EFFECT ON THE NAVBAR */
   box-shadow: 1px 1px 3px black, -1px 0 1px -1px black; }
 
@@ -27,7 +43,9 @@ a:focus {
   letter-spacing: .5em; }
 
 #learnTab {
-  background-color: #ac4142; }
+  background-color: #ac4142;
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+ }
 
 .navbar-btn {
   box-shadow: none;
@@ -63,7 +81,8 @@ a:focus {
 #sidebarHeader {
   color: white;
   letter-spacing: .1em;
-  text-shadow: -3px -3px 3px #111, 1px 1px 0px #ac4142; }
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+}
 
 #bss {
   color: black; }
@@ -88,6 +107,7 @@ a:focus {
 /* ---------------------------------------------------
     CONTENT STYLE
 ----------------------------------------------------- */
+
 /* ADDED STYLE TO ALIGN WITH THE SIDEBAR */
 #content {
   width: calc(100% - 250px);
@@ -107,15 +127,33 @@ a:focus {
   letter-spacing: .1em;
   font-size: 3em; }
 
-#example {
-  margin-right: .1em;
-  box-shadow: 1px 1px 3px black, 0 -5px 5px -5px black, 5px 0 5px -5px black, -5px 0 5px -5px black; }
-
 /* OVERRIDES DEFAULT FONT-SIZE AND COLOR */
-pre {
-  margin-left: 1.4em;
-  font-size: 18px;
-  color: white; }
+#preExCode {
+  font-family: monospace;
+  background-color: #fff;
+  margin-right: 1em;
+  margin-left: 1em;
+  box-shadow: .1em .1em .5em rgba(0,0,0,.45);
+  line-height: 0;
+  counter-reset: line;
+  overflow-y: hidden;
+  overflow-x: auto;
+}
+
+span {
+  display: block;
+  line-height: 1.5rem;
+}
+
+#exampleCode:before {
+  counter-increment: line;
+  content: counter(line);
+  display: inline-block;
+  border-right: 1px solid #ddd;
+  padding: 0 .5em;
+  margin-right: .5em;
+  color: #888
+}
 
 /* ADD BACKGROUND COLOR TO CODE IN EXAMPLES */
 code {
@@ -124,15 +162,17 @@ code {
   font-family: courier, monospace;
   padding: 0 3px; }
 
-#practiceQ {
-  color: black;
+#exampleHeader {
+  margin-left: 0.5em;
 }
 
 #exampleComment {
-  background-color: #e0e0e0;
-  margin-left: 1.5em;
-  margin-right: 10em;
-  overflow-x: auto; }
+  margin-left: 1em;
+  margin-right: 1em;
+}
+
+#practiceQ {
+  color: black; }
 
 #problem {
   box-shadow: 1px 1px 3px black, 0 -5px 5px -5px black, 5px 0 5px -5px black, -5px 0 5px -5px black; }
@@ -155,7 +195,9 @@ code {
 
 #contactUsButton {
   background-color: #ac4142;
-  color: white; }
+  color: white;
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+ }
 
 #problem-one-font {
   font-size: 2em; }
