@@ -22,21 +22,21 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarCollapse">
         <ul class="nav navbar-nav ml-auto">
-          <li class="nav-item active py-0 my-0">
+          <li class="nav-item py-0 my-0">
             <a href="http://localhost:3000/" class="nav-link border-right border-left px-4 ">Home</a>
           </li>
           <li class="nav-item py-0 my-0">
-            <a href="views/workshop.html" class="nav-link border-right px-3 my-0">Workshop</a>
+            <a href="../workshop.html" class="nav-link border-right px-3 my-0">Workshop</a>
           </li>
           <li class="nav-item py-0 my-0">
-            <a href="views/learn/learn.html" class="nav-link border-right px-4 my-0">Learn</a>
+            <a href="../learn/learn.html" class="nav-link border-right px-4 my-0">Learn</a>
           </li>
           <li class="nav-item py-0 my-0">
-            <a href="views/quizes.html" class="nav-link border-right px-3 my-0">Quizzes</a>
+            <a href="../quizes.html" class="nav-link border-right px-3 my-0">Quizzes</a>
           </li>
           <span ng-show="!currentUser">
           <li class="nav-item py-0 my-0">
-            <a href="views/account/singIn.html" class="nav-link pl-3 my-0" >Sign in</a>
+            <a href="./signIn.html" class="nav-link pl-3 my-0" >Sign in</a>
           </li>
           </span>
           <span ng-show="currentUser">
@@ -59,13 +59,18 @@
 			<!-- <img class="mb-4" src="../../assets/brand/bootstrap-solid.svg" alt="" width="72" height="72"> -->
 			<span ng-show="error">
 				<div class="alert alert-danger">
-						{{ errorMessage }}
+						{{ message }}
 				</div>
 			</span>
+      <span ng-show="success">
+        <div class="alert alert-success">
+            {{ message }}
+        </div>
+      </span>
 			<span ng-show="form == 'login'">
-				<h1 class="h3 mb-3 font-weight-bold">Please sign in {{ test }}</h1>
+				<h1 class="h3 mb-3 font-weight-bold text-primary">Please Sign In {{ test }}</h1>
 				<label for="inputEmail" class="sr-only">Email address</label>
-				<input type="email" class="form-control" ng-model="email" placeholder="Email address" required autofocus>
+				<input type="email" class="form-control " ng-model="email" placeholder="Email address" required autofocus>
 				<label for="inputPassword" class="sr-only">Password</label>
 				<input type="password" class="form-control" ng-model="password" placeholder="Password" required>
 				<!-- TODO: Add a remember me when we can support it -->
@@ -74,31 +79,32 @@
 						<input type="checkbox" value="remember-me"> Remember me
 					</label>
 				</div> -->
-				<button class="btn btn-lg btn-primary btn-block" value="login" type="submit" ng-click="login()">Sign in</button>
-				<a class="pl-4 pr-5" href="#">Register</a>
-				<a class="pl-4" href="#">Forgot Password?</a>
+				<button class="btn btn-lg btn-primary btn-block" value="login" type="submit" ng-click="login()">Sign In</button>
+				<a class="pl-4 pr-5" href="#" ng-click="form = 'register'">Register</a>
+				<a class="pl-4" href="#" ng-click="form = 'forgotPassword'">Forgot Password?</a>
 			</span>
 			<span ng-show="form == 'register'">
-				<h1 class="h3 mb-3 font-weight-normal">Register</h1>
+				<h1 class="h3 mb-3 font-weight-bold text-primary">Register</h1>
 				<label for="inputEmail" class="sr-only">Email address</label>
-				<input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
-				<label for="inputEmail" class="sr-only">Email address</label>
-				<input type="email" id="inputFullName" class="form-control" placeholder="Full Name" required autofocus>
+				<input type="email" class="form-control" ng-model="email" placeholder="Email address" required autofocus>
+				<label for="inputName" class="sr-only">Full Name</label>
+				<input type="name"  class="form-control" ng-model="fullName" placeholder="Full Name" required>
 				<label for="inputPassword" class="sr-only">Password</label>
-				<input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
-				<label for="inputPassword2" class="sr-only">Password2</label>
-				<input type="password" id="inputPassword2" class="form-control" placeholder="Re-type Password" required>
-				<button class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
-				<a class="pl-4 pr-5" href="#">Sign In</a>
-				<a class="pl-4" href="#">Forgot Password?</a>
+				<input type="password" class="form-control" ng-model="password" placeholder="Password" required>
+        <label for="inputPassword2" class="sr-only">Password2</label>
+        <input type="name" class="form-control" ng-model="password2" placeholder="Re-type Password" required>
+				<button class="btn btn-lg btn-primary btn-block" type="submit" ng-click="register()">Register</button>
+				<a class="pl-4 pr-5" href="#" ng-click="form = 'login'">Sign In</a>
+				<a class="pl-4" href="#" ng-click="form = 'forgotPassword'">Forgot Password?</a>
 			</span>
 			<span ng-show="form == 'forgotPassword'">
-				<h1 class="h3 mb-3 font-weight-normal">Forgot Password?</h1>
+        <!-- TODO: Get working -->
+				<h1 class="h3 mb-3 font-weight-bold text-primary">Forgot Password?</h1>
 				<label for="inputEmail" class="sr-only">Email address</label>
 				<input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
-				<button class="btn btn-lg btn-primary btn-block" type="submit">Send Email</button>
-				<a class="pl-4 pr-5" href="#">Sign In</a>
-				<a class="pl-4" href="#">Register</a>
+				<button class="btn btn-lg btn-primary btn-block" type="submit" ng-click="forgotPassword()">Send Email</button>
+				<a class="pl-4 pr-5" href="#" ng-click="form = 'login'">Sign In</a>
+				<a class="pl-4" href="#" ng-click="form = 'register'">Register</a>
 			</span>
 			<p class="mt-5 mb-3 text-muted">&copy; 2018-2019</p>
 		</form>

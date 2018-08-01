@@ -9,7 +9,7 @@ function createUser(req, res) {
   .then(() => {
     const salt = bcrypt.genSaltSync();
     const hash = bcrypt.hashSync(req.body.password, salt);
-    return db.none('INSERT INTO Users(UserID, FullName, Password, Email)  ' +
+    db.none('INSERT INTO Users(UserID, FullName, Password, Email)  ' +
     'VALUES(${id}, ${full}, ${pass}, ${email})', {
       id: req.body.username,
       full: req.body.fullname,
@@ -21,7 +21,8 @@ function createUser(req, res) {
     })
     .catch(error => {
         // error;
-    });
+    })
+  })
 }
 
 function loginRequired(req, res, next) {

@@ -20,7 +20,7 @@ var app = angular.module('LearnSQL', []);
 app.controller('Question', ($scope, $http) => {
   $scope.answerQuestion = () => {
     $scope.statement = {"text":$scope.statementInHTML};
-    $http.post('/api/v1/questions', $scope.formData)//The submitted answer
+    $http.post('/api/v1/login', $scope.formData)//The submitted answer
     .success((data1) => {
       delete $scope.formData;
       $scope.answerData = data1;
@@ -86,19 +86,52 @@ app.controller('NavCtrl', ($scope, $http) => {
 app.controller('LoginCtrl', ($scope, $http) => {
   $scope.form = 'login';
   $scope.error = false;
-  $scope.errorMessage = 'Email or Password was incorrect';
+  $scope.success = false;
+  $scope.message = 'Email or Password was incorrect';
 
   this.user = {
      email: '',
-     password:''
+     password:'',
+     fullName:''
   };
   $scope.register = () => {
-
+    $scope.error = false;
+    $scope.success = false;
+    this.user.email = $scope.email;
+    this.user.password = $scope.password;
+    this.user.fullName = $scope.fullName;
+    if ($scope.password != $scope.password2)
+    {
+      $scope.error = true;
+      $scope.message = 'Passwords do not match';
+    } else
+    {
+      $scope.success = true;
+      $scope.message = 'Successfully Registered';
+    }
   };
   $scope.login = () => {
+    $scope.error = false;
+    $scope.success = false;
+    $scope.sending = {};
     this.user.email = $scope.email;
     this.user.password = $scope.password;
     $scope.error = true;
-    $scope.errorMessage = this.user;
+    $scope.message = 'stuff';
+    $http.post('/auth/login', $scope.sending)
+    .success((data) => {
+      $scope.success = true;
+      $scope.message = data;
+    })
+    .error((error) => {
+      $scope.success = true;
+      $scope.message = "in error";
+    });
+  };
+
+  // TODO: add functionality
+  $scope.forgotPassword = () => {
+    $scope.error = false;
+    $scope.success = false;
   };
 });
