@@ -6,22 +6,26 @@ function comparePass(userPassword, databasePassword) {
 }
 
 function createUser(req, res) {
+  //// TODO: npm i uniqid
   return handleErrors(req)
   .then(() => {
+    console.log('reached then');
+    var _id = (Date.now().toString(36) + Math.random().toString(36).substr(2,5)).toUpperCase();
+    console.log(_id);
     const salt = bcrypt.genSaltSync();
     const hash = bcrypt.hashSync(req.body.password, salt);
     db.none('INSERT INTO Users(UserID, FullName, Password, Email)  ' +
     'VALUES(${id}, ${full}, ${pass}, ${email})', {
-      id: req.body.username,
-      full: req.body.fullname,
+      id: _id,
+      full: req.body.fullName,
       pass: hash,
       email: req.body.email,
     })
     .then(() => {
-        // success;
+        res.status(200).json({status: 'User was created'});
     })
     .catch(error => {
-        // error;
+        res.status(500).json({status: 'User could not be created'});
     })
   })
 }
@@ -50,13 +54,10 @@ function loginRedirect(req, res, next) {
 }
 
 function handleErrors(req) {
+  // TODO: fix length requirements
+  console.log(req.body);
   return new Promise((resolve, reject) => {
-    if (req.body.username.length < 6) {
-      reject({
-        message: 'Username must be longer than 6 characters'
-      });
-    }
-    else if (req.body.password.length < 6) {
+  if (req.body.password.length < 1) {
       reject({
         message: 'Password must be longer than 6 characters'
       });

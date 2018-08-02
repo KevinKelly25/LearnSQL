@@ -90,27 +90,30 @@ app.controller('LoginCtrl', ($scope, $http) => {
   $scope.message = 'Email or Password was incorrect';
 
   this.user = {
-     email: '',
-     password:'',
-     fullName:''
+     email: null,
+     password: null,
+     fullName: null
   };
   $scope.register = () => {
     $scope.error = false;
     $scope.success = false;
-    $scope.sending = {
-      email: 'bitch',
-      text : 'hello'
-    };
     this.user.email = $scope.email;
     this.user.password = $scope.password;
     this.user.fullName = $scope.fullName;
-    if ($scope.password != $scope.password2)
+    //if email was entered incorrectly or not entered
+    if (!$scope.email)
+    {
+      $scope.error = true;
+      $scope.message = 'Email not valid';
+    }
+    //if passwords do not match display error
+    else if ($scope.password != $scope.password2)
     {
       $scope.error = true;
       $scope.message = 'Passwords do not match';
     } else
     {
-      $http.post('/auth/register', $scope.sending)
+      $http.post('/auth/register', this.user)
       .success((data) => {
         $scope.success = true;
         $scope.message = data;
