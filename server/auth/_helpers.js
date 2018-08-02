@@ -1,4 +1,5 @@
 const bcrypt = require('bcryptjs');
+const db = require('../db/ldb.js');
 
 function comparePass(userPassword, databasePassword) {
   return bcrypt.compareSync(userPassword, databasePassword);

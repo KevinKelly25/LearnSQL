@@ -20,7 +20,7 @@ var app = angular.module('LearnSQL', []);
 app.controller('Question', ($scope, $http) => {
   $scope.answerQuestion = () => {
     $scope.statement = {"text":$scope.statementInHTML};
-    $http.post('/api/v1/login', $scope.formData)//The submitted answer
+    $http.post('/api/v1/questions', $scope.formData)//The submitted answer
     .success((data1) => {
       delete $scope.formData;
       $scope.answerData = data1;
@@ -97,6 +97,10 @@ app.controller('LoginCtrl', ($scope, $http) => {
   $scope.register = () => {
     $scope.error = false;
     $scope.success = false;
+    $scope.sending = {
+      email: 'bitch',
+      text : 'hello'
+    };
     this.user.email = $scope.email;
     this.user.password = $scope.password;
     this.user.fullName = $scope.fullName;
@@ -106,8 +110,15 @@ app.controller('LoginCtrl', ($scope, $http) => {
       $scope.message = 'Passwords do not match';
     } else
     {
-      $scope.success = true;
-      $scope.message = 'Successfully Registered';
+      $http.post('/auth/register', $scope.sending)
+      .success((data) => {
+        $scope.success = true;
+        $scope.message = data;
+      })
+      .error((error) => {
+        $scope.success = true;
+        $scope.message = "in error";
+      });
     }
   };
   $scope.login = () => {

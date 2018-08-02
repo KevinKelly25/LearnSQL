@@ -5,27 +5,31 @@ const authHelpers = require('../auth/_helpers');
 const passport = require('../auth/local');
 
 router.post('/register', authHelpers.loginRedirect, (req, res, next)  => {
-  return authHelpers.createUser(req, res)
-  .then((response) => {
-    passport.authenticate('local', (err, user, info) => {
-      if (user) { handleResponse(res, 200, 'success'); }
-    })(req, res, next);
-  })
-  .catch((err) => { handleResponse(res, 500, 'error'); });
+  console.log(req.body);
+  return res.status(200).json({success: true, data: 'req'});
+  // return authHelpers.createUser(req, res)
+  // .then((response) => {
+  //   passport.authenticate('local', (err, user, info) => {
+  //     if (user) { handleResponse(res, 200, 'success'); }
+  //   })(req, res, next);
+  // })
+  // .catch((err) => { handleResponse(res, 500, 'error'); });
 });
 
-router.post('/login', (req, res, next) => {
-  return res.status(200).json({success: false, data: 'help me'});
-  // passport.authenticate('local', (err, user, info) => {
-  //   if (err) { handleResponse(res, 500, 'error'); }
-  //   if (!user) { handleResponse(res, 404, 'User not found'); }
-  //   if (user) {
-  //     req.logIn(user, function (err) {
-  //       if (err) { handleResponse(res, 500, 'error'); }
-  //       handleResponse(res, 200, 'success');
-  //     });
-  //   }
-  // })(req, res, next);
+router.post('/login', authHelpers.loginRedirect, (req, res, next) => {
+  passport.authenticate('local', (err, user, info) => {
+    if (err) { handleResponse(res, 500, 'error'); }
+    if (!user) {
+      console.log("User Not Found");
+      handleResponse(res, 404, 'User not found');
+    }
+    if (user) {
+      req.logIn(user, function (err) {
+        if (err) { handleResponse(res, 500, 'error'); }
+        handleResponse(res, 200, 'success');
+      });
+    }
+  })(req, res, next);
 });
 
 router.get('/logout', authHelpers.loginRequired, (req, res, next) => {

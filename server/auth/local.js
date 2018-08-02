@@ -3,7 +3,7 @@ const LocalStrategy = require('passport-local').Strategy;
 const authHelpers = require('./_helpers');
 const init = require('./passport');
 const pgp = require('pg-promise')();
-const db = require('../db/ldb.js')
+var db = require('../db/ldb.js')
 
 init();
 

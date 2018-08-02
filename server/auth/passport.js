@@ -1,4 +1,5 @@
 const passport = require('passport');
+const db = require('../db/ldb.js');
 
 module.exports = () => {
 
@@ -9,7 +10,7 @@ module.exports = () => {
   passport.deserializeUser((id, done)=>{
     log.debug("deserialize ", id);
     db.one("SELECT * FROM User " +
-            "WHERE user_id = $1", [id])
+            "WHERE user_id = $1", id)
     .then((user)=>{
       //log.debug("deserializeUser ", user);
       done(null, user);
@@ -18,5 +19,4 @@ module.exports = () => {
       done(new Error(`User with the id ${id} does not exist`));
     })
   });
-
 };
