@@ -8,7 +8,7 @@ gulp.task("sass", function() {
     .src(["node_modules/bootstrap/scss/bootstrap.scss", "client/scss/*.scss"])
     .pipe(sass().on("error", sass.logError))
     .pipe(gulp.dest("client/stylesheets"))
-    .pipe(browserSync.stream());
+	.pipe(browserSync.stream());
 });
 
 // Move JS Files to src/js
