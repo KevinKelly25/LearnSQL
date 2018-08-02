@@ -1,6 +1,5 @@
 /* FONT STYLE */
 @import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
-
 html, body {
   font-family: "Arial";
   height: 100%; }
@@ -15,14 +14,12 @@ a:focus {
 /* ---------------------------------------------------
     rotate arrow icons when clicked for clarity when opening and closing the accordion
 ----------------------------------------------------- */
-[data-toggle="collapse"][aria-expanded="true"] > .js-rotate-if-collapsed
-{
-    -webkit-transform: rotate(180deg);
-    -moz-transform:    rotate(180deg);
-    -ms-transform:     rotate(180deg);
-    -o-transform:      rotate(180deg);
-    transform:         rotate(180deg);
-}
+[data-toggle="collapse"][aria-expanded="true"] > .js-rotate-if-collapsed {
+  -webkit-transform: rotate(180deg);
+  -moz-transform: rotate(180deg);
+  -ms-transform: rotate(180deg);
+  -o-transform: rotate(180deg);
+  transform: rotate(180deg); }
 
 /* ---------------------------------------------------
     NAVBAR STYLE
@@ -33,7 +30,6 @@ a:focus {
   border: none;
   border-radius: 0;
   margin-bottom: 40px;
-
   /* ADDED A SHADOW TO CREATE A 3D CSS EFFECT ON THE NAVBAR */
   box-shadow: 1px 1px 3px black, -1px 0 1px -1px black; }
 
@@ -43,8 +39,7 @@ a:focus {
 
 #learnTab {
   background-color: #ac4142;
-  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
- }
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black; }
 
 .navbar-btn {
   box-shadow: none;
@@ -80,8 +75,7 @@ a:focus {
 #sidebarHeader {
   color: white;
   letter-spacing: .1em;
-  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
-}
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black; }
 
 #bss {
   color: black; }
@@ -106,7 +100,6 @@ a:focus {
 /* ---------------------------------------------------
     CONTENT STYLE
 ----------------------------------------------------- */
-
 /* ADDED STYLE TO ALIGN WITH THE SIDEBAR */
 #content {
   width: calc(100% - 250px);
@@ -132,17 +125,15 @@ a:focus {
   background-color: #fff;
   margin-right: 1em;
   margin-left: 1em;
-  box-shadow: .1em .1em .5em rgba(0,0,0,.45);
+  box-shadow: 0.1em 0.1em 0.5em rgba(0, 0, 0, 0.45);
   line-height: 0;
   counter-reset: line;
   overflow-y: hidden;
-  overflow-x: auto;
-}
+  overflow-x: auto; }
 
 span {
   display: block;
-  line-height: 1.5rem;
-}
+  line-height: 1.5rem; }
 
 #exampleCode:before {
   counter-increment: line;
@@ -151,8 +142,7 @@ span {
   border-right: 1px solid #ddd;
   padding: 0 .5em;
   margin-right: .5em;
-  color: #888
-}
+  color: #888; }
 
 /* ADD BACKGROUND COLOR TO CODE IN EXAMPLES */
 code {
@@ -161,14 +151,19 @@ code {
   font-family: courier, monospace;
   padding: 0 3px; }
 
-#exampleHeader {
-  margin-left: 0.5em;
+#example {
+  padding-top: 1em;
+  padding-bottom: 1em;
 }
+
+#exampleHeader {
+  margin-left: 0.5em; }
 
 #exampleComment {
   margin-left: 1em;
   margin-right: 1em;
-}
+  padding-top: 1em;
+ }
 
 #practiceQ {
   color: black; }
@@ -195,8 +190,7 @@ code {
 #contactUsButton {
   background-color: #ac4142;
   color: white;
-  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
- }
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black; }
 
 #problem-one-font {
   font-size: 2em; }
