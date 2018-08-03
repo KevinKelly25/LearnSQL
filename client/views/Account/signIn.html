@@ -34,6 +34,7 @@
           <li class="nav-item py-0 my-0">
             <a href="../quizes.html" class="nav-link border-right px-3 my-0">Quizzes</a>
           </li>
+          <!-- Dynamically show sign in tabs or profile/logout tabs depending if user is logged in -->
           <span ng-show="!currentUser">
           <li class="nav-item">
             <a href="views/account/signIn.html" class="nav-link pl-4"> Sign in</a>
@@ -69,6 +70,7 @@
             {{ message }}
         </div>
       </span>
+      <!-- Default login page or if login anchor is clicked -->
 			<span ng-show="form == 'login'">
 				<h1 class="h3 mb-3 font-weight-bold text-primary">Please Sign In</h1>
 				<label for="inputEmail" class="sr-only">Email address</label>
@@ -86,6 +88,7 @@
 				<a class="pl-4 pr-5" href="#" ng-click="form = 'register'">Register</a>
 				<a class="pl-4" href="#" ng-click="form = 'forgotPassword'">Forgot Password?</a>
 			</span>
+      <!-- If the register anchor is clicked -->
 			<span ng-show="form == 'register'">
 				<h1 class="h3 mb-3 font-weight-bold text-primary">Register</h1>
 				<label for="inputEmail" class="sr-only">Email address</label>
@@ -95,11 +98,12 @@
 				<label for="inputPassword" class="sr-only">Password</label>
 				<input type="password" class="form-control" ng-model="password" placeholder="Password" required>
         <label for="inputPassword2" class="sr-only">Password2</label>
-        <input type="name" class="form-control" ng-model="password2" placeholder="Re-type Password" required>
+        <input type="password" class="form-control" ng-model="password2" placeholder="Re-type Password" required>
 				<button class="btn btn-lg btn-primary btn-block" type="submit" ng-click="register()">Register</button>
 				<a class="pl-4 pr-5" href="#" ng-click="form = 'login'">Sign In</a>
 				<a class="pl-4" href="#" ng-click="form = 'forgotPassword'">Forgot Password?</a>
 			</span>
+      <!-- If the forgotPassword anchor is clicked -->
 			<span ng-show="form == 'forgotPassword'">
         <!-- TODO: Get working -->
 				<h1 class="h3 mb-3 font-weight-bold text-primary">Forgot Password?</h1>
@@ -116,7 +120,6 @@
 
     <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.6/angular.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular-route.js"></script>
     <script src="../../javascripts/controllers.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>

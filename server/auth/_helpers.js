@@ -6,6 +6,8 @@ function comparePass(userPassword, databasePassword) {
   return bcrypt.compareSync(userPassword, databasePassword);
 }
 
+
+
 function createUser(req, res) {
   return handleErrors(req)
   .then(() => {
