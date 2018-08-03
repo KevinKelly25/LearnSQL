@@ -1,23 +1,13 @@
-# Bootstrap 4.1 Starter Pack
+# LearnSQL
 
-**Includes complete Bootstrap 4.1.0 dev environment with Gulp and Sass**
+LearnSQL is an easy to use and easy to access Web Class Database that is specialized for learning SQL.
+This site has two main sections, the learning section where there is a large amount of tutorials about SQL.
+In these tutorials we bring students the SQL standard definitions. After the written tutorial there
+is questions based on the tutorial the student just did. In these questions the students
+will write there own SQL statements and submit these statments to a live database to see if their
+answers are correct. These answers will provide real database responses so students are exposed
+to the real situations they may see out in the working world.
 
-## Install Dependencies
-
-`npm install`
-## Compile Sass and Run Dev Server
-
-`npm start`
-
-
-**Note: Browser-Sync is set with default browser as Firefox.**
-
-`gulp.task("serve", ["sass"], function() {
-	browserSync.init({
-		server: "./src",
-		browser: "firefox"
-	});`
-
-  **Remove:**  , browser: "firefox"* to use your default browser or set to a browser of your choice.
-
-	adding some test stuffs
+The second section is going to be an area for students to be able to test and practice thier own SQL code
+in a sandbox envirment of thier own database. Teachers will also be able to look at these databases to check thier activity
+and help with thier progress.

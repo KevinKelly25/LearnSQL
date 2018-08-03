@@ -4,11 +4,6 @@ $dark-overlay: rgba(0,0,0,0.7);
 $primary-color:#008ed6;
 $icon-size:30px;
 
-body {
-  background: $bg-color;
-  color: $font-color;
-}
-
 #home-section{
   background: url('../views/imgs/home-background.jpg') no-repeat;
   background-size: 100% 100%;
