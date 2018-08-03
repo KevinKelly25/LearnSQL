@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS Users (
+CREATE TABLE IF NOT EXISTS UserData (
   UserID                  VARCHAR(60) NOT NULL PRIMARY KEY,
   FullName                VARCHAR(256) NOT NULL,
   Password                VARCHAR(256) NOT NULL,
@@ -8,22 +8,17 @@ CREATE TABLE IF NOT EXISTS Users (
   isAdmin                 BOOLEAN DEFAULT FALSE
 );
 
-CREATE
+CREATE UNIQUE INDEX idx_Unique_Email ON UserData(LOWER(TRIM(Email)));
 
-Create Table IF NOT EXISTS Class (
+CREATE TABLE IF NOT EXISTS Class (
   ClassID                 VARCHAR(60) NOT NULL PRIMARY KEY,
   ClassName               VARCHAR(60),
   Password                VARCHAR(60)
 );
 
-Create Table IF NOT EXISTS Attends (
+CREATE TABLE IF NOT EXISTS Attends (
   ClassID                 VARCHAR(30) NOT NULL REFERENCES Class,
-  UserID                  VARCHAR(30) NOT NULL REFERENCES Users,
+  UserID                  VARCHAR(30) NOT NULL REFERENCES UserData,
   isTeacher               BOOLEAN,
   PRIMARY KEY (ClassID, UserID)
-);
-
-Create Table IF NOT EXISTS test (
-  UserID                  VARCHAR(30) NOT NULL PRIMARY KEY,
-  Email                   VARCHAR(60) NOT NULL
 );

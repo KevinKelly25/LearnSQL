@@ -69,25 +69,43 @@ app.controller('Question', ($scope, $http) => {
  * to show whether a user is logged in or not.
  */
 app.controller('NavCtrl', ($scope, $http) => {
+  $scope.currentUser = {};
+  $scope.message = 'message';
+  $scope.sending = {};
   $scope.register = () => {
 
   };
-  $scope.Login = () => {
+  $scope.login = () => {
     $scope.test = "Works!!!";
   };
-  $scope.Logout = () => {
-
+  $scope.logout = () => {
+    $http.get('/auth/logout')
+    .success((data) => {
+      $scope.init()
+    })
+    .error((error) => {
+      //could not log out
+    });
   };
+
+  $scope.init = () => {
+    $http.get('/auth/check')
+    .success((data) => {
+      $scope.currentUser = data;
+    })
+    .error((error) => {
+      $scope.message = error.status;
+    });
+  }
 });
 
 /**
  * This controller is used to display and use the login operations
  */
-app.controller('LoginCtrl', ($scope, $http) => {
+app.controller('LoginCtrl', ($scope, $http, $location, $window) => {
   $scope.form = 'login';
   $scope.error = false;
   $scope.success = false;
-  $scope.message = 'Email or Password was incorrect';
 
   this.user = {
      email: null,
@@ -119,27 +137,23 @@ app.controller('LoginCtrl', ($scope, $http) => {
         $scope.message = data;
       })
       .error((error) => {
-        $scope.success = true;
-        $scope.message = "in error";
+        $scope.error = true;
+        $scope.message = error.status;
       });
     }
   };
   $scope.login = () => {
     $scope.error = false;
     $scope.success = false;
-    $scope.sending = {};
     this.user.email = $scope.email;
     this.user.password = $scope.password;
-    $scope.error = true;
-    $scope.message = 'stuff';
-    $http.post('/auth/login', $scope.sending)
+    $http.post('/auth/login', this.user)
     .success((data) => {
-      $scope.success = true;
-      $scope.message = data;
+      $window.location.href = 'http://localhost:3000';
     })
     .error((error) => {
-      $scope.success = true;
-      $scope.message = "in error";
+      $scope.error = true;
+      $scope.message = error;
     });
   };
 
@@ -147,5 +161,15 @@ app.controller('LoginCtrl', ($scope, $http) => {
   $scope.forgotPassword = () => {
     $scope.error = false;
     $scope.success = false;
+  };
+
+  $scope.logout = () => {
+    $http.get('/auth/check')
+    .success((data) => {
+      $scope.message = data;
+    })
+    .error((error) => {
+      $scope.message = error.status;
+    });
   };
 });

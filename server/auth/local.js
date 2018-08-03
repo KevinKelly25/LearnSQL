@@ -9,18 +9,16 @@ init();
 
 passport.use(new LocalStrategy({
   usernameField: 'email',
-  passwordField: 'pass'
+  passwordField: 'password'
   },
   (username, password, done) => {
-  log.debug("Login process:", username);
   return db.one("SELECT * " +
-    "FROM Users " +
-    "WHERE Email=$1 AND Password=$2", [username, password])
+    "FROM UserData " +
+    "WHERE Email=$1", [username])
   .then((result)=> {
     return done(null, result);
   })
   .catch((err) => {
-    log.error("/login: " + err);
     return done(null, false, {message:'Wrong user name or password'});
   });
 }));

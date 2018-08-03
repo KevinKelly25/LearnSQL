@@ -5,14 +5,10 @@ const authHelpers = require('../auth/_helpers');
 const passport = require('../auth/local');
 
 router.post('/register', authHelpers.loginRedirect, (req, res, next)  => {
-  console.log(req.body);
   return authHelpers.createUser(req, res)
-  .then((response) => {
-    passport.authenticate('local', (err, user, info) => {
-      if (user) { handleResponse(res, 200, 'success'); }
-    })(req, res, next);
-  })
-  .catch((err) => { handleResponse(res, 500, 'error'); });
+  .catch((err) => {
+    handleResponse(res, 500, 'error');
+  });
 });
 
 router.post('/login', authHelpers.loginRedirect, (req, res, next) => {
@@ -34,6 +30,11 @@ router.post('/login', authHelpers.loginRedirect, (req, res, next) => {
 router.get('/logout', authHelpers.loginRequired, (req, res, next) => {
   req.logout();
   handleResponse(res, 200, 'success');
+});
+
+router.get('/check', (req, res, next) => {
+  console.log(req.user);
+  return res.status(200).json(req.user);
 });
 
 // *** helpers *** //

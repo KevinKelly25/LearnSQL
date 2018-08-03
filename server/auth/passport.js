@@ -4,15 +4,14 @@ const db = require('../db/ldb.js');
 module.exports = () => {
 
   passport.serializeUser((user, done) => {
-    done(null, user.UserID);
+    done(null, user.userid);
   });
 
   passport.deserializeUser((id, done)=>{
-    log.debug("deserialize ", id);
-    db.one("SELECT * FROM User " +
-            "WHERE user_id = $1", id)
+    db.one("SELECT userid, fullname, email, datejoined " +
+           "FROM UserData " +
+           "WHERE userid = $1", id)
     .then((user)=>{
-      //log.debug("deserializeUser ", user);
       done(null, user);
     })
     .catch((err)=>{

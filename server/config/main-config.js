@@ -37,8 +37,9 @@
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({ extended: false }));
     // uncomment if using express-session
+    // TODO: change secret to process.env.SECRET_KEY
     app.use(session({
-      secret: process.env.SECRET_KEY,
+      secret: 'anything',
       resave: false,
       saveUninitialized: true
     }));

@@ -1,31 +1,37 @@
 const bcrypt = require('bcryptjs');
 const db = require('../db/ldb.js');
+var uniqid = require('uniqid');
 
 function comparePass(userPassword, databasePassword) {
   return bcrypt.compareSync(userPassword, databasePassword);
 }
 
 function createUser(req, res) {
-  //// TODO: npm i uniqid
   return handleErrors(req)
   .then(() => {
-    console.log('reached then');
-    var _id = (Date.now().toString(36) + Math.random().toString(36).substr(2,5)).toUpperCase();
-    console.log(_id);
+    var _id = uniqid();
     const salt = bcrypt.genSaltSync();
     const hash = bcrypt.hashSync(req.body.password, salt);
-    db.none('INSERT INTO Users(UserID, FullName, Password, Email)  ' +
+    db.none('INSERT INTO UserData(UserID, FullName, Password, Email)  ' +
     'VALUES(${id}, ${full}, ${pass}, ${email})', {
       id: _id,
       full: req.body.fullName,
       pass: hash,
-      email: req.body.email,
+      email: req.body.email
     })
     .then(() => {
-        res.status(200).json({status: 'User was created'});
+        var user = {
+          email: req.body.email,
+          pass: hash
+        }
+        //console.log(user);
+        return res.status(200).json('User Created Successfully');
     })
     .catch(error => {
-        res.status(500).json({status: 'User could not be created'});
+      if (error.code == '23505')//UNIQUE VIOLATION
+        res.status(400).json({status: "Email Already Exists"});
+      else
+        res.status(400).json({status: error});
     })
   })
 }
@@ -37,7 +43,7 @@ function loginRequired(req, res, next) {
 
 function adminRequired(req, res, next) {
   if (!req.user) res.status(401).json({status: 'Please log in'});
-  return db.one('SELECT isAdmin FROM Users WHERE UserID = $1', [req.user.username])
+  return db.one('SELECT isAdmin FROM UserData WHERE UserID = $1', [req.user.username])
   .then((user) => {
     if (!user.isAdmin) res.status(401).json({status: 'You are not authorized'});
     return next();
@@ -55,7 +61,6 @@ function loginRedirect(req, res, next) {
 
 function handleErrors(req) {
   // TODO: fix length requirements
-  console.log(req.body);
   return new Promise((resolve, reject) => {
   if (req.body.password.length < 1) {
       reject({

@@ -35,16 +35,18 @@
             <a href="../quizes.html" class="nav-link border-right px-3 my-0">Quizzes</a>
           </li>
           <span ng-show="!currentUser">
-          <li class="nav-item py-0 my-0">
-            <a href="./signIn.html" class="nav-link pl-3 my-0" >Sign in</a>
+          <li class="nav-item">
+            <a href="views/account/signIn.html" class="nav-link pl-4"> Sign in</a>
           </li>
           </span>
           <span ng-show="currentUser">
           <li class="nav-item">
-            <a href="views/account/profile.html" class="nav-link pl-3 py-0 my-0">Profile</a>
+            <a href="views/account/profile.html" class="nav-link border-right px-4">Profile</a>
           </li>
+          </span>
+          <span ng-show="currentUser">
           <li class="nav-item">
-            <a href="#" class="nav-link pl-3" ng-click="logout() py-0 my-0">Logout</a>
+            <a href="#" class="nav-link pl-4" ng-click="logout()">Logout</a>
           </li>
           </span>
         </ul>
@@ -68,7 +70,7 @@
         </div>
       </span>
 			<span ng-show="form == 'login'">
-				<h1 class="h3 mb-3 font-weight-bold text-primary">Please Sign In {{ test }}</h1>
+				<h1 class="h3 mb-3 font-weight-bold text-primary">Please Sign In</h1>
 				<label for="inputEmail" class="sr-only">Email address</label>
 				<input type="email" class="form-control " ng-model="email" placeholder="Email address" required autofocus>
 				<label for="inputPassword" class="sr-only">Password</label>
@@ -80,6 +82,7 @@
 					</label>
 				</div> -->
 				<button class="btn btn-lg btn-primary btn-block" value="login" type="submit" ng-click="login()">Sign In</button>
+        <button class="btn btn-lg btn-primary btn-block" value="logout" type="submit" ng-click="logout()">test</button>
 				<a class="pl-4 pr-5" href="#" ng-click="form = 'register'">Register</a>
 				<a class="pl-4" href="#" ng-click="form = 'forgotPassword'">Forgot Password?</a>
 			</span>
@@ -113,6 +116,7 @@
 
     <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.6/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular-route.js"></script>
     <script src="../../javascripts/controllers.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
