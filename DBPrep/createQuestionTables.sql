@@ -1,11 +1,4 @@
---temporary populate scripts taken from the textbox. Will need to add our own
-
-Create Table IF NOT EXISTS Users (
-ID			VARCHAR(30),
-Password    VARCHAR(60),
-Email		VARCHAR(60),
-DateJoined	DATE
-);
+--temporary create scripts taken from the textbox. Will need to add our own
 
 CREATE TABLE IF NOT EXISTS Customer_T
 (

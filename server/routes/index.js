@@ -2,17 +2,26 @@ const express = require('express');
 const router = express.Router();
 const { Pool } = require('pg');
 const path = require('path');
-const connectionString = 'postgresql://postgres:password@localhost:5432/WCDB';
+const connectionStringQuestions = 'postgresql://postgres:password@localhost:5432/questions';
+const connectionStringLearnsql = 'postgresql://postgres:password@localhost:5432/learnsql';
 
+
+//Basic get function for basic routing
 router.get('/', (req, res, next) => {
   res.sendFile(path.join(
     __dirname, '..', '..', 'client', 'views', 'index.html'));
 });
 
-router.post('/api/v1/WCDB', (req, res, next) => {
+/**
+ * This method is given a possible sql query. It sends this query to the database
+ * If it is sucessful it will return the results in json. If an error occures it
+ * will return the error statement/status
+ */
+ // TODO: update to pg-promise
+router.post('/api/v1/questions', (req, res, next) => {
   const results = [];
   const pool = new Pool({
-    connectionString: connectionString,
+    connectionString: connectionStringQuestions,
   })
   // Grab data from http request
   const data = {text: req.body.text, complete: false};

@@ -11,8 +11,8 @@
   <link href='https://fonts.googleapis.com/css?family=Alegreya:400,700,700i' rel='stylesheet'>
   <link href="https://fonts.googleapis.com/css?family=Merriweather:400,700" rel="stylesheet">
 </head>
-<body>
-  <nav class="navbar navbar-expand-sm bg-primary navbar-dark fixed-top">
+<body ng-app="LearnSQL">
+  <nav class="navbar navbar-expand-sm bg-primary navbar-dark fixed-top py-0" ng-controller="NavCtrl" data-ng-init="init()">
     <div class="container-fluid">
       <a href="http://localhost:3000/" class="navbar-brand mr-auto">LearnSQL</a>
       <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
@@ -27,14 +27,26 @@
             <a href="views/workshop.html" class="nav-link border-right px-3">Workshop</a>
           </li>
           <li class="nav-item">
-            <a href="views/learn/learn.html" class="nav-link border-right px-4">Learn</a>
+            <a href="views/learn/select.html" class="nav-link border-right px-4">Learn</a>
           </li>
           <li class="nav-item">
-            <a href="views/quizes.html" class="nav-link border-right px-3">Quizzes</a>
+            <a href="views/quizes.html" class="nav-link border-right px-4">Quizzes</a>
           </li>
+          <span ng-show="!currentUser">
           <li class="nav-item">
-            <a href="views/account/signIn.html" class="nav-link pl-3">Sign in</a>
+            <a href="views/account/signIn.html" class="nav-link pl-4"> Sign in</a>
           </li>
+          </span>
+          <span ng-show="currentUser">
+          <li class="nav-item">
+            <a href="views/account/profile.html" class="nav-link border-right px-4">Profile</a>
+          </li>
+          </span>
+          <span ng-show="currentUser">
+          <li class="nav-item">
+            <a href="#" class="nav-link pl-4" ng-click="logout()">Logout</a>
+          </li>
+          </span>
         </ul>
       </div>
     </div>
@@ -144,8 +156,11 @@
       </div>
     </footer>
 
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.6/angular.min.js"></script>
+    <script src="../../javascripts/controllers.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
 </body>
 </html>

@@ -1,41 +1,126 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <title>Account</title>
-  <link rel = "stylesheet" type = "text/css" href = "../../stylesheets/style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>LearnSQL</title>
+  <link rel="stylesheet" href="../../stylesheets/style.css" media="screen">
+  <link rel="stylesheet" href="../../stylesheets/font-awesome.min.css">
+  <link rel="stylesheet" href="../../stylesheets/bootstrap.css">
   <link href='https://fonts.googleapis.com/css?family=Alegreya:400,700,700i' rel='stylesheet'>
   <link href="https://fonts.googleapis.com/css?family=Merriweather:400,700" rel="stylesheet">
 </head>
-<body>
+<body ng-app="LearnSQL">
 
-  <nav class="nav-menu">
-    <ul>
-      <!--WCDB is temp until logo is done-->
-      <li style="background-color: #4CAF50; width: 15%;"><a href = "http://localhost:3000/" style="font-size:1.3em;font-weight:bold;padding:9px;margin:0;">W C D B</a></li>
-      <li><a href="http://localhost:3000/">Home</a></li>
-      <li><a href="../workshop.html">Workshop</a></li>
-      <li><a href="../learn/learn.html">Learn</a></li>
-      <li style="float:right"><a class="active" style="float:right" href="./signIn.html">Sign In</a></li>
-    </ul>
+  <!-- Nav Bar -->
+  <nav class="navbar navbar-expand-sm bg-primary navbar-dark fixed-top py-0" ng-controller="NavCtrl" data-ng-init="init()">
+    <div class="container-fluid">
+      <a href="http://localhost:3000/" class="navbar-brand mr-auto my-0">LearnSQL</a>
+      <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarCollapse">
+        <ul class="nav navbar-nav ml-auto">
+          <li class="nav-item py-0 my-0">
+            <a href="http://localhost:3000/" class="nav-link border-right border-left px-4 ">Home</a>
+          </li>
+          <li class="nav-item py-0 my-0">
+            <a href="../workshop.html" class="nav-link border-right px-3 my-0">Workshop</a>
+          </li>
+          <li class="nav-item py-0 my-0">
+            <a href="../learn/select.html" class="nav-link border-right px-4 my-0">Learn</a>
+          </li>
+          <li class="nav-item py-0 my-0">
+            <a href="../quizes.html" class="nav-link border-right px-3 my-0">Quizzes</a>
+          </li>
+          <!-- Dynamically show sign in tabs or profile/logout tabs depending if user is logged in -->
+          <span ng-show="!currentUser">
+          <li class="nav-item">
+            <a href="views/account/signIn.html" class="nav-link pl-4"> Sign in</a>
+          </li>
+          </span>
+          <span ng-show="currentUser">
+          <li class="nav-item">
+            <a href="views/account/profile.html" class="nav-link border-right px-4">Profile</a>
+          </li>
+          </span>
+          <span ng-show="currentUser">
+          <li class="nav-item">
+            <a href="#" class="nav-link pl-4" ng-click="logout()">Logout</a>
+          </li>
+          </span>
+        </ul>
+      </div>
+    </div>
   </nav>
 
-  <div class="login-page">
-    <div class="form">
-      <form class="register-form">
-        <input type="text" placeholder="name"/>
-        <input type="password" placeholder="password"/>
-        <input type="text" placeholder="email address"/>
-        <button>create</button>
-        <p class="message">Already registered? <a href="#">Sign In</a></p>
-      </form>
-      <form class="login-form">
-        <input type="text" placeholder="username"/>
-        <input type="password" placeholder="password"/>
-        <button>login</button>
-        <p class="message">Not registered? <a href="#">Create an account</a></p>
-      </form>
-    </div>
-  </div>
+	<!-- Login form -->
+	<div class="py-5" ng-controller="LoginCtrl as ctrl">
+		<form class="form-signin">
+			<!-- TODO: add a logo here	 -->
+			<!-- <img class="mb-4" src="../../assets/brand/bootstrap-solid.svg" alt="" width="72" height="72"> -->
+			<span ng-show="error">
+				<div class="alert alert-danger">
+						{{ message }}
+				</div>
+			</span>
+      <span ng-show="success">
+        <div class="alert alert-success">
+            {{ message }}
+        </div>
+      </span>
+      <!-- Default login page or if login anchor is clicked -->
+			<span ng-show="form == 'login'">
+				<h1 class="h3 mb-3 font-weight-bold text-primary">Please Sign In</h1>
+				<label for="inputEmail" class="sr-only">Email address</label>
+				<input type="email" class="form-control " ng-model="email" placeholder="Email address" required autofocus>
+				<label for="inputPassword" class="sr-only">Password</label>
+				<input type="password" class="form-control" ng-model="password" placeholder="Password" required>
+				<!-- TODO: Add a remember me when we can support it -->
+				<!-- <div class="checkbox mb-3">
+					<label>
+						<input type="checkbox" value="remember-me"> Remember me
+					</label>
+				</div> -->
+				<button class="btn btn-lg btn-primary btn-block" value="login" type="submit" ng-click="login()">Sign In</button>
+				<a class="pl-4 pr-5" href="#" ng-click="form = 'register'">Register</a>
+				<a class="pl-4" href="#" ng-click="form = 'forgotPassword'">Forgot Password?</a>
+			</span>
+      <!-- If the register anchor is clicked -->
+			<span ng-show="form == 'register'">
+				<h1 class="h3 mb-3 font-weight-bold text-primary">Register</h1>
+				<label for="inputEmail" class="sr-only">Email address</label>
+				<input type="email" class="form-control" ng-model="email" placeholder="Email address" required autofocus>
+				<label for="inputName" class="sr-only">Full Name</label>
+				<input type="name"  class="form-control" ng-model="fullName" placeholder="Full Name" required>
+				<label for="inputPassword" class="sr-only">Password</label>
+				<input type="password" class="form-control" ng-model="password" placeholder="Password" required>
+        <label for="inputPassword2" class="sr-only">Password2</label>
+        <input type="password" class="form-control" ng-model="password2" placeholder="Re-type Password" required>
+				<button class="btn btn-lg btn-primary btn-block" type="submit" ng-click="register()">Register</button>
+				<a class="pl-4 pr-5" href="#" ng-click="form = 'login'">Sign In</a>
+				<a class="pl-4" href="#" ng-click="form = 'forgotPassword'">Forgot Password?</a>
+			</span>
+      <!-- If the forgotPassword anchor is clicked -->
+			<span ng-show="form == 'forgotPassword'">
+        <!-- TODO: Get working -->
+				<h1 class="h3 mb-3 font-weight-bold text-primary">Forgot Password?</h1>
+				<label for="inputEmail" class="sr-only">Email address</label>
+				<input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
+				<button class="btn btn-lg btn-primary btn-block" type="submit" ng-click="forgotPassword()">Send Email</button>
+				<a class="pl-4 pr-5" href="#" ng-click="form = 'login'">Sign In</a>
+				<a class="pl-4" href="#" ng-click="form = 'register'">Register</a>
+			</span>
+			<p class="mt-5 mb-3 text-muted">&copy; 2018-2019</p>
+		</form>
+	</div>
+
+
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.6/angular.min.js"></script>
+    <script src="../../javascripts/controllers.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 </body>
 </html>
