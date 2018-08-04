@@ -14,7 +14,7 @@
 <body ng-app="LearnSQL">
 
   <!-- Nav Bar -->
-  <nav class="navbar navbar-expand-sm bg-primary navbar-dark fixed-top py-0" ng-controller="NavCtrl">
+  <nav class="navbar navbar-expand-sm bg-primary navbar-dark fixed-top py-0" ng-controller="NavCtrl" data-ng-init="init()">
     <div class="container-fluid">
       <a href="http://localhost:3000/" class="navbar-brand mr-auto my-0">LearnSQL</a>
       <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
@@ -29,7 +29,7 @@
             <a href="../workshop.html" class="nav-link border-right px-3 my-0">Workshop</a>
           </li>
           <li class="nav-item py-0 my-0">
-            <a href="../learn/learn.html" class="nav-link border-right px-4 my-0">Learn</a>
+            <a href="../learn/select.html" class="nav-link border-right px-4 my-0">Learn</a>
           </li>
           <li class="nav-item py-0 my-0">
             <a href="../quizes.html" class="nav-link border-right px-3 my-0">Quizzes</a>
@@ -84,7 +84,6 @@
 					</label>
 				</div> -->
 				<button class="btn btn-lg btn-primary btn-block" value="login" type="submit" ng-click="login()">Sign In</button>
-        <button class="btn btn-lg btn-primary btn-block" value="logout" type="submit" ng-click="logout()">test</button>
 				<a class="pl-4 pr-5" href="#" ng-click="form = 'register'">Register</a>
 				<a class="pl-4" href="#" ng-click="form = 'forgotPassword'">Forgot Password?</a>
 			</span>

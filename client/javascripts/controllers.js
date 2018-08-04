@@ -125,11 +125,16 @@ app.controller('LoginCtrl', ($scope, $http, $location, $window) => {
   };
 
   /**
-   *
+   * This function takes user information into the controller. First email validation
+   * check is done first. Error message is displayed if email failed. If Passwords
+   * do not match then an error message is displayed. The post method '/auth/register'
+   * is used to register the user. Upon sucess a sucess message is displayed.
+   * If register method fails an error message is displayed showing the error
    */
   $scope.register = () => {
     $scope.error = false;
     $scope.success = false;
+    // TODO: do these work directly in the html page?
     this.user.email = $scope.email;
     this.user.password = $scope.password;
     this.user.fullName = $scope.fullName;
@@ -157,6 +162,14 @@ app.controller('LoginCtrl', ($scope, $http, $location, $window) => {
       });
     }
   };
+
+  /**
+   * This function takes user information into the controller. First email validation
+   * check is done first. Error message is displayed if email failed. If Passwords
+   * do not match then an error message is displayed. The post method '/auth/register'
+   * is used to register the user. Upon sucess a sucess message is displayed.
+   * If register method fails an error message is displayed showing the error
+   */
   $scope.login = () => {
     $scope.error = false;
     $scope.success = false;
@@ -174,17 +187,7 @@ app.controller('LoginCtrl', ($scope, $http, $location, $window) => {
 
   // TODO: add functionality
   $scope.forgotPassword = () => {
-    $scope.error = false;
-    $scope.success = false;
+
   };
 
-  $scope.logout = () => {
-    $http.get('/auth/check')
-    .success((data) => {
-      $scope.message = data;
-    })
-    .error((error) => {
-      $scope.message = error.status;
-    });
-  };
 });

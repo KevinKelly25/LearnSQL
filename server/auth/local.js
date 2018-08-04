@@ -7,6 +7,12 @@ var db = require('../db/ldb.js')
 
 init();
 
+
+/**
+ * This function sets up the local stategy for the passport.js module. usernameField
+ * and passwordField are set to the database equivalient of their names.
+ * Using pg-promise the query returns userdata if there is a matching userid
+ */
 passport.use(new LocalStrategy({
   usernameField: 'email',
   passwordField: 'password'
