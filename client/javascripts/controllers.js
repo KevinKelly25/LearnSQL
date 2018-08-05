@@ -119,6 +119,7 @@ app.controller('LoginCtrl', ($scope, $http, $location, $window) => {
 
   //user information
   this.user = {
+     username: null,
      email: null,
      password: null,
      fullName: null
@@ -138,6 +139,7 @@ app.controller('LoginCtrl', ($scope, $http, $location, $window) => {
     this.user.email = $scope.email;
     this.user.password = $scope.password;
     this.user.fullName = $scope.fullName;
+    this.user.username = $scope.username;
     //if email was entered incorrectly or not entered
     if (!$scope.email)
     {
@@ -210,7 +212,7 @@ app.controller('AdminCtrl', ($scope, $http, $location, $window) => {
   $scope.addClass = () => {
     $scope.error = false;
     $scope.success = false;
-    
+
   };
 
 });

@@ -8,7 +8,7 @@ module.exports = () => {
    * to the session.
    */
   passport.serializeUser((user, done) => {
-    done(null, user.userid);
+    done(null, user.username);
   });
 
   /**
@@ -19,7 +19,7 @@ module.exports = () => {
    * displaying the id that failed.
    */
   passport.deserializeUser((id, done)=>{
-    db.one("SELECT userid, fullname, email, datejoined, isAdmin, isTeacher " +
+    db.one("SELECT username, fullname, email, datejoined, isAdmin, isTeacher " +
            "FROM UserData " +
            "WHERE userid = $1", id)
     .then((user)=>{

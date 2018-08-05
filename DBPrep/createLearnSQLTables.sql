@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS UserData (
-  UserID                  VARCHAR(60) NOT NULL PRIMARY KEY,
+  Username                VARCHAR(256) NOT NULL PRIMARY KEY,
   FullName                VARCHAR(256) NOT NULL,
   Password                VARCHAR(256) NOT NULL,
   Email                   VARCHAR(319) NOT NULL CHECK(TRIM(Email) like '_%@_%._%'),
@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS Class (
 
 CREATE TABLE IF NOT EXISTS Attends (
   ClassID                 VARCHAR(30) NOT NULL REFERENCES Class,
-  UserID                  VARCHAR(30) NOT NULL REFERENCES UserData,
+  Username                  VARCHAR(30) NOT NULL REFERENCES UserData,
   isTeacher               BOOLEAN,
-  PRIMARY KEY (ClassID, UserID)
+  PRIMARY KEY (ClassID, Username)
 );

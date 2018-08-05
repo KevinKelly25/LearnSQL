@@ -1,6 +1,5 @@
 const bcrypt = require('bcryptjs');
 const db = require('../db/ldb.js');
-var uniqid = require('uniqid');
 
 
 /**
@@ -23,12 +22,11 @@ function comparePass(userPassword, databasePassword) {
 function createUser(req, res) {
   return handleErrors(req)
   .then(() => {
-    var _id = uniqid();
     const salt = bcrypt.genSaltSync();
     const hash = bcrypt.hashSync(req.body.password, salt);
-    db.none('INSERT INTO UserData(UserID, FullName, Password, Email)  ' +
-    'VALUES(${id}, ${full}, ${pass}, ${email})', {
-      id: _id,
+    db.none('INSERT INTO UserData(Username, FullName, Password, Email)  ' +
+    'VALUES(${username}, ${full}, ${pass}, ${email})', {
+      username: req.body.username,
       full: req.body.fullName,
       pass: hash,
       email: req.body.email
@@ -42,8 +40,11 @@ function createUser(req, res) {
         return res.status(200).json('User Created Successfully');
     })
     .catch(error => {
-      if (error.code == '23505')//UNIQUE VIOLATION
+      //console.log(error.error);
+      if (error.code == '23505' && error.constraint == 'idx_unique_email')//UNIQUE VIOLATION
         res.status(400).json({status: "Email Already Exists"});
+      else if (error.code == '23505' && error.constraint == 'userdata_pkey')//UNIQUE VIOLATION
+        res.status(400).json({status: "Username Already Exists"});
       else
         res.status(400).json({status: error});
     })
@@ -89,7 +90,7 @@ function loginRedirect(req, res, next) {
 
 /**
  * handles errors when registering. For now only checks the length of the password
- * Also, set to a low number for testing purposes. 
+ * Also, set to a low number for testing purposes.
  */
 function handleErrors(req) {
   // TODO: fix length requirements

@@ -90,6 +90,8 @@
       <!-- If the register anchor is clicked -->
 			<span ng-show="form == 'register'">
 				<h1 class="h3 mb-3 font-weight-bold text-primary">Register</h1>
+        <label for="inputUsername" class="sr-only">Username</label>
+        <input type="name" class="form-control" ng-model="username" placeholder="Username" required autofocus>
 				<label for="inputEmail" class="sr-only">Email address</label>
 				<input type="email" class="form-control" ng-model="email" placeholder="Email address" required autofocus>
 				<label for="inputName" class="sr-only">Full Name</label>

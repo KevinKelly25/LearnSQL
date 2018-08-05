@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const authHelpers = require('../auth/_helpers');
+const adminHelpers = require('../controlPanel/controlPanel.js')
 
 
 /**
@@ -9,10 +9,13 @@ const authHelpers = require('../auth/_helpers');
  * an error status code and message is returned
  */
 router.post('/addClass', authHelpers.adminRequired, (req, res, next)  => {
-  return authHelpers.createUser(req, res)
-  .catch((err) => {
-    handleResponse(res, 500, 'error');
-  });
+  return authHelpers.createClass(req, res)
+	.then((result)=> {
+		return done(null, result);
+	})
+	.catch((err) => {
+		return done(null, false, {message: err});
+	});
 });
 
 module.exports = router;
