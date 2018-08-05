@@ -19,7 +19,7 @@ module.exports = () => {
    * displaying the id that failed.
    */
   passport.deserializeUser((id, done)=>{
-    db.one("SELECT userid, fullname, email, datejoined " +
+    db.one("SELECT userid, fullname, email, datejoined, isAdmin, isTeacher " +
            "FROM UserData " +
            "WHERE userid = $1", id)
     .then((user)=>{

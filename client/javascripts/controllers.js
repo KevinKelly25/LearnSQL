@@ -191,3 +191,26 @@ app.controller('LoginCtrl', ($scope, $http, $location, $window) => {
   };
 
 });
+
+/**
+ * This controller is used to display and use the login operations
+ */
+app.controller('AdminCtrl', ($scope, $http, $location, $window) => {
+  $scope.form = 'default';
+  $scope.error = false;
+  $scope.success = false;
+
+  /**
+   * This function takes user information into the controller. First email validation
+   * check is done first. Error message is displayed if email failed. If Passwords
+   * do not match then an error message is displayed. The post method '/auth/register'
+   * is used to register the user. Upon sucess a sucess message is displayed.
+   * If register method fails an error message is displayed showing the error
+   */
+  $scope.addClass = () => {
+    $scope.error = false;
+    $scope.success = false;
+    
+  };
+
+});

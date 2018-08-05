@@ -51,6 +51,7 @@ router.get('/logout', authHelpers.loginRequired, (req, res, next) => {
  * This method returns the deserialized user.
  */
 router.get('/check', (req, res, next) => {
+  console.log(req.user);
   return res.status(200).json(req.user);
 });
 
