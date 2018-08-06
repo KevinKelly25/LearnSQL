@@ -68,9 +68,9 @@ function loginRequired(req, res, next) {
  */
 function adminRequired(req, res, next) {
   if (!req.user) res.status(401).json({status: 'Please log in'});
-  return db.one('SELECT isAdmin FROM UserData WHERE UserID = $1', [req.user.username])
+  return db.one('SELECT isAdmin FROM UserData WHERE Username = $1', [req.user.username])
   .then((user) => {
-    if (!user.isAdmin) res.status(401).json({status: 'You are not authorized'});
+    if (!user.isadmin) res.status(401).json({status: 'You are not authorized'});
     return next();
   })
   .catch((err) => {

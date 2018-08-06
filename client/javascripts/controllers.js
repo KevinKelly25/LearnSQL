@@ -175,7 +175,7 @@ app.controller('LoginCtrl', ($scope, $http, $location, $window) => {
   $scope.login = () => {
     $scope.error = false;
     $scope.success = false;
-    this.user.email = $scope.email;
+    this.user.username = $scope.username;
     this.user.password = $scope.password;
     $http.post('/auth/login', this.user)
     .success((data) => {
@@ -212,7 +212,15 @@ app.controller('AdminCtrl', ($scope, $http, $location, $window) => {
   $scope.addClass = () => {
     $scope.error = false;
     $scope.success = false;
-
+    $http.post('/admin/addClass', this.user)
+    .success((data) => {
+      scope.success = true;
+      scope.message = data;
+    })
+    .error((error) => {
+      $scope.error = true;
+      $scope.message = error;
+    });
   };
 
 });
