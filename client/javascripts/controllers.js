@@ -202,17 +202,22 @@ app.controller('AdminCtrl', ($scope, $http, $location, $window) => {
   $scope.error = false;
   $scope.success = false;
 
+  //user information
+  this.class = {
+     name: null,
+     password: null
+  };
+
   /**
-   * This function takes user information into the controller. First email validation
-   * check is done first. Error message is displayed if email failed. If Passwords
-   * do not match then an error message is displayed. The post method '/auth/register'
-   * is used to register the user. Upon sucess a sucess message is displayed.
-   * If register method fails an error message is displayed showing the error
+   * This function takes user information into the controller.
    */
   $scope.addClass = () => {
     $scope.error = false;
     $scope.success = false;
-    $http.post('/admin/addClass', this.user)
+    this.class.name = $scope.class;
+    this.class.password = $scope.password;
+
+    $http.post('/admin/addClass', this.class)
     .success((data) => {
       scope.success = true;
       scope.message = data;

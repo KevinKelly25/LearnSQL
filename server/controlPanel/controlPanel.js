@@ -7,18 +7,20 @@ var uniqid = require('uniqid');
 function createClass(req, res) {
 	return handleErrors(req)
 	.then(() => {
-		var classname = req.body.name + '/' + uniqid(); //guarantee uniqueness
-		db.none('CREATE DATABASE ${name} WITH TEMPLATE classdb_template OWNER classdb '
-		, {
+		const classname = req.body.name + '_' + uniqid(); //guarantee uniqueness
+		db.none('CREATE DATABASE ${name} WITH TEMPLATE classdb_template OWNER classdb',
+	  {
 			name: classname
 		})
 		.then(() => {
+				console.log('getting to 1');
 				//addClassToDB(classname, req.body.name, req.body.password);
 				//addInstructorToDB(req.user.username, classname);
-				return res.status(200).json({status: 'Class Database Created Successfully'});
+				return res.status(200).json('Class Database Created Successfully');
 		})
-		.catch((error) => {
-				res.status(400).json({status: error});
+		.catch(error => {
+			console.log('getting to 2');
+			res.status(400).json({status: error});
 		})
 	})
 }
@@ -58,6 +60,7 @@ function addClassToDB(username, classid, password) {
  * Also, set to a low number for testing purposes.
  */
 function handleErrors(req) {
+	console.log('handleErrors');
   // TODO: fix length requirements
   return new Promise((resolve, reject) => {
   if (req.body.password.length < 1) {

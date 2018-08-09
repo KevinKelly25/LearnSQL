@@ -32,11 +32,6 @@ function createUser(req, res) {
       email: req.body.email
     })
     .then(() => {
-        var user = {
-          email: req.body.email,
-          pass: hash
-        }
-        //console.log(user);
         return res.status(200).json('User Created Successfully');
     })
     .catch(error => {
