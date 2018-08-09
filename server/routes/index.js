@@ -5,7 +5,6 @@ const path = require('path');
 const connectionStringQuestions = 'postgresql://postgres:password@localhost:5432/questions';
 const connectionStringLearnsql = 'postgresql://postgres:password@localhost:5432/learnsql';
 
-
 //Basic get function for basic routing
 router.get('/', (req, res, next) => {
   res.sendFile(path.join(
