@@ -213,18 +213,20 @@ app.controller('AdminCtrl', ($scope, $http, $location, $window) => {
    */
   $scope.addClass = () => {
     $scope.error = false;
-    $scope.success = false;
     this.class.name = $scope.class;
     this.class.password = $scope.password;
+    $scope.success = true;
+    $scope.message = 'Database Being Created, Please Wait';
 
     $http.post('/admin/addClass', this.class)
     .success((data) => {
-      scope.success = true;
-      scope.message = data;
+      $scope.success = true;
+      $scope.message = 'Database Successfully Created';
     })
     .error((error) => {
+      $scope.success = false;
       $scope.error = true;
-      $scope.message = error;
+      $scope.message = 'Database Could Not Be Created';
     });
   };
 

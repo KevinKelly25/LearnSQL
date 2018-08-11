@@ -4,22 +4,21 @@ var uniqid = require('uniqid');
 /**
  * This funciton creates a class database using a ClassDB template Database
  */
+ // TODO: this should be a task of multiple queries
 function createClass(req, res) {
 	return handleErrors(req)
 	.then(() => {
-		const classname = req.body.name + '_' + uniqid(); //guarantee uniqueness
-		db.none('CREATE DATABASE ${name} WITH TEMPLATE classdb_template OWNER classdb',
-	  {
-			name: classname
-		})
+		var classid = req.body.name + '_' + uniqid(); //guarantee uniqueness
+		db.none('CREATE DATABASE $1~ WITH TEMPLATE classdb_template OWNER classdb', classid)
 		.then(() => {
 				console.log('getting to 1');
-				//addClassToDB(classname, req.body.name, req.body.password);
-				//addInstructorToDB(req.user.username, classname);
+				addClassToDB(classid, req.body.name, req.body.password);
+				addInstructorToDB(req.user.username, classname);
 				return res.status(200).json('Class Database Created Successfully');
 		})
 		.catch(error => {
 			console.log('getting to 2');
+			console.log(error);
 			res.status(400).json({status: error});
 		})
 	})
@@ -40,7 +39,7 @@ function addInstructorToDB(username, classid) {
 	})
 }
 
-function addClassToDB(username, classid, password) {
+function addClassToDB(classname, classname, password) {
 	db.none('INSERT INTO class(classid, classname, password) VALUES(${id}, ${name}, ${password}) '
 	, {
 		id: classid,
