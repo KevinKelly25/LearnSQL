@@ -1,3 +1,12 @@
+/**
+ * route-config.js - LearnSQL
+ *
+ * Kevin Kelly
+ * Web Applications and Databases for Education (WADE)
+ *
+ * This file sets up the routes for the express router.
+ */
+
 (function (routeConfig) {
 
   'use strict';

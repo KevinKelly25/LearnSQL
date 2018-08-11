@@ -1,3 +1,14 @@
+/**
+ * admin.js - LearnSQL
+ *
+ * Kevin Kelly
+ * Web Applications and Databases for Education (WADE)
+ *
+ * This file sets up the http routes associated with admin functionality
+ */
+
+
+
 const express = require('express');
 const router = express.Router();
 

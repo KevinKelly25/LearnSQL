@@ -1,3 +1,15 @@
+/**
+ * local.js - LearnSQL
+ *
+ * Kevin Kelly
+ * Web Applications and Databases for Education (WADE)
+ *
+ * This file contains the passport.js serialization and deserialization
+ * of the user.
+ */
+
+
+
 const passport = require('passport');
 const db = require('../db/ldb.js');
 

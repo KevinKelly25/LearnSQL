@@ -1,3 +1,13 @@
+-- ClassDBAdditions.sql - LearnSQL
+
+-- Kevin Kelly
+-- Web Applications and Databases for Education (WADE)
+
+-- This file supplies a function to the template ClassDB Database that readds
+--  classdb roles to be able to access the database. This is needed as access
+--  privleges are removed from the database object when a new database is cloned
+--  from the template
+
 CREATE OR REPLACE FUNCTION reAddUserAccess()
    RETURNS VOID AS
 $$

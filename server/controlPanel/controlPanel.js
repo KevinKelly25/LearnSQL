@@ -1,3 +1,14 @@
+/**
+ * controlPanel.js - LearnSQL
+ *
+ * Kevin Kelly
+ * Web Applications and Databases for Education (WADE)
+ *
+ * This file contains the functions for admin control panel
+ */
+
+
+
 const db = require('../db/ldb.js');
 var uniqid = require('uniqid');
 
@@ -9,7 +20,6 @@ function createClass(req, res) {
 	.then(() => {
 		var classid = req.body.name + '_' + uniqid(); //guarantee uniqueness
 		db.task(t => {
-        // this.ctx = task config + state context;
         return t.none('CREATE DATABASE $1~ WITH TEMPLATE classdb_template OWNER classdb', classid)
             .then(() => {
 							return t.none('INSERT INTO class(classid, classname, password) VALUES(${id}, ${name}, ${password}) '

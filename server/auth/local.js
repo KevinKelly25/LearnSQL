@@ -1,3 +1,15 @@
+/**
+ * local.js - LearnSQL
+ *
+ * Kevin Kelly
+ * Web Applications and Databases for Education (WADE)
+ *
+ * This file contains the passport.js authentication setup for the local strategy
+ * used. 
+ */
+
+
+
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const authHelpers = require('./_helpers');

@@ -1,3 +1,14 @@
+/**
+ * auth.js - LearnSQL
+ *
+ * Kevin Kelly
+ * Web Applications and Databases for Education (WADE)
+ *
+ * This file contains the routes used for authorization of users
+ */
+
+
+
 const express = require('express');
 const router = express.Router();
 
@@ -51,7 +62,6 @@ router.get('/logout', authHelpers.loginRequired, (req, res, next) => {
  * This method returns the deserialized user.
  */
 router.get('/check', (req, res, next) => {
-  console.log(req.user);
   return res.status(200).json(req.user);
 });
 
