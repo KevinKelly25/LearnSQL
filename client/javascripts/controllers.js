@@ -191,3 +191,41 @@ app.controller('LoginCtrl', ($scope, $http, $location, $window) => {
   };
 
 });
+
+app.controller('ContactCtrl', ($scope, $http, $location, $window) => {
+  $scope.form = 'email';
+  $scope.error = false;
+  $scope.success = false;
+
+  //user information
+  this.user = {
+     email: null,
+     password: null,
+     fullName: null
+  };
+
+  /**
+   * This function takes user information into the controller. First email validation
+   * check is done first. Error message is displayed if email failed. If Passwords
+   * do not match then an error message is displayed. The post method '/auth/register'
+   * is used to register the user. Upon sucess a sucess message is displayed.
+   * If register method fails an error message is displayed showing the error
+   */
+  $scope.login = () => {
+    $scope.error = false;
+    $scope.success = false;
+    this.user.email = $scope.email;
+    this.user.password = $scope.password;
+    $http.post('/auth/login', this.user)
+    .success((data) => {
+      $scope.success = true;
+      $scope.message = data;
+    })
+    .error((error) => {
+      $scope.error = true;
+      $scope.message = error;
+    });
+  };
+});
+
+//
