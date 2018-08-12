@@ -1,18 +1,7 @@
-// contact.js - LearnSQL
-
-// Chris Innaco, Kevin Kelly, Michael Torres
-// Web Applications and Databases for Education (WADE)
-
-/* 
-   The purpose of this file is to render contact.html
-   which contains handlebars as a template engine. 
-   This file allows the user to email directly from the 
-   contact.html page by using the contact form. 
-*/
-
-
+// added this
 const express = require('express');
 const bodyParser = require('body-parser');
+const cons = require('consolidate');
 const exphbs = require('express-handlebars'); // To use in context of ExpressJS
 const path = require('path');
 const nodemailer = require('nodemailer'); // Use this module to allow easy as cake email sending
@@ -20,26 +9,25 @@ const hbs = require('hbs');
 
 const app = express();
 
-// searches for css file contact.css
-app.set('views', path.join(__dirname, '/client/views'));
+app.set('views', path.join(__dirname, '../../client/views'));
 
 // To use a different extension other than .hbs or .handlebars (i.e. html) for our template file
 app.set('view engine', 'html');
 app.engine('html', require('hbs').__express);
 
 // static folder
-app.use(express.static(__dirname + '/client'));
+app.use(express.static(__dirname + '../../client/views'));
 
 // body parser middleware
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.get('/', (req, res) => {
-    // renders the contact.html file (note: extension not needed)
-    res.render('contact');
+    console.log("hello from CONTACT PAGE!!!");
+    // renders the app.html file (note: extension not needed)
+    res.render(path.join(__dirname, '..', '..', 'client', 'views', 'contact'));
 });
 
-// send client response to localhost:3000/send
 app.post('/send', (req, res) => {
     const output = `
         <p>You have a new app request</p>
@@ -59,8 +47,8 @@ app.post('/send', (req, res) => {
         port: 587,
         secure: false, // true for 465, false for other ports
         auth: {
-            user: 'test123203@outlook.com', 
-            pass: 'testing123!' 
+            user: 'mtorr203@outlook.com', 
+            pass: '88521134Mmfour' 
         },
         tls:{
             // rejectUnauthorized:false will probably need to be changed for production because
@@ -72,7 +60,7 @@ app.post('/send', (req, res) => {
 
     // setup email data with unicode symbols
     let mailOptions = {
-        from: '"Nodemailer app 👻" <test123203!@outlook.com>', // sender address
+        from: '"Nodemailer app 👻" <mtorr203@outlook.com>', // sender address
         to: 'testacct123203@gmail.com', // list of receivers
         subject: 'Node app Request', // Subject line
         text: 'Hello world?', // plain text body
