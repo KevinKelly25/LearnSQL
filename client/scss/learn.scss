@@ -119,38 +119,6 @@ a:focus {
   letter-spacing: .1em;
   font-size: 3em; }
 
-/* OVERRIDES DEFAULT FONT-SIZE AND COLOR */
-#preExCode {
-  font-family: monospace;
-  background-color: #fff;
-  margin-right: 1em;
-  margin-left: 1em;
-  box-shadow: 0.1em 0.1em 0.5em rgba(0, 0, 0, 0.45);
-  line-height: 0;
-  counter-reset: line;
-  overflow-y: hidden;
-  overflow-x: auto; }
-
-span {
-  display: block;
-  line-height: 1.5rem; }
-
-#exampleCode:before {
-  counter-increment: line;
-  content: counter(line);
-  display: inline-block;
-  border-right: 1px solid #ddd;
-  padding: 0 .5em;
-  margin-right: .5em;
-  color: #888; }
-
-/* ADD BACKGROUND COLOR TO CODE IN EXAMPLES */
-code {
-  background-color: #1C2331;
-  border-radius: 3px;
-  font-family: courier, monospace;
-  padding: 0 3px; }
-
 #example {
   padding-top: 1em;
   padding-bottom: 1em;

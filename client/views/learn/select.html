@@ -13,6 +13,8 @@
   <link rel="stylesheet" href="../../stylesheets/font-awesome.min.css">
   <link rel="stylesheet" href="../../stylesheets/bootstrap.css">
   <link rel="stylesheet" href="../../stylesheets/learn.css">
+  <link href = "../../stylesheets/prism.css" rel = "stylesheet" />
+
 </head>
 <body ng-app="LearnSQL">
 
@@ -44,9 +46,6 @@
         </li>
         <li class="nav-item w-100">
           <a href="./distict.html" class="nav-link text-center">Distinct</a>
-        </li>
-        <li class="nav-item w-100">
-          <a href="./as.html" class="nav-link text-center">As Clause</a>
         </li>
         <li class="nav-item w-100">
           <a href="./predicateOperators.html" class="nav-link text-center">Predicate Operators</a>
@@ -180,41 +179,39 @@
       </h2>
       <!-- INTRODUCTION TO BASIC SELECT STATEMENTS -->
       <p class="text-left ml-5 mr-5 mb-5">SELECT is a clause used to return data from a database.
-          The data returned is stored in a result table, called the result-set.
+          The data returned is stored in a result table, called the result-set. This result set
+          contains 0 or more rows of data depending on the table and selected attributes and
+          is a unstored table.
           To use Select in an SQL statement you write SELECT then the name of the attribute
           columns, each seperated by a comma. SELECT has to be used with the
           FROM clause, which designates which table the SELECT attributes
-          are coming from. This is shown here:</p>
+          are acting on. This is shown here:</p>
 
       <!-- EXAMPLE 1 -->
       <div id="example" class="bg-light text-dark shadow-lg ml-5 mr-5">
         <h4 id="exampleHeader" class="font-weight-bold">Example 1</h4>
-        <div class="example">
-          <pre id="preExCode">
-<span id="exampleCode">SELECT attribute1, attribute2, attribute3, ...</span>
-<span id="exampleCode">FROM table_name</span>
-          </pre>
+<pre class="line-numbers"><code class="language-sql"> SELECT attribute1, attribute2, attribute3
+ FROM table_name;</code></pre>
 
           <p id="exampleComment">
-            Here, column1, column2, ... are the field/attribute names of the table you want to select data from.
-            If you want to select all the fields available in the table, use * in place of the        attributes. As shown in the next example.
+            Here, attribute1, attribute2 and attribute3 are the field/attribute names of the table you
+            want to select data from. "table_name" represents any table in the database.
+            In plain english this means for each row in "table_name" display attribute1, attribute2, and attribute3.
           </p>
-        </div>
       </div>
 
-      <p class="ml-5 mr-5 mt-5 mb-5">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quod mollitia, nulla praesentium quae esse alias, ad odit doloribus eos porro harum vero
-        assumenda nobis, provident libero repudiandae totam aliquid ut. Perspiciatis nulla praesentium ab aut, fuga nobis ducimus tempora explicabo dicta
-        quia voluptatibus quis saepe eius quisquam non unde mollitia.
+      <p class="ml-5 mr-5 mt-5 mb-5">
+        There has to be at least one attribute selected but if you want to select all
+        the fields available in the table, use * in place of the attributes. As
+        shown in the next example:
       </p>
 
       <!-- EXAMPLE 2 -->
       <div id="example" class="bg-light text-dark shadow-lg ml-5 mr-5">
         <h4 id="exampleHeader" class="font-weight-bold">Example 2</h4>
         <div class="example">
-          <pre id="preExCode">
-<span id="exampleCode">SELECT *</span>
-<span id="exampleCode">FROM table_name;</span>
-          </pre>
+<pre class="line-numbers"><code class="language-sql">SELECT *
+FROM table_name;</code></pre>
 
           <p id="exampleComment">
             Here, all fields in the table are selected because of the use of * in place of the attributes.
@@ -222,216 +219,37 @@
         </div>
       </div>
 
-      <p class="ml-5 mr-5 mt-5 mb-5">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quod mollitia, nulla praesentium quae esse alias, ad odit doloribus eos porro harum vero
-        assumenda nobis, provident libero repudiandae totam aliquid ut. Perspiciatis nulla praesentium ab aut, fuga nobis ducimus tempora explicabo dicta
-        quia voluptatibus quis saepe eius quisquam non unde mollitia.
+      <p class="ml-5 mr-5 mt-5 mb-5">
+        Any SQL query to retrieve data from a table will always have at least two Clauses: SELECT and FROM. All queries are ended with a semicolon.
+        Many clauses are typically added to the select statement to narrow down the result set even more then just selecting individual attributes
+        such as <a href="./where.html" style="color:blue;">Where</a> and <a href="./group.html" style="color:blue;">Group By</a> statements.
+        Even other queries can be used to as an input as long as it fits into the rules discussed in a later sections. Also,
+        SELECT attributes can be renamed in the result set with the AS clause. To do this you add AS "alias" after the attribute name. This is shown
+        in this following example:
       </p>
 
-      <!-- EXAMPLE 1 -->
+      <!-- EXAMPLE 3 -->
       <div id="example" class="bg-light text-dark shadow-lg ml-5 mr-5">
         <h4 id="exampleHeader" class="font-weight-bold">Example 3</h4>
         <div class="example">
-          <pre id="preExCode">
-<span id="exampleCode">SELECT attribute1, attribute2, attribute3, ...</span>
-<span id="exampleCode">FROM table_name</span>
-          </pre>
+<pre class="line-numbers"><code class="language-sql">SELECT CustomerID AS ID, CustomerName AS Name, CustomerAddress AS Address
+FROM Customer_Table;</code></pre>
 
           <p id="exampleComment">
-            Here, column1, column2, ... are the field/attribute names of the table you want to select data from.
-            If you want to select all the fields available in the table, use * in place of the        attributes. As shown in the next example.
+            Here the result set will display ID, Name, Address instead of CustomerID, CustomerName, CustomerAddress.
+            This will not alter the attribute names of the called table.
           </p>
         </div>
       </div>
 
-      <p class="ml-5 mr-5 mt-5 mb-5">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quod mollitia, nulla praesentium quae esse alias, ad odit doloribus eos porro harum vero
-        assumenda nobis, provident libero repudiandae totam aliquid ut. Perspiciatis nulla praesentium ab aut, fuga nobis ducimus tempora explicabo dicta
-        quia voluptatibus quis saepe eius quisquam non unde mollitia.
+      <p class="ml-5 mr-5 mt-5 mb-5">
+        While the query is written SELECT Then FROM it is actaully executed FROM and then SELECT.
+        It is important to know the order of operations, especially when there a more clauses, because
+        the order will affect the results.
+        </br>
+        The DISTINCT modifier can be added after SELECT to ensure that all rows are unique. This means that any rows that are repeated
+        will only show one row instead of many in the result set.  
       </p>
-
-      <!-- EXAMPLE 2 -->
-      <div id="example" class="bg-light text-dark shadow-lg ml-5 mr-5">
-        <h4 id="exampleHeader" class="font-weight-bold">Example 4</h4>
-        <div class="example">
-          <pre id="preExCode">
-<span id="exampleCode">SELECT *</span>
-<span id="exampleCode">FROM table_name;</span>
-          </pre>
-
-          <p id="exampleComment">
-            Here, all fields in the table are selected because of the use of * in place of the attributes.
-          </p>
-        </div>
-      </div>
-
-      <p class="ml-5 mr-5 mt-5 mb-5">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quod mollitia, nulla praesentium quae esse alias, ad odit doloribus eos porro harum vero
-        assumenda nobis, provident libero repudiandae totam aliquid ut. Perspiciatis nulla praesentium ab aut, fuga nobis ducimus tempora explicabo dicta
-        quia voluptatibus quis saepe eius quisquam non unde mollitia.
-      </p>
-
-      <!-- EXAMPLE 1 -->
-      <div id="example" class="bg-light text-dark shadow-lg ml-5 mr-5">
-        <h4 id="exampleHeader" class="font-weight-bold">Example 5</h4>
-        <div class="example">
-          <pre id="preExCode">
-<span id="exampleCode">SELECT attribute1, attribute2, attribute3, ...</span>
-<span id="exampleCode">FROM table_name</span>
-          </pre>
-
-          <p id="exampleComment">
-            Here, column1, column2, ... are the field/attribute names of the table you want to select data from.
-            If you want to select all the fields available in the table, use * in place of the        attributes. As shown in the next example.
-          </p>
-        </div>
-      </div>
-
-      <p class="ml-5 mr-5 mt-5 mb-5">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quod mollitia, nulla praesentium quae esse alias, ad odit doloribus eos porro harum vero
-        assumenda nobis, provident libero repudiandae totam aliquid ut. Perspiciatis nulla praesentium ab aut, fuga nobis ducimus tempora explicabo dicta
-        quia voluptatibus quis saepe eius quisquam non unde mollitia.
-      </p>
-
-      <!-- EXAMPLE 2 -->
-      <div id="example" class="bg-light text-dark shadow-lg ml-5 mr-5">
-        <h4 id="exampleHeader" class="font-weight-bold">Example 6</h4>
-        <div class="example">
-          <pre id="preExCode">
-<span id="exampleCode">SELECT *</span>
-<span id="exampleCode">FROM table_name;</span>
-          </pre>
-
-          <p id="exampleComment">
-            Here, all fields in the table are selected because of the use of * in place of the attributes.
-          </p>
-        </div>
-      </div>
-
-      <p class="ml-5 mr-5 mt-5 mb-5">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quod mollitia, nulla praesentium quae esse alias, ad odit doloribus eos porro harum vero
-        assumenda nobis, provident libero repudiandae totam aliquid ut. Perspiciatis nulla praesentium ab aut, fuga nobis ducimus tempora explicabo dicta
-        quia voluptatibus quis saepe eius quisquam non unde mollitia.
-      </p>
-
-      <!-- EXAMPLE 1 -->
-      <div id="example" class="bg-light text-dark shadow-lg ml-5 mr-5">
-        <h4 id="exampleHeader" class="font-weight-bold">Example 7</h4>
-        <div class="example">
-          <pre id="preExCode">
-<span id="exampleCode">SELECT attribute1, attribute2, attribute3, ...</span>
-<span id="exampleCode">FROM table_name</span>
-          </pre>
-
-          <p id="exampleComment">
-            Here, column1, column2, ... are the field/attribute names of the table you want to select data from.
-            If you want to select all the fields available in the table, use * in place of the        attributes. As shown in the next example.
-          </p>
-        </div>
-      </div>
-
-      <p class="ml-5 mr-5 mt-5 mb-5">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quod mollitia, nulla praesentium quae esse alias, ad odit doloribus eos porro harum vero
-        assumenda nobis, provident libero repudiandae totam aliquid ut. Perspiciatis nulla praesentium ab aut, fuga nobis ducimus tempora explicabo dicta
-        quia voluptatibus quis saepe eius quisquam non unde mollitia.
-      </p>
-
-      <!-- EXAMPLE 2 -->
-      <div id="example" class="bg-light text-dark shadow-lg ml-5 mr-5">
-        <h4 id="exampleHeader" class="font-weight-bold">Example 8</h4>
-        <div class="example">
-          <pre id="preExCode">
-<span id="exampleCode">SELECT *</span>
-<span id="exampleCode">FROM table_name;</span>
-          </pre>
-
-          <p id="exampleComment">
-            Here, all fields in the table are selected because of the use of * in place of the attributes.
-          </p>
-        </div>
-      </div>
-
-      <p class="ml-5 mr-5 mt-5 mb-5">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quod mollitia, nulla praesentium quae esse alias, ad odit doloribus eos porro harum vero
-        assumenda nobis, provident libero repudiandae totam aliquid ut. Perspiciatis nulla praesentium ab aut, fuga nobis ducimus tempora explicabo dicta
-        quia voluptatibus quis saepe eius quisquam non unde mollitia.
-      </p>
-
-      <!-- EXAMPLE 1 -->
-      <div id="example" class="bg-light text-dark shadow-lg ml-5 mr-5">
-        <h4 id="exampleHeader" class="font-weight-bold">Example 9</h4>
-        <div class="example">
-          <pre id="preExCode">
-<span id="exampleCode">SELECT attribute1, attribute2, attribute3, ...</span>
-<span id="exampleCode">FROM table_name</span>
-          </pre>
-
-          <p id="exampleComment">
-            Here, column1, column2, ... are the field/attribute names of the table you want to select data from.
-            If you want to select all the fields available in the table, use * in place of the        attributes. As shown in the next example.
-          </p>
-        </div>
-      </div>
-
-      <p class="ml-5 mr-5 mt-5 mb-5">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quod mollitia, nulla praesentium quae esse alias, ad odit doloribus eos porro harum vero
-        assumenda nobis, provident libero repudiandae totam aliquid ut. Perspiciatis nulla praesentium ab aut, fuga nobis ducimus tempora explicabo dicta
-        quia voluptatibus quis saepe eius quisquam non unde mollitia.
-      </p>
-
-      <!-- EXAMPLE 2 -->
-      <div id="example" class="bg-light text-dark shadow-lg ml-5 mr-5">
-        <h4 id="exampleHeader" class="font-weight-bold">Example 10</h4>
-        <div class="example">
-          <pre id="preExCode">
-<span id="exampleCode">SELECT *</span>
-<span id="exampleCode">FROM table_name;</span>
-          </pre>
-
-          <p id="exampleComment">
-            Here, all fields in the table are selected because of the use of * in place of the attributes.
-          </p>
-        </div>
-      </div>
-
-      <p class="ml-5 mr-5 mt-5 mb-5">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quod mollitia, nulla praesentium quae esse alias, ad odit doloribus eos porro harum vero
-        assumenda nobis, provident libero repudiandae totam aliquid ut. Perspiciatis nulla praesentium ab aut, fuga nobis ducimus tempora explicabo dicta
-        quia voluptatibus quis saepe eius quisquam non unde mollitia.
-      </p>
-
-        <!-- EXAMPLE 1 -->
-      <div id="example" class="bg-light text-dark shadow-lg ml-5 mr-5">
-        <h4 id="exampleHeader" class="font-weight-bold">Example 11</h4>
-        <div class="example">
-          <pre id="preExCode">
-<span id="exampleCode">SELECT attribute1, attribute2, attribute3, ...</span>
-<span id="exampleCode">FROM table_name</span>
-          </pre>
-
-          <p id="exampleComment" class="ml-2">
-            Here, column1, column2, ... are the field/attribute names of the table you want to select data from.
-            If you want to select all the fields available in the table, use * in place of the        attributes. As shown in the next example.
-          </p>
-        </div>
-      </div>
-
-      <p class="ml-5 mr-5 mt-5 mb-5">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quod mollitia, nulla praesentium quae esse alias, ad odit doloribus eos porro harum vero
-        assumenda nobis, provident libero repudiandae totam aliquid ut. Perspiciatis nulla praesentium ab aut, fuga nobis ducimus tempora explicabo dicta
-        quia voluptatibus quis saepe eius quisquam non unde mollitia.
-      </p>
-
-      <!-- EXAMPLE 2 -->
-      <div id="example" class="bg-light text-dark shadow-lg ml-5 mr-5">
-        <h4 id="exampleHeader" class="font-weight-bold">Example 12</h4>
-        <div class="example">
-          <pre id="preExCode">
-<span id="exampleCode">SELECT *</span>
-<span id="exampleCode">FROM table_name;</span>
-          </pre>
-
-          <p id="exampleComment">
-            Here, all fields in the table are selected because of the use of * in place of the attributes.
-          </p>
-        </div>
-      </div>
-
-      <p class="ml-5 mr-5 mt-5 mb-4">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quod mollitia, nulla praesentium quae esse alias, ad odit doloribus eos porro harum vero
-        assumenda nobis, provident libero repudiandae totam aliquid ut. Perspiciatis nulla praesentium ab aut, fuga nobis ducimus tempora explicabo dicta
-        quia voluptatibus quis saepe eius quisquam non unde mollitia.
-      </p>
-
       <br>
 
       <!-- PRACTICE QUESTIONS -->
@@ -574,6 +392,7 @@ Customerid, Customername, CustomerAddress, CustomerCity, CustomerState, and Cust
 
   </div>
 
+  <script src="../../javascripts/prism.js"></script>
   <script src="http://code.jquery.com/jquery-3.3.1.min.js"
   integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
   crossorigin="anonymous"></script>
