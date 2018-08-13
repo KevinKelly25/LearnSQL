@@ -1,3 +1,12 @@
+<!--
+  signin.html - LearnSQL
+
+  Kevin Kelly
+  Web Applications and Databases for Education (WADE)
+
+  This file contains the html view of the sign in page for the LearnSQL website
+-->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -37,7 +46,7 @@
           <!-- Dynamically show sign in tabs or profile/logout tabs depending if user is logged in -->
           <span ng-show="!currentUser">
           <li class="nav-item">
-            <a href="views/account/signIn.html" class="nav-link pl-4"> Sign in</a>
+            <a href="./signIn.html" class="nav-link pl-4"> Sign in</a>
           </li>
           </span>
           <span ng-show="currentUser">
@@ -73,8 +82,8 @@
       <!-- Default login page or if login anchor is clicked -->
 			<span ng-show="form == 'login'">
 				<h1 class="h3 mb-3 font-weight-bold text-primary">Please Sign In</h1>
-				<label for="inputEmail" class="sr-only">Email address</label>
-				<input type="email" class="form-control " ng-model="email" placeholder="Email address" required autofocus>
+				<label for="inputEmail" class="sr-only">Username</label>
+				<input type="name" class="form-control " ng-model="username" placeholder="Username" required autofocus>
 				<label for="inputPassword" class="sr-only">Password</label>
 				<input type="password" class="form-control" ng-model="password" placeholder="Password" required>
 				<!-- TODO: Add a remember me when we can support it -->
@@ -90,6 +99,8 @@
       <!-- If the register anchor is clicked -->
 			<span ng-show="form == 'register'">
 				<h1 class="h3 mb-3 font-weight-bold text-primary">Register</h1>
+        <label for="inputUsername" class="sr-only">Username</label>
+        <input type="name" class="form-control" ng-model="username" placeholder="Username" required autofocus>
 				<label for="inputEmail" class="sr-only">Email address</label>
 				<input type="email" class="form-control" ng-model="email" placeholder="Email address" required autofocus>
 				<label for="inputName" class="sr-only">Full Name</label>

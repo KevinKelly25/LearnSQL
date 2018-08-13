@@ -1,27 +1,32 @@
 /**
- * controller.js
+ * controllers.js - LearnSQL
+ *
+ * Kevin Kelly
+ * Web Applications and Databases for Education (WADE)
+ *
  * This file contains the angularJS controllers that are used throughout the
  * LearnSQL website
  */
+
 
 var app = angular.module('LearnSQL', []);
 
 /**
  * The Question controller is used to create dynamic questions for the user using
- * the function answerQuestion
+ *  the function answerQuestion
  */
  // TODO: test whether all deletes are needed or can be cleaned up
 app.controller('Question', ($scope, $http) => {
 
   /**
    * The answeQuestion function is passed a user's query, $formData, and the correct
-   * answer, $statement. The controller will route the user's query to a post
-   * method that will return question database reponse to the supplied query.
-   * Upon success of the user query it will use the same post method with the
-   * correct query. Once successfully returned the two results will be compared
-   * using a deep comparision. If they match a correct answer message will appear.
-   * If results do not match or if any statement fails a wrong answer message will
-   * appear
+   *  answer, $statement. The controller will route the user's query to a post
+   *  method that will return question database reponse to the supplied query.
+   *  Upon success of the user query it will use the same post method with the
+   *  correct query. Once successfully returned the two results will be compared
+   *  using a deep comparision. If they match a correct answer message will appear.
+   *  If results do not match or if any statement fails a wrong answer message will
+   *  appear
    */
   $scope.answerQuestion = () => {
     $scope.statement = {"text":$scope.statementInHTML};
@@ -71,7 +76,7 @@ app.controller('Question', ($scope, $http) => {
 
 /**
  * This controller is used to dynamically display the navbar of the website
- * to show whether a user is logged in or not.
+ *  to show whether a user is logged in or not.
  */
 app.controller('NavCtrl', ($scope, $http) => {
   $scope.currentUser = {};
@@ -79,9 +84,9 @@ app.controller('NavCtrl', ($scope, $http) => {
 
   /**
    * This function is used to log the user out. The functionality is primarily
-   * in the REST api /auth/logout function. If logout is sucessful init() is called
-   * which will refresh the values on the page. This is done do that currentUser
-   * is updated.
+   *  in the REST api /auth/logout function. If logout is sucessful init() is called
+   *  which will refresh the values on the page. This is done once the currentUser
+   *  is updated.
    */
   $scope.logout = () => {
     $http.get('/auth/logout')
@@ -95,8 +100,8 @@ app.controller('NavCtrl', ($scope, $http) => {
 
   /**
    * This function is used to check the current user, if any. If there is a user
-   * the current user will be updated with its user information. The functionality
-   * is primarily in the REST api /auth/check function.
+   *  the current user will be updated with its user information. The functionality
+   *  is primarily in the REST api /auth/check function.
    */
   $scope.init = () => {
     $http.get('/auth/check')
@@ -119,17 +124,19 @@ app.controller('LoginCtrl', ($scope, $http, $location, $window) => {
 
   //user information
   this.user = {
+     username: null,
      email: null,
      password: null,
      fullName: null
   };
 
   /**
-   * This function takes user information into the controller. First email validation
-   * check is done first. Error message is displayed if email failed. If Passwords
-   * do not match then an error message is displayed. The post method '/auth/register'
-   * is used to register the user. Upon sucess a sucess message is displayed.
-   * If register method fails an error message is displayed showing the error
+   * This function takes user information into the controller. First email syntax validation
+   *  check is done, which checks that it fits into the general format of all emails.
+   *  Otherwise, an error message is displayed because email failed the check. If Passwords
+   *  do not match then an error message is displayed. The post method '/auth/register'
+   *  is used to register the user. Upon sucess a sucess message is displayed.
+   *  If register method fails an error message is displayed showing the error
    */
   $scope.register = () => {
     $scope.error = false;
@@ -138,6 +145,7 @@ app.controller('LoginCtrl', ($scope, $http, $location, $window) => {
     this.user.email = $scope.email;
     this.user.password = $scope.password;
     this.user.fullName = $scope.fullName;
+    this.user.username = $scope.username;
     //if email was entered incorrectly or not entered
     if (!$scope.email)
     {
@@ -165,15 +173,15 @@ app.controller('LoginCtrl', ($scope, $http, $location, $window) => {
 
   /**
    * This function takes user information into the controller. First email validation
-   * check is done first. Error message is displayed if email failed. If Passwords
-   * do not match then an error message is displayed. The post method '/auth/register'
-   * is used to register the user. Upon sucess a sucess message is displayed.
-   * If register method fails an error message is displayed showing the error
+   *  check is done first. Error message is displayed if email failed. If Passwords
+   *  do not match then an error message is displayed. The post method '/auth/register'
+   *  is used to register the user. Upon sucess a sucess message is displayed.
+   *  If register method fails an error message is displayed showing the error
    */
   $scope.login = () => {
     $scope.error = false;
     $scope.success = false;
-    this.user.email = $scope.email;
+    this.user.username = $scope.username;
     this.user.password = $scope.password;
     $http.post('/auth/login', this.user)
     .success((data) => {
@@ -190,4 +198,43 @@ app.controller('LoginCtrl', ($scope, $http, $location, $window) => {
 
   };
 
+});
+
+/**
+ * This controller is used for the admin control panel to add classes
+ */
+app.controller('AdminCtrl', ($scope, $http, $location, $window) => {
+  $scope.form = 'default';
+  $scope.error = false;
+  $scope.success = false;
+
+  //user information
+  this.class = {
+     name: null,
+     password: null
+  };
+
+  /**
+   * This function calls the /admin/addClass post method to create ClassDB databases
+   *  and updates the associated LearnSQL tables. While processing a message
+   *  appears to let the user know to wait.
+   */
+  $scope.addClass = () => {
+    $scope.error = false;
+    this.class.name = $scope.class;
+    this.class.password = $scope.password;
+    $scope.success = true;
+    $scope.message = 'Database Being Created, Please Wait';
+
+    $http.post('/admin/addClass', this.class)
+    .success((data) => {
+      $scope.success = true;
+      $scope.message = 'Database Successfully Created';
+    })
+    .error((error) => {
+      $scope.success = false;
+      $scope.error = true;
+      $scope.message = 'Database Could Not Be Created';
+    });
+  };
 });
