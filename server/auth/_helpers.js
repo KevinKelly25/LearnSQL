@@ -27,7 +27,7 @@ function comparePass(userPassword, databasePassword) {
  * This funciton creates a user in the database. A username is given by
  * the user and has to be unique for the database. The password is then salted and
  * hashed. Using pg-promise the user information is then inserted into the UserData
- * table. If sucessful a success response and message is returned. If there was an
+ * table. If successful a success response and message is returned. If there was an
  * error because email already exists that message is returned. Otherwise, the
  * database error is returned
  */

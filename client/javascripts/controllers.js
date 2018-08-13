@@ -85,7 +85,7 @@ app.controller('NavCtrl', ($scope, $http) => {
   /**
    * This function is used to log the user out. The functionality is primarily
    *  in the REST api /auth/logout function. If logout is sucessful init() is called
-   *  which will refresh the values on the page. This is done do that currentUser
+   *  which will refresh the values on the page. This is done once the currentUser
    *  is updated.
    */
   $scope.logout = () => {
@@ -131,8 +131,9 @@ app.controller('LoginCtrl', ($scope, $http, $location, $window) => {
   };
 
   /**
-   * This function takes user information into the controller. First email validation
-   *  check is done first. Error message is displayed if email failed. If Passwords
+   * This function takes user information into the controller. First email syntax validation
+   *  check is done, which checks that it fits into the general format of all emails.
+   *  Otherwise, an error message is displayed because email failed the check. If Passwords
    *  do not match then an error message is displayed. The post method '/auth/register'
    *  is used to register the user. Upon sucess a sucess message is displayed.
    *  If register method fails an error message is displayed showing the error
