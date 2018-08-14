@@ -5,8 +5,9 @@
     Web Applications and Databases for Education (WADE)
      
     The purpose of this file is to create a contact form so that 
-    a user may email directly through the contact.html page by 
-    using the contact form. 
+    a user may email directly through the contact.html page without 
+    having to navigate to their own email application to make a 
+    contact request.
 -->
 
 <!DOCTYPE html>
@@ -21,6 +22,7 @@
         integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp"
         crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.css" />
 
     <link rel="stylesheet" href="../stylesheets/font-awesome.min.css">
     <link rel="stylesheet" href="../stylesheets/bootstrap.css">
@@ -102,18 +104,20 @@
         <div class="contact-form-section container mt-4">
             <div class="row">
                 <!-- contact form -->
-                <div class="contact-form" ng-controller="ContactCtrl">
+                <div class="contact-form container-fluid" ng-controller="ContactCtrl">
                     <div class="card contact-form-background-color">
                         <div class="card-body">
                             <h3 class="text-center text-white">Please fill out this form to contact us</h3>
                             <hr class="bg-white">
 
+                            <!-- if message was not sent or a required input field was missing -->
                             <span ng-show="error">
                                 <div class="alert alert-danger">
                                     {{msg}}
                                 </div>
                             </span>
 
+                            <!-- if message ws sent successfully and no input fields are missing -->
                             <span ng-show="success">
                                 <div class="alert alert-success">
                                     {{msg}}
@@ -123,21 +127,13 @@
                             <form>
     
                                 <div class="row">
-                                    <!-- first name-->
+                                    <!-- full name-->
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <input type="name" class="form-control" ng-model="firstName" placeholder="First Name" required>
+                                            <input type="name" class="form-control" ng-model="fullName" placeholder="Full Name" required>
                                         </div>
                                     </div>
-                                    <!-- end of first name -->
-    
-                                    <!-- last name -->
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <input type="name" class="form-control" ng-model="lastName" placeholder="Last Name" required>
-                                        </div>
-                                    </div>
-                                    <!-- end of last name -->
+                                    <!-- end of full name -->
     
                                     <!-- email -->
                                     <div class="col-md-6">
@@ -147,13 +143,6 @@
                                     </div>
                                     <!-- end of email -->
     
-                                    <!-- phone number -->
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <input type="number" class="form-control" ng-model="phoneNumber" placeholder="Phone Number">
-                                        </div>
-                                    </div>
-                                    <!-- end of phone number -->
                                 </div>
     
                                 <!-- message -->
@@ -168,7 +157,7 @@
     
                                 <!-- submit message button -->
                                 <div class="col-md-12">
-                                    <button type="submit" value="submit" class="btn btn-outline-danger btn-block" ng-click="submit()">Submit</button>
+                                    <button type="submit" value="submit" class="btn btn-outline-danger btn-block form-control" ng-click="submit()">Submit</button>
                                 </div>
                                 <!-- end of submit message button -->
     
@@ -202,7 +191,6 @@
     </footer>
     <!-- END OF FOOTER -->
 
-    <!-- ADDED THIS -->
     <script src="http://code.jquery.com/jquery-3.3.1.min.js"
     integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
     crossorigin="anonymous"></script>
@@ -214,7 +202,6 @@
     crossorigin="anonymous"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.6/angular.min.js"></script>
     <script src="../javascripts/controllers.js"></script>
-    <!-- END OF ADDED THIS -->
 
 </body>
 </html>

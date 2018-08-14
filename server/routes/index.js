@@ -1,3 +1,12 @@
+/**
+ * index.js - LearnSQL
+ *
+ * Kevin Kelly, Michael Torres
+ * Web Applications and Databases for Education (WADE)
+ *
+ * This file contains the route (URL handlers) and exports the router
+ */
+
 const express = require('express');
 const router = express.Router();
 const { Pool } = require('pg');
@@ -49,13 +58,10 @@ router.post('/api/v1/questions', (req, res, next) => {
 
 router.post('/send', (req, res, next) => {
   const output = `
-        <p>You have a new app request</p>
-        <h3>app Details</h3>
+        <h3>You have a new contact request</h3>
         <ul>
-            <li>First Name: ${req.body.firstName}</li>
-            <li>Last Name: ${req.body.lastName}</li>
+            <li>Full Name: ${req.body.fullName}</li>
             <li>Email: ${req.body.email}</li>
-            <li>Phone Number: ${req.body.phoneNumber}</li>
         </ul>
         <h3>Message</h3>
         <p>${req.body.clientMessage}</p>
@@ -66,8 +72,8 @@ router.post('/send', (req, res, next) => {
     port: 587,
     secure: false, // true for 465, false for other ports
     auth: {
-        user: 'mtorr203@outlook.com', 
-        pass: 'M1c5t2258' 
+        user: 'test123203@outlook.com', // email used for sending the message (will need to be changed)
+        pass: 'testing123!' 
     },
     tls:{
         // rejectUnauthorized:false will probably need to be changed for production because
@@ -79,9 +85,9 @@ router.post('/send', (req, res, next) => {
 
   // setup email data with unicode symbols
   let mailOptions = {
-      from: '"Nodemailer app 👻" <mtorr203@outlook.com>', // sender address
-      to: 'testacct123203@gmail.com', // list of receivers
-      subject: 'Node app Request', // Subject line
+      from: '"Nodemailer app 👻" <test123203@outlook.com>', // sender address
+      to: 'testacct123203@gmail.com', // list of receivers (email will need to be changed)
+      subject: 'LearnSQL contact request', // Subject line
       text: 'Hello world?', // plain text body
       html: output // html body
   };
@@ -94,7 +100,6 @@ router.post('/send', (req, res, next) => {
       console.log('Message sent: %s', info.messageId);
       console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
 
-      //res.render('contact', {msg:'Email has been sent'});
       return res.status(200).json({status: 'email sent'});
   });
 });

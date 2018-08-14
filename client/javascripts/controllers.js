@@ -1,7 +1,7 @@
 /**
  * controllers.js - LearnSQL
  *
- * Kevin Kelly
+ * Kevin Kelly, Michael Torres
  * Web Applications and Databases for Education (WADE)
  *
  * This file contains the angularJS controllers that are used throughout the
@@ -239,21 +239,23 @@ app.controller('AdminCtrl', ($scope, $http, $location, $window) => {
   };
 });
 
+/**
+ * This controller is used to display success and error messges
+ * in the contact form
+ */
 app.controller('ContactCtrl', ($scope, $http) => {
   $scope.error = false;
   $scope.success = false;
 
-  //user information
+  //client information
   this.user = {
-     firstName: null,
-     lastName: null,
+     fullName: null,
      email: null,
-     phoneNumber: null,
      clientMessage: null
   };
 
   /**
-   * This function takes in user information only, (first name, last name, email, phone number, and their message)
+   * This function takes in user information only, (their full name, email, and their message)
    * and check to see if any of the input fields are missing (left empty). 
    */
 
@@ -262,26 +264,19 @@ app.controller('ContactCtrl', ($scope, $http) => {
     $scope.success = true;
     $scope.msg = 'email being sent, please wait...';
 
-    this.user.firstName = $scope.firstName;
-    this.user.lastName = $scope.lastName;
+    this.user.fullName = $scope.fullName;
     this.user.email = $scope.email;
-    this.user.phoneNumber = $scope.phoneNumber;
     this.user.clientMessage = $scope.clientMessage;
 
-    if(!$scope.firstName)
+    // if user does not enter their name
+    if(!$scope.fullName)
     {
       $scope.error = true;
       $scope.success = false;
       $scope.msg = 'first name missing';
     }
 
-    if(!$scope.lastName)
-    {
-      $scope.error = true;
-      $scope.success = false;
-      $scope.msg = 'last name missing';
-    }
-
+    // if user does not enter their email
     if(!$scope.email)
     {
       $scope.error = true;
@@ -289,6 +284,7 @@ app.controller('ContactCtrl', ($scope, $http) => {
       $scope.msg = 'email missing';
     }
 
+    // if user does not enter the message to be delivered
     if(!$scope.clientMessage)
     {
       $scope.error = true;
@@ -296,7 +292,7 @@ app.controller('ContactCtrl', ($scope, $http) => {
       $scope.msg = 'message content missing';
     }
 
-    
+
     $http.post('/send', this.user)
     .success((data) => {
       $scope.success = true;
