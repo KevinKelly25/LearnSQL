@@ -47,28 +47,33 @@
                         <a href="http://localhost:3000/" class="nav-link text-dark">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a href="../workshop.html" class="nav-link text-dark">Workshop</a>
+                        <a href="../views/workshop.html" class="nav-link text-dark">Workshop</a>
                     </li>
                     <li class="nav-item active">
-                        <a href="../learn/select.html" id="learn-tab" class="nav-link shadow-lg text-white">Learn</a>
+                        <a href="../views/learn/select.html" id="learn-tab" class="nav-link shadow-lg text-white">Learn</a>
                     </li>
                     <li class="nav-item">
                         <a href="../quizzes.html" class="nav-link text-dark">Quizzes</a>
                     </li>
                     <span ng-show="!currentUser">
-                    <li class="nav-item">
-                        <a href="../views/Account/signIn.html" class="nav-link text-dark">Sign in</a>
-                    </li>
+                        <li class="nav-item">
+                            <a href="../views/Account/signIn.html" class="nav-link text-dark">Sign in</a>
+                        </li>
+                    </span>
+                    <span ng-show="currentUser.isadmin">
+                        <li class="nav-item">
+                          <a href="../views/controlPanels/admin.html" class="nav-link border-right px-4">Admin Control Panel</a>
+                        </li>
                     </span>
                     <span ng-show="currentUser">
-                    <li class="nav-item">
-                        <a href="../account/profile.html" class="nav-link text-dark">Profile</a>
-                    </li>
+                        <li class="nav-item">
+                            <a href="../views/Account/profile.html" class="nav-link text-dark">Profile</a>
+                        </li>
                     </span>
                     <span ng-show="currentUser">
-                    <li class="nav-item">
-                        <a href="#" class="nav-link text-dark" ng-click="logout()">Logout</a>
-                    </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link text-dark" ng-click="logout()">Logout</a>
+                        </li>
                     </span>
                 </ul>
             </div>

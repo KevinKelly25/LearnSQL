@@ -11,9 +11,7 @@
   const morgan = require('morgan');
   const passport = require('passport');
   const nodemailer = require('nodemailer');
-  
-  // end of added this
-  
+    
   // *** view folders *** //
   const viewFolders = [
     path.join(__dirname, '..', 'views')
