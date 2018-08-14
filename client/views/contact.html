@@ -1,12 +1,12 @@
 <!-- contact.html - LearnSQL
      
-    Chris Innaco, Kevin Kelly, Michael Torres
+    Michael Torres
      
-     Web Applications and Databases for Education (WADE)
+    Web Applications and Databases for Education (WADE)
      
-     The purpose of this file is to create a contact form so that 
-     a user may email directly through the contact.html page by 
-     using the contact form. 
+    The purpose of this file is to create a contact form so that 
+    a user may email directly through the contact.html page by 
+    using the contact form. 
 -->
 
 <!DOCTYPE html>
@@ -55,7 +55,7 @@
                     </li>
                     <span ng-show="!currentUser">
                     <li class="nav-item">
-                        <a href="../Account/signIn.html" class="nav-link text-dark">Sign in</a>
+                        <a href="../views/Account/signIn.html" class="nav-link text-dark">Sign in</a>
                     </li>
                     </span>
                     <span ng-show="currentUser">
@@ -98,66 +98,89 @@
         </p>
         <!-- end of contact page description -->
 
-        <div class="py-5" ng-controller="LoginCtrl as ctrl">
-            <form class="form-signin">
-                <!-- TODO: add a logo here	 -->
-                <!-- <img class="mb-4" src="../../assets/brand/bootstrap-solid.svg" alt="" width="72" height="72"> -->
-                <span ng-show="error">
-                    <div class="alert alert-danger">
-                            {{ message }}
-                    </div>
-                </span>
-          <span ng-show="success">
-            <div class="alert alert-success">
-                {{ message }}
-            </div>
-          </span>
-          <!-- Default login page or if login anchor is clicked -->
-                <span ng-show="form == 'login'">
-                    <h1 class="h3 mb-3 font-weight-bold text-primary">Please Sign In</h1>
-                    <label for="inputEmail" class="sr-only">Email address</label>
-                    <input type="email" class="form-control " ng-model="email" placeholder="Email address" required autofocus>
-                    <label for="inputPassword" class="sr-only">Password</label>
-                    <input type="password" class="form-control" ng-model="password" placeholder="Password" required>
-                    <!-- TODO: Add a remember me when we can support it -->
-                    <!-- <div class="checkbox mb-3">
-                        <label>
-                            <input type="checkbox" value="remember-me"> Remember me
-                        </label>
-                    </div> -->
-                    <button class="btn btn-lg btn-primary btn-block" value="login" type="submit" ng-click="login()">Sign In</button>
-                    <a class="pl-4 pr-5" href="#" ng-click="form = 'register'">Register</a>
-                    <a class="pl-4" href="#" ng-click="form = 'forgotPassword'">Forgot Password?</a>
-                </span>
-          <!-- If the register anchor is clicked -->
-                <span ng-show="form == 'register'">
-                    <h1 class="h3 mb-3 font-weight-bold text-primary">Register</h1>
-                    <label for="inputEmail" class="sr-only">Email address</label>
-                    <input type="email" class="form-control" ng-model="email" placeholder="Email address" required autofocus>
-                    <label for="inputName" class="sr-only">Full Name</label>
-                    <input type="name"  class="form-control" ng-model="fullName" placeholder="Full Name" required>
-                    <label for="inputPassword" class="sr-only">Password</label>
-                    <input type="password" class="form-control" ng-model="password" placeholder="Password" required>
-            <label for="inputPassword2" class="sr-only">Password2</label>
-            <input type="password" class="form-control" ng-model="password2" placeholder="Re-type Password" required>
-                    <button class="btn btn-lg btn-primary btn-block" type="submit" ng-click="register()">Register</button>
-                    <a class="pl-4 pr-5" href="#" ng-click="form = 'login'">Sign In</a>
-                    <a class="pl-4" href="#" ng-click="form = 'forgotPassword'">Forgot Password?</a>
-                </span>
-          <!-- If the forgotPassword anchor is clicked -->
-                <span ng-show="form == 'forgotPassword'">
-            <!-- TODO: Get working -->
-                    <h1 class="h3 mb-3 font-weight-bold text-primary">Forgot Password?</h1>
-                    <label for="inputEmail" class="sr-only">Email address</label>
-                    <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
-                    <button class="btn btn-lg btn-primary btn-block" type="submit" ng-click="forgotPassword()">Send Email</button>
-                    <a class="pl-4 pr-5" href="#" ng-click="form = 'login'">Sign In</a>
-                    <a class="pl-4" href="#" ng-click="form = 'register'">Register</a>
-                </span>
-                <p class="mt-5 mb-3 text-muted">&copy; 2018-2019</p>
-            </form>
-        </div>
+        <!-- contact form section -->
+        <div class="contact-form-section container mt-4">
+            <div class="row">
+                <!-- contact form -->
+                <div class="contact-form" ng-controller="ContactCtrl">
+                    <div class="card contact-form-background-color">
+                        <div class="card-body">
+                            <h3 class="text-center text-white">Please fill out this form to contact us</h3>
+                            <hr class="bg-white">
 
+                            <span ng-show="error">
+                                <div class="alert alert-danger">
+                                    {{msg}}
+                                </div>
+                            </span>
+
+                            <span ng-show="success">
+                                <div class="alert alert-success">
+                                    {{msg}}
+                                </div>
+                            </span>
+
+                            <form>
+    
+                                <div class="row">
+                                    <!-- first name-->
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <input type="name" class="form-control" ng-model="firstName" placeholder="First Name" required>
+                                        </div>
+                                    </div>
+                                    <!-- end of first name -->
+    
+                                    <!-- last name -->
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <input type="name" class="form-control" ng-model="lastName" placeholder="Last Name" required>
+                                        </div>
+                                    </div>
+                                    <!-- end of last name -->
+    
+                                    <!-- email -->
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <input type="email" class="form-control" ng-model="email" placeholder="Email" required>
+                                        </div>
+                                    </div>
+                                    <!-- end of email -->
+    
+                                    <!-- phone number -->
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <input type="number" class="form-control" ng-model="phoneNumber" placeholder="Phone Number">
+                                        </div>
+                                    </div>
+                                    <!-- end of phone number -->
+                                </div>
+    
+                                <!-- message -->
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <textarea name="message" class="form-control" ng-model="clientMessage" placeholder="Message" required></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- end of message -->
+    
+                                <!-- submit message button -->
+                                <div class="col-md-12">
+                                    <button type="submit" value="submit" class="btn btn-outline-danger btn-block" ng-click="submit()">Submit</button>
+                                </div>
+                                <!-- end of submit message button -->
+    
+                            </form>
+    
+                        </div>
+                    </div>
+                </div>
+                <!-- end of contact form -->
+            </div>
+        </div>
+        <!-- end of contact-form-section -->
     </section>
     <!-- END OF PAGE CONTENT -->
 

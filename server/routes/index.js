@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { Pool } = require('pg');
 const path = require('path');
+const nodemailer = require('nodemailer');
 const connectionStringQuestions = 'postgresql://postgres:password@localhost:5432/questions';
 const connectionStringLearnsql = 'postgresql://postgres:password@localhost:5432/learnsql';
 
@@ -46,28 +47,39 @@ router.post('/api/v1/questions', (req, res, next) => {
   });
 });
 
-router.post('/send', (req, res) => {
-  console.log('app.post is working')
+router.post('/send', (req, res, next) => {
+  const output = `
+        <p>You have a new app request</p>
+        <h3>app Details</h3>
+        <ul>
+            <li>First Name: ${req.body.firstName}</li>
+            <li>Last Name: ${req.body.lastName}</li>
+            <li>Email: ${req.body.email}</li>
+            <li>Phone Number: ${req.body.phoneNumber}</li>
+        </ul>
+        <h3>Message</h3>
+        <p>${req.body.clientMessage}</p>
+    `;
 
   let transporter = nodemailer.createTransport({
-      host: 'smtp-mail.outlook.com', // host for outlook mail
-      port: 587,
-      secure: false, // true for 465, false for other ports
-      auth: {
-          user: 'mtorr203@outlook.com', 
-          pass: '88521134Mmfour' 
-      },
-      tls:{
-          // rejectUnauthorized:false will probably need to be changed for production because
-          // it can leave you vulnerable to MITM attack - secretly relays and alters the 
-          // communication betwee two parties.
-          rejectUnauthorized:false
-      }
+    host: 'smtp-mail.outlook.com', // host for outlook mail
+    port: 587,
+    secure: false, // true for 465, false for other ports
+    auth: {
+        user: 'mtorr203@outlook.com', 
+        pass: 'M1c5t2258' 
+    },
+    tls:{
+        // rejectUnauthorized:false will probably need to be changed for production because
+        // it can leave you vulnerable to MITM attack - secretly relays and alters the 
+        // communication betwee two parties.
+        rejectUnauthorized:false
+    }
   });
 
   // setup email data with unicode symbols
   let mailOptions = {
-      from: '"Nodemailer router 👻" <mtorr203@outlook.com>', // sender address
+      from: '"Nodemailer app 👻" <mtorr203@outlook.com>', // sender address
       to: 'testacct123203@gmail.com', // list of receivers
       subject: 'Node app Request', // Subject line
       text: 'Hello world?', // plain text body
@@ -81,8 +93,9 @@ router.post('/send', (req, res) => {
       }
       console.log('Message sent: %s', info.messageId);
       console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
-      
-      res.status(200).json({status: 'sent email'});
+
+      //res.render('contact', {msg:'Email has been sent'});
+      return res.status(200).json({status: 'email sent'});
   });
 });
 

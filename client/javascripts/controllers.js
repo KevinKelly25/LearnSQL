@@ -192,40 +192,74 @@ app.controller('LoginCtrl', ($scope, $http, $location, $window) => {
 
 });
 
-app.controller('ContactCtrl', ($scope, $http, $location, $window) => {
-  $scope.form = 'email';
+app.controller('ContactCtrl', ($scope, $http) => {
   $scope.error = false;
   $scope.success = false;
 
   //user information
   this.user = {
+     firstName: null,
+     lastName: null,
      email: null,
-     password: null,
-     fullName: null
+     phoneNumber: null,
+     clientMessage: null
   };
 
   /**
-   * This function takes user information into the controller. First email validation
-   * check is done first. Error message is displayed if email failed. If Passwords
-   * do not match then an error message is displayed. The post method '/auth/register'
-   * is used to register the user. Upon sucess a sucess message is displayed.
-   * If register method fails an error message is displayed showing the error
+   * This function takes in user information only, (first name, last name, email, phone number, and their message)
+   * and check to see if any of the input fields are missing (left empty). 
    */
-  $scope.login = () => {
+
+  $scope.submit = () => {
     $scope.error = false;
-    $scope.success = false;
+    $scope.success = true;
+    $scope.msg = 'email being sent, please wait...';
+
+    this.user.firstName = $scope.firstName;
+    this.user.lastName = $scope.lastName;
     this.user.email = $scope.email;
-    this.user.password = $scope.password;
-    $http.post('/auth/login', this.user)
+    this.user.phoneNumber = $scope.phoneNumber;
+    this.user.clientMessage = $scope.clientMessage;
+
+    if(!$scope.firstName)
+    {
+      $scope.error = true;
+      $scope.success = false;
+      $scope.msg = 'first name missing';
+    }
+
+    if(!$scope.lastName)
+    {
+      $scope.error = true;
+      $scope.success = false;
+      $scope.msg = 'last name missing';
+    }
+
+    if(!$scope.email)
+    {
+      $scope.error = true;
+      $scope.success = false;
+      $scope.msg = 'email missing';
+    }
+
+    if(!$scope.clientMessage)
+    {
+      $scope.error = true;
+      $scope.success = false;
+      $scope.msg = 'message content missing';
+    }
+
+    
+    $http.post('/send', this.user)
     .success((data) => {
       $scope.success = true;
-      $scope.message = data;
+      $scope.msg = data.status;
     })
     .error((error) => {
       $scope.error = true;
-      $scope.message = error;
+      $scope.success = false;
+      $scope.msg = 'error';
     });
+
   };
 });
-
-//
