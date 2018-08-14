@@ -1,3 +1,14 @@
+/**
+ * auth.js - LearnSQL
+ *
+ * Kevin Kelly
+ * Web Applications and Databases for Education (WADE)
+ *
+ * This file contains the routes used for authorization of users
+ */
+
+
+
 const express = require('express');
 const router = express.Router();
 

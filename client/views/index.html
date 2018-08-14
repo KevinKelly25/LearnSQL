@@ -1,3 +1,11 @@
+<!--
+  index.html - LearnSQL
+
+  Kevin Kelly, Michael Torres
+  Web Applications and Databases for Education (WADE)
+
+  This file contains the html view of the index page for the LearnSQL website
+-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -36,6 +44,11 @@
           <span ng-show="!currentUser">
           <li class="nav-item">
             <a href="views/account/signIn.html" class="nav-link pl-4"> Sign in</a>
+          </li>
+          </span>
+          <span ng-show="currentUser.isadmin">
+          <li class="nav-item">
+            <a href="views/controlPanels/admin.html" class="nav-link border-right px-4">Admin Control Panel</a>
           </li>
           </span>
           <span ng-show="currentUser">

@@ -1,3 +1,15 @@
+/**
+ * local.js - LearnSQL
+ *
+ * Kevin Kelly
+ * Web Applications and Databases for Education (WADE)
+ *
+ * This file contains the passport.js serialization and deserialization
+ * of the user.
+ */
+
+
+
 const passport = require('passport');
 const db = require('../db/ldb.js');
 
@@ -8,7 +20,7 @@ module.exports = () => {
    * to the session.
    */
   passport.serializeUser((user, done) => {
-    done(null, user.userid);
+    done(null, user.username);
   });
 
   /**
@@ -19,9 +31,9 @@ module.exports = () => {
    * displaying the id that failed.
    */
   passport.deserializeUser((id, done)=>{
-    db.one("SELECT userid, fullname, email, datejoined " +
+    db.one("SELECT username, fullname, email, datejoined, isAdmin, isTeacher " +
            "FROM UserData " +
-           "WHERE userid = $1", id)
+           "WHERE username = $1", id)
     .then((user)=>{
       done(null, user);
     })
