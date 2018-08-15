@@ -1,0 +1,368 @@
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<!------ Include the above in your HEAD tag ---------->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Bootstrap Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../../stylesheets/instructor.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.6/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="../../stylesheets/admin.css">
+
+
+</head>
+<body ng-app="LearnSQL">
+<br>
+    <div class="container">
+        <div class="wrapper">
+            <!-- SIDEBAR  -->
+            <nav id="sidebar">
+                <ul class="nav nav-tabs list-unstyled components" id="myTab" role="tablist">
+                    <!-- SIDEBAR HEADER -->
+                    <h2 id="sidebarHeader" class="font-weight-bold text-center mt-4">Courses</h2>
+                    <!-- SIDEBAR SECTIONS -->
+                    <li class="nav-item w-100">
+                        <a class="nav-link active text-center" data-toggle="tab" href="#home" role="tab" aria-controls="home">course 1</a>
+                    </li>
+                    <li class="nav-item w-100">
+                        <a class="nav-link text-center" data-toggle="tab" href="#profile" role="tab" aria-controls="profile">course 2</a>
+                    </li>
+                    <li class="nav-item w-100">
+                        <a class="nav-link text-center" data-toggle="tab" href="#messages" role="tab" aria-controls="messages">course 3</a>
+                    </li>
+                    <li class="nav-item w-100">
+                        <a class="nav-link text-center" data-toggle="tab" href="#settings" role="tab" aria-controls="settings">course 4</a>
+                    </li>
+                    <li class="nav-item w-100">
+                        <a href="#add-student" data-toggle="tab" role="tab" aria-controls="add-student" class="nav-link text-center"><h3>Add Student</h3></a>
+                    </li>
+                    <li class="nav-item w-100">
+                        <a href="#add-course" data-toggle="tab" role="tab" aria-controls="add-course" class="nav-link text-center"><h3>Add Course</h3></a>
+                    </li>
+                </ul>
+            </nav>
+
+            <section id="content">
+                <!-- NAVBAR -->
+                <nav class="navbar navbar-expand-lg navbar-light bg-white" ng-controller="NavCtrl" data-ng-init="init()">
+                    <div class="container-fluid">
+                        <!-- NAVBAR HEADER -->
+                        <h2 id="navbarTitle" class="font-weight-bold ml-3 mt-2">
+                            <a href="http://localhost:3000/">LearnSQL</a>
+                        </h2>
+                        <!-- button to close sidebar -->
+                        <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                
+                        <!-- NAVBAR SECTIONS -->
+                        <div class="collapse navbar-collapse" id="navbarCollapse">
+                            <ul class="nav navbar-nav ml-auto">
+                            <li class="nav-item">
+                                <a href="http://localhost:3000/" class="nav-link text-dark">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../workshop.html" class="nav-link text-dark">Workshop</a>
+                            </li>
+                            <li class="nav-item active">
+                                <a href="../learn/select.html" id="learnTab" class="nav-link shadow-lg text-white">Learn</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../quizes.html" class="nav-link text-dark">Quizzes</a>
+                            </li>
+                            <span ng-show="!currentUser">
+                                <li class="nav-item">
+                                    <a href="../Account/signIn.html" class="nav-link text-dark">Sign in</a>
+                                </li>
+                            </span>
+                            <span ng-show="currentUser">
+                                <li class="nav-item">
+                                    <a href="../account/profile.html" class="nav-link text-dark">Profile</a>
+                                </li>
+                            </span>
+                            <span ng-show="currentUser">
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link text-dark" ng-click="logout()">Logout</a>
+                                </li>
+                            </span>
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+                
+                <div class="tab-content ml-4 mr-4">
+                    <div class="tab-pane active" id="home" role="tabpanel">
+                        <!-- PAGE TITLE -->
+                        <h2 id="pageTitle" class="text-center shadow-none font-weight-bold mb-5">
+                            <!-- TOGGLE SIDEBAR BUTTON -->
+                            <button type="button" id="sidebarCollapse" class="btn btn-dark float-left" style="margin-left: -1em">
+                                <span><i class="fas fa-angle-left"></i></span>
+                            </button>TITLE FOR PAGE GOES HERE
+                        </h2>
+                        
+                        <h3 class="lead">Course 1:</h3>
+                        <table class="table table-striped bg-table-color text-white">
+                            <thead class="bg-dark">
+                                <tr>
+                                    <th>FIRST NAME</th>
+                                    <th>LAST NAME</th>
+                                    <th>SECTION</th>
+                                    <th>...</th>
+                                    <th>...</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>a first name</td>
+                                    <td>a last name</td>
+                                    <td>Section #</td>
+                                    <td>...</td>
+                                    <td>...</td>
+                                </tr>
+                                <tr>
+                                    <td>a first name</td>
+                                    <td>Last name</td>
+                                    <td>Section #</td>
+                                    <td>...</td>
+                                    <td>...</td>
+                                </tr>
+                                <tr>
+                                    <td>a first name</td>
+                                    <td>Last name</td>
+                                    <td>Section #</td>
+                                    <td>...</td>
+                                    <td>...</td>
+                                </tr>
+                                <tr>
+                                    <td>a first name</td>
+                                    <td>Last name</td>
+                                    <td>Section #</td>
+                                    <td>...</td>
+                                    <td>...</td>
+                                </tr>
+                                <tr>
+                                    <td>a first name</td>
+                                    <td>Last name</td>
+                                    <td>Section #</td>
+                                    <td>...</td>
+                                    <td>...</td>
+                                </tr>
+                                <tr>
+                                    <td>a first name</td>
+                                    <td>Last name</td>
+                                    <td>Section #</td>
+                                    <td>...</td>
+                                    <td>...</td>
+                                </tr>
+                                <tr>
+                                    <td>a first name</td>
+                                    <td>Last name</td>
+                                    <td>Section #</td>
+                                    <td>...</td>
+                                    <td>...</td>
+                                </tr>
+                                <tr>
+                                    <td>a first name</td>
+                                    <td>Last name</td>
+                                    <td>Section #</td>
+                                    <td>...</td>
+                                    <td>...</td>
+                                </tr>
+                                <tr>
+                                    <td>a first name</td>
+                                    <td>Last name</td>
+                                    <td>Section #</td>
+                                    <td>...</td>
+                                    <td>...</td>
+                                </tr>
+                                <tr>
+                                    <td>a first name</td>
+                                    <td>Last name</td>
+                                    <td>Section #</td>
+                                    <td>...</td>
+                                    <td>...</td>
+                                </tr>
+                                <tr>
+                                    <td>a first name</td>
+                                    <td>Last name</td>
+                                    <td>Section #</td>
+                                    <td>...</td>
+                                    <td>...</td>
+                                </tr>
+                                <tr>
+                                    <td>a first name</td>
+                                    <td>Last name</td>
+                                    <td>Section #</td>
+                                    <td>...</td>
+                                    <td>...</td>
+                                </tr>
+                                <tr>
+                                    <td>a first name</td>
+                                    <td>Last name</td>
+                                    <td>Section #</td>
+                                    <td>...</td>
+                                    <td>...</td>
+                                </tr>
+                                <tr>
+                                    <td>a first name</td>
+                                    <td>Last name</td>
+                                    <td>Section #</td>
+                                    <td>...</td>
+                                    <td>...</td>
+                                </tr>
+                                <tr>
+                                    <td>a first name</td>
+                                    <td>Last name</td>
+                                    <td>Section #</td>
+                                    <td>...</td>
+                                    <td>...</td>
+                                </tr>
+                                <tr>
+                                    <td>a first name</td>
+                                    <td>Last name</td>
+                                    <td>Section #</td>
+                                    <td>...</td>
+                                    <td>...</td>
+                                </tr>
+                                <tr>
+                                    <td>a first name</td>
+                                    <td>Last name</td>
+                                    <td>Section #</td>
+                                    <td>...</td>
+                                    <td>...</td>
+                                </tr>
+                                <tr>
+                                    <td>a first name</td>
+                                    <td>Last name</td>
+                                    <td>Section #</td>
+                                    <td>...</td>
+                                    <td>...</td>
+                                </tr>
+                                <tr>
+                                    <td>a first name</td>
+                                    <td>Last name</td>
+                                    <td>Section #</td>
+                                    <td>...</td>
+                                    <td>...</td>
+                                </tr>
+                                <tr>
+                                    <td>a first name</td>
+                                    <td>Last name</td>
+                                    <td>Section #</td>
+                                    <td>...</td>
+                                    <td>...</td>
+                                </tr>
+                                <tr>
+                                    <td>a first name</td>
+                                    <td>Last name</td>
+                                    <td>Section #</td>
+                                    <td>...</td>
+                                    <td>...</td>
+                                </tr>
+                                <tr>
+                                    <td>a first name</td>
+                                    <td>Last name</td>
+                                    <td>Section #</td>
+                                    <td>...</td>
+                                    <td>...</td>
+                                </tr>
+                                <tr>
+                                    <td>a first name</td>
+                                    <td>Last name</td>
+                                    <td>Section #</td>
+                                    <td>...</td>
+                                    <td>...</td>
+                                </tr>
+                                <tr>
+                                    <td>a first name</td>
+                                    <td>Last name</td>
+                                    <td>Section #</td>
+                                    <td>...</td>
+                                    <td>...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+
+                    <div class="tab-pane font-weight-bold" id="profile" role="tabpanel"><h1>table for course 2</h1></div>
+                    <div class="tab-pane alert-danger" id="messages" role="tabpanel"><h1>table for course 3</h1></div>
+                    <div class="tab-pane alert-success" id="settings" role="tabpanel"><h1>table for course 4</h1></div>
+
+                    <!-- Login form -->
+		            <div class=" tab-pane py-5" id="add-course" role="tabpanel" ng-controller="AdminCtrl">
+                        <form class="form-admin">
+                            <!-- TODO: add a logo here	 -->
+                            <!-- <img class="mb-4" src="../../assets/brand/bootstrap-solid.svg" alt="" width="72" height="72"> -->
+                            <span ng-show="error">
+                                <div class="alert alert-danger">
+                                        {{ message }}
+                                </div>
+                            </span>
+                            <span ng-show="success">
+                                <div class="alert alert-success">
+                                    {{ message }}
+                                </div>
+                            </span>
+                            <!-- Default login page or if login anchor is clicked -->
+                            <span ng-show="form == 'default'">
+                                <h1 class="h3 mb-3 font-weight-bold text-primary">Admin Control Panel</h1>
+                                <label for="inputClass" class="sr-only">Class Name</label>
+                                <input type="name" class="form-control " ng-model="class" placeholder="Class Name" required autofocus>
+                                <!-- TODO: Add a remember me when we can support it -->
+                                <!-- <div class="checkbox mb-3">
+                                    <label>
+                                        <input type="checkbox" value="remember-me"> Remember me
+                                    </label>
+                                </div> -->
+                                <button class="btn btn-lg btn-primary btn-block" value="login" type="submit" ng-click="addClass()">Add Class</button>
+                            </span>
+                            <p class="mt-5 mb-3 text-muted">&copy; 2018-2019</p>
+                        </form>
+                    </div>
+
+                </div>
+
+                <!-- MAIN FOOTER -->
+                <footer id="main-footer" class="bg-white mt-3">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col text-center">
+                                <div class="py-4">
+                                    <h1 id="learnSQLFooterHeader" class="h3">
+                                        <a href="http://localhost:3000/">LearnSQL</a>
+                                    </h1>
+                                    <p>Copyright &copy; 2018</p>
+                                    <a href="contact.html" id="contactUsButton" class="btn shadow" role="button">Contact Us</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </footer>
+            </section>
+
+        </div>
+    </div>
+
+    <script src="http://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+  integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+  crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"
+  integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T"
+  crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
+
+  <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.6/angular.min.js"></script>
+  <script src="../../javascripts/controllers.js"></script>
+</body>
+</html>
