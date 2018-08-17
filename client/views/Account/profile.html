@@ -1,38 +1,196 @@
+<!--
+  profile.html - LearnSQL
+
+  Christopher Innaco
+  Web Applications and Databases for Education (WADE)
+
+  This file contains the HTML view of the user profile page for the
+   LearnSQL website
+-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
+  <meta charset="UTF-8"/>
   <title>Account</title>
   <link rel = "stylesheet" type = "text/css" href = "../../stylesheets/style.css" />
-  <link href='https://fonts.googleapis.com/css?family=Alegreya:400,700,700i' rel='stylesheet'>
-  <link href="https://fonts.googleapis.com/css?family=Merriweather:400,700" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css"
+    integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp"
+    crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
+  <link rel="stylesheet" href="../../stylesheets/font-awesome.min.css">
+  <link rel="stylesheet" href="../../stylesheets/bootstrap.css">
+  <link rel="stylesheet" href="../../stylesheets/profile.css">
 </head>
-<body>
+<body ng-app="LearnSQL">
 
-  <nav class="nav-menu">
-    <ul>
-      <!--WCDB is temp until logo is done-->
-      <li style="background-color: #4CAF50; width: 15%;"><a href = "http://localhost:3000/" style="font-size:1.3em;font-weight:bold;padding:9px;margin:0;">W C D B</a></li>
-      <li><a href="http://localhost:3000/">Home</a></li>
-      <li><a href="../workshop.html">Workshop</a></li>
-      <li><a href="../learn/learn.html">Learn</a></li>
-      <li style="float:right"><a class="active" style="float:right" href="./signIn.html">Account</a></li>
-    </ul>
-  </nav>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-white" ng-controller="NavCtrl" data-ng-init="init()">
+    <div class="container-fluid">
+        <!-- Navbar header -->
+        <h2 class="font-weight-bold ml-3 mt-2">
+            <a href="http://localhost:3000/" id="navbar-title">LearnSQL</a>
+        </h2>
+        <!-- End Navbar header -->
+        
+        <!-- Navbar sections -->
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="nav navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a href="http://localhost:3000/" class="nav-link text-dark">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a href="/views/workshop.html" class="nav-link text-dark">Workshop</a>
+                </li>
+                <li class="nav-item">
+                    <a href="/views/learn/select.html" id="learn-tab" class="nav-link text-dark">Learn</a>
+                </li>
+                <li class="nav-item">
+                    <a href="/quizzes.html" class="nav-link text-dark">Quizzes</a>
+                </li>
+                <span ng-show="!currentUser">
+                    <li class="nav-item">
+                        <a href="/views/Account/signIn.html" class="nav-link text-dark">Sign in</a>
+                    </li>
+                </span>
+                <span ng-show="currentUser.isadmin">
+                    <li class="nav-item">
+                      <a href="/views/controlPanels/admin.html" class="nav-link border-right px-4">Admin Control Panel</a>
+                    </li>
+                </span>
+                <span ng-show="currentUser">
+                    <li class="nav-item active">
+                        <a href="/views/Account/profile.html" id="profile-tab" class="nav-link shadow-lg text-white">Profile</a>
+                    </li>
+                </span>
+                <span ng-show="currentUser">
+                    <li class="nav-item">
+                        <a href="#" class="nav-link text-dark" ng-click="logout()">Logout</a>
+                    </li>
+                </span>
+            </ul>
+        </div>
+        <!-- End Navbar sections -->
+      </div>
+    </nav>
+    <!-- End Navbar -->
 
-  <div class="vertical-menu">
-    <h3 style="background-color:#333;margin-top:0;padding:10px;margin-bottom:0;color:white;">Account</h3>
-    <a href="./profile.html" class="active">Profile</a>
-    <a href="./classes.html">Classes</a>
-  </div>
+    <!-- Sidebar -->
+    <div class="card sidebar">
+      <div class="list-group panel">
+        <a class="list-group-item" href="#" data-parent="#sidebar">Info</a>
+        <a class="list-group-item " href="#dropdown1" data-toggle="collapse" data-parent="#sidebar">Class List <i class="fa fa-caret-down"></i></a>
+          <div class="collapse" id="dropdown1">
+            <a class="list-group-item" href="javascript:;">CS 205</a>
+            <a class="list-group-item" href="javascript:;">CS 305</a>
+          </div>  
+          
+        <a class="list-group-item" href="#" data-parent="#sidebar">Grades</a>
 
-  <div class="profile">
-    <p>
-      <b>Account Name:</b> Kevin Kelly <br>
-      <b>Date Joined: </b> 3/10/18 <br>
-      <b>Email:</b>        kelly263@connect.wcsu.edu <br>
-      <input type="Submit" value="Change Password">
-    </p>
-  </div>
+        <a class="list-group-item" href="#dropdown2" data-toggle="collapse" data-parent="#sidebar">Control Panel <i class="fa fa-caret-down"></i></a>
+          <div class="collapse" id="dropdown2">
+            <a class="list-group-item" href="javascript:;">Admin</a>
+            <a class="list-group-item" href="javascript:;">Instructor</a>
+          </div>
+
+        <a class="list-group-item list-group-item-success" href="#" data-toggle="collapse" data-parent="#sidebar">Settings</a>
+
+        </div>
+      </div> 
+    <!-- End Sidebar -->
+    
+    <!-- Page content -->
+    <section id="page-content">
+
+      <h1 id="page-title" class="text-center font-weight-bold">My Profile</h1>
+
+      <section id="page-body">
+
+        <!-- Info -->
+
+        <div class="container-fluid"> 
+
+          <table class="table table-dark">   
+            <tbody>
+              <tr>
+                <th scope="row">Username</th>
+                <td>cinnaco</td>
+                    
+              </tr>
+              <tr>
+                <th scope="row">Full Name</th>
+                <td>Christopher Innaco</td>
+                    
+              </tr>
+              <tr>
+                <th scope="row">E-mail</th>
+                <td>innaco001@connect.wcsu.edu</td>
+                    
+              </tr>
+              <tr>
+                  <th scope="row">Date Joined</th>
+                  <td>08-02-2018</td>
+                      
+              </tr>
+              <tr>
+                  <th scope="row">Teacher</th>
+                  <td>No</td>
+                      
+              </tr>
+              <tr>
+                  <th scope="row">Administrator</th>
+                  <td>Yes</td>
+                      
+              </tr>
+            </tbody>    
+          </table>
+        </div>
+
+        <!-- End Info -->
+
+        <!-- Settings -->
+
+        <div ng-show=""> 
+          <button type="button" class="btn btn-primary" >Change Password</button>
+        </div>
+
+        <!-- End Settings-->
+
+
+      </section>
+    </section>
+    <!-- End Page content -->
+
+    <!-- Footer -->
+    <footer id="main-footer" class="bg-light mt-3 fixed-bottom">
+        <div class="container">
+            <div class="row">
+                <div class="col text-center">
+                    <div class="py-4">
+                        <h1 id="learnSQLFooterHeader" class="h3">
+                            <a href="http://localhost:3000/" id="footer-header">LearnSQL</a>
+                        </h1>
+                        <p>Copyright &copy; 2018</p>
+                        <a href="../contact.html" id="contact-us-button" class="btn text-white shadow" role="button">Contact Us</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- End Footer-->
+
+    <script src="http://code.jquery.com/jquery-3.3.1.min.js"
+    integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+    crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+    integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+    crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"
+    integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T"
+    crossorigin="anonymous"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.6/angular.min.js"></script>
+    <script src="/javascripts/controllers.js"></script>
+
 </body>
 </html>
