@@ -76,17 +76,20 @@
     </nav>
     <!-- End Navbar -->
 
+    <!-- Section using ProfileCtrl -->
+    <div ng-controller="ProfileCtrl">
+
     <!-- Sidebar -->
     <div class="card sidebar">
       <div class="list-group panel">
-        <a class="list-group-item" href="#" data-parent="#sidebar">Info</a>
+        <a class="list-group-item" href="#" data-parent="#sidebar" ng-click="view = 'showInfo'">Info</a>
         <a class="list-group-item " href="#dropdown1" data-toggle="collapse" data-parent="#sidebar">Class List <i class="fa fa-caret-down"></i></a>
           <div class="collapse" id="dropdown1">
-            <a class="list-group-item" href="javascript:;">CS 205</a>
-            <a class="list-group-item" href="javascript:;">CS 305</a>
+            <a class="list-group-item" href="javascript:;" ng-click="view = 'showClassCS205'">CS 205</a>
+            <a class="list-group-item" href="javascript:;" ng-click="view = 'showClassCS305'">CS 305</a>
           </div>  
           
-        <a class="list-group-item" href="#" data-parent="#sidebar">Grades</a>
+        <a class="list-group-item" href="#" data-parent="#sidebar" ng-click="view = 'showGrades'">Grades</a>
 
         <a class="list-group-item" href="#dropdown2" data-toggle="collapse" data-parent="#sidebar">Control Panel <i class="fa fa-caret-down"></i></a>
           <div class="collapse" id="dropdown2">
@@ -94,7 +97,7 @@
             <a class="list-group-item" href="javascript:;">Instructor</a>
           </div>
 
-        <a class="list-group-item list-group-item-success" href="#" data-toggle="collapse" data-parent="#sidebar">Settings</a>
+        <!--<a class="list-group-item list-group-item-success" href="#" data-toggle="collapse" data-parent="#sidebar" ng-click="view = 'showSettings'">Settings</a>-->
 
         </div>
       </div> 
@@ -107,60 +110,138 @@
 
       <section id="page-body">
 
-        <!-- Info -->
+        <!-- Info section -->
 
-        <div class="container-fluid"> 
+        <div class="container-fluid" ng-show="view == 'showInfo'"> 
 
-          <table class="table table-dark">   
+          <table class="table table-dark table-striped">   
             <tbody>
               <tr>
                 <th scope="row">Username</th>
                 <td>cinnaco</td>
+                <td><img src="https://png.icons8.com/windows/32/ffffff/video-editing.png"></td>
                     
+              </tr>
+              <tr>
+                  <th scope="row">Password</th>
+                  <td>&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;</td>
+                  <td><img src="https://png.icons8.com/windows/32/ffffff/video-editing.png"></td>
+                  
               </tr>
               <tr>
                 <th scope="row">Full Name</th>
                 <td>Christopher Innaco</td>
-                    
+                <td><img src="https://png.icons8.com/windows/32/ffffff/video-editing.png"></td>
+
               </tr>
               <tr>
                 <th scope="row">E-mail</th>
                 <td>innaco001@connect.wcsu.edu</td>
-                    
+                <td><img src="https://png.icons8.com/windows/32/ffffff/video-editing.png"></td>
+
               </tr>
               <tr>
                   <th scope="row">Date Joined</th>
                   <td>08-02-2018</td>
-                      
+                  <td></td>
+
               </tr>
               <tr>
                   <th scope="row">Teacher</th>
                   <td>No</td>
-                      
+                  <td></td>
               </tr>
               <tr>
                   <th scope="row">Administrator</th>
                   <td>Yes</td>
-                      
+                  <td></td>    
               </tr>
             </tbody>    
           </table>
         </div>
 
-        <!-- End Info -->
+        <!-- End Info section -->
 
-        <!-- Settings -->
+        <!-- CS 205 section -->
 
-        <div ng-show=""> 
-          <button type="button" class="btn btn-primary" >Change Password</button>
+        <div ng-show="view == 'showClassCS205'">
+          <div class="card">
+            <h2>
+              Course Description:
+            </h2>
+            <p>
+              An in-depth introduction to information management techniques with emphasis on data modeling and relational database design. 
+              Topics include conceptual data modeling, relational database design and normalization, database query languages, schema integration and integrity
+              constraints, physical database design, and database usability issues in a shared environment. Students will design and implement a database 
+              application working from the E-R modeling stage through to the actual implementation. This course lays the data modeling foundations used in 
+              CS 305 Database Applications Engineering, CS350 Object Oriented Software Engineering and CS 360 Distributed Applications Engineering.
+            </p> 
+            <p>
+              Prerequisite: CS 140 or CS 143 or CS 170. <br />
+              Fall semester. <br />
+              4.000 Credit hours <br />
+              4.000 Lecture hours <br />
+              <br />
+              Levels: Undergraduate <br />
+              Schedule Types: Lecture <br />
+              <br />
+              Computer Science Department 
+            </p>
+
+            
+          </div>
         </div>
 
-        <!-- End Settings-->
+        <!-- End CS 205 section -->
 
+        <!-- CS 305 section -->
+
+        <div ng-show="view == 'showClassCS305'">
+            <div class="card">
+                <h2>
+                  Course Description:
+                </h2>
+                <p>
+                    This course addresses the engineering of software application systems with extensive client/server database components. It encompasses all 
+                    phases of the life cycle of a software system, including planning, analysis, design, implementation, testing, and operation and maintenance. 
+                    In a team project, students participate in the development of an integrated medium-size information system that uses a contemporary large 
+                    database management system (DBMS). The course may be offered with different DBMS, specified as an option at each offering. For the offerings
+                    with Oracle the following Oracle subsystems are used: Oracle SQL Plus, PL/SQL, Forms Builder, and Report Builder. This course will be an elective 
+                    in the Computer Science program unless it is being substituted for the required course CS 350.
+                </p> 
+                <p>
+                  Prerequisite: CS 170 and 205. <br />
+                  4.000 Credit hours <br />
+                  4.000 Lecture hours <br />
+                  <br />
+                  Levels: Undergraduate <br />
+                  Schedule Types: Lecture <br />
+                  <br />
+                  Computer Science Department 
+                </p>
+          </div>
+        </div>
+  
+        <!-- End CS 305 section -->
+
+        <!-- Grades section -->
+
+        <div ng-show="view == 'showGrades'"> 
+          <div class="card">
+            <p>
+              Functionality coming soon...
+            </p>
+          </div>
+        </div>
+  
+        <!-- End Grades section-->
 
       </section>
     </section>
     <!-- End Page content -->
+
+    </div>
+    <!-- End Section using ProfileCtrl-->
 
     <!-- Footer -->
     <footer id="main-footer" class="bg-light mt-3 fixed-bottom">
@@ -192,5 +273,6 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.6/angular.min.js"></script>
     <script src="/javascripts/controllers.js"></script>
 
+    <!-- Icons courtesy of Icons8 at https://icons8.com -->
 </body>
 </html>
