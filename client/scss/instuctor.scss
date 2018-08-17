@@ -1,45 +1,25 @@
-#navbar-title {
-  color: #ac4142; 
-}
+/**
+ * contact.scss - LearnSQL
+ *
+ * Michael Torres
+ * Web Applications and Databases for Education (WADE)
+ *
+ * This file contains the scss for the contact.html page
+ */
+ #navbar-title {
+  color: #ac4142; }
 
 #learn-tab {
-  background-color: #ac4142; 
-}
+  background-color: #ac4142; }
 
 #page-title {
-  color: #ac4142; 
-}
+  color: #ac4142; }
 
-.classes-section {
-  margin-left: 1em;
-}
-
-.classes-background-color {
-  background-color: #1C2331; 
-}
-
-.nav-tabs li a:hover,
-.nav-tabs li.active a {
-  color: black !important;
-  background-color: #FFFFFF !important;
-}
-
-.course-section-background-color {
-  background-color: white;
-}
-
-.add-section {
-  margin-left: 25em;
-}
-
-#main-footer {
-  position: relative;
-}
+.contact-form-background-color {
+  background-color: #1C2331; }
 
 #footer-header {
-  color: #ac4142; 
-}
+  color: #ac4142; }
 
 #contact-us-button {
-  background-color: #ac4142; 
-}  
+  background-color: #ac4142; }
