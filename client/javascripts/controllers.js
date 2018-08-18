@@ -226,16 +226,25 @@ app.controller('AdminCtrl', ($scope, $http, $location, $window) => {
     $scope.success = true;
     $scope.message = 'Database Being Created, Please Wait';
 
-    $http.post('/admin/addClass', this.class)
-    .success((data) => {
-      $scope.success = true;
-      $scope.message = 'Database Successfully Created';
-    })
-    .error((error) => {
-      $scope.success = false;
-      $scope.error = true;
-      $scope.message = 'Database Could Not Be Created';
-    });
+    //make sure that is a valid name
+    var regex = new RegExp("^[a-zA-Z0-9_]*$");
+    if (regex.test(this.class.name))
+    {
+      $http.post('/admin/addClass', this.class)
+      .success((data) => {
+        $scope.success = true;
+        $scope.message = 'Database Successfully Created';
+      })
+      .error((error) => {
+        $scope.success = false;
+        $scope.error = true;
+        $scope.message = error.status;
+      });
+    } else
+    {
+      $scope.message = 'Invalid Characters Detected! Please Use only the following ' +
+                       'characters: A-Z, 0-9, - only (case insensitive)';
+    }
   };
 });
 
@@ -256,7 +265,7 @@ app.controller('ContactCtrl', ($scope, $http) => {
 
   /**
    * This function takes in user information only, (their full name, email, and their message)
-   * and check to see if any of the input fields are missing (left empty). 
+   * and check to see if any of the input fields are missing (left empty).
    */
 
   $scope.submit = () => {
