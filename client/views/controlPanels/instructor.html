@@ -71,148 +71,137 @@
     </nav>
     <!-- END OF NAVBAR -->
 
-    <!-- PAGE CONTENT -->
-    <section id="page-content" class="mt-4">
-        
-        <section id="first-page-section">
-            
-            <div class="class-table-section table-overflow-vertical mr-auto d-flex">
-                <div class="flex-fill widthflex">
-                    <table class="bg-table-color">
-                        <th class="d-flex">
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <button class="btn btn-danger m-2" type="button">Search</button>
-                                </div>
-                                <input type="text" class="form-control m-2" style="background-color: #1C2331" placeholder="Search here ..." aria-label="" aria-describedby="basic-addon1">
-                            </div>
-                            <tr>
-                                <td class="text-left text-white p-2">Class name</td>
-                                <td class="text-right text-white p-2"># of students</td>
-                            </tr>
-                        </th>
-                        <tbody class="flexcroll">
-                            <tr>
-                                <td class="text-left text-white p-2">CS 100</td>
-                                <td class="text-right text-white p-2">10</td>
-                            </tr>
-                            <tr>
-                                <td class="text-left text-white p-2">CS 200</td>
-                                <td class="text-right text-white p-2">15</td>
-                            </tr>
-                            <tr>
-                                <td class="text-left text-white p-2">CS 300</td>
-                                <td class="text-right text-white p-2">20</td>
-                            </tr>
-                            <tr>
-                                <td class="text-left text-white p-2">CS 400</td>
-                                <td class="text-right text-white p-2">25</td>
-                            </tr>
-                            <tr>
-                                <td class="text-left text-white p-2">CS 500</td>
-                                <td class="text-right text-white p-2">30</td>
-                            </tr>
-                            <tr>
-                                <td class="text-left text-white p-2">CS 600</td>
-                                <td class="text-right text-white p-2">35</td>
-                            </tr>
-                            <tr>
-                                <td class="text-left text-white p-2">CS 700</td>
-                                <td class="text-right text-white p-2">40</td>
-                            </tr>
-                            <tr>
-                                <td class="text-left text-white p-2">CS 800</td>
-                                <td class="text-right text-white p-2">45</td>
-                            </tr>
-                            <tr>
-                                <td class="text-left text-white p-2">CS 900</td>
-                                <td class="text-right text-white p-2">50</td>
-                            </tr>
-                            <tr>
-                                <td class="text-left text-white p-2">CS 1000</td>
-                                <td class="text-right text-white p-2">55</td>
-                            </tr>
-                        </tbody>  
-                    </table>
+    <section class="information-for-classes mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control bg-light" id="myInput" placeholder="Search for class..." aria-label="" aria-describedby="basic-addon1">
                 </div>
-
-                <div class="flex-fill mr-2">
-                    <div class="card bg-add-card-color">
-                        <div class="card-body text-center">
-
-                            <button type="button" class="btn btn-danger btn-block mb-1" data-toggle="modal" data-target="#myModal">Add Student</button>
-                            <!-- The Modal -->
-                            <div class="modal" id="myModal">
-                                <div class="modal-dialog modal-lg">
+                <table class="table table-bordered bg-dark-primary text-white table-hover">
+                    <caption>Classes being taught</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Class Name</th>
+                            <th scope="col">Section #</th>
+                            <th scope="col">Times</th>
+                            <th scope="col">Days</th>
+                            <th scope="col">Start Date</th>
+                            <th scope="col">End Date</th>
+                            <th scope="col"># of Students</th>
+                        </tr>
+                    </thead>
+                    <tbody id="myTable">
+                        <tr>
+                            <th scope="row">1</th>
+                            <td>CS 100</td>
+                            <td>01</td>
+                            <td>10:00 am - 11:40 am</td>
+                            <td>Tues / Thurs</td>
+                            <td>08/28/2018</td>
+                            <td>12/5/2018</td>
+                            <td>36</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">2</th>
+                            <td>CS 200</td>
+                            <td>01</td>
+                            <td>10:00 am - 11:40 am</td>
+                            <td>Tues / Thurs</td>
+                            <td>08/28/2018</td>
+                            <td>12/5/2018</td>
+                            <td>27</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">3</th>
+                            <td>CS 300</td>
+                            <td>01</td>
+                            <td>10:00 am - 11:40 am</td>
+                            <td>Tues / Thurs</td>
+                            <td>08/28/2018</td>
+                            <td>12/5/2018</td>
+                            <td>27</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">4</th>
+                            <td>CS 400</td>
+                            <td>01</td>
+                            <td>10:00 am - 11:40 am</td>
+                            <td>Tues / Thurs</td>
+                            <td>08/28/2018</td>
+                            <td>12/5/2018</td>
+                            <td>27</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">5</th>
+                            <td>CS 500</td>
+                            <td>01</td>
+                            <td>10:00 am - 11:40 am</td>
+                            <td>Tues / Thurs</td>
+                            <td>08/28/2018</td>
+                            <td>12/5/2018</td>
+                            <td>27</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">6</th>
+                            <td>CS 100</td>
+                            <td>01</td>
+                            <td>10:00 am - 11:40 am</td>
+                            <td>Tues / Thurs</td>
+                            <td>08/28/2018</td>
+                            <td>12/5/2018</td>
+                            <td>27</td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <td colspan="8">
+                            <button type="button" class="btn btn-outline-warning btn-lg btn-block" data-toggle="modal" data-target="#addClass">ADD CLASS</button>
+                            <!-- Modal -->
+                            <div class="modal fade" id="addClass" tabindex="-1" role="dialog" aria-labelledby="addClass" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
                                     <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title text-danger font-weight-bold" id="addClassLabel">Input Class Information</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form>
+                                                <div class="form-group">
+                                                    <input type="text" class="form-control" placeholder="Input class name here..." name="className">
+                                                </div>
+                                                <div class="form-group">
+                                                    <input type="text" class="form-control" placeholder="Input section here..." name="classSection">
+                                                </div>
+                                                <div class="form-group">
+                                                    <input type="text" class="form-control" placeholder="Input class times here..." name="classTimes">
+                                                </div>
+                                                <div class="form-group">
+                                                    <input type="text" class="form-control" placeholder="Input class days here..." name="classDays">
+                                                </div>
+                                                <div class="form-group">
+                                                    <input type="text" class="form-control" placeholder="Input class start date here..." name="classStartDate">
+                                                </div>
+                                                <div class="form-group">
+                                                    <input type="text" class="form-control" placeholder="Input class end date here..." name="classEndDate">
+                                                </div>
+                                                <div class="form-group">
+                                                    <input type="text" class="form-control" placeholder="Input # of students in class here..." name="numOfStudents">
+                                                </div>
                     
-                                        <!-- Modal Header -->
-                                        <div class="modal-header">
-                                            <h4 class="modal-title">Add Student Heading</h4>
-                                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                <button type="submit" class="btn btn-primary">Submit</button>
+                                            </form>
                                         </div>
-                                
-                                        <!-- Modal body -->
-                                        <div class="modal-body">
-                                            <div class="input-group">
-                                                <div class="input-group-prepend">
-                                                    <button class="btn btn-danger m-2" type="button">Add Student: </button>
-                                                </div>
-                                                <input type="text" class="form-control m-2" style="background-color: #1C2331" placeholder="type student's name here ..." aria-label="" aria-describedby="basic-addon1">
-                                            </div>
-                                        </div>
-                                
-                                        <!-- Modal footer -->
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                                        </div>
-                                
                                     </div>
                                 </div>
                             </div>
-      
-                            <button type="button" class="btn btn-danger btn-block" data-toggle="modal" data-target="#classModal">Add Class</button>
-                            <!-- The Modal -->
-                            <div class="modal" id="classModal">
-                                <div class="modal-dialog modal-lg">
-                                    <div class="modal-content">
-                                
-                                        <!-- Modal Header -->
-                                        <div class="modal-header">
-                                            <h4 class="modal-title">Class Add Heading</h4>
-                                            <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                        </div>
-                                
-                                        <!-- Modal body -->
-                                        <div class="modal-body">
-                                            <div class="input-group">
-                                                <div class="input-group-prepend">
-                                                    <button class="btn btn-danger m-2" type="button">Add Class:</button>
-                                                </div>
-                                                <input type="text" class="form-control m-2" style="background-color: #1C2331" placeholder="type class name here ..." aria-label="" aria-describedby="basic-addon1">
-                                            </div>
-                                        </div>
-                                
-                                        <!-- Modal footer -->
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-      
-                        </div>
-                    </div>
-                </div>
+                        </td>
+                    </tfoot>
+                </table>
             </div>
-
-        </section>
-
-        
-
+        </div>
     </section>
-    <!-- END OF PAGE CONTENT -->
 
     <script src="http://code.jquery.com/jquery-3.3.1.min.js"
     integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
@@ -225,6 +214,17 @@
     crossorigin="anonymous"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.6/angular.min.js"></script>
     <script src="../javascripts/controllers.js"></script>
+
+    <script>
+        $(document).ready(function(){
+            $("#myInput").on("keyup", function() {
+            var value = $(this).val().toLowerCase();
+            $("#myTable tr").filter(function() {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+            });
+        });
+    </script>
 
 </body>
 </html>

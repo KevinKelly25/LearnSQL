@@ -1,83 +1,19 @@
 #navbar-title {
-  color: #ac4142; }
+  color: #ac4142; 
+}
 
 #learn-tab {
-  background-color: #ac4142; }
+  background-color: #ac4142; 
+}
 
-.class-table-section {
-  margin: 1%; }
-
-table thead tr {
-  display: block; }
-
-table th, table td {
-  width: 100%; }
-
-table tbody {
-  display: block;
-  max-height: 300px;
-  overflow-y: auto; }
-
-.flexcroll {
-  height: 250px;
-  overflow: scroll; }
-
-.flexcroll {
-  scrollbar-face-color: #367CD2;
-  scrollbar-shadow-color: #FFFFFF;
-  scrollbar-highlight-color: #FFFFFF;
-  scrollbar-3dlight-color: #FFFFFF;
-  scrollbar-darkshadow-color: #FFFFFF;
-  scrollbar-track-color: #FFFFFF;
-  scrollbar-arrow-color: #FFFFFF; }
-
-/* Let's get this party started */
-.flexcroll::-webkit-scrollbar {
-  width: 12px; }
-
-/* Track */
-.flexcroll::-webkit-scrollbar-track {
-  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-  -webkit-border-radius: 10px;
-  border-radius: 10px; }
-
-/* Handle */
-.flexcroll::-webkit-scrollbar-thumb {
-  background: #ac4142; }
-
-::-webkit-scrollbar {
-  /* 1 */ }
-
-::-webkit-scrollbar-button {
-  /* 2 */ }
-
-::-webkit-scrollbar-track {
-  /* 3 */ }
-
-::-webkit-scrollbar-track-piece {
-  /* 4 */ }
-
-::-webkit-scrollbar-thumb {
-  /* 5 */ }
-
-::-webkit-scrollbar-corner {
-  /* 6 */ }
-
-::-webkit-resizer {
-  /* 7 */ }
-
-.bg-table-color {
+.bg-dark-primary {
   background-color: #1C2331;
-  width: 99%; }
+}
 
-.primary-color {
-  background-color: #ac4142; }
+.bg-light-primary {
+  background-color: #ac4142;
+}
 
-#footer-header {
-  color: #ac4142; }
-
-#contact-us-button {
-  background-color: #ac4142; }
-
-.widthflex {
-  width: 50em; }
+.table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
+  background-color: #ac4142;
+}
