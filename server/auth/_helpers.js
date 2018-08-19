@@ -74,7 +74,7 @@ function loginRequired(req, res, next) {
  * to log in. If user is logged in it check to make sure the user is an admin.
  */
 function adminRequired(req, res, next) {
-  if (!req.user) res.status(401).json({status: 'Please log in'});
+  if (!req.user) return res.status(401).json({status: 'Please log in'});
   return db.one('SELECT isAdmin FROM UserData WHERE Username = $1', [req.user.username])
   .then((user) => {
     if (!user.isadmin) res.status(401).json({status: 'You are not authorized'});
