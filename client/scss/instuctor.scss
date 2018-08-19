@@ -1,19 +1,29 @@
 #navbar-title {
-  color: #ac4142; 
-}
+  color: #ac4142; }
 
 #learn-tab {
-  background-color: #ac4142; 
-}
+  background-color: #ac4142; }
 
 .bg-dark-primary {
-  background-color: #1C2331;
-}
+  background-color: rgba(62, 69, 81, 0.7); }
 
 .bg-light-primary {
-  background-color: #ac4142;
-}
+  background-color: #ac4142; }
 
 .table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
-  background-color: #ac4142;
-}
+  background-color: #ac4142; }
+
+#footer-header {
+  color: #ac4142; }
+
+table.table-bordered > thead > tr > th {
+  border: 1px solid black; }
+
+table.table-bordered > tbody > tr > td {
+  border: 1px solid black; }
+
+table.table-bordered > tbody > tr > th {
+  border: 1px solid black; }
+
+table.table-bordered > thead > tr > td {
+  border: 1px solid black; }

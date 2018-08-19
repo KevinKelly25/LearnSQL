@@ -20,7 +20,7 @@
 <body ng-app="LearnSQL">
     
     <!-- NAVBAR -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-white" ng-controller="NavCtrl" data-ng-init="init()">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light" ng-controller="NavCtrl" data-ng-init="init()">
         <div class="container-fluid">
             <!-- navbar header -->
             <h2 class="font-weight-bold ml-3 mt-2">
@@ -74,13 +74,60 @@
     <section class="information-for-classes mt-5">
         <div class="container">
             <div class="row">
-                <div class="input-group mb-3">
-                    <input type="text" class="form-control bg-light" id="myInput" placeholder="Search for class..." aria-label="" aria-describedby="basic-addon1">
-                </div>
-                <table class="table table-bordered bg-dark-primary text-white table-hover">
+                <table id="myDIV" class="table table-bordered bg-dark-primary text-white table-hover shadow-lg">
                     <caption>Classes being taught</caption>
                     <thead>
                         <tr>
+                            <td colspan="7">
+                                <div class="input-group">
+                                    <input type="text" class="form-control bg-light" id="myInput" placeholder="Search for class..." aria-label="" aria-describedby="basic-addon1">
+                                </div>
+                            </td>
+                            <td colspan="8">
+                                <button type="button" class="btn btn-outline-warning btn-md btn-block" data-toggle="modal" data-target="#addClass">ADD CLASS</button>
+                                <!-- Modal -->
+                                <div class="modal fade" id="addClass" tabindex="-1" role="dialog" aria-labelledby="addClass" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title text-danger font-weight-bold" id="addClassLabel">Input Class Information</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form>
+                                                    <div class="form-group">
+                                                        <input type="text" class="form-control" placeholder="Input class name here..." name="className">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <input type="text" class="form-control" placeholder="Input section here..." name="classSection">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <input type="text" class="form-control" placeholder="Input class times here..." name="classTimes">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <input type="text" class="form-control" placeholder="Input class days here..." name="classDays">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <input type="text" class="form-control" placeholder="Input class start date here..." name="classStartDate">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <input type="text" class="form-control" placeholder="Input class end date here..." name="classEndDate">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <input type="text" class="form-control" placeholder="Input # of students in class here..." name="numOfStudents">
+                                                    </div>
+                        
+                                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="alert-light">
                             <th scope="col">#</th>
                             <th scope="col">Class Name</th>
                             <th scope="col">Section #</th>
@@ -94,7 +141,7 @@
                     <tbody id="myTable">
                         <tr>
                             <th scope="row">1</th>
-                            <td>CS 100</td>
+                            <td><button onclick="myFunction()"><a id="class-cs100-tab" data-toggle="tab" href="#class-cs100" role="tab" aria-controls="class-cs100" aria-selected="false">CS 100</a></button></td>
                             <td>01</td>
                             <td>10:00 am - 11:40 am</td>
                             <td>Tues / Thurs</td>
@@ -104,7 +151,7 @@
                         </tr>
                         <tr>
                             <th scope="row">2</th>
-                            <td>CS 200</td>
+                            <td><button onclick="myFunction()">CS 200</button></td>
                             <td>01</td>
                             <td>10:00 am - 11:40 am</td>
                             <td>Tues / Thurs</td>
@@ -114,7 +161,7 @@
                         </tr>
                         <tr>
                             <th scope="row">3</th>
-                            <td>CS 300</td>
+                            <td><button onclick="myFunction()">CS 300</button></td>
                             <td>01</td>
                             <td>10:00 am - 11:40 am</td>
                             <td>Tues / Thurs</td>
@@ -124,7 +171,7 @@
                         </tr>
                         <tr>
                             <th scope="row">4</th>
-                            <td>CS 400</td>
+                            <td><button onclick="myFunction">CS 400</button></td>
                             <td>01</td>
                             <td>10:00 am - 11:40 am</td>
                             <td>Tues / Thurs</td>
@@ -134,7 +181,7 @@
                         </tr>
                         <tr>
                             <th scope="row">5</th>
-                            <td>CS 500</td>
+                            <td><button onclick="myFunction()">CS 500</button></td>
                             <td>01</td>
                             <td>10:00 am - 11:40 am</td>
                             <td>Tues / Thurs</td>
@@ -144,7 +191,7 @@
                         </tr>
                         <tr>
                             <th scope="row">6</th>
-                            <td>CS 100</td>
+                            <td><button onclick="myFunction()">CS 100</button></td>
                             <td>01</td>
                             <td>10:00 am - 11:40 am</td>
                             <td>Tues / Thurs</td>
@@ -153,51 +200,54 @@
                             <td>27</td>
                         </tr>
                     </tbody>
-                    <tfoot>
-                        <td colspan="8">
-                            <button type="button" class="btn btn-outline-warning btn-lg btn-block" data-toggle="modal" data-target="#addClass">ADD CLASS</button>
-                            <!-- Modal -->
-                            <div class="modal fade" id="addClass" tabindex="-1" role="dialog" aria-labelledby="addClass" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title text-danger font-weight-bold" id="addClassLabel">Input Class Information</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <form>
-                                                <div class="form-group">
-                                                    <input type="text" class="form-control" placeholder="Input class name here..." name="className">
-                                                </div>
-                                                <div class="form-group">
-                                                    <input type="text" class="form-control" placeholder="Input section here..." name="classSection">
-                                                </div>
-                                                <div class="form-group">
-                                                    <input type="text" class="form-control" placeholder="Input class times here..." name="classTimes">
-                                                </div>
-                                                <div class="form-group">
-                                                    <input type="text" class="form-control" placeholder="Input class days here..." name="classDays">
-                                                </div>
-                                                <div class="form-group">
-                                                    <input type="text" class="form-control" placeholder="Input class start date here..." name="classStartDate">
-                                                </div>
-                                                <div class="form-group">
-                                                    <input type="text" class="form-control" placeholder="Input class end date here..." name="classEndDate">
-                                                </div>
-                                                <div class="form-group">
-                                                    <input type="text" class="form-control" placeholder="Input # of students in class here..." name="numOfStudents">
-                                                </div>
-                    
-                                                <button type="submit" class="btn btn-primary">Submit</button>
-                                            </form>
+                </table>
+
+                <table id="test" class="table table-bordered bg-dark-primary text-white table-hover shadow-g">
+                    <caption>CS 100: List of students and information</caption>
+                    <thead>
+                        <tr>
+                            <td colspan="7">
+                                <div class="input-group">
+                                    <input type="text" id="myInput" class="form-control bg-light" placeholder="Search for class..." aria-label="" aria-describedby="basic-addon1">
+                                </div>
+                            </td>
+                            <td colspan="8">
+                                <button type="button" class="btn btn-outline-warning btn-md btn-block" data-toggle="modal" data-target="#addStudent">Add Student</button>
+                                <!-- Modal -->
+                                <div id="addStudent" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="addStudent" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 id="addStudentLabel" class="modal-title text-danger font-weight-bold">Input Student Information</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form>
+                                                    <div class="form-group">
+                                                        <input type="text" class="form-control" placeholder="Input name of student here..." name="nameOfStudent">
+                                                    </div>
+
+                                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                                </form>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </td>
-                    </tfoot>
+                            </td>
+                        </tr>
+                        <tr class="alert-light">
+                            <th scope="col">#</th>
+                            <th scope="col">Class Name</th>
+                            <th scope="col">Section #</th>
+                            <th scope="col">Times</th>
+                            <th scope="col">Days</th>
+                            <th scope="col">Start Date</th>
+                            <th scope="col">End Date</th>
+                            <th scope="col"># of Students</th>
+                        </tr>
+                    </thead>
                 </table>
             </div>
         </div>
@@ -224,6 +274,17 @@
             });
             });
         });
+    </script>
+
+    <script>
+        function myFunction() {
+            var x = document.getElementById("myDIV");
+            if (x.style.display === "none") {
+                x.style.display = "block";
+            } else {
+                x.style.display = "none";
+            }
+        }
     </script>
 
 </body>
