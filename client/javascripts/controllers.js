@@ -1,7 +1,7 @@
 /**
  * controllers.js - LearnSQL
  *
- * Kevin Kelly, Michael Torres
+ * Kevin Kelly, Michael Torres, Christopher Innaco
  * Web Applications and Databases for Education (WADE)
  *
  * This file contains the angularJS controllers that are used throughout the
