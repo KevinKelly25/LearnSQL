@@ -11,7 +11,6 @@
         crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.css" />
-
     <link rel="stylesheet" href="../../stylesheets/font-awesome.min.css">
     <link rel="stylesheet" href="../../stylesheets/bootstrap.css">
     <link rel="stylesheet" href="../../stylesheets/instuctor.css">
@@ -74,6 +73,7 @@
     <section class="information-for-classes mt-5">
         <div class="container">
             <div class="row">
+
                 <table id="myDIV" class="table table-bordered bg-dark-primary text-white table-hover shadow-lg">
                     <caption>Classes being taught</caption>
                     <thead>
@@ -138,10 +138,14 @@
                             <th scope="col"># of Students</th>
                         </tr>
                     </thead>
-                    <tbody id="myTable">
+                    <tbody id="classesTable">
                         <tr>
                             <th scope="row">1</th>
-                            <td><button onclick="myFunction()"><a id="class-cs100-tab" data-toggle="tab" href="#class-cs100" role="tab" aria-controls="class-cs100" aria-selected="false">CS 100</a></button></td>
+                            <td>
+                                <button onclick="myFunction()">
+                                    <a id="class-cs100-pill" data-toggle="pill" href="#class-cs100" role="pill" aria-controls="class-cs100" aria-selected="false">CS 100</a>
+                                </button>
+                            </td>
                             <td>01</td>
                             <td>10:00 am - 11:40 am</td>
                             <td>Tues / Thurs</td>
@@ -201,9 +205,9 @@
                         </tr>
                     </tbody>
                 </table>
-
-                <table id="test" class="table table-bordered bg-dark-primary text-white table-hover shadow-g">
-                    <caption>CS 100: List of students and information</caption>
+      
+                <table class="table table-bordered bg-dark-primary text-white table-hover shadow-g">
+                    <caption>CS 100: List of students and their information</caption>
                     <thead>
                         <tr>
                             <td colspan="7">
@@ -211,7 +215,7 @@
                                     <input type="text" id="myInput" class="form-control bg-light" placeholder="Search for class..." aria-label="" aria-describedby="basic-addon1">
                                 </div>
                             </td>
-                            <td colspan="8">
+                            <td colspan="1">
                                 <button type="button" class="btn btn-outline-warning btn-md btn-block" data-toggle="modal" data-target="#addStudent">Add Student</button>
                                 <!-- Modal -->
                                 <div id="addStudent" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="addStudent" aria-hidden="true">
@@ -238,17 +242,50 @@
                             </td>
                         </tr>
                         <tr class="alert-light">
-                            <th scope="col">#</th>
-                            <th scope="col">Class Name</th>
-                            <th scope="col">Section #</th>
-                            <th scope="col">Times</th>
-                            <th scope="col">Days</th>
-                            <th scope="col">Start Date</th>
-                            <th scope="col">End Date</th>
-                            <th scope="col"># of Students</th>
+                            <th scope="col">id</th>
+                            <th scope="col">Student Name</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Midterm Grade</th>
+                            <th scope="col">Final Grade</th>
+                            <th scope="col">GPA</th>
+                            <th scope="col">Failed / Passed</th>
+                            <th scope="col">Edit / Remove</th>
                         </tr>
                     </thead>
+                    <tbody id="classTable1">
+                        <tr>
+                            <th scope="row">1</th>
+                            <td><button onclick="hideFunction()" id="student-1-tab" data-toggle="tab" href="#student-1" role="tab" aria-controls="student-1" aria-selected="false">Juan Doe</button></td>
+                            <td>juan@gmail.com</td>
+                            <td>nan</td>
+                            <td>nan</td>
+                            <td>0.01</td>
+                            <td>F</td>
+                            <td><i class="fas fa-minus-circle pl-3 ml-5"></i></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">1</th>
+                            <td><button onclick="hideFunction()" id="student-2-tab" data-toggle="tab" href="#student-1" role="tab" aria-controls="student-1" aria-selected="false">John Smith</button></td>
+                            <td>John@gmail.com</td>
+                            <td>nan</td>
+                            <td>nan</td>
+                            <td>3.2</td>
+                            <td>P</td>
+                            <td><i class="fas fa-minus-circle pl-3 ml-5"></i></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">1</th>
+                            <td><button onclick="hideFunction()" id="student-3-tab" data-toggle="tab" href="#student-1" role="tab" aria-controls="student-1" aria-selected="false">Max Long</button></td>
+                            <td>Max@gmail.com</td>
+                            <td>nan</td>
+                            <td>nan</td>
+                            <td>4.0</td>
+                            <td>--</td>
+                            <td><i class="fas fa-minus-circle pl-3 ml-5"></i></td>
+                        </tr>
+                    </tbody>
                 </table>
+
             </div>
         </div>
     </section>
@@ -269,7 +306,7 @@
         $(document).ready(function(){
             $("#myInput").on("keyup", function() {
             var value = $(this).val().toLowerCase();
-            $("#myTable tr").filter(function() {
+            $("#classesTable tr").filter(function() {
                 $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
             });
             });
@@ -279,6 +316,17 @@
     <script>
         function myFunction() {
             var x = document.getElementById("myDIV");
+            if (x.style.display === "none") {
+                x.style.display = "block";
+            } else {
+                x.style.display = "none";
+            }
+        }
+    </script>
+
+    <script>
+        function hideFunction() {
+            var x = document.getElementById("test");
             if (x.style.display === "none") {
                 x.style.display = "block";
             } else {
