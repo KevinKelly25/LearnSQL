@@ -27,6 +27,13 @@ router.post('/addClass', authHelpers.adminRequired,(req, res, next)  => {
 	});
 });
 
+router.post('/dropClass', authHelpers.adminRequired,(req, res, next)  => {
+  return adminHelpers.dropClass(req, res)
+	.catch((err) => {
+		handleResponse(res, 500, err);
+	});
+});
+
 //adds a status code and message to response
 function handleResponse(res, code, statusMsg) {
   res.status(code).json({status: statusMsg});

@@ -56,6 +56,37 @@ function createClass(req, res) {
 	})
 }
 
+
+/**
+ * This funciton creates a class database using a ClassDB template Database
+ */
+function removeClass(req, res) {
+	return handleErrors(req)
+	.then(() => {
+		db.task(t => {
+				return t.one('SELECT C.ClassID ' +
+								'FROM Attends AS A INNER JOIN Class AS C ON A.ClassID = C.ClassID ' +
+								'WHERE Username = $1 AND ClassName = $2', [req.user.username, req.body.name])
+						.then((classid) => {
+							console.log(classid);
+						  return	t.none('DROP DATABASE $1~ ', classid)
+						})
+						.then(() => {
+							return t.none('DELETE FROM attends WHERE classid = $1', classid)
+						})
+						.then(() => {
+							return t.none('DELETE FROM class WHERE classid = $1', classid)
+						});
+					});
+		})
+		.then(events => {
+				return res.status(200).json('Class Database Dropped Successfully');
+		})
+		.catch(error => {
+				res.status(400).json({status: 'Database could not be Deleted'});
+		});
+}
+
 /**
  * handles errors, for now only checks the length of the password
  * Also, set to a low number for testing purposes.
@@ -76,5 +107,6 @@ function handleErrors(req) {
 
 
 module.exports = {
-  createClass
+  createClass,
+	removeClass
 };
