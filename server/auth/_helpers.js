@@ -49,11 +49,11 @@ function createUser(req, res) {
     .catch(error => {
       //console.log(error.error);
       if (error.code == '23505' && error.constraint == 'idx_unique_email')//UNIQUE VIOLATION
-        res.status(400).json({status: "Email Already Exists"});
+        return res.status(400).json({status: "Email Already Exists"});
       else if (error.code == '23505' && error.constraint == 'userdata_pkey')//UNIQUE VIOLATION
-        res.status(400).json({status: "Username Already Exists"});
+        return res.status(400).json({status: "Username Already Exists"});
       else
-        res.status(400).json({status: error});
+        return res.status(400).json({status: error});
     })
   })
 }
@@ -71,19 +71,40 @@ function loginRequired(req, res, next) {
 
 /**
  * If a user is not logged in returns a 401 status code and a status that says
- * to log in. If user is logged in it check to make sure the user is an admin.
+ * to log in. If user is logged in it checks to make sure the user is an admin.
  */
 function adminRequired(req, res, next) {
   if (!req.user) res.status(401).json({status: 'Please log in'});
   return db.one('SELECT isAdmin FROM UserData WHERE Username = $1', [req.user.username])
   .then((user) => {
-    if (!user.isadmin) res.status(401).json({status: 'You are not authorized'});
+    if (!user.isadmin) return res.status(401).json({status: 'You are not authorized'});
     return next();
   })
   .catch((err) => {
-    res.status(500).json({status: 'Something bad happened'});
+    return res.status(500).json({status: 'Something bad happened'});
   });
 }
+
+
+
+/**
+ * If a user is not logged in returns a 401 status code and a status that says
+ * to log in. If user is logged in it checks to make sure the user is a teacher.
+ */
+function teacherRequired(req, res, next) {
+  if (!req.user) res.status(401).json({status: 'Please log in'});
+  return db.one('SELECT isAdmin, isTeacher FROM UserData WHERE Username = $1', [req.user.username])
+  .then((user) => {
+    console.log(user);
+    if (!user.isadmin) return res.status(401).json({status: 'You are not authorized'});
+    return next();
+  })
+  .catch((err) => {
+    return res.status(500).json({status: 'Something bad happened'});
+  });
+}
+
+
 
 /**
  * If a user is logged in returns a 401 status code and a status that says
@@ -117,5 +138,6 @@ module.exports = {
   createUser,
   loginRequired,
   adminRequired,
+  teacherRequired,
   loginRedirect
 };
