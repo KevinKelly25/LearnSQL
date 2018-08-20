@@ -72,9 +72,9 @@
 
     <section class="information-for-classes mt-5">
         <div class="container">
-            <div class="row">
+            <div class="row scroll">
 
-                <table id="myDIV" class="table table-bordered bg-dark-primary text-white table-hover shadow-lg">
+                <table id="myDIV" class="fixed_headers table table-bordered table-striped bg-dark-primary text-white table-hover shadow-lg">
                     <caption>Classes being taught</caption>
                     <thead>
                         <tr>
@@ -84,7 +84,7 @@
                                 </div>
                             </td>
                             <td colspan="8">
-                                <button type="button" class="btn btn-outline-warning btn-md btn-block" data-toggle="modal" data-target="#addClass">ADD CLASS</button>
+                                <button type="button" class="btn btn-outline-success btn-md btn-block" data-toggle="modal" data-target="#addClass">ADD CLASS</button>
                                 <!-- Modal -->
                                 <div class="modal fade" id="addClass" tabindex="-1" role="dialog" aria-labelledby="addClass" aria-hidden="true">
                                     <div class="modal-dialog" role="document">
@@ -127,7 +127,7 @@
                                 </div>
                             </td>
                         </tr>
-                        <tr class="alert-light">
+                        <tr class="bg-header-color">
                             <th scope="col">#</th>
                             <th scope="col">Class Name</th>
                             <th scope="col">Section #</th>
@@ -136,14 +136,15 @@
                             <th scope="col">Start Date</th>
                             <th scope="col">End Date</th>
                             <th scope="col"># of Students</th>
+                            <th scope="col"></th>
                         </tr>
                     </thead>
                     <tbody id="classesTable">
                         <tr>
                             <th scope="row">1</th>
                             <td>
-                                <button onclick="myFunction()">
-                                    <a id="class-cs100-pill" data-toggle="pill" href="#class-cs100" role="pill" aria-controls="class-cs100" aria-selected="false">CS 100</a>
+                                <button class="class-button" onclick="myFunction()">
+                                    <a href="#" class="text-white" data-target="#class1" data-toggle="collapse">CS 100</a>
                                 </button>
                             </td>
                             <td>01</td>
@@ -152,68 +153,99 @@
                             <td>08/28/2018</td>
                             <td>12/5/2018</td>
                             <td>36</td>
+                            <td><i class="fas fa-trash-alt ml-3"></i></td>
                         </tr>
                         <tr>
                             <th scope="row">2</th>
-                            <td><button onclick="myFunction()">CS 200</button></td>
+                            <td>
+                                <button class="class-button" onclick="myFunction()">
+                                    <a href="#" class="text-white" data-target="#class2" data-toggle="collapse">CS 200</a>
+                                </button>
+                            </td>
                             <td>01</td>
                             <td>10:00 am - 11:40 am</td>
                             <td>Tues / Thurs</td>
                             <td>08/28/2018</td>
                             <td>12/5/2018</td>
                             <td>27</td>
+                            <td><i class="fas fa-trash-alt ml-3"></i></td>
                         </tr>
                         <tr>
                             <th scope="row">3</th>
-                            <td><button onclick="myFunction()">CS 300</button></td>
+                            <td>
+                                <button class="class-button" onclick="myFunction()">
+                                    <a href="#" class="text-white" data-target="#class3" data-toggle="collapse">CS 300</a>
+                                </button>
+                            </td>
                             <td>01</td>
                             <td>10:00 am - 11:40 am</td>
                             <td>Tues / Thurs</td>
                             <td>08/28/2018</td>
                             <td>12/5/2018</td>
                             <td>27</td>
+                            <td><i class="fas fa-trash-alt ml-3"></i></td>
                         </tr>
                         <tr>
                             <th scope="row">4</th>
-                            <td><button onclick="myFunction">CS 400</button></td>
+                            <td>
+                                <button class="class-button" onclick="myFunction()">
+                                    <a href="#" class="text-white" data-target="#class4" data-toggle="collapse">CS 400</a>
+                                </button>
+                            </td>
                             <td>01</td>
                             <td>10:00 am - 11:40 am</td>
                             <td>Tues / Thurs</td>
                             <td>08/28/2018</td>
                             <td>12/5/2018</td>
                             <td>27</td>
+                            <td><i class="fas fa-trash-alt ml-3"></i></td>
                         </tr>
                         <tr>
                             <th scope="row">5</th>
-                            <td><button onclick="myFunction()">CS 500</button></td>
+                            <td>
+                                <button class="class-button" onclick="myFunction()">
+                                    <a href="#" class="text-white" data-target="#class5" data-toggle="collapse">CS 500</a>
+                                </button>
+                            </td>
                             <td>01</td>
                             <td>10:00 am - 11:40 am</td>
                             <td>Tues / Thurs</td>
                             <td>08/28/2018</td>
                             <td>12/5/2018</td>
                             <td>27</td>
+                            <td><i class="fas fa-trash-alt ml-3"></i></td>
                         </tr>
                         <tr>
                             <th scope="row">6</th>
-                            <td><button onclick="myFunction()">CS 100</button></td>
+                            <td>
+                                <button class="class-button" onclick="myFunction()">
+                                    <a href="#" class="text-white" data-target="#class6" data-toggle="collapse">CS 100</a>
+                                </button>
+                            </td>
                             <td>01</td>
                             <td>10:00 am - 11:40 am</td>
                             <td>Tues / Thurs</td>
                             <td>08/28/2018</td>
                             <td>12/5/2018</td>
                             <td>27</td>
+                            <td><i class="fas fa-trash-alt ml-3"></i></td>
                         </tr>
                     </tbody>
                 </table>
       
-                <table class="table table-bordered bg-dark-primary text-white table-hover shadow-g">
+                <table id="class1" class="collapse table table-bordered table-striped bg-dark-primary text-white table-hover shadow-lg">
                     <caption>CS 100: List of students and their information</caption>
                     <thead>
                         <tr>
-                            <td colspan="7">
+                            <td colspan="6">
                                 <div class="input-group">
                                     <input type="text" id="myInput" class="form-control bg-light" placeholder="Search for class..." aria-label="" aria-describedby="basic-addon1">
                                 </div>
+                            </td>
+                            <td colspan="1">
+                                <button type="button" class="btn btn-outline-secondary btn-md btn-block" onclick="refresh()">
+                                    <a href="#" class="text-white" data-target="#myDIV" data-toggle="collapse">Back to Courses</a>
+                                </button>
                             </td>
                             <td colspan="1">
                                 <button type="button" class="btn btn-outline-warning btn-md btn-block" data-toggle="modal" data-target="#addStudent">Add Student</button>
@@ -241,47 +273,544 @@
                                 </div>
                             </td>
                         </tr>
-                        <tr class="alert-light">
-                            <th scope="col">id</th>
-                            <th scope="col">Student Name</th>
-                            <th scope="col">Email</th>
-                            <th scope="col">Midterm Grade</th>
-                            <th scope="col">Final Grade</th>
-                            <th scope="col">GPA</th>
-                            <th scope="col">Failed / Passed</th>
-                            <th scope="col">Edit / Remove</th>
+                        <tr class="bg-header-color">
+                            <th scope="col">UserName</th>
+                            <th scope="col">LastDDLActivityAt</th>
+                            <th scope="col">LastDDLOperation</th>
+                            <th scope="col">LastDDLObject</th>
+                            <th scope="col">DDLCount</th>
+                            <th scope="col">LastConnectionAt</th>
+                            <th scope="col">ConnectionCount</th>
+                            <th scope="col"></th>
                         </tr>
                     </thead>
                     <tbody id="classTable1">
                         <tr>
                             <th scope="row">1</th>
-                            <td><button onclick="hideFunction()" id="student-1-tab" data-toggle="tab" href="#student-1" role="tab" aria-controls="student-1" aria-selected="false">Juan Doe</button></td>
+                            <td>
+                                <button class="class-button text-white">
+                                    Enter data here
+                                </button>
+                            </td>
                             <td>juan@gmail.com</td>
                             <td>nan</td>
                             <td>nan</td>
                             <td>0.01</td>
                             <td>F</td>
-                            <td><i class="fas fa-minus-circle pl-3 ml-5"></i></td>
+                            <td><i class="fas fa-trash-alt ml-5"></i></td>
                         </tr>
                         <tr>
                             <th scope="row">1</th>
-                            <td><button onclick="hideFunction()" id="student-2-tab" data-toggle="tab" href="#student-1" role="tab" aria-controls="student-1" aria-selected="false">John Smith</button></td>
+                            <td>
+                                <button class="class-button text-white">
+                                    Enter data here
+                                </button>
+                            </td>
                             <td>John@gmail.com</td>
                             <td>nan</td>
                             <td>nan</td>
                             <td>3.2</td>
                             <td>P</td>
-                            <td><i class="fas fa-minus-circle pl-3 ml-5"></i></td>
+                            <td><i class="fas fa-trash-alt ml-5"></i></td>
                         </tr>
                         <tr>
                             <th scope="row">1</th>
-                            <td><button onclick="hideFunction()" id="student-3-tab" data-toggle="tab" href="#student-1" role="tab" aria-controls="student-1" aria-selected="false">Max Long</button></td>
+                            <td>
+                                <button class="class-button text-white">
+                                    Enter data here
+                                </button>
+                            </td>
                             <td>Max@gmail.com</td>
                             <td>nan</td>
                             <td>nan</td>
                             <td>4.0</td>
                             <td>--</td>
-                            <td><i class="fas fa-minus-circle pl-3 ml-5"></i></td>
+                            <td><i class="fas fa-trash-alt ml-5"></i></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table id="class2" class="collapse table table-bordered table-striped bg-dark-primary text-white table-hover shadow-lg">
+                    <caption>CS 200: List of students and their information</caption>
+                    <thead>
+                        <tr>
+                            <td colspan="6">
+                                <div class="input-group">
+                                    <input type="text" id="myInput" class="form-control bg-light" placeholder="Search for class..." aria-label="" aria-describedby="basic-addon1">
+                                </div>
+                            </td>
+                            <td colspan="1">
+                                <button type="button" class="btn btn-outline-secondary btn-md btn-block" onclick="refresh()">
+                                    <a href="#" class="text-white" data-target="#myDIV" data-toggle="collapse">Back to Courses</a>
+                                </button>
+                            </td>
+                            <td colspan="1">
+                                <button type="button" class="btn btn-outline-warning btn-md btn-block" data-toggle="modal" data-target="#addStudent">Add Student</button>
+                                <!-- Modal -->
+                                <div id="addStudent" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="addStudent" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 id="addStudentLabel" class="modal-title text-danger font-weight-bold">Input Student Information</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form>
+                                                    <div class="form-group">
+                                                        <input type="text" class="form-control" placeholder="Input name of student here..." name="nameOfStudent">
+                                                    </div>
+
+                                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="bg-header-color">
+                            <th scope="col">UserName</th>
+                            <th scope="col">LastDDLActivityAt</th>
+                            <th scope="col">LastDDLOperation</th>
+                            <th scope="col">LastDDLObject</th>
+                            <th scope="col">DDLCount</th>
+                            <th scope="col">LastConnectionAt</th>
+                            <th scope="col">ConnectionCount</th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="classTable2">
+                        <tr>
+                            <th scope="row">1</th>
+                            <td>
+                                <button class="class-button text-white">
+                                    Enter data here
+                                </button>
+                            </td>
+                            <td>juan@gmail.com</td>
+                            <td>nan</td>
+                            <td>nan</td>
+                            <td>0.01</td>
+                            <td>F</td>
+                            <td><i class="fas fa-trash-alt ml-5"></i></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">1</th>
+                            <td>
+                                <button class="class-button text-white">
+                                    Enter data here
+                                </button>
+                            </td>
+                            <td>John@gmail.com</td>
+                            <td>nan</td>
+                            <td>nan</td>
+                            <td>3.2</td>
+                            <td>P</td>
+                            <td><i class="fas fa-trash-alt ml-5"></i></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">1</th>
+                            <td>
+                                <button class="class-button text-white">
+                                    Enter data here
+                                </button>
+                            </td>
+                            <td>Max@gmail.com</td>
+                            <td>nan</td>
+                            <td>nan</td>
+                            <td>4.0</td>
+                            <td>--</td>
+                            <td><i class="fas fa-trash-alt ml-5"></i></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table id="class3" class="collapse table table-bordered table-striped bg-dark-primary text-white table-hover shadow-lg">
+                    <caption>CS 300: List of students and their information</caption>
+                    <thead>
+                        <tr>
+                            <td colspan="6">
+                                <div class="input-group">
+                                    <input type="text" id="myInput" class="form-control bg-light" placeholder="Search for class..." aria-label="" aria-describedby="basic-addon1">
+                                </div>
+                            </td>
+                            <td colspan="1">
+                                <button type="button" class="btn btn-outline-secondary btn-md btn-block" onclick="refresh()">
+                                    <a href="#" class="text-white" data-target="#myDIV" data-toggle="collapse">Back to Courses</a>
+                                </button>
+                            </td>
+                            <td colspan="1">
+                                <button type="button" class="btn btn-outline-warning btn-md btn-block" data-toggle="modal" data-target="#addStudent">Add Student</button>
+                                <!-- Modal -->
+                                <div id="addStudent" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="addStudent" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 id="addStudentLabel" class="modal-title text-danger font-weight-bold">Input Student Information</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form>
+                                                    <div class="form-group">
+                                                        <input type="text" class="form-control" placeholder="Input name of student here..." name="nameOfStudent">
+                                                    </div>
+
+                                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="bg-header-color">
+                            <th scope="col">UserName</th>
+                            <th scope="col">LastDDLActivityAt</th>
+                            <th scope="col">LastDDLOperation</th>
+                            <th scope="col">LastDDLObject</th>
+                            <th scope="col">DDLCount</th>
+                            <th scope="col">LastConnectionAt</th>
+                            <th scope="col">ConnectionCount</th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="classTable3">
+                        <tr>
+                            <th scope="row">1</th>
+                            <td>
+                                <button class="class-button text-white">
+                                    Enter data here
+                                </button>
+                            </td>
+                            <td>juan@gmail.com</td>
+                            <td>nan</td>
+                            <td>nan</td>
+                            <td>0.01</td>
+                            <td>F</td>
+                            <td><i class="fas fa-trash-alt ml-5"></i></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">1</th>
+                            <td>
+                                <button class="class-button text-white">
+                                    Enter data here
+                                </button>
+                            </td>
+                            <td>John@gmail.com</td>
+                            <td>nan</td>
+                            <td>nan</td>
+                            <td>3.2</td>
+                            <td>P</td>
+                            <td><i class="fas fa-trash-alt ml-5"></i></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">1</th>
+                            <td>
+                                <button class="class-button text-white">
+                                    Enter data here
+                                </button>
+                            </td>
+                            <td>Max@gmail.com</td>
+                            <td>nan</td>
+                            <td>nan</td>
+                            <td>4.0</td>
+                            <td>--</td>
+                            <td><i class="fas fa-trash-alt ml-5"></i></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table id="class4" class="collapse table table-bordered table-striped bg-dark-primary text-white table-hover shadow-lg">
+                    <caption>CS 400: List of students and their information</caption>
+                    <thead>
+                        <tr>
+                            <td colspan="6">
+                                <div class="input-group">
+                                    <input type="text" id="myInput" class="form-control bg-light" placeholder="Search for class..." aria-label="" aria-describedby="basic-addon1">
+                                </div>
+                            </td>
+                            <td colspan="1">
+                                <button type="button" class="btn btn-outline-secondary btn-md btn-block" onclick="refresh()">
+                                    <a href="#" class="text-white" data-target="#myDIV" data-toggle="collapse">Back to Courses</a>
+                                </button>
+                            </td>
+                            <td colspan="1">
+                                <button type="button" class="btn btn-outline-warning btn-md btn-block" data-toggle="modal" data-target="#addStudent">Add Student</button>
+                                <!-- Modal -->
+                                <div id="addStudent" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="addStudent" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 id="addStudentLabel" class="modal-title text-danger font-weight-bold">Input Student Information</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form>
+                                                    <div class="form-group">
+                                                        <input type="text" class="form-control" placeholder="Input name of student here..." name="nameOfStudent">
+                                                    </div>
+
+                                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="bg-header-color">
+                            <th scope="col">UserName</th>
+                            <th scope="col">LastDDLActivityAt</th>
+                            <th scope="col">LastDDLOperation</th>
+                            <th scope="col">LastDDLObject</th>
+                            <th scope="col">DDLCount</th>
+                            <th scope="col">LastConnectionAt</th>
+                            <th scope="col">ConnectionCount</th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="classTable4">
+                        <tr>
+                            <th scope="row">1</th>
+                            <td>
+                                <button class="class-button text-white">
+                                    Enter data here
+                                </button>
+                            </td>
+                            <td>juan@gmail.com</td>
+                            <td>nan</td>
+                            <td>nan</td>
+                            <td>0.01</td>
+                            <td>F</td>
+                            <td><i class="fas fa-trash-alt ml-5"></i></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">1</th>
+                            <td>
+                                <button class="class-button text-white">
+                                    Enter data here
+                                </button>
+                            </td>
+                            <td>John@gmail.com</td>
+                            <td>nan</td>
+                            <td>nan</td>
+                            <td>3.2</td>
+                            <td>P</td>
+                            <td><i class="fas fa-trash-alt ml-5"></i></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">1</th>
+                            <td>
+                                <button class="class-button text-white">
+                                    Enter data here
+                                </button>
+                            </td>
+                            <td>Max@gmail.com</td>
+                            <td>nan</td>
+                            <td>nan</td>
+                            <td>4.0</td>
+                            <td>--</td>
+                            <td><i class="fas fa-trash-alt ml-5"></i></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table id="class5" class="collapse table table-bordered table-striped bg-dark-primary text-white table-hover shadow-lg">
+                    <caption>CS 500: List of students and their information</caption>
+                    <thead>
+                        <tr>
+                            <td colspan="6">
+                                <div class="input-group">
+                                    <input type="text" id="myInput" class="form-control bg-light" placeholder="Search for class..." aria-label="" aria-describedby="basic-addon1">
+                                </div>
+                            </td>
+                            <td colspan="1">
+                                <button type="button" class="btn btn-outline-secondary btn-md btn-block" onclick="refresh()">
+                                    <a href="#" class="text-white" data-target="#myDIV" data-toggle="collapse">Back to Courses</a>
+                                </button>
+                            </td>
+                            <td colspan="1">
+                                <button type="button" class="btn btn-outline-warning btn-md btn-block" data-toggle="modal" data-target="#addStudent">Add Student</button>
+                                <!-- Modal -->
+                                <div id="addStudent" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="addStudent" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 id="addStudentLabel" class="modal-title text-danger font-weight-bold">Input Student Information</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form>
+                                                    <div class="form-group">
+                                                        <input type="text" class="form-control" placeholder="Input name of student here..." name="nameOfStudent">
+                                                    </div>
+
+                                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="bg-header-color">
+                            <th scope="col">UserName</th>
+                            <th scope="col">LastDDLActivityAt</th>
+                            <th scope="col">LastDDLOperation</th>
+                            <th scope="col">LastDDLObject</th>
+                            <th scope="col">DDLCount</th>
+                            <th scope="col">LastConnectionAt</th>
+                            <th scope="col">ConnectionCount</th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="classTable5">
+                        <tr>
+                            <th scope="row">1</th>
+                            <td>
+                                <button class="class-button text-white">
+                                    Enter data here
+                                </button>
+                            </td>
+                            <td>juan@gmail.com</td>
+                            <td>nan</td>
+                            <td>nan</td>
+                            <td>0.01</td>
+                            <td>F</td>
+                            <td><i class="fas fa-trash-alt ml-5"></i></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">1</th>
+                            <td>
+                                <button class="class-button text-white">
+                                    Enter data here
+                                </button>
+                            </td>
+                            <td>John@gmail.com</td>
+                            <td>nan</td>
+                            <td>nan</td>
+                            <td>3.2</td>
+                            <td>P</td>
+                            <td><i class="fas fa-trash-alt ml-5"></i></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">1</th>
+                            <td>
+                                <button class="class-button text-white">
+                                    Enter data here
+                                </button>
+                            </td>
+                            <td>Max@gmail.com</td>
+                            <td>nan</td>
+                            <td>nan</td>
+                            <td>4.0</td>
+                            <td>--</td>
+                            <td><i class="fas fa-trash-alt ml-5"></i></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table id="class6" class="collapse table table-bordered table-striped bg-dark-primary text-white table-hover shadow-lg">
+                    <caption>CS 600: List of students and their information</caption>
+                    <thead>
+                        <tr>
+                            <td colspan="6">
+                                <div class="input-group">
+                                    <input type="text" id="myInput" class="form-control bg-light" placeholder="Search for class..." aria-label="" aria-describedby="basic-addon1">
+                                </div>
+                            </td>
+                            <td colspan="1">
+                                <button type="button" class="btn btn-outline-secondary btn-md btn-block" onclick="refresh()">
+                                    <a href="#" class="text-white" data-target="#myDIV" data-toggle="collapse">Back to Courses</a>
+                                </button>
+                            </td>
+                            <td colspan="1">
+                                <button type="button" class="btn btn-outline-warning btn-md btn-block" data-toggle="modal" data-target="#addStudent">Add Student</button>
+                                <!-- Modal -->
+                                <div id="addStudent" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="addStudent" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 id="addStudentLabel" class="modal-title text-danger font-weight-bold">Input Student Information</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form>
+                                                    <div class="form-group">
+                                                        <input type="text" class="form-control" placeholder="Input name of student here..." name="nameOfStudent">
+                                                    </div>
+
+                                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="bg-header-color">
+                            <th scope="col">UserName</th>
+                            <th scope="col">LastDDLActivityAt</th>
+                            <th scope="col">LastDDLOperation</th>
+                            <th scope="col">LastDDLObject</th>
+                            <th scope="col">DDLCount</th>
+                            <th scope="col">LastConnectionAt</th>
+                            <th scope="col">ConnectionCount</th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="classTable6">
+                        <tr>
+                            <th scope="row">1</th>
+                            <td>
+                                <button class="class-button text-white">
+                                    Enter data here
+                                </button>
+                            </td>
+                            <td>juan@gmail.com</td>
+                            <td>nan</td>
+                            <td>nan</td>
+                            <td>0.01</td>
+                            <td>F</td>
+                            <td><i class="fas fa-trash-alt ml-5"></i></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">1</th>
+                            <td>
+                                <button class="class-button text-white">
+                                    Enter data here
+                                </button>
+                            </td>
+                            <td>John@gmail.com</td>
+                            <td>nan</td>
+                            <td>nan</td>
+                            <td>3.2</td>
+                            <td>P</td>
+                            <td><i class="fas fa-trash-alt ml-5"></i></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">1</th>
+                            <td>
+                                <button class="class-button text-white">
+                                    Enter data here
+                                </button>
+                            </td>
+                            <td>Max@gmail.com</td>
+                            <td>nan</td>
+                            <td>nan</td>
+                            <td>4.0</td>
+                            <td>--</td>
+                            <td><i class="fas fa-trash-alt ml-5"></i></td>
                         </tr>
                     </tbody>
                 </table>
@@ -325,13 +854,8 @@
     </script>
 
     <script>
-        function hideFunction() {
-            var x = document.getElementById("test");
-            if (x.style.display === "none") {
-                x.style.display = "block";
-            } else {
-                x.style.display = "none";
-            }
+        function refresh() {
+            location.reload();
         }
     </script>
 
