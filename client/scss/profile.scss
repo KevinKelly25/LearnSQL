@@ -7,10 +7,10 @@
   This file contains the SCSS for the profile.html page
 ----------------------------------------------------- */
 $primary-color: #ac4142;
-$secondary-color: #1C2331;
+$secondary-color: #45526e;
 
 #navbar-title {
-  color: #ac4142; 
+  color: $primary-color; 
 }
 
 #profile-tab {
@@ -18,7 +18,7 @@ $secondary-color: #1C2331;
 }
 
 #page-title {
-  color: #ac4142; }
+  color: $primary-color; }
 
 h1 {
   padding-bottom: 10px;
@@ -49,7 +49,7 @@ h1 {
 }
 
 .sidebar a:hover {
-    color: #959596;
+    color: $primary-color;
 }
 
 #page-body {
@@ -64,10 +64,21 @@ h1 {
   background: $secondary-color;
 }
 
+table .iconCol{
+  text-align: center;
+}
+
 p {
   font-size: 14pt;
 }
 
+.btn-edit {
+  color: #ffffff; 
+}
+
+.btn-edit:hover {
+  color: $primary-color; 
+}
 
 @media screen and (max-height: 450px) {
   .sidebar {
@@ -83,7 +94,7 @@ p {
 }
 
 #footer-header {
-  color: #ac4142; 
+  color: $primary-color; 
 }
 
 #contact-us-button {

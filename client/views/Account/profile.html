@@ -26,7 +26,7 @@
 <body ng-app="LearnSQL">
 
   <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-light bg-white" ng-controller="NavCtrl" data-ng-init="init()">
+  <nav class="navbar navbar-expand-lg navbar-light bg-white" ng-controller="NavCtrl" data-ng-init="init()" data-spy="affix" data-offset-top="197">
     <div class="container-fluid">
         <!-- Navbar header -->
         <h2 class="font-weight-bold ml-3 mt-2">
@@ -80,9 +80,9 @@
     <div ng-controller="ProfileCtrl">
 
     <!-- Sidebar -->
-    <div class="card sidebar">
+    <div class="card sidebar" data-spy="affix" data-offset-top="197">
       <div class="list-group panel">
-        <a class="list-group-item" href="#" data-parent="#sidebar" ng-click="view = 'showInfo'">Info</a>
+        <a class="list-group-item" href="#" data-parent="#sidebar" ng-click="view = 'showInfo'"> Info</a>
         <a class="list-group-item " href="#dropdown1" data-toggle="collapse" data-parent="#sidebar">Class List <i class="fa fa-caret-down"></i></a>
           <div class="collapse" id="dropdown1">
             <a class="list-group-item" href="javascript:;" ng-click="view = 'showClassCS205'">CS 205</a>
@@ -117,52 +117,79 @@
           <table class="table table-dark table-striped">   
             <tbody>
               <tr>
-                <th scope="row">Username</th>
+                <th scope="row" class="iconCol" style="width: 2%">
+                  <span class="fa fa-user-o"></span>
+                </th>
+                <td>Username</td>
                 <td>cinnaco</td>
                 <td>
-                  <img class="btn btn-link" data-toggle="modal" data-target="#changeUsername" src="https://png.icons8.com/windows/32/ffffff/video-editing.png">
+                  <!-- <img class="btn btn-link" data-toggle="modal" data-target="#changeUsername" src="https://png.icons8.com/windows/32/ffffff/video-editing.png"> -->
+                  <a class="btn btn-edit" href="#">
+                    <i class="fa fa-pencil-square-o fa-2x" data-toggle="modal" data-target="#changeUsername" aria-hidden="true"></i>
+                  </a>  
+
                 </td>
                     
               </tr>
               <tr>
-                  <th scope="row">Password</th>
-                  <td>&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;</td>
-                  <td>
-                    <img class="btn btn-link" data-toggle="modal" data-target="#changePassword" src="https://png.icons8.com/windows/32/ffffff/video-editing.png">
-                  </td>
-                  
+                <th scope="row" class="iconCol">
+                  <span class="fa fa-lock"></span> 
+                </th>
+                <td>Password</td>
+                <td>&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;</td>
+                <td>
+                  <a class="btn btn-edit" href="#">
+                    <i class="fa fa-pencil-square-o fa-2x" data-toggle="modal" data-target="#changePassword" aria-hidden="true"></i>
+                  </a>  
+                </td>
               </tr>
               <tr>
-                <th scope="row">Full Name</th>
+                <th scope="row" class="iconCol">
+                  <span class="fa fa-id-card-o"></span> 
+                </th>
+                <td>Full Name</td>
                 <td>Christopher Innaco</td>
                 <td>
-                  <img class="btn btn-link" data-toggle="modal" data-target="#changeFullName" src="https://png.icons8.com/windows/32/ffffff/video-editing.png">
+                  <a class="btn btn-edit" href="#">
+                    <i class="fa fa-pencil-square-o fa-2x" data-toggle="modal" data-target="#changeFullName" aria-hidden="true"></i>
+                  </a>     
                 </td>
-
               </tr>
               <tr>
-                <th scope="row">E-mail</th>
+                <th scope="row" class="iconCol">
+                  <span class="fa fa-envelope-o"></span>
+                </th>
+                <td>E-mail</td>
                 <td>innaco001@connect.wcsu.edu</td>
                 <td>
-                  <img class="btn btn-link" data-toggle="modal" data-target="#changeEmail" src="https://png.icons8.com/windows/32/ffffff/video-editing.png">
+                  <a class="btn btn-edit" href="#">
+                    <i class="fa fa-pencil-square-o fa-2x" data-toggle="modal" data-target="#changeFullName" aria-hidden="true"></i>
+                  </a>                 
                 </td>
-
               </tr>
               <tr>
-                  <th scope="row">Date Joined</th>
-                  <td>08-02-2018</td>
-                  <td></td>
-
+                <th scope="row" class="iconCol">
+                  <span class="fa fa-calendar"></span> 
+                </th>
+                <td>Date Joined</td>
+                <td>08-02-2018</td>
+                <td></td>
               </tr>
               <tr>
-                  <th scope="row">Teacher</th>
-                  <td>No</td>
-                  <td></td>
+                <th scope="row" class="iconCol">
+                  <span class="fa fa-mortar-board"></span>
+                </th>
+                <td>Instructor</td>
+                <td>No</td>
+                <td></td>
               </tr>
               <tr>
-                  <th scope="row">Administrator</th>
-                  <td>Yes</td>
-                  <td></td>    
+                <th scope="row" class="iconCol">
+                  <span class="fa fa-shield"></span>
+                </th>
+                <td>Administrator</td>
+                <td>Yes</td>
+                <td></td>    
               </tr>
             </tbody>    
           </table>
