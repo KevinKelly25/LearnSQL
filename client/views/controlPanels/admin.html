@@ -58,11 +58,11 @@
               <a href="../Account/signIn.html" class="nav-link text-dark">Sign in</a>
             </li>
             </span>
-						<span ng-show="currentUser.isadmin">
-						<li class="nav-item">
-							<a href="views/controlPanels/admin.html" class="nav-link border-right px-4">Admin Control Panel</a>
-						</li>
-						</span>
+			<span ng-show="currentUser.isadmin">
+			<li class="nav-item">
+				<a href="views/controlPanels/admin.html" class="nav-link border-right px-4">Admin Control Panel</a>
+			</li>
+			</span>
             <span ng-show="currentUser">
             <li class="nav-item">
               <a href="../account/profile.html" class="nav-link text-dark">Profile</a>
@@ -83,32 +83,32 @@
 		<!-- Login form -->
 		<div class="py-5" ng-controller="AdminCtrl">
 			<form class="form-admin">
-				<!-- TODO: add a logo here	 -->
-				<!-- <img class="mb-4" src="../../assets/brand/bootstrap-solid.svg" alt="" width="72" height="72"> -->
-				<span ng-show="error">
-					<div class="alert alert-danger">
-							{{ message }}
-					</div>
-				</span>
-	      <span ng-show="success">
-	        <div class="alert alert-success">
-	            {{ message }}
-	        </div>
-	      </span>
+    			<!-- TODO: add a logo here	 -->
+    			<!-- <img class="mb-4" src="../../assets/brand/bootstrap-solid.svg" alt="" width="72" height="72"> -->
+    			<span ng-show="error">
+    				<div class="alert alert-danger">
+    					{{ message }}
+    				</div>
+    			</span>
+                <span ng-show="success">
+                    <div class="alert alert-success">
+                        {{ message }}
+                    </div>
+                </span>
 	      <!-- Default login page or if login anchor is clicked -->
 				<span ng-show="form == 'default'">
 					<h1 class="h3 mb-3 font-weight-bold text-primary">Admin Control Panel</h1>
 					<label for="inputClass" class="sr-only">Class Name</label>
 					<input type="name" class="form-control " ng-model="class" placeholder="Class Name" required autofocus>
 					<label for="inputClass" class="sr-only">Password</label>
-					<input type="password" class="form-control " ng-model="password" placeholder="Password" required autofocus>
+					<input type="password" class="form-control " ng-model="password" placeholder="Type Anything here" required autofocus>
 					<!-- TODO: Add a remember me when we can support it -->
 					<!-- <div class="checkbox mb-3">
 						<label>
 							<input type="checkbox" value="remember-me"> Remember me
 						</label>
 					</div> -->
-					<button class="btn btn-lg btn-primary btn-block" value="login" type="submit" ng-click="addClass()">Add Class</button>
+					<button class="btn btn-lg btn-primary btn-block" value="login" type="submit" ng-click="selectClass()">Select Class</button>
 				</span>
 				<p class="mt-5 mb-3 text-muted">&copy; 2018-2019</p>
 			</form>
