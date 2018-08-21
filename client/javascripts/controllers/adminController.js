@@ -58,4 +58,28 @@ app.controller('AdminCtrl', ($scope, $http, $location, $window) => {
                        'characters: A-Z, 0-9, - only (case insensitive)';
     }
   };
+
+
+  /**
+   * This function calls the /admin/addClass post method to create ClassDB databases
+   *  and updates the associated LearnSQL tables. While processing a message
+   *  appears to let the user know to wait.
+   */
+  $scope.selectClass = () => {
+    $scope.error = false;
+    this.class.name = $scope.class;
+    this.class.password = $scope.password;
+    $scope.success = true;
+    $scope.message = 'Data being searched';
+    $http.post('/teacher/selectClass', this.class)
+    .success((data) => {
+      $scope.success = true;
+      $scope.message = 'Database Successfully Created';
+    })
+    .error((error) => {
+      $scope.success = false;
+      $scope.error = true;
+      $scope.message = error.status;
+    });
+  };
 });
