@@ -1,3 +1,13 @@
+<!--
+  instructor.html - LearnSQL
+
+  Michael Torres
+  Web Applications and Databases for Education (WADE)
+
+  This file contains the html view of the instructor control panel page for the
+   LearnSQL website
+-->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -70,17 +80,21 @@
     </nav>
     <!-- END OF NAVBAR -->
 
+    <!-- DYNAMIC TABLES  -->
     <section class="information-for-classes mt-5">
         <div class="container">
+            <!-- TODO: make scroll to only scroll the tbody of the table and fix misalignment across different browsers through javascript -->
             <div class="row scroll">
 
-                <table id="myDIV" class="fixed_headers table table-bordered table-striped bg-dark-primary text-white table-hover shadow-lg">
+                <!-- this table shows a list of classes -->
+                <table id="table-of-classes" class="table table-bordered table-striped bg-dark-primary text-white table-hover shadow-lg">
                     <caption>Classes being taught</caption>
                     <thead>
+                        <!-- search and add class -->
                         <tr>
                             <td colspan="7">
                                 <div class="input-group">
-                                    <input type="text" class="form-control bg-light" id="myInput" placeholder="Search for class..." aria-label="" aria-describedby="basic-addon1">
+                                    <input type="text" class="form-control bg-light" id="myInput" placeholder="Search for class...">
                                 </div>
                             </td>
                             <td colspan="8">
@@ -127,6 +141,9 @@
                                 </div>
                             </td>
                         </tr>
+                        <!-- end of search and add class -->
+
+                        <!-- column headings -->
                         <tr class="bg-header-color">
                             <th scope="col">#</th>
                             <th scope="col">Class Name</th>
@@ -138,6 +155,7 @@
                             <th scope="col"># of Students</th>
                             <th scope="col"></th>
                         </tr>
+                        <!-- end of columns headings -->
                     </thead>
                     <tbody id="classesTable">
                         <tr>
@@ -232,19 +250,20 @@
                         </tr>
                     </tbody>
                 </table>
-      
+                
+                <!-- this table shows a list of students for the first class: id = 1 -->
                 <table id="class1" class="collapse table table-bordered table-striped bg-dark-primary text-white table-hover shadow-lg">
                     <caption>CS 100: List of students and their information</caption>
                     <thead>
                         <tr>
                             <td colspan="6">
                                 <div class="input-group">
-                                    <input type="text" id="myInput" class="form-control bg-light" placeholder="Search for class..." aria-label="" aria-describedby="basic-addon1">
+                                    <input type="text" id="studentInput" class="form-control bg-light" placeholder="Search for class...">
                                 </div>
                             </td>
                             <td colspan="1">
                                 <button type="button" class="btn btn-outline-secondary btn-md btn-block" onclick="refresh()">
-                                    <a href="#" class="text-white" data-target="#myDIV" data-toggle="collapse">Back to Courses</a>
+                                    <a href="#" class="text-white" data-target="#table-of-classes" data-toggle="collapse">Back to Courses</a>
                                 </button>
                             </td>
                             <td colspan="1">
@@ -284,7 +303,7 @@
                             <th scope="col"></th>
                         </tr>
                     </thead>
-                    <tbody id="classTable1">
+                    <tbody id="studentsTable">
                         <tr>
                             <th scope="row">1</th>
                             <td>
@@ -330,18 +349,19 @@
                     </tbody>
                 </table>
 
+                <!-- this table shows a list of students for the second class: id = 2 -->
                 <table id="class2" class="collapse table table-bordered table-striped bg-dark-primary text-white table-hover shadow-lg">
                     <caption>CS 200: List of students and their information</caption>
                     <thead>
                         <tr>
                             <td colspan="6">
                                 <div class="input-group">
-                                    <input type="text" id="myInput" class="form-control bg-light" placeholder="Search for class..." aria-label="" aria-describedby="basic-addon1">
+                                    <input type="text" id="studentInput1" class="form-control bg-light" placeholder="Search for class...">
                                 </div>
                             </td>
                             <td colspan="1">
                                 <button type="button" class="btn btn-outline-secondary btn-md btn-block" onclick="refresh()">
-                                    <a href="#" class="text-white" data-target="#myDIV" data-toggle="collapse">Back to Courses</a>
+                                    <a href="#" class="text-white" data-target="#table-of-classes" data-toggle="collapse">Back to Courses</a>
                                 </button>
                             </td>
                             <td colspan="1">
@@ -381,7 +401,7 @@
                             <th scope="col"></th>
                         </tr>
                     </thead>
-                    <tbody id="classTable2">
+                    <tbody id="studentsTable1">
                         <tr>
                             <th scope="row">1</th>
                             <td>
@@ -427,18 +447,19 @@
                     </tbody>
                 </table>
 
+                <!-- this table shows a list of students for the third class: id = 3 -->
                 <table id="class3" class="collapse table table-bordered table-striped bg-dark-primary text-white table-hover shadow-lg">
                     <caption>CS 300: List of students and their information</caption>
                     <thead>
                         <tr>
                             <td colspan="6">
                                 <div class="input-group">
-                                    <input type="text" id="myInput" class="form-control bg-light" placeholder="Search for class..." aria-label="" aria-describedby="basic-addon1">
+                                    <input type="text" id="myInput" class="form-control bg-light" placeholder="Search for class...">
                                 </div>
                             </td>
                             <td colspan="1">
                                 <button type="button" class="btn btn-outline-secondary btn-md btn-block" onclick="refresh()">
-                                    <a href="#" class="text-white" data-target="#myDIV" data-toggle="collapse">Back to Courses</a>
+                                    <a href="#" class="text-white" data-target="#table-of-classes" data-toggle="collapse">Back to Courses</a>
                                 </button>
                             </td>
                             <td colspan="1">
@@ -478,7 +499,7 @@
                             <th scope="col"></th>
                         </tr>
                     </thead>
-                    <tbody id="classTable3">
+                    <tbody id="classesTable">
                         <tr>
                             <th scope="row">1</th>
                             <td>
@@ -524,18 +545,19 @@
                     </tbody>
                 </table>
 
+                <!-- this table shows a list of students for the fourth class: id = 4 -->
                 <table id="class4" class="collapse table table-bordered table-striped bg-dark-primary text-white table-hover shadow-lg">
                     <caption>CS 400: List of students and their information</caption>
                     <thead>
                         <tr>
                             <td colspan="6">
                                 <div class="input-group">
-                                    <input type="text" id="myInput" class="form-control bg-light" placeholder="Search for class..." aria-label="" aria-describedby="basic-addon1">
+                                    <input type="text" id="myInput" class="form-control bg-light" placeholder="Search for class...">
                                 </div>
                             </td>
                             <td colspan="1">
                                 <button type="button" class="btn btn-outline-secondary btn-md btn-block" onclick="refresh()">
-                                    <a href="#" class="text-white" data-target="#myDIV" data-toggle="collapse">Back to Courses</a>
+                                    <a href="#" class="text-white" data-target="#table-of-classes" data-toggle="collapse">Back to Courses</a>
                                 </button>
                             </td>
                             <td colspan="1">
@@ -575,7 +597,7 @@
                             <th scope="col"></th>
                         </tr>
                     </thead>
-                    <tbody id="classTable4">
+                    <tbody id="classesTable">
                         <tr>
                             <th scope="row">1</th>
                             <td>
@@ -621,18 +643,19 @@
                     </tbody>
                 </table>
 
+                <!-- this table shows a list of students for the fifth class: id = 5 -->
                 <table id="class5" class="collapse table table-bordered table-striped bg-dark-primary text-white table-hover shadow-lg">
                     <caption>CS 500: List of students and their information</caption>
                     <thead>
                         <tr>
                             <td colspan="6">
                                 <div class="input-group">
-                                    <input type="text" id="myInput" class="form-control bg-light" placeholder="Search for class..." aria-label="" aria-describedby="basic-addon1">
+                                    <input type="text" id="myInput" class="form-control bg-light" placeholder="Search for class...">
                                 </div>
                             </td>
                             <td colspan="1">
                                 <button type="button" class="btn btn-outline-secondary btn-md btn-block" onclick="refresh()">
-                                    <a href="#" class="text-white" data-target="#myDIV" data-toggle="collapse">Back to Courses</a>
+                                    <a href="#" class="text-white" data-target="#table-of-classes" data-toggle="collapse">Back to Courses</a>
                                 </button>
                             </td>
                             <td colspan="1">
@@ -672,7 +695,7 @@
                             <th scope="col"></th>
                         </tr>
                     </thead>
-                    <tbody id="classTable5">
+                    <tbody id="classesTable">
                         <tr>
                             <th scope="row">1</th>
                             <td>
@@ -718,18 +741,19 @@
                     </tbody>
                 </table>
 
+                <!-- this table shows a list of students for the sixth class: id = 6 -->
                 <table id="class6" class="collapse table table-bordered table-striped bg-dark-primary text-white table-hover shadow-lg">
                     <caption>CS 600: List of students and their information</caption>
                     <thead>
                         <tr>
                             <td colspan="6">
                                 <div class="input-group">
-                                    <input type="text" id="myInput" class="form-control bg-light" placeholder="Search for class..." aria-label="" aria-describedby="basic-addon1">
+                                    <input type="text" id="myInput" class="form-control bg-light" placeholder="Search for class...">
                                 </div>
                             </td>
                             <td colspan="1">
                                 <button type="button" class="btn btn-outline-secondary btn-md btn-block" onclick="refresh()">
-                                    <a href="#" class="text-white" data-target="#myDIV" data-toggle="collapse">Back to Courses</a>
+                                    <a href="#" class="text-white" data-target="#table-of-classes" data-toggle="collapse">Back to Courses</a>
                                 </button>
                             </td>
                             <td colspan="1">
@@ -769,7 +793,7 @@
                             <th scope="col"></th>
                         </tr>
                     </thead>
-                    <tbody id="classTable6">
+                    <tbody id="classesTable">
                         <tr>
                             <th scope="row">1</th>
                             <td>
@@ -818,6 +842,7 @@
             </div>
         </div>
     </section>
+    <!-- END OF DYNAMIC TABLES -->
 
     <script src="http://code.jquery.com/jquery-3.3.1.min.js"
     integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
@@ -831,20 +856,48 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.6/angular.min.js"></script>
     <script src="../javascripts/controllers.js"></script>
 
+    <!-- TODO: The following 3 scripts which search through tables will need change (added in the backend) -->
+    <!-- searches through the table of classes -->
     <script>
         $(document).ready(function(){
             $("#myInput").on("keyup", function() {
-            var value = $(this).val().toLowerCase();
-            $("#classesTable tr").filter(function() {
-                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-            });
+                var value = $(this).val().toLowerCase();
+                $("#classesTable tr").filter(function() {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
             });
         });
     </script>
 
+    <!-- searches through the table of students (for the first class) -->
+    <script>
+        $(document).ready(function(){
+            $("#studentInput").on("keyup", function() {
+                var value = $(this).val().toLowerCase();
+                $("#studentsTable tr").filter(function() {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+        });
+    </script>
+
+    <!-- searches through the table of classes (for the second class) -->
+    <script>
+        $(document).ready(function(){
+            $("#studentInput1").on("keyup", function() {
+                var value = $(this).val().toLowerCase();
+                $("#studentsTable1 tr").filter(function() {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+        });
+    </script>
+
+    <!-- to avoid dynamic table showing up together: table of classes should not appear when a specific class is clicked and 
+         the table of classes should not take up any space within the page when not visible. -->
     <script>
         function myFunction() {
-            var x = document.getElementById("myDIV");
+            var x = document.getElementById("table-of-classes");
             if (x.style.display === "none") {
                 x.style.display = "block";
             } else {
@@ -853,6 +906,7 @@
         }
     </script>
 
+    <!-- used to refresh the page - will go back to table of classes -->
     <script>
         function refresh() {
             location.reload();

@@ -1,3 +1,12 @@
+/* ---------------------------------------------------
+  instructor.scss - LearnSQL
+
+  Michael Torres
+  Web Applications and Databases for Education (WADE)
+
+  This file contains the Scss for the instructor.html page
+----------------------------------------------------- */
+
 #navbar-title {
   color: #ac4142; }
 
@@ -35,8 +44,9 @@ table.table-bordered > thead > tr > td {
   background-color: transparent;
   border: none; }
 
+/* TODO: change this to work with tbody only while leaving thead always visible (because of misalignment
+         I will need to work on this when working on the backend for the instructor control panel */
 .scroll {
   max-height: 600px;
   overflow-y: auto;
-  overflow-x: hidden;
-}
+  overflow-x: hidden; }
