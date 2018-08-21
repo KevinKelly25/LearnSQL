@@ -96,7 +96,7 @@ function teacherRequired(req, res, next) {
   return db.one('SELECT isAdmin, isTeacher FROM UserData WHERE Username = $1', [req.user.username])
   .then((user) => {
     console.log(user);
-    if (!user.isadmin) return res.status(401).json({status: 'You are not authorized'});
+    if (!user.isadmin && !user.isteacher) return res.status(401).json({status: 'You are not authorized'});
     return next();
   })
   .catch((err) => {

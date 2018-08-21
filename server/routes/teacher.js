@@ -17,8 +17,8 @@ const authHelpers = require('../auth/_helpers');
 
 
 /**
- * This method create user using a helper function. If an error is encountered
- * an error status code and message is returned
+ * This method returns ddl.Activity for a given ClassDB database. This is meant
+ *  for an example of how to connect and use ClassDB Database properly
  */
 router.post('/selectClass', authHelpers.teacherRequired, (req, res, next)  => {
 	console.log('getting here');

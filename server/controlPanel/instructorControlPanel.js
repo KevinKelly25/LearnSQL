@@ -29,7 +29,7 @@ function selectClass(req, res) {
 				.then((result) => {
 					console.log(result);
 					var db = dbCreator(result);
-					db.one('SELECT * FROM ClassDB.DDLActivity')
+					db.any('SELECT * FROM ClassDB.DDLActivity')
 					.then((result) => {
 						console.log(result);
 						resolve();
