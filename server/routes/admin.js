@@ -19,7 +19,7 @@ const logger = require('../logs/winston.js');
 
 router.post('/testLogWarning', authHelpers.adminRequired,(req, res, next)  => {
     logger.error('Performing ' + req.body.numberOfExpectedLogs + ' test(s) that'
-                 + 'will result in log(s)');
+                 + ' will result in log(s)');
     return res.status(200).json('Log Warning Added Successfully');
 });
 

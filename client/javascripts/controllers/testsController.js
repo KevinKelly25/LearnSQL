@@ -50,17 +50,17 @@ app.controller('TestsCtrl', ($scope, $http, $window) => {
 	     name: 'create_test1',
 	     password: 'test'
 	  };
-    $http.post('/admin/addClass', $scope.class1)
-    .success((data) => {
+      $http.post('/admin/addClass', $scope.class1)
+      .success((data) => {
       $http.post('/admin/dropClass', $scope.class1)
 			.success((data) => {
 				$scope.count += 1;
-				if ($scope.count == $scope.numberOfTests)
+				if (angular.equals($scope.count, $scope.testStats.numberOfTests))
 					return $scope.addDropClassTestStatus = 'Passed';
 			}).error((error) => {
 				return $scope.addDropClassTestStatus = 'Fail Code 2';
 			});
-    })
+        })
 		.error((error) => {
 			$scope.addDropClassTestStatus = 'Fail Code 1';
 			if (error.status == 'Class Already Exists With That Name'){
@@ -81,7 +81,7 @@ app.controller('TestsCtrl', ($scope, $http, $window) => {
 			$http.post('/admin/dropClass', $scope.class2)
 			.success((data) => {
 				$scope.count += 1;
-				if ($scope.count == $scope.numberOfTests)
+				if (angular.equals($scope.count, $scope.testStats.numberOfTests))
 					return $scope.addDropClassTestStatus = 'Passed';
 			}).error((error) => {
 				return $scope.addDropClassTestStatus = 'Fail Code 4';
@@ -112,7 +112,7 @@ app.controller('TestsCtrl', ($scope, $http, $window) => {
 				$http.post('/admin/dropClass', $scope.class3)
 				.success((data) => {
 					$scope.count += 1;
-					if ($scope.count == $scope.numberOfTests)
+					if (angular.equals($scope.count, $scope.testStats.numberOfTests))
 						return $scope.addDropClassTestStatus = 'Passed';
 				})
 			});
