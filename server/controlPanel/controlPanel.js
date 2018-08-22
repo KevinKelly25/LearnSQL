@@ -11,9 +11,12 @@
 
 const db = require('../db/ldb.js');
 var uniqid = require('uniqid');
+const logger = require('../logs/winston.js');
+
 
 /**
- * This funciton creates a class database using a ClassDB template Database
+ * This function creates a class database using a ClassDB template Database. It
+ *  also addes the class to the attends and class table of the learnsql database
  */
 function createClass(req, res) {
 	return handleErrors(req)
@@ -34,6 +37,7 @@ function createClass(req, res) {
 												password: req.body.password
 											})
 											.then(() => {
+												//logger.info('test');
 												return t.none('INSERT INTO attends(username, classid, isteacher) VALUES(${name}, ${class}, ${isTeacher})'
 												, {
 													name: req.user.username,
@@ -47,13 +51,47 @@ function createClass(req, res) {
 									return res.status(200).json('Class Database Created Successfully');
 							})
 							.catch(error => {
-									res.status(400).json({status: 'Database could not be created'});
+									res.status(500).json({status: 'Database could not be created'});
 							});
 						})
 						.catch(error => {
-						    res.status(400).json({status: 'Class Already Exists With That Name'});
+							logger.error('Create Class: \n' + error);
+						  res.status(400).json({status: 'Class Already Exists With That Name'});
 						});
 	})
+}
+
+
+/**
+ * This function drops a class database as well as removes it from the attends
+ *  and class table from the learnsql database
+ */
+function dropClass(req, res) {
+	return handleErrors(req)
+	.then(() => {
+		db.task(t => {
+				return t.one('SELECT C.ClassID ' +
+								'FROM Attends AS A INNER JOIN Class AS C ON A.ClassID = C.ClassID ' +
+								'WHERE Username = $1 AND ClassName = $2', [req.user.username, req.body.name])
+						.then((result) => {
+							req.body.classid = result.classid;
+						  return t.none('DROP DATABASE $1~ ', result.classid)
+						})
+						.then(() => {
+							return t.none('DELETE FROM attends WHERE classid = $1', req.body.classid)
+						})
+						.then(() => {
+							return t.none('DELETE FROM class WHERE classid = $1', req.body.classid)
+						})
+						.then(() => {
+							return res.status(200).json('Class Database Created Successfully');
+						})
+						.catch(error => {
+							logger.error('Drop Class: \n' + error);
+							res.status(500).json({status: 'Database could not be Deleted'});
+						});
+					});
+		})
 }
 
 /**
@@ -61,7 +99,6 @@ function createClass(req, res) {
  * Also, set to a low number for testing purposes.
  */
 function handleErrors(req) {
-	console.log('handleErrors');
   // TODO: fix length requirements
   return new Promise((resolve, reject) => {
   if (req.body.password.length < 1) {
@@ -76,5 +113,6 @@ function handleErrors(req) {
 
 
 module.exports = {
-  createClass
+  createClass,
+	dropClass
 };
