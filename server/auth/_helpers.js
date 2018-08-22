@@ -15,7 +15,7 @@ const db = require('../db/ldb.js');
 
 
 /**
- * Uses the built in bcypt module to compare given password and database password.
+ * Uses the built in bcrypt module to compare given password and database password.
  *  This is comparing hashed and salted passwords.
  *
  * @param {string} userPassword user inputted password
