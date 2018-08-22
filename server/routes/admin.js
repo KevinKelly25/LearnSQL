@@ -15,6 +15,13 @@ const router = express.Router();
 const adminHelpers = require('../controlPanel/controlPanel.js');
 const authHelpers = require('../auth/_helpers');
 
+const logger = require('../logs/winston.js');
+
+router.post('/testLogWarning', authHelpers.adminRequired,(req, res, next)  => {
+    logger.error('Performing ' + req.body.numberOfExpectedLogs + ' test(s) that'
+                 + ' will result in log(s)');
+    return res.status(200).json('Log Warning Added Successfully');
+});
 
 /**
  * This method create user using a helper function. If an error is encountered
@@ -22,6 +29,13 @@ const authHelpers = require('../auth/_helpers');
  */
 router.post('/addClass', authHelpers.adminRequired,(req, res, next)  => {
   return adminHelpers.createClass(req, res)
+	.catch((err) => {
+		handleResponse(res, 500, err);
+	});
+});
+
+router.post('/dropClass', authHelpers.adminRequired,(req, res, next)  => {
+  return adminHelpers.dropClass(req, res)
 	.catch((err) => {
 		handleResponse(res, 500, err);
 	});
