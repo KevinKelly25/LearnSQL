@@ -6,24 +6,12 @@
 
   This file contains the Scss for the instructor.html page
 ----------------------------------------------------- */
-
-#navbar-title {
-  color: #ac4142; }
-
-#learn-tab {
-  background-color: #ac4142; }
-
 .bg-dark-primary {
   background-color: #45526e; }
 
-.bg-light-primary {
-  background-color: #ac4142; }
-
-.bg-header-color {
-  background-color: #2e3951; }
-
 .table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
-  background-color: #ac4142; }
+  background-color: #ac4142;
+  color: white;}
 
 #footer-header {
   color: #ac4142; }
@@ -40,13 +28,9 @@ table.table-bordered > tbody > tr > th {
 table.table-bordered > thead > tr > td {
   border: 1px solid black; }
 
+a {color: black;}
+a:hover {color: white;}
+
 .class-button {
   background-color: transparent;
   border: none; }
-
-/* TODO: change this to work with tbody only while leaving thead always visible (because of misalignment
-         I will need to work on this when working on the backend for the instructor control panel */
-.scroll {
-  max-height: 600px;
-  overflow-y: auto;
-  overflow-x: hidden; }
