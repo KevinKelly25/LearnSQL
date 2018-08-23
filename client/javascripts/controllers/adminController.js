@@ -25,6 +25,9 @@ app.controller('AdminCtrl', ($scope, $http, $location, $window) => {
      name: null,
      password: null
   };
+  $scope.output = 'Class info will displayed here, it will unformatted'
+
+
 
   /**
    * This function calls the /admin/addClass post method to create ClassDB databases
@@ -60,26 +63,73 @@ app.controller('AdminCtrl', ($scope, $http, $location, $window) => {
   };
 
 
-  /**
-   * This function calls the /admin/addClass post method to create ClassDB databases
-   *  and updates the associated LearnSQL tables. While processing a message
-   *  appears to let the user know to wait.
-   */
-  $scope.selectClass = () => {
-    $scope.error = false;
-    this.class.name = $scope.class;
-    this.class.password = $scope.password;
-    $scope.success = true;
-    $scope.message = 'Data being searched';
-    $http.post('/teacher/selectClass', this.class)
-    .success((data) => {
+    /**
+     * This function is an example of how to add student via angularjs
+     */
+    $scope.addStudent = () => {
+      $scope.error = false;
       $scope.success = true;
-      $scope.message = 'Database Successfully Created';
-    })
-    .error((error) => {
-      $scope.success = false;
-      $scope.error = true;
-      $scope.message = error.status;
-    });
-  };
+      $scope.student = {
+          username : $scope.username,
+          fullname : $scope.fullName,
+          classname : $scope.className2
+      };
+      $scope.message = 'adding student';
+      $http.post('/teacher/addStudent', $scope.student)
+      .success((data) => {
+        $scope.success = true;
+        $scope.message = 'Student Added Successfully';
+        $scope.output = data;
+      })
+      .error((error) => {
+        $scope.success = false;
+        $scope.error = true;
+        $scope.message = error.status;
+      });
+    };
+
+    /**
+     * This function is an example of how to retrieve class info via angularJS
+     */
+    $scope.getClass = () => {
+      $scope.error = false;
+      $scope.success = true;
+      $scope.getclass = {
+          classname : $scope.className
+      };
+      $http.post('/teacher/getClass', $scope.getclass)
+      .success((data) => {
+        $scope.success = true;
+        $scope.message = 'Got Data';
+        $scope.output = data;
+      })
+      .error((error) => {
+        $scope.success = false;
+        $scope.error = true;
+        $scope.message = $scope.getclass;
+      });
+    };
+
+    /**
+     * This function is an example of how to remove student via angularjs
+     */
+    $scope.dropStudent = () => {
+      $scope.error = false;
+      $scope.success = true;
+      $scope.student2 = {
+          username : $scope.studentName,
+          classname : $scope.className3
+      };
+      $http.post('/teacher/dropStudent', $scope.student2)
+      .success((data) => {
+        $scope.success = true;
+        $scope.message = 'dropped student';
+      })
+      .error((error) => {
+        $scope.success = false;
+        $scope.error = true;
+        $scope.message = error;
+      });
+    };
+
 });

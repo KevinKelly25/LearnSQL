@@ -51,6 +51,7 @@ function createClass(req, res) {
 									return res.status(200).json('Class Database Created Successfully');
 							})
 							.catch(error => {
+								console.log(error);
 									res.status(500).json({status: 'Database could not be created'});
 							});
 						})
