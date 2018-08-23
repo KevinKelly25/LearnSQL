@@ -55,7 +55,7 @@
             </li>
             <span ng-show="!currentUser">
             <li class="nav-item">
-              <a href="../Account/signIn.html" class="nav-link text-dark">Sign in</a>
+              <a href="./Account/signIn.html" class="nav-link text-dark">Sign in</a>
             </li>
             </span>
 			<span ng-show="currentUser.isadmin">
@@ -78,9 +78,7 @@
       </div>
     </nav>
 
-    <a href="./adminTest.html">Go To Tests</a>
-
-		<!-- Login form -->
+		<!-- Admin form -->
 		<div class="py-5" ng-controller="AdminCtrl">
 			<form class="form-admin">
     			<!-- TODO: add a logo here	 -->
@@ -101,16 +99,85 @@
 					<label for="inputClass" class="sr-only">Class Name</label>
 					<input type="name" class="form-control " ng-model="class" placeholder="Class Name" required autofocus>
 					<label for="inputClass" class="sr-only">Password</label>
-					<input type="password" class="form-control " ng-model="password" placeholder="Type Anything here" required autofocus>
+					<input type="password" class="form-control " ng-model="password" placeholder="Class Password" required autofocus>
 					<!-- TODO: Add a remember me when we can support it -->
 					<!-- <div class="checkbox mb-3">
 						<label>
 							<input type="checkbox" value="remember-me"> Remember me
 						</label>
 					</div> -->
-					<button class="btn btn-lg btn-primary btn-block" value="login" type="submit" ng-click="selectClass()">DOES NOT WORK</button>
+					<button class="btn btn-lg btn-primary btn-block" value="login" type="submit" ng-click="addClass()">Add Class</button>
 				</span>
-				<p class="mt-5 mb-3 text-muted">&copy; 2018-2019</p>
+			</form>
+			<form class="form-admin">
+				<!-- TODO: add a logo here	 -->
+				<!-- <img class="mb-4" src="../../assets/brand/bootstrap-solid.svg" alt="" width="72" height="72"> -->
+				<span ng-show="error">
+					<div class="alert alert-danger">
+						{{ message }}
+					</div>
+				</span>
+				<span ng-show="success">
+					<div class="alert alert-success">
+						{{ message }}
+					</div>
+				</span>
+		  <!-- Default login page or if login anchor is clicked -->
+				<span ng-show="form == 'default'">
+					<h1 class="h3 mb-3 font-weight-bold text-primary">Add student</h1>
+					<label for="inputClass" class="sr-only">Username</label>
+					<input type="name" class="form-control " ng-model="username" placeholder="Student Username" required autofocus>
+					<label for="inputClass" class="sr-only">Full Name</label>
+					<input type="name" class="form-control " ng-model="fullName" placeholder="Student Full Name" required autofocus>
+					<label for="inputClass" class="sr-only">Class Name</label>
+					<input type="name" class="form-control " ng-model="className2" placeholder="Class Name" required autofocus>
+					<button class="btn btn-lg btn-primary btn-block" value="login" type="submit" ng-click="addStudent()">Add Student</button>
+				</span>
+			</form>
+			<form class="form-admin">
+				<!-- TODO: add a logo here	 -->
+				<!-- <img class="mb-4" src="../../assets/brand/bootstrap-solid.svg" alt="" width="72" height="72"> -->
+				<span ng-show="error">
+					<div class="alert alert-danger">
+						{{ message }}
+					</div>
+				</span>
+				<span ng-show="success">
+					<div class="alert alert-success">
+						{{ message }}
+					</div>
+				</span>
+		  <!-- Default login page or if login anchor is clicked -->
+				<span ng-show="form == 'default'">
+					<h1 class="h3 mb-3 font-weight-bold text-primary">Get Students in class</h1>
+					<label for="inputClass" class="sr-only">ClassName</label>
+					<input type="name" class="form-control " ng-model="className" placeholder="Class Name" required autofocus>
+					<button class="btn btn-lg btn-primary btn-block" value="login" type="submit" ng-click="getClass()">View Class</button>
+				</span>
+			</form>
+			<p>{{ output }}</p>
+			<form class="form-admin">
+				<!-- TODO: add a logo here	 -->
+				<!-- <img class="mb-4" src="../../assets/brand/bootstrap-solid.svg" alt="" width="72" height="72"> -->
+				<span ng-show="error">
+					<div class="alert alert-danger">
+						{{ message }}
+					</div>
+				</span>
+				<span ng-show="success">
+					<div class="alert alert-success">
+						{{ message }}
+					</div>
+				</span>
+		  <!-- Default login page or if login anchor is clicked -->
+				<span ng-show="form == 'default'">
+					<h1 class="h3 mb-3 font-weight-bold text-primary">Remove Student</h1>
+					<label for="inputClass" class="sr-only">ClassName</label>
+					<input type="name" class="form-control " ng-model="studentName" placeholder="student username" required autofocus>
+					<label for="inputClass" class="sr-only">ClassName</label>
+					<input type="name" class="form-control " ng-model="className3" placeholder="Class Name" required autofocus>
+					<button class="btn btn-lg btn-primary btn-block" value="login" type="submit" ng-click="dropStudent()">Drop Student</button>
+				</span>
 			</form>
 		</div>
 
@@ -126,8 +193,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
 
   <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.6/angular.min.js"></script>
-  <script src="../../javascripts/controllers/mainControllers.js"></script>
-  <script src="../../javascripts/controllers/adminController.js"></script>
+  <script src="../javascripts/controllers/mainControllers.js"></script>
+  <script src="../javascripts/controllers/adminController.js"></script>
 
 </body>
 </html>
