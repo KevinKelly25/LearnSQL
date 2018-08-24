@@ -65,6 +65,17 @@ router.get('/check', (req, res, next) => {
   return res.status(200).json(req.user);
 });
 
+
+/**
+ * This method checks to see if email exists
+ */
+router.post('/forgotPassword', (req, res, next)  => {
+    return authHelpers.emailVerification(req, res)
+	.catch((err) => {
+		handleResponse(res, 500, err);
+	});
+});
+
 // *** helpers *** //
 
 /**

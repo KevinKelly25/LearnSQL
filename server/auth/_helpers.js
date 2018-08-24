@@ -13,6 +13,8 @@
 const bcrypt = require('bcryptjs');
 const db = require('../db/ldb.js');
 
+const logger = require('../logs/winston.js');
+
 
 /**
  * Uses the built in bcrypt module to compare given password and database password.
@@ -67,6 +69,50 @@ function createUser(req, res) {
     })
   })
 }
+
+
+
+/**
+ * This function adds a student to a ClassDB database. Using the given classname
+ *  and the user's username a ClassID is derived; the ClassID is also the ClassDB
+ *  database name. Using the ClassID a connection is made to the database and a
+ *  database object is returned. This db object then uses the given username and
+ *  fullname to create a student in the ClassDB database. To do this a built in
+ *  classdb function 'createStudent' is used. See https://github.com/DASSL/ClassDB/wiki/Adding-Users
+ *  for more information on how ClassDB adds students
+ *
+ * @param {string} email the username of the student to be added
+ * @param {string} fullname the full name of the student
+ * @param {string} classname the classname the student will be added to
+ * @return response with boolean whether or not the email exists
+ */
+function forgotPassword(req, res) {
+    return new Promise((resolve, reject) => {
+        return db.oneOrNone('SELECT Email FROM UserData WHERE Email = $1 ', [req.body.email])
+        .then((result) => {
+            //if the email existed
+            if (result) {
+                req.body= {
+                    prompt : 'Click this link to renew your password'
+                }
+                console.log(req.body);
+                //sendEmail(req, res);
+            } else {
+                res.status(200).json('If email exists, an email will be sent to '
+                                    +'that address');
+                return false;
+            }
+        })
+        .catch((error) => {//goes here if you can't find the class
+            logger.error('checkEmail: \n' + error);
+            reject({
+                message: 'Email Processing Failed'
+            });
+            return;
+        });
+    });
+}
+
 
 
 /**
@@ -145,11 +191,57 @@ function handleErrors(req) {
   });
 }
 
+
+
+function sendEmail(req, res) {
+  const output = `
+        <h3>${req.body.prompt}</h3>
+        <p>${req.body.content}</p>
+    `;
+
+  let transporter = nodemailer.createTransport({
+    host: 'smtp-mail.outlook.com', // host for outlook mail
+    port: 587,
+    secure: false, // true for 465, false for other ports
+    auth: {
+        user: 'test123203@outlook.com', // email used for sending the message (will need to be changed)
+        pass: 'testing123!'
+    },
+    tls:{
+        // rejectUnauthorized:false will probably need to be changed for production because
+        // it can leave you vulnerable to MITM attack - secretly relays and alters the
+        // communication betwee two parties.
+        rejectUnauthorized:false
+    }
+  });
+
+  // setup email data with unicode symbols
+  let mailOptions = {
+      from: '"Nodemailer app 👻" <test123203@outlook.com>', // sender address
+      to: req.body.receiver, // list of receivers (email will need to be changed)
+      subject: req.body.emailTitle, // Subject line
+      html: output // html body
+  };
+
+  // send mail with defined transport object
+  transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+          console.log(error);
+          return res.status(500).json({status: 'Email could not be sent'});
+      }
+      console.log('Message sent: %s', info.messageId);
+      console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+
+      return res.status(200).json({status: 'email sent'});
+  });
+}
+
 module.exports = {
   comparePass,
   createUser,
   loginRequired,
   adminRequired,
   teacherRequired,
-  loginRedirect
+  loginRedirect,
+  forgotPassword
 };

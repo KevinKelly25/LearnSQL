@@ -57,7 +57,7 @@ function createClass(req, res) {
 						})
 						.catch(error => {
 							logger.error('Create Class: \n' + error);
-						  res.status(400).json({status: 'Class Already Exists With That Name'});
+						 	res.status(400).json({status: 'Class Already Exists With That Name'});
 						});
 	})
 }

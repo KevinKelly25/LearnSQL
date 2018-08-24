@@ -56,7 +56,7 @@ router.post('/api/v1/questions', (req, res, next) => {
   });
 });
 
-router.post('/send', (req, res, next) => {
+router.post('/sendContact', (req, res, next) => {
   const output = `
         <h3>You have a new contact request</h3>
         <ul>
@@ -73,11 +73,11 @@ router.post('/send', (req, res, next) => {
     secure: false, // true for 465, false for other ports
     auth: {
         user: 'test123203@outlook.com', // email used for sending the message (will need to be changed)
-        pass: 'testing123!' 
+        pass: 'testing123!'
     },
     tls:{
         // rejectUnauthorized:false will probably need to be changed for production because
-        // it can leave you vulnerable to MITM attack - secretly relays and alters the 
+        // it can leave you vulnerable to MITM attack - secretly relays and alters the
         // communication betwee two parties.
         rejectUnauthorized:false
     }

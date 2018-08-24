@@ -155,7 +155,20 @@ app.controller('LoginCtrl', ($scope, $http, $location, $window) => {
 
   // TODO: add functionality
   $scope.forgotPassword = () => {
-
+      $scope.email = {
+          email: $scope.forgotEmail
+      }
+      $http.post('/auth/forgotPassword', $scope.email)
+      .success((data) => {
+          $scope.error = false;
+          $scope.success = true;
+          $scope.success = data;
+      })
+      .error((error) => {
+          $scope.success = false;
+          $scope.error = true;
+          $scope.message = error;
+      });
   };
 
 });
@@ -215,7 +228,7 @@ app.controller('ContactCtrl', ($scope, $http) => {
     }
 
 
-    $http.post('/send', this.user)
+    $http.post('/sendContact', this.user)
     .success((data) => {
       $scope.success = true;
       $scope.msg = data.status;
