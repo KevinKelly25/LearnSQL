@@ -1,10 +1,10 @@
 <!--
-  admin.html - LearnSQL
+  adminTest.html - LearnSQL
 
   Kevin Kelly
   Web Applications and Databases for Education (WADE)
 
-  This file contains the html view of the admin control panel page for the
+  This file contains the html view of the admin test suite page for the
    LearnSQL website
 -->
 
@@ -58,11 +58,11 @@
               <a href="../Account/signIn.html" class="nav-link text-dark">Sign in</a>
             </li>
             </span>
-			<span ng-show="currentUser.isadmin">
-			<li class="nav-item">
-				<a href="views/controlPanels/admin.html" class="nav-link border-right px-4">Admin Control Panel</a>
-			</li>
-			</span>
+						<span ng-show="currentUser.isadmin">
+						<li class="nav-item">
+							<a href="views/controlPanels/admin.html" class="nav-link border-right px-4">Admin Control Panel</a>
+						</li>
+						</span>
             <span ng-show="currentUser">
             <li class="nav-item">
               <a href="../account/profile.html" class="nav-link text-dark">Profile</a>
@@ -78,40 +78,39 @@
       </div>
     </nav>
 
-    <a href="./adminTest.html">Go To Tests</a>
-
-		<!-- Login form -->
-		<div class="py-5" ng-controller="AdminCtrl">
-			<form class="form-admin">
-    			<!-- TODO: add a logo here	 -->
-    			<!-- <img class="mb-4" src="../../assets/brand/bootstrap-solid.svg" alt="" width="72" height="72"> -->
-    			<span ng-show="error">
-    				<div class="alert alert-danger">
-    					{{ message }}
-    				</div>
-    			</span>
-                <span ng-show="success">
-                    <div class="alert alert-success">
-                        {{ message }}
-                    </div>
-                </span>
-	      <!-- Default login page or if login anchor is clicked -->
-				<span ng-show="form == 'default'">
-					<h1 class="h3 mb-3 font-weight-bold text-primary">Admin Control Panel</h1>
-					<label for="inputClass" class="sr-only">Class Name</label>
-					<input type="name" class="form-control " ng-model="class" placeholder="Class Name" required autofocus>
-					<label for="inputClass" class="sr-only">Password</label>
-					<input type="password" class="form-control " ng-model="password" placeholder="Type Anything here" required autofocus>
-					<!-- TODO: Add a remember me when we can support it -->
-					<!-- <div class="checkbox mb-3">
-						<label>
-							<input type="checkbox" value="remember-me"> Remember me
-						</label>
-					</div> -->
-					<button class="btn btn-lg btn-primary btn-block" value="login" type="submit" ng-click="selectClass()">DOES NOT WORK</button>
-				</span>
-				<p class="mt-5 mb-3 text-muted">&copy; 2018-2019</p>
-			</form>
+		<div class="container" ng-controller="TestsCtrl">
+		  <h2>Unit Tests</h2>
+		  <p>The Following Contains Automated Unit Tests</p>
+		  <table class="table table-striped text-centered" style="text-align: center;">
+		    <thead >
+		      <tr>
+		        <th>Unit Test</th>
+		        <th>Test File</th>
+		        <th>Run Test</th>
+						<th>Status</th>
+		      </tr>
+		    </thead>
+		    <tbody>
+		      <tr>
+		        <td>Adding/Removing Classes</td>
+		        <td>testsController.js</td>
+		        <td><button type="button" class="btn btn-info" ng-click="testAddDropClass()">Run Test</button></td>
+						<td>{{ addDropClassTestStatus }}</td>
+		      </tr>
+		      <tr>
+		        <td>Success Test example</td>
+		        <td>Testfile.js</td>
+		        <td><button type="button" class="btn btn-info" ng-click="testSuccess()">Run Test</button></td>
+						<td>{{ successTestStatus }}</td>
+		      </tr>
+		      <tr>
+		        <td>Fail Test example</td>
+		        <td>Testfile.js</td>
+		        <td><button type="button" class="btn btn-info" ng-click="testFail()">Run Test</button></td>
+						<td>{{ failTestStatus }}</td>
+		      </tr>
+		    </tbody>
+		  </table>
 		</div>
 
   <script src="http://code.jquery.com/jquery-3.3.1.min.js"
@@ -127,7 +126,7 @@
 
   <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.6/angular.min.js"></script>
   <script src="../../javascripts/controllers/mainControllers.js"></script>
-  <script src="../../javascripts/controllers/adminController.js"></script>
+	<script src="../../javascripts/controllers/testsController.js"></script>
 
 </body>
 </html>

@@ -15,8 +15,12 @@ const db = require('../db/ldb.js');
 
 
 /**
- * Uses the built in bcypt module to compare given password and database password.
- * This is comparing hashed and salted passwords.
+ * Uses the built in bcrypt module to compare given password and database password.
+ *  This is comparing hashed and salted passwords.
+ *
+ * @param {string} userPassword user inputted password
+ * @param {string} databasePassword password from the database
+ * @return a boolean on whether the passwords match after salting/hashing
  */
 function comparePass(userPassword, databasePassword) {
   return bcrypt.compareSync(userPassword, databasePassword);
@@ -25,11 +29,17 @@ function comparePass(userPassword, databasePassword) {
 
 /**
  * This funciton creates a user in the database. A username is given by
- * the user and has to be unique for the database. The password is then salted and
- * hashed. Using pg-promise the user information is then inserted into the UserData
- * table. If successful a success response and message is returned. If there was an
- * error because email already exists that message is returned. Otherwise, the
- * database error is returned
+ *  the user and has to be unique for the database. The password is then salted and
+ *  hashed. Using pg-promise the user information is then inserted into the UserData
+ *  table. If successful a success response and message is returned. If there was an
+ *  error because email already exists that message is returned. Otherwise, the
+ *  database error is returned
+ *
+ * @param {string} password the password the user wants to use
+ * @param {string} username the username the user wants to use
+ * @param {string} fullName the full name of the user
+ * @param {string} email the email the user wants to use
+ * @return http response with message
  */
 function createUser(req, res) {
   return handleErrors(req)
@@ -49,11 +59,11 @@ function createUser(req, res) {
     .catch(error => {
       //console.log(error.error);
       if (error.code == '23505' && error.constraint == 'idx_unique_email')//UNIQUE VIOLATION
-        res.status(400).json({status: "Email Already Exists"});
+        return res.status(400).json({status: "Email Already Exists"});
       else if (error.code == '23505' && error.constraint == 'userdata_pkey')//UNIQUE VIOLATION
-        res.status(400).json({status: "Username Already Exists"});
+        return res.status(400).json({status: "Username Already Exists"});
       else
-        res.status(400).json({status: error});
+        return res.status(400).json({status: error});
     })
   })
 }
@@ -71,19 +81,40 @@ function loginRequired(req, res, next) {
 
 /**
  * If a user is not logged in returns a 401 status code and a status that says
- * to log in. If user is logged in it check to make sure the user is an admin.
+ * to log in. If user is logged in it checks to make sure the user is an admin.
  */
 function adminRequired(req, res, next) {
-  if (!req.user) res.status(401).json({status: 'Please log in'});
+  if (!req.user) return res.status(401).json({status: 'Please log in'});
   return db.one('SELECT isAdmin FROM UserData WHERE Username = $1', [req.user.username])
   .then((user) => {
-    if (!user.isadmin) res.status(401).json({status: 'You are not authorized'});
+    if (!user.isadmin) return res.status(401).json({status: 'You are not authorized'});
     return next();
   })
   .catch((err) => {
-    res.status(500).json({status: 'Something bad happened'});
+    return res.status(500).json({status: 'Something bad happened'});
   });
 }
+
+
+
+/**
+ * If a user is not logged in returns a 401 status code and a status that says
+ * to log in. If user is logged in it checks to make sure the user is a teacher.
+ */
+function teacherRequired(req, res, next) {
+  if (!req.user) return res.status(401).json({status: 'Please log in'});
+  return db.one('SELECT isAdmin, isTeacher FROM UserData WHERE Username = $1', [req.user.username])
+  .then((user) => {
+    console.log(user);
+    if (!user.isadmin && !user.isteacher) return res.status(401).json({status: 'You are not authorized'});
+    return next();
+  })
+  .catch((err) => {
+    return res.status(500).json({status: 'Something bad happened'});
+  });
+}
+
+
 
 /**
  * If a user is logged in returns a 401 status code and a status that says
@@ -98,6 +129,8 @@ function loginRedirect(req, res, next) {
 /**
  * handles errors when registering. For now only checks the length of the password
  * Also, set to a low number for testing purposes.
+ *
+ * @param {string} password password the user wishes to use
  */
 function handleErrors(req) {
   // TODO: fix length requirements
@@ -117,5 +150,6 @@ module.exports = {
   createUser,
   loginRequired,
   adminRequired,
+  teacherRequired,
   loginRedirect
 };

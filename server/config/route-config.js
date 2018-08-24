@@ -18,12 +18,14 @@
     const authRoutes = require('../routes/auth');
     const userRoutes = require('../routes/user');
     const adminRoutes = require('../routes/admin');
+    const teacherRoutes = require('../routes/teacher');
 
     // *** register routes *** //
     app.use('/', routes);
     app.use('/auth', authRoutes);
     app.use('/', userRoutes);
     app.use('/admin', adminRoutes);
+    app.use('/teacher', teacherRoutes);
 
   };
 
