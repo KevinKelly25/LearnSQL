@@ -4,33 +4,11 @@
   Michael Torres
   Web Applications and Databases for Education (WADE)
 
-  This file contains the Scss for the instructor.html page
+  This file contains the Scss for the classes.html and 
+  students.html page
 ----------------------------------------------------- */
-.bg-dark-primary {
-  background-color: #45526e; }
-
-.table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
-  background-color: #ac4142;
-  color: white;}
+td.highlight {
+  background-color: whitesmoke !important; }
 
 #footer-header {
   color: #ac4142; }
-
-table.table-bordered > thead > tr > th {
-  border: 1px solid black; }
-
-table.table-bordered > tbody > tr > td {
-  border: 1px solid black; }
-
-table.table-bordered > tbody > tr > th {
-  border: 1px solid black; }
-
-table.table-bordered > thead > tr > td {
-  border: 1px solid black; }
-
-a {color: black;}
-a:hover {color: white;}
-
-.class-button {
-  background-color: transparent;
-  border: none; }
