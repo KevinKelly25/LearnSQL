@@ -15,6 +15,8 @@ const router = express.Router();
 const authHelpers = require('../auth/_helpers');
 const passport = require('../auth/local');
 
+const path = require('path');
+
 
 /**
  * This method create user using a helper function. If an error is encountered
@@ -70,10 +72,24 @@ router.get('/check', (req, res, next) => {
  * This method checks to see if email exists
  */
 router.post('/forgotPassword', (req, res, next)  => {
-    return authHelpers.emailVerification(req, res)
+    return authHelpers.forgotPassword(req, res)
 	.catch((err) => {
 		handleResponse(res, 500, err);
 	});
+});
+
+
+
+//forgot password link and given token is appended with #? for angular retrieval
+router.get('/forgotPassword/', (req, res, next) => {
+    res.sendFile(path.join(
+      __dirname, '..', '..', 'client', 'views', 'account', 'forgotPassword.html'));
+});
+
+
+//forgot password link and given token
+router.get('/resetPassword', (req, res, next) => {
+    console.log(req.params);
 });
 
 // *** helpers *** //

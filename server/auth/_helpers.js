@@ -12,8 +12,8 @@
 
 const bcrypt = require('bcryptjs');
 const db = require('../db/ldb.js');
-
 const logger = require('../logs/winston.js');
+const cryptoRandomString = require('crypto-random-string');
 
 
 /**
@@ -46,17 +46,29 @@ function comparePass(userPassword, databasePassword) {
 function createUser(req, res) {
   return handleErrors(req)
   .then(() => {
-    const salt = bcrypt.genSaltSync();
-    const hash = bcrypt.hashSync(req.body.password, salt);
-    db.none('INSERT INTO UserData(Username, FullName, Password, Email)  ' +
-    'VALUES(${username}, ${full}, ${pass}, ${email})', {
+    const saltpass = bcrypt.genSaltSync();
+    const hashpass = bcrypt.hashSync(req.body.password, saltpass);
+    const token = cryptoRandomString(20);
+    const salttoken = bcrypt.genSaltSync();
+    const hashedToken = bcrypt.hashSync(token, salthash);
+    const email = req.body.email;
+    db.none('INSERT INTO UserData(Username, FullName, Password, Email, token)  ' +
+    'VALUES(${username}, ${full}, ${pass}, ${email}, ${token})', {
       username: req.body.username,
       full: req.body.fullName,
-      pass: hash,
-      email: req.body.email
+      pass: hashpass,
+      email: req.body.email,
+      token: hashedToken
     })
     .then(() => {
-        return res.status(200).json('User Created Successfully');
+        req.body= {
+            receiver : email,
+            prompt : 'Click this link to renew your password',
+            content : 'http://localhost:3000/views/account/Verification/#?token=' + token,
+            emailTitle: 'LearnSQL Forgot Password Reset',
+            successMessage: 'Email Verification Sent'
+        };
+        sendEmail(req, res);
     })
     .catch(error => {
       //console.log(error.error);
@@ -90,21 +102,51 @@ function forgotPassword(req, res) {
     return new Promise((resolve, reject) => {
         return db.oneOrNone('SELECT Email FROM UserData WHERE Email = $1 ', [req.body.email])
         .then((result) => {
-            //if the email existed
+            //If the email existed update tables and send email with link. Otherwise
+            // send an email saying the email is not registered
             if (result) {
-                req.body= {
-                    prompt : 'Click this link to renew your password'
-                }
-                console.log(req.body);
-                //sendEmail(req, res);
+                const email = result.email;
+                const token = cryptoRandomString(20);
+                const salt = bcrypt.genSaltSync();
+                const hashedToken = bcrypt.hashSync(token, salt);
+                return db.oneOrNone('UPDATE USERDATA SET Token = $1, Timestamp = now(), ' +
+                                    'forgotPassword = true WHERE Email = $2 ',
+                                    [hashedToken,   email])
+                .then(() => {
+                    req.body= {
+                        receiver : email,
+                        prompt : 'Click this link to renew your password',
+                        content : 'http://localhost:3000/views/account/forgotPassword/#?token=' + token,
+                        emailTitle: 'LearnSQL Forgot Password Reset',
+                        successMessage: 'Email being sent to that address'
+                    };
+                    console.log(req.body);
+                    sendEmail(req, res);
+                })
+                //goes here if cannot update userdata
+                .catch(() => {
+                    logger.error('insertForgotPassword: \n' + error);
+                    reject({
+                        message: 'Update Userdata failed'
+                    });
+                    return;
+                })
             } else {
-                res.status(200).json('If email exists, an email will be sent to '
-                                    +'that address');
-                return false;
+                req.body= {
+                    receiver : req.body.email,
+                    prompt : 'This Email was used to try to reset a password for'
+                    + 'LearnSQL, however, there is no associated account linked to this address',
+                    content : 'http://localhost:3000/views/account/forgotPassword/#?token=' + token,
+                    emailTitle: 'Requested Password Reset LearnSQL',
+                    successMessage: 'Email being sent to that address'
+                };
+                console.log(req.body);
+                sendEmail(req, res);
             }
         })
-        .catch((error) => {//goes here if you can't find the class
-            logger.error('checkEmail: \n' + error);
+        //Goes here if email query fails
+        .catch((error) => {
+            logger.error('forgotPassword: \n' + error);
             reject({
                 message: 'Email Processing Failed'
             });
@@ -226,13 +268,16 @@ function sendEmail(req, res) {
   // send mail with defined transport object
   transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
-          console.log(error);
-          return res.status(500).json({status: 'Email could not be sent'});
+          logger.error('sendEmail: \n' + error);
+          reject({
+              message: 'Email Sending Failed'
+          });
+          return;
       }
       console.log('Message sent: %s', info.messageId);
       console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
 
-      return res.status(200).json({status: 'email sent'});
+      return res.status(200).json({status: req.body.successMessage});
   });
 }
 
