@@ -1,7 +1,7 @@
 /**
  * controllers.js - LearnSQL
  *
- * Kevin Kelly, Michael Torres
+ * Kevin Kelly, Michael Torres, Christopher Innaco
  * Web Applications and Databases for Education (WADE)
  *
  * This file contains the angularJS controllers that are used throughout the
@@ -226,5 +226,47 @@ app.controller('ContactCtrl', ($scope, $http) => {
       $scope.msg = 'error';
     });
 
+  };
+});
+
+/*
+* This controller dynamically updates the HTML view for the profile.html page and 
+*   handles relevant user input
+*/
+app.controller('ProfileCtrl', ($scope, $http) => {
+  $scope.view = 'showInfo';
+  $scope.error = false;
+  $scope.success = false;
+
+  // Object for user information
+  this.user = {
+     username: null,
+     fullname: null,
+     email: null,
+     dateJoined: null,
+     isTeacher: null,
+     isAdmin: null
+  };
+
+  /**
+   * This function updates the HTML view to display the user's personal information
+   */
+  $scope.showInfo= () => {
+    /*$scope.error = false;
+    this.class.name = $scope.class;
+    this.class.password = $scope.password;
+    $scope.success = true;
+    $scope.message = 'Database Being Created, Please Wait';
+
+    $http.post('/admin/addClass', this.class)
+    .success((data) => {
+      $scope.success = true;
+      $scope.message = 'Database Successfully Created';
+    })
+    .error((error) => {
+      $scope.success = false;
+      $scope.error = true;
+      $scope.message = 'Database Could Not Be Created';
+    });*/
   };
 });
