@@ -85,13 +85,15 @@
     <section id="page-content" class="mt-5">
         <div class="container">
             <!-- table listing all students in a class -->
-            <table id="table_id" class="ui celled table row-border hover bg-dark order-column shadow-lg">
+            <table id="table_id" class="ui celled table row-border hover order-column shadow-lg">
                 <caption>List of classes being taught</caption>
                 <thead>
                     <!-- add/ remove -->
                     <tr>
                         <td colspan="7">
-                            <button type="button" id="addRow" class="btn btn-outline-success btn-block btn-lg">Add Student</button>
+                            <button type="button" class="btn btn-outline-dark btn-block btn-lg">
+                                <a href="mailto:someclass@example.com? Subject=Testing%20subject%20text" target="_top" class="text-success">Send Activation Link</a>
+                            </button>
                         </td>
                         <td colspan="1">
                             <button type="button" id="trash" class="btn btn-outline-primary btn-block btn-lg">remove</button>
@@ -110,6 +112,28 @@
                     </tr>
                 </thead>
                 <tbody>
+                    <tr>
+                        <th>1</th>
+                        <td>
+                            <a class="btn btn-light" href="#">username 1</a>
+                        </td>
+                        <td>samle data</td>
+                        <td>sample data</td>
+                        <td>sample data</td>
+                        <td>sample data</td>
+                        <td>sample data</td>
+                        <td>sample data</td>
+                    </tr>
+                    <tr>
+                        <th>2</th>
+                        <td>username 2</td>
+                        <td>samle data</td>
+                        <td>sample data</td>
+                        <td>sample data</td>
+                        <td>sample data</td>
+                        <td>sample data</td>
+                        <td>sample data</td>
+                    </tr>
                 </tbody>
             </table>
         </div>
