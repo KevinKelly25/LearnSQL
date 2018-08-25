@@ -5,7 +5,7 @@
  * Web Applications and Databases for Education (WADE)
  *
  * This file contains the passport.js authentication setup for the local strategy
- * used. 
+ * used.
  */
 
 
@@ -33,8 +33,13 @@ passport.use(new LocalStrategy({
   return db.one("SELECT * " +
     "FROM UserData " +
     "WHERE Username=$1", [username])
-  .then((result)=> {
-    return done(null, result);
+  .then((user)=> {
+      console.log('getting here');
+      if(!authHelpers.compareHashed(password, user.password)) {
+          return done(null, false, {message: 'Wrong username or password'});
+      } else {
+         return done(null, user);
+      }
   })
   .catch((err) => {
     return done(null, false, {message:'Wrong username or password'});

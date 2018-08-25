@@ -188,7 +188,7 @@ app.controller('LoginCtrl', ($scope, $http, $location, $window) => {
     })
     .error((error) => {
       $scope.error = true;
-      $scope.message = error;
+      $scope.message = error.status;
     });
   };
 

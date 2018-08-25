@@ -17,15 +17,15 @@ const cryptoRandomString = require('crypto-random-string');
 
 
 /**
- * Uses the built in bcrypt module to compare given password and database password.
- *  This is comparing hashed and salted passwords.
+ * Uses the built in bcrypt module to compare given plain string to an already
+ *  hashed string.
  *
- * @param {string} userPassword user inputted password
- * @param {string} databasePassword password from the database
+ * @param {string} unhashedString a string that needs to be hashed and salted for comparision
+ * @param {string} hashedString already hashed string that will compared
  * @return a boolean on whether the passwords match after salting/hashing
  */
-function comparePass(userPassword, databasePassword) {
-  return bcrypt.compareSync(userPassword, databasePassword);
+function compareHashed(unhashedString, hashedString) {
+  return bcrypt.compareSync(unhashedString, hashedString);
 }
 
 
@@ -63,20 +63,21 @@ function createUser(req, res) {
     .then(() => {
         req.body= {
             receiver : email,
-            prompt : 'Click this link to renew your password',
-            content : 'http://localhost:3000/views/account/Verification/#?token=' + token,
+            prompt : 'Click this link to verify your account',
+            content : 'http://localhost:3000/auth/verification/' + token + '\n' +
+                      'Link will expire in 30 minutes',
             emailTitle: 'LearnSQL Forgot Password Reset',
             successMessage: 'Email Verification Sent'
         };
         sendEmail(req, res);
     })
     .catch(error => {
-      //console.log(error.error);
       if (error.code == '23505' && error.constraint == 'idx_unique_email')//UNIQUE VIOLATION
         return res.status(400).json({status: "Email Already Exists"});
       else if (error.code == '23505' && error.constraint == 'userdata_pkey')//UNIQUE VIOLATION
         return res.status(400).json({status: "Username Already Exists"});
       else
+        logger.error('createUser: \n' + error);
         return res.status(400).json({status: error});
     })
   })
@@ -116,7 +117,7 @@ function forgotPassword(req, res) {
                     req.body= {
                         receiver : email,
                         prompt : 'Click this link to renew your password',
-                        content : 'http://localhost:3000/views/account/forgotPassword/#?token=' + token,
+                        content : 'http://localhost:3000/auth/forgotPassword/#?token=' + token,
                         emailTitle: 'LearnSQL Forgot Password Reset',
                         successMessage: 'Email being sent to that address'
                     };
@@ -282,7 +283,7 @@ function sendEmail(req, res) {
 }
 
 module.exports = {
-  comparePass,
+  compareHashed,
   createUser,
   loginRequired,
   adminRequired,

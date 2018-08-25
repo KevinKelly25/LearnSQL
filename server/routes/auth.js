@@ -16,6 +16,8 @@ const authHelpers = require('../auth/_helpers');
 const passport = require('../auth/local');
 
 const path = require('path');
+const db = require('../db/ldb.js');
+const logger = require('../logs/winston.js');
 
 
 /**
@@ -39,15 +41,17 @@ router.post('/register', authHelpers.loginRedirect, (req, res, next)  => {
 router.post('/login', authHelpers.loginRedirect, (req, res, next) => {
   passport.authenticate('local', (err, user, info) => {
     if (err) { handleResponse(res, 500, 'error'); }
-    if (!user) { handleResponse(res, 404, 'User not found'); }
+    if (!user) { handleResponse(res, 404, 'User Or Password Is Incorrect'); }
     if (user) {
       req.logIn(user, function (err) {
         if (err) { handleResponse(res, 500, 'error'); }
+        else if (user.isVerified == false) { handleResponse(res, 404, 'Email Not Verified'); }
         handleResponse(res, 200, 'success');
       });
     }
   })(req, res, next);
 });
+
 
 
 /**
@@ -60,12 +64,51 @@ router.get('/logout', authHelpers.loginRequired, (req, res, next) => {
 });
 
 
+
 /**
  * This method returns the deserialized user.
  */
 router.get('/check', (req, res, next) => {
   return res.status(200).json(req.user);
 });
+
+
+
+/**
+ * This method recieves a token from the url. It then hashes it and comapares it
+ *  to the database verification token.
+ *
+ * @param token the unhashed token for verification of user account. In URL param
+ * @param email the email of the user trying to verify account
+ */
+ // TODO: add timeout for verification token
+router.get('/verification/:token/:email', (req, res, next) => {
+    console.log(req.params.email);
+    db.one('SELECT Username, Token FROM UserData WHERE Email = $1', [req.params.email])
+    .then((result)=>{
+        console.log(req.params.token);
+        console.log(result);
+        if (!authHelpers.compareHashed(req.params.token, result.token)) {
+            
+        }
+        console.log('getting here 1');
+        db.none('UPDATE UserData SET isVerified = true WHERE Username = $1', [result.username]);
+        console.log('getting here 2');
+    })
+    .then(() => {
+        console.log('getting here 3');
+        res.sendFile(path.join(
+          __dirname, '..', '..', 'client', 'views', 'account', 'verificationSuccess.html'));
+    })
+    .catch((error) =>{
+        console.log(error);
+        console.log('getting here 4');
+        logger.error('verification: \n' + error);
+        res.sendFile(path.join(
+          __dirname, '..', '..', 'client', 'views', 'account', 'verificationError.html'));
+    });
+});
+
 
 
 /**
