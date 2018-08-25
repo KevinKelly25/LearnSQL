@@ -8,12 +8,10 @@
  *  on the LearnSQL website
  */
 
-
 var app = angular.module('LearnSQL');
 
-
-/*
-* This controller dynamically updates the HTML view for the profile.html page.
+/**
+  * This controller dynamically updates the HTML view for the profile.html page.
 */
 app.controller('ProfileCtrl', ($scope, $http) => {
   $scope.showInstructorRow = false;
@@ -30,13 +28,20 @@ app.controller('ProfileCtrl', ($scope, $http) => {
       $scope.fullName = data.fullname;
       $scope.email = data.email;
       $scope.dateJoined = convertDate(data.datejoined);
-      showInstructorRow($scope, data.isteacher);
-      showAdminRow($scope, data.isadmin);
 
-      console.log("userData: ", data);
+      if(data.isteacher)
+      {
+        $scope.showInstructorRow = true;
+      }
+
+      if(data.isadmin)
+      {
+        $scope.showAdminRow = true;
+      }
+
     })
     .error((error) => {
-      console.log("Unable to retrieve user information");
+      $scope.error = "Unable to retrieve user information";
     });
 
   function convertDate(inputDateString){
@@ -44,22 +49,4 @@ app.controller('ProfileCtrl', ($scope, $http) => {
     return date.getMonth()+1 + "/" + date.getDate() + "/" + date.getFullYear();
   }
 
-  // If the current user is an instructor, display the row on the table.
-  function showInstructorRow($scope, input_isTeacher){
-    if(input_isTeacher)
-    {
-      $scope.showInstructorRow = true;
-    }
-    return;
-  }
-
-  // If the current user is an administrator, display the row on the table.
-  function showAdminRow($scope, input_isAdmin){
-    if(input_isAdmin)
-    {
-      $scope.showAdminRow = true;
-    }
-    return;
-  }
- 
 });
