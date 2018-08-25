@@ -79,30 +79,6 @@
     <!-- Section using ProfileCtrl -->
     <div ng-controller="ProfileCtrl">
 
-    <!-- Sidebar -->
-    <div class="card sidebar" data-spy="affix" data-offset-top="197">
-      <div class="list-group panel">
-        <a class="list-group-item" href="#" data-parent="#sidebar" ng-click="view = 'showInfo'"> Info</a>
-        <a class="list-group-item " href="#dropdown1" data-toggle="collapse" data-parent="#sidebar">Class List <i class="fa fa-caret-down"></i></a>
-          <div class="collapse" id="dropdown1">
-            <a class="list-group-item" href="javascript:;" ng-click="view = 'showClassCS205'">CS 205</a>
-            <a class="list-group-item" href="javascript:;" ng-click="view = 'showClassCS305'">CS 305</a>
-          </div>  
-          
-        <a class="list-group-item" href="#" data-parent="#sidebar" ng-click="view = 'showGrades'">Grades</a>
-
-        <a class="list-group-item" href="#dropdown2" data-toggle="collapse" data-parent="#sidebar">Control Panel <i class="fa fa-caret-down"></i></a>
-          <div class="collapse" id="dropdown2">
-            <a class="list-group-item" href="../controlPanels/admin.html">Admin</a>
-            <a class="list-group-item" href="../controlPanels/instructor.html">Instructor</a>
-          </div>
-
-        <!--<a class="list-group-item list-group-item-success" href="#" data-toggle="collapse" data-parent="#sidebar" ng-click="view = 'showSettings'">Settings</a>-->
-
-        </div>
-      </div> 
-    <!-- End Sidebar -->
-    
     <!-- Page content -->
     <section id="page-content">
 
@@ -112,7 +88,7 @@
 
         <!-- Info section -->
 
-        <div class="container-fluid" ng-show="view == 'showInfo'"> 
+        <div class="container-fluid"> 
 
           <table class="table table-dark table-striped">   
             <tbody>
@@ -121,15 +97,12 @@
                   <span class="fa fa-user-o"></span>
                 </th>
                 <td>Username</td>
-                <td>cinnaco</td>
+                <td>{{ userName }}</td>
                 <td>
-                  <!-- <img class="btn btn-link" data-toggle="modal" data-target="#changeUsername" src="https://png.icons8.com/windows/32/ffffff/video-editing.png"> -->
                   <a class="btn btn-edit" href="#">
                     <i class="fa fa-pencil-square-o fa-2x" data-toggle="modal" data-target="#changeUsername" aria-hidden="true"></i>
                   </a>  
-
-                </td>
-                    
+                </td>         
               </tr>
               <tr>
                 <th scope="row" class="iconCol">
@@ -148,7 +121,7 @@
                   <span class="fa fa-id-card-o"></span> 
                 </th>
                 <td>Full Name</td>
-                <td>Christopher Innaco</td>
+                <td>{{ fullName }}</td>
                 <td>
                   <a class="btn btn-edit" href="#">
                     <i class="fa fa-pencil-square-o fa-2x" data-toggle="modal" data-target="#changeFullName" aria-hidden="true"></i>
@@ -160,10 +133,10 @@
                   <span class="fa fa-envelope-o"></span>
                 </th>
                 <td>E-mail</td>
-                <td>innaco001@connect.wcsu.edu</td>
+                <td>{{ email }}</td>
                 <td>
                   <a class="btn btn-edit" href="#">
-                    <i class="fa fa-pencil-square-o fa-2x" data-toggle="modal" data-target="#changeFullName" aria-hidden="true"></i>
+                    <i class="fa fa-pencil-square-o fa-2x" data-toggle="modal" data-target="#changeEmail" aria-hidden="true"></i>
                   </a>                 
                 </td>
               </tr>
@@ -172,18 +145,18 @@
                   <span class="fa fa-calendar"></span> 
                 </th>
                 <td>Date Joined</td>
-                <td>08-02-2018</td>
+                <td>{{ dateJoined }}</td>
                 <td></td>
               </tr>
-              <tr>
+              <tr ng-show="showInstructorRow">
                 <th scope="row" class="iconCol">
                   <span class="fa fa-mortar-board"></span>
                 </th>
                 <td>Instructor</td>
-                <td>No</td>
+                <td>Yes</td>
                 <td></td>
               </tr>
-              <tr>
+              <tr ng-show="showAdminRow">
                 <th scope="row" class="iconCol">
                   <span class="fa fa-shield"></span>
                 </th>
@@ -196,80 +169,6 @@
         </div>
 
         <!-- End Info section -->
-
-        <!-- CS 205 section -->
-
-        <div ng-show="view == 'showClassCS205'">
-          <div class="card">
-            <h2>
-              Course Description:
-            </h2>
-            <p>
-              An in-depth introduction to information management techniques with emphasis on data modeling and relational database design. 
-              Topics include conceptual data modeling, relational database design and normalization, database query languages, schema integration and integrity
-              constraints, physical database design, and database usability issues in a shared environment. Students will design and implement a database 
-              application working from the E-R modeling stage through to the actual implementation. This course lays the data modeling foundations used in 
-              CS 305 Database Applications Engineering, CS350 Object Oriented Software Engineering and CS 360 Distributed Applications Engineering.
-            </p> 
-            <p>
-              Prerequisite: CS 140 or CS 143 or CS 170. <br />
-              Fall semester. <br />
-              4.000 Credit hours <br />
-              4.000 Lecture hours <br />
-              <br />
-              Levels: Undergraduate <br />
-              Schedule Types: Lecture <br />
-              <br />
-              Computer Science Department 
-            </p>
-
-            
-          </div>
-        </div>
-
-        <!-- End CS 205 section -->
-
-        <!-- CS 305 section -->
-
-        <div ng-show="view == 'showClassCS305'">
-            <div class="card">
-                <h2>
-                  Course Description:
-                </h2>
-                <p>
-                    This course addresses the engineering of software application systems with extensive client/server database components. It encompasses all 
-                    phases of the life cycle of a software system, including planning, analysis, design, implementation, testing, and operation and maintenance. 
-                    In a team project, students participate in the development of an integrated medium-size information system that uses a contemporary large 
-                    database management system (DBMS). The course may be offered with different DBMS, specified as an option at each offering. For the offerings
-                    with Oracle the following Oracle subsystems are used: Oracle SQL Plus, PL/SQL, Forms Builder, and Report Builder. This course will be an elective 
-                    in the Computer Science program unless it is being substituted for the required course CS 350.
-                </p> 
-                <p>
-                  Prerequisite: CS 170 and 205. <br />
-                  4.000 Credit hours <br />
-                  4.000 Lecture hours <br />
-                  <br />
-                  Levels: Undergraduate <br />
-                  Schedule Types: Lecture <br />
-                  <br />
-                  Computer Science Department 
-                </p>
-          </div>
-        </div>
-  
-        <!-- End CS 305 section -->
-
-        <!-- Grades section -->
-
-        <div ng-show="view == 'showGrades'"> 
-          <div class="card">
-            <p>
-              Functionality coming soon...
-            </p>
-          </div>
-        </div>
-  
-        <!-- End Grades section-->
 
       </section>
     </section>
@@ -410,6 +309,21 @@
     </div>
     <!-- End Section using ProfileCtrl-->
 
+    <!-- Dynamic Alert messages -->
+    <span ng-show="error">
+			<div class="alert alert-danger">
+				{{ message }}
+      </div>
+    </span>
+    
+    <span ng-show="success">
+      <div class="alert alert-success">
+        {{ message }}
+      </div>
+    </span>
+
+    <!-- End Dynamic Alert messages -->
+
     <!-- Footer -->
     <footer id="main-footer" class="bg-light mt-3 fixed-bottom">
         <div class="container">
@@ -428,6 +342,7 @@
     </footer>
     <!-- End Footer-->
 
+    
     <script src="http://code.jquery.com/jquery-3.3.1.min.js"
     integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
     crossorigin="anonymous"></script>
@@ -438,8 +353,8 @@
     integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T"
     crossorigin="anonymous"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.6/angular.min.js"></script>
-    <script src="/javascripts/controllers.js"></script>
+    <script src="/javascripts/controllers/mainControllers.js"></script>
+    <script src="/javascripts/controllers/profileController.js"></script>
 
-    <!-- Icons courtesy of Icons8 at https://icons8.com -->
 </body>
 </html>
