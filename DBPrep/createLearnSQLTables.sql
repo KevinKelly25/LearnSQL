@@ -17,11 +17,11 @@ CREATE TABLE IF NOT EXISTS UserData (
   FullName                VARCHAR(256) NOT NULL,
   Password                VARCHAR(60) NOT NULL,
   Email                   VARCHAR(319) NOT NULL CHECK(TRIM(Email) like '_%@_%._%'),
+  Token                   VARCHAR(60) NOT NULL,
   DateJoined              DATE DEFAULT CURRENT_DATE,
   isTeacher               BOOLEAN DEFAULT FALSE,
   isAdmin                 BOOLEAN DEFAULT FALSE,
   isVerified              BOOLEAN DEFAULT FALSE,
-  Token                   VARCHAR(60),
   ForgotPassword          BOOLEAN DEFAULT FALSE
 );
 

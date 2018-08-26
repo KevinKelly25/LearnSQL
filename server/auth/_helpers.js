@@ -14,6 +14,7 @@ const bcrypt = require('bcryptjs');
 const db = require('../db/ldb.js');
 const logger = require('../logs/winston.js');
 const cryptoRandomString = require('crypto-random-string');
+const nodemailer = require('nodemailer');
 
 
 /**
@@ -46,17 +47,18 @@ function compareHashed(unhashedString, hashedString) {
 function createUser(req, res) {
   return handleErrors(req)
   .then(() => {
-    const saltpass = bcrypt.genSaltSync();
-    const hashpass = bcrypt.hashSync(req.body.password, saltpass);
+    console.log(req.body);
+    const saltPass = bcrypt.genSaltSync();
+    const hashedPass = bcrypt.hashSync(req.body.password, saltPass);
     const token = cryptoRandomString(20);
-    const salttoken = bcrypt.genSaltSync();
-    const hashedToken = bcrypt.hashSync(token, salthash);
+    const hashSalt = bcrypt.genSaltSync();
+    const hashedToken = bcrypt.hashSync(token, hashSalt);
     const email = req.body.email;
     db.none('INSERT INTO UserData(Username, FullName, Password, Email, token)  ' +
     'VALUES(${username}, ${full}, ${pass}, ${email}, ${token})', {
       username: req.body.username,
       full: req.body.fullName,
-      pass: hashpass,
+      pass: hashedPass,
       email: req.body.email,
       token: hashedToken
     })
@@ -64,14 +66,17 @@ function createUser(req, res) {
         req.body= {
             receiver : email,
             prompt : 'Click this link to verify your account',
-            content : 'http://localhost:3000/auth/verification/' + token + '\n' +
+            content : 'http://localhost:3000/auth/verification/' + token + '/' +
+                      req.body.username + '<br>' +
                       'Link will expire in 30 minutes',
-            emailTitle: 'LearnSQL Forgot Password Reset',
+            emailTitle: 'LearnSQL Email Verification',
             successMessage: 'Email Verification Sent'
         };
         sendEmail(req, res);
     })
     .catch(error => {
+        console.log('getting to this error');
+        console.log(error);
       if (error.code == '23505' && error.constraint == 'idx_unique_email')//UNIQUE VIOLATION
         return res.status(400).json({status: "Email Already Exists"});
       else if (error.code == '23505' && error.constraint == 'userdata_pkey')//UNIQUE VIOLATION
