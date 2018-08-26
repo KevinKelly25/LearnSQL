@@ -71,11 +71,8 @@ app.controller('LoginCtrl', ($scope, $http, $location, $window) => {
   };
 
   /**
-   * This function takes user information into the controller. First email validation
-   *  check is done first. Error message is displayed if email failed. If Passwords
-   *  do not match then an error message is displayed. The post method '/auth/register'
-   *  is used to register the user. Upon sucess a sucess message is displayed.
-   *  If register method fails an error message is displayed showing the error
+   * This function takes a username and password from the form and sends it to
+   *  /auth/login http route. If successful the user will be redirected to homepage
    */
   $scope.login = () => {
     $scope.error = false;
@@ -93,7 +90,11 @@ app.controller('LoginCtrl', ($scope, $http, $location, $window) => {
   };
 
 
-
+  /**
+   * This function is used to send a forgot password email to the user. User
+   *  inputted email is sent to /auth/forgotPasswordEmail. Once email is sent
+   *  a success message pops up.
+   */
   $scope.forgotPassword = () => {
     $scope.error = false;
     $scope.success = true;
@@ -117,12 +118,10 @@ app.controller('LoginCtrl', ($scope, $http, $location, $window) => {
 
 
   /**
-   * This function takes user information into the controller. First email syntax validation
-   *  check is done, which checks that it fits into the general format of all emails.
-   *  Otherwise, an error message is displayed because email failed the check. If Passwords
-   *  do not match then an error message is displayed. The post method '/auth/register'
-   *  is used to register the user. Upon sucess a sucess message is displayed.
-   *  If register method fails an error message is displayed showing the error
+   * This function is used to reset the password of the user. If new passwords
+   *  do not match the user is prompted to reenter passwords. A token is extracted
+   *  from the url and the token, username, and new password are sent to
+   *  /auth/resetPassword http route. The response is then displayed.
    */
   $scope.resetPassword = () => {
     $scope.error = false;

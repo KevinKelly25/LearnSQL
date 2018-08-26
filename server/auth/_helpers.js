@@ -96,7 +96,7 @@ function createUser(req, res) {
  *  token. If not registed will send a general email explaining that the email
  *  is not registered on the site.
  *
- * @param {string} email the username of the student to be added
+ * @param {string} email the email that will be used to send forgot password link
  * @return http response with status message
  */
  // TODO: add timeout for verification token
