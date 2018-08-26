@@ -78,45 +78,48 @@ router.get('/check', (req, res, next) => {
 
 
 /**
- * This method recieves a token from the url. It then hashes it and comapares it
- *  to the database verification token.
+ * This method recieves a token and username from the url. It then hashes it and
+ *  comapares it to the database verification token. If the tokens match the
+ *  user's account will be validated and user will be sent to a success page.
+ *  If tokens do not match the user will be sent to a validation failed page.
  *
  * @param token the unhashed token for verification of user account. In URL param
  * @param email the email of the user trying to verify account
  */
  // TODO: add timeout for verification token
 router.get('/verification/:token/:username', (req, res, next) => {
-    console.log(req.params);
     db.task(t => {
-        return t.one('SELECT Username, Token FROM UserData WHERE Username = $1', [req.params.username])
-        .then(data => {
-            if (!authHelpers.compareHashed(req.params.token, data.token)) {
-                throw 'Token hashes do not match';
-            } else {
-                return t.none('UPDATE UserData SET isVerified = true WHERE Username = $1', [data.username]);
-            }
-        })
+      return t.one('SELECT Username, Token FROM UserData WHERE Username = $1', [req.params.username])
+      .then(data => {
+        if (!authHelpers.compareHashed(req.params.token, data.token)) {
+          throw 'Token hashes do not match';
+        } else {
+          return t.none('UPDATE UserData SET isVerified = true WHERE Username = $1', [data.username]);
+        }
+      })
     })
     .then(() => {
-        res.sendFile(path.join(
-          __dirname, '..', '..', 'client', 'views', 'account', 'verificationSuccess.html'));
+      res.sendFile(path.join(
+        __dirname, '..', '..', 'client', 'views', 'account', 'verificationSuccess.html'));
     })
     .catch((error) =>{
-        console.log(error);
-        console.log('getting here 4');
-        logger.error('verification: \n' + error);
-        res.sendFile(path.join(
-          __dirname, '..', '..', 'client', 'views', 'account', 'verificationError.html'));
+      logger.error('verification: \n' + error);
+      res.sendFile(path.join(
+        __dirname, '..', '..', 'client', 'views', 'account', 'verificationError.html'));
     });
 });
 
 
 
 /**
- * This method checks to see if email exists
+ * This method sends a forgot password email to a given email. Most functionality
+ *  is in `_helpers.js` forgotPassword function but is expecting a promise
+ *  to be returned
+ *
+ * @param {string} email the email that will be used to send forgot password link
  */
-router.post('/forgotPassword', (req, res, next)  => {
-    return authHelpers.forgotPassword(req, res)
+router.post('/forgotPasswordEmail', (req, res, next)  => {
+  return authHelpers.forgotPassword(req, res)
 	.catch((err) => {
 		handleResponse(res, 500, err);
 	});
@@ -124,24 +127,41 @@ router.post('/forgotPassword', (req, res, next)  => {
 
 
 
-//forgot password link and given token is appended with #? for angular retrieval
+/**
+ * This will redirect a user to the resetPassword page. The reset token needs
+ *  to be appended to the end of the link after #?token=. For example
+ *  http://localhost:3000/auth/forgotPassword/#?token=59ff4734c92f789058b2
+ */
 router.get('/forgotPassword/', (req, res, next) => {
     res.sendFile(path.join(
       __dirname, '..', '..', 'client', 'views', 'account', 'forgotPassword.html'));
 });
 
 
-//forgot password link and given token
-router.get('/resetPassword', (req, res, next) => {
-    console.log(req.params);
+
+/**
+ * This function resets a password of a user. Most functionality
+ *  is in `_helpers.js` forgotPassword function but is expecting a promise
+ *  to be returned
+ *
+ * @param {string} username the username that needs password reset
+ * @param {string} password the new password of the user
+ * @param {string} token token needed for the new password reset
+ * @return http response with status message stating whether reset was successful
+ */
+router.post('/resetPassword', (req, res, next) => {
+    return authHelpers.resetPassword(req, res)
+    .catch((err) => {
+        handleResponse(res, 500, err);
+    });
 });
+
 
 // *** helpers *** //
 
 /**
  * This function returns a promise with the login function.
  */
- // TODO: explore this functionality more
 function handleLogin(req, user) {
   return new Promise((resolve, reject) => {
     req.login(user, (err) => {
@@ -152,7 +172,14 @@ function handleLogin(req, user) {
 }
 
 
-//adds a status code and message to response
+/**
+ * This function is used to return http responses.
+ *
+ * @param {string} res the result object
+ * @param {string} code the http status code
+ * @param {string} statusMsg the message containing the status of the message
+ * @return an http responde with designated status code and attached
+ */
 function handleResponse(res, code, statusMsg) {
   res.status(code).json({status: statusMsg});
 }

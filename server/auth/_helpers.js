@@ -31,7 +31,7 @@ function compareHashed(unhashedString, hashedString) {
 
 
 /**
- * This funciton creates a user in the database. A username is given by
+ * This function creates a user in the database. A username is given by
  *  the user and has to be unique for the database. The password is then salted and
  *  hashed. Using pg-promise the user information is then inserted into the UserData
  *  table. If successful a success response and message is returned. If there was an
@@ -42,14 +42,14 @@ function compareHashed(unhashedString, hashedString) {
  * @param {string} username the username the user wants to use
  * @param {string} fullName the full name of the user
  * @param {string} email the email the user wants to use
- * @return http response with message
+ * @return http response with status message
  */
 function createUser(req, res) {
   return handleErrors(req)
   .then(() => {
     console.log(req.body);
-    const saltPass = bcrypt.genSaltSync();
-    const hashedPass = bcrypt.hashSync(req.body.password, saltPass);
+    const passSalt = bcrypt.genSaltSync();
+    const hashedPass = bcrypt.hashSync(req.body.password, passSalt);
     const token = cryptoRandomString(20);
     const hashSalt = bcrypt.genSaltSync();
     const hashedToken = bcrypt.hashSync(token, hashSalt);
@@ -91,74 +91,103 @@ function createUser(req, res) {
 
 
 /**
- * This function adds a student to a ClassDB database. Using the given classname
- *  and the user's username a ClassID is derived; the ClassID is also the ClassDB
- *  database name. Using the ClassID a connection is made to the database and a
- *  database object is returned. This db object then uses the given username and
- *  fullname to create a student in the ClassDB database. To do this a built in
- *  classdb function 'createStudent' is used. See https://github.com/DASSL/ClassDB/wiki/Adding-Users
- *  for more information on how ClassDB adds students
+ * This function sends an email with forgotPassword details to a given email
+ *  address. If the email is in UserData table it will send a link with generated
+ *  token. If not registed will send a general email explaining that the email
+ *  is not registered on the site.
  *
  * @param {string} email the username of the student to be added
- * @param {string} fullname the full name of the student
- * @param {string} classname the classname the student will be added to
- * @return response with boolean whether or not the email exists
+ * @return http response with status message
  */
+ // TODO: add timeout for verification token
 function forgotPassword(req, res) {
     return new Promise((resolve, reject) => {
-        return db.oneOrNone('SELECT Email FROM UserData WHERE Email = $1 ', [req.body.email])
-        .then((result) => {
-            //If the email existed update tables and send email with link. Otherwise
-            // send an email saying the email is not registered
-            if (result) {
-                const email = result.email;
-                const token = cryptoRandomString(20);
-                const salt = bcrypt.genSaltSync();
-                const hashedToken = bcrypt.hashSync(token, salt);
-                return db.oneOrNone('UPDATE USERDATA SET Token = $1, Timestamp = now(), ' +
-                                    'forgotPassword = true WHERE Email = $2 ',
-                                    [hashedToken,   email])
-                .then(() => {
-                    req.body= {
-                        receiver : email,
-                        prompt : 'Click this link to renew your password',
-                        content : 'http://localhost:3000/auth/forgotPassword/#?token=' + token,
-                        emailTitle: 'LearnSQL Forgot Password Reset',
-                        successMessage: 'Email being sent to that address'
-                    };
-                    console.log(req.body);
-                    sendEmail(req, res);
-                })
-                //goes here if cannot update userdata
-                .catch(() => {
-                    logger.error('insertForgotPassword: \n' + error);
-                    reject({
-                        message: 'Update Userdata failed'
-                    });
-                    return;
-                })
-            } else {
-                req.body= {
-                    receiver : req.body.email,
-                    prompt : 'This Email was used to try to reset a password for'
-                    + 'LearnSQL, however, there is no associated account linked to this address',
-                    content : 'http://localhost:3000/views/account/forgotPassword/#?token=' + token,
-                    emailTitle: 'Requested Password Reset LearnSQL',
-                    successMessage: 'Email being sent to that address'
-                };
-                console.log(req.body);
-                sendEmail(req, res);
-            }
-        })
-        //Goes here if email query fails
-        .catch((error) => {
-            logger.error('forgotPassword: \n' + error);
-            reject({
-                message: 'Email Processing Failed'
+      return db.task(t => {
+        return t.oneOrNone('SELECT Email FROM UserData WHERE Email = $1 ', [req.body.email])
+        .then(result => {
+          if (result) {
+            const token = cryptoRandomString(20);
+            const salt = bcrypt.genSaltSync();
+            const hashedToken = bcrypt.hashSync(token, salt);
+            const email = result.email;
+            return t.none('UPDATE USERDATA SET Token = $1, forgotPassword '
+                          + '= true WHERE Email = $2 ',[hashedToken,   email])
+            .then(() => {
+              req.body= {
+                receiver : email,
+                prompt : 'Use this link to renew your password',
+                content : 'http://localhost:3000/auth/forgotPassword/#?token=' + token,
+                emailTitle: 'LearnSQL Forgot Password Reset',
+                successMessage: 'Email being sent to that address'
+              };
+              resolve();
+              sendEmail(req, res);
             });
-            return;
-        });
+          } else {
+              req.body= {
+              receiver : req.body.email,
+              prompt : 'This Email was used to try to reset a password for'
+              + 'LearnSQL, however, there is no associated account linked to this address',
+              content : 'http://localhost:3000/views/account/forgotPassword/#?token=' + token,
+              emailTitle: 'Requested Password Reset LearnSQL',
+              successMessage: 'Email being sent to that address'
+          };
+            resolve();
+            sendEmail(req, res);
+          }
+      })
+    })
+    .catch((error) => {
+      logger.error('forgotPassword: \n' + error);
+      reject({
+        message: 'Email Processing Failed'
+      });
+      return;
     });
+  });
+}
+
+
+/**
+ * This function resets a password of a user. When given a username it extracts
+ *  what is supposed to be the correct hashed token and compares the given token
+ *  to the hashed token. If matched and forgotPassword is true the password is
+ *  updated to the given new password
+ *
+ * @param {string} username the username that needs password reset
+ * @param {string} password the new password of the user
+ * @param {string} token token needed for the new password reset
+ * @return http response with status message stating whether reset was successful
+ */
+ // TODO: add timeout for verification token
+function resetPassword(req, res) {
+  return new Promise((resolve, reject) => {
+    db.task(t => {
+      return t.one('SELECT Username, Token, forgotPassword FROM UserData ' +
+                   ' WHERE Username = $1', [req.body.username])
+      .then(data => {
+        if (!compareHashed(req.body.token, data.token)) {
+          throw 'Token hashes do not match';
+        } else if (!data.forgotPassword) {
+          throw 'ForgotPassword not true';
+        } else {
+          const passSalt = bcrypt.genSaltSync();
+          const hashedPass = bcrypt.hashSync(req.body.password, passSalt);
+          return t.none('UPDATE UserData SET forgotPassword = false, password = $1'
+                        + ' WHERE Username = $2',[hashedPass, data.username]);
+          }
+        })
+    })
+    .then(() => {
+      return res.status(200).json('Password Reset Successfully');
+    })
+    .catch((error) =>{
+      console.log(error);
+      logger.error('reset Password: \n' + error);
+      reject('Username or Token does not match');
+      return;
+    });
+  });
 }
 
 
@@ -194,6 +223,7 @@ function adminRequired(req, res, next) {
 /**
  * If a user is not logged in returns a 401 status code and a status that says
  * to log in. If user is logged in it checks to make sure the user is a teacher.
+ *
  */
 function teacherRequired(req, res, next) {
   if (!req.user) return res.status(401).json({status: 'Please log in'});
@@ -229,7 +259,7 @@ function loginRedirect(req, res, next) {
 function handleErrors(req) {
   // TODO: fix length requirements
   return new Promise((resolve, reject) => {
-  if (req.body.password.length < 1) {
+    if (req.body.password.length < 1) {
       reject({
         message: 'Password must be longer than 6 characters'
       });
@@ -240,7 +270,17 @@ function handleErrors(req) {
 }
 
 
-
+/**
+ * Sends an email to a given email address. The contents and subject of the email
+ *  has to be given to the function. Content and subject is html driven.
+ *
+ * @param {string} prompt H3 header of the email
+ * @param {string} content The content of the email, can be html
+ * @param {string} receiver Address that the email is being sent to
+ * @param {string} emailTitle email subjectline/title
+ * @param {string} successMessage The message that will be http response upon
+ *                                 success of the email
+ */
 function sendEmail(req, res) {
   const output = `
         <h3>${req.body.prompt}</h3>
@@ -265,25 +305,25 @@ function sendEmail(req, res) {
 
   // setup email data with unicode symbols
   let mailOptions = {
-      from: '"Nodemailer app 👻" <test123203@outlook.com>', // sender address
-      to: req.body.receiver, // list of receivers (email will need to be changed)
-      subject: req.body.emailTitle, // Subject line
-      html: output // html body
+    from: '"Nodemailer app 👻" <test123203@outlook.com>', // sender address
+    to: req.body.receiver, // list of receivers (email will need to be changed)
+    subject: req.body.emailTitle, // Subject line
+    html: output // html body
   };
 
   // send mail with defined transport object
   transporter.sendMail(mailOptions, (error, info) => {
-      if (error) {
-          logger.error('sendEmail: \n' + error);
-          reject({
-              message: 'Email Sending Failed'
-          });
-          return;
-      }
-      console.log('Message sent: %s', info.messageId);
-      console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+    if (error) {
+      logger.error('sendEmail: \n' + error);
+      reject({
+        message: 'Email Sending Failed'
+      });
+      return;
+    }
+    console.log('Message sent: %s', info.messageId);
+    console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
 
-      return res.status(200).json({status: req.body.successMessage});
+    return res.status(200).json({status: req.body.successMessage});
   });
 }
 
@@ -294,5 +334,6 @@ module.exports = {
   adminRequired,
   teacherRequired,
   loginRedirect,
-  forgotPassword
+  forgotPassword,
+  resetPassword
 };
