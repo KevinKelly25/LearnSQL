@@ -1,0 +1,34 @@
+/* ---------------------------------------------------
+  instructor.scss - LearnSQL
+
+  Michael Torres
+  Web Applications and Databases for Education (WADE)
+
+  This file contains the Scss for the classes.html and 
+  students.html page
+----------------------------------------------------- */
+td.highlight {
+  background-color: whitesmoke !important; }
+
+#footer-header {
+  color: #ac4142; }
+
+table.dataTable thead tr > td {
+  background-color: #eceff1; }
+
+.dataTables_wrapper .dataTables_paginate .paginate_button.current, .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+  color: #333333 !important;
+  border: 1px solid #481b1c;
+  background-color: #dba1a1;
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #dba1a1), color-stop(100%, #ac4142));
+  /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top, #dba1a1 0%, #ac4142 100%);
+  /* Chrome10+,Safari5.1+ */
+  background: -moz-linear-gradient(top, #dba1a1 0%, #ac4142 100%);
+  /* FF3.6+ */
+  background: -ms-linear-gradient(top, #dba1a1 0%, #ac4142 100%);
+  /* IE10+ */
+  background: -o-linear-gradient(top, #dba1a1 0%, #ac4142 100%);
+  /* Opera 11.10+ */
+  background: linear-gradient(to bottom, #dba1a1 0%, #ac4142 100%);
+  /* W3C */ }
