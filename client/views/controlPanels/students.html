@@ -91,9 +91,37 @@
                     <!-- add/ remove -->
                     <tr>
                         <td colspan="7">
-                            <button type="button" class="btn btn-outline-dark btn-block btn-lg">
-                                <a href="mailto:someclass@example.com? Subject=Testing%20subject%20text" target="_top" class="text-success">Class Invite Link & Password</a>
-                            </button>
+                            <button type="button" class="btn btn-outline-dark btn-block btn-lg" data-toggle="modal" data-target="#myModal">Class Invite Link & Password</button>
+                            <!-- The Modal -->
+                            <div class="modal" id="myModal">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                            
+                                        <!-- Modal Header -->
+                                        <div class="modal-header">
+                                            <h4 class="modal-title">Class Invite</h4>
+                                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                        </div>
+                                
+                                        <!-- Modal body -->
+                                        <div class="modal-body">
+                                            <form>
+                                                <div class="form-group">
+                                                    <label>Class invite link</label>
+                                                    <input type="link" class="form-control" placeholder="class link goes here..." id="inviteLink">
+                                                </div>
+                                            </form>
+                                        </div>
+                                
+                                        <!-- Modal footer -->
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                        </div>
+                            
+                                    </div>
+                                </div>
+                            </div>
+
                         </td>
                         <td colspan="1">
                             <button type="button" id="trash" class="btn btn-outline-primary btn-block btn-lg">remove</button>
