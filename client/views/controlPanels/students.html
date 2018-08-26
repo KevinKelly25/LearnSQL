@@ -91,7 +91,7 @@
                     <!-- add/ remove -->
                     <tr>
                         <td colspan="7">
-                            <button type="button" class="btn btn-outline-dark btn-block btn-lg" data-toggle="modal" data-target="#myModal">Class Invite Link & Password</button>
+                            <button type="button" class="btn btn-outline-success btn-block btn-lg" data-toggle="modal" data-target="#myModal">Class Invite Link & Password</button>
                             <!-- The Modal -->
                             <div class="modal" id="myModal">
                                 <div class="modal-dialog">
@@ -107,14 +107,26 @@
                                         <div class="modal-body">
                                             <form>
                                                 <div class="form-group">
-                                                    <label>Class invite link</label>
-                                                    <input type="link" class="form-control" placeholder="class link goes here..." id="inviteLink">
+                                                    <label>Copy class invite link</label>
+                                                    <input type="link" class="form-control" placeholder="http:localhost:3000/exampleClasslink..." id="inviteLink">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Old Password:</label>
+                                                    <input type="password" class="form-control" placeholder="enter old password here..." id="oldPassword">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>New Password:</label>
+                                                    <input type="password" class="form-control" placeholder="enter new password here..." id="newPassword">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Confirm Password</label>
+                                                    <input type="password" class="form-control" placeholder="confirm new password here..." id="confirmPassword">
                                                 </div>
                                             </form>
                                         </div>
-                                
                                         <!-- Modal footer -->
                                         <div class="modal-footer">
+                                            <button type="button" class="btn btn-success">Save changes</button>
                                             <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                                         </div>
                             
