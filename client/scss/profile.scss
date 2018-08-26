@@ -1,0 +1,79 @@
+/* ---------------------------------------------------
+  profile.scss - LearnSQL
+
+  Christopher Innaco
+  Web Applications and Databases for Education (WADE)
+
+  This file contains the SCSS for the profile.html page
+----------------------------------------------------- */
+$primary-color: #ac4142;
+$secondary-color: #45526e;
+
+#navbar-title {
+  color: $primary-color; 
+}
+
+#profile-tab {
+  background-color: $primary-color; 
+}
+
+#page-title {
+  color: $primary-color; }
+
+h1 {
+  padding-bottom: 10px;
+}
+
+.list-group-item {
+  background: $secondary-color;
+}
+
+#page-body {
+ 
+  font-size: 28px;
+  padding-left: 120px;
+  padding-right: 120px;
+}
+
+.table{
+
+  font-size: 16pt;
+  background: $secondary-color;
+}
+
+table .iconCol{
+  text-align: center;
+}
+
+p {
+  font-size: 14pt;
+}
+
+.btn-edit {
+  color: #ffffff; 
+}
+
+.btn-edit:hover {
+  color: $primary-color; 
+}
+
+.contact-form-background-color {
+  background-color: $secondary-color; 
+}
+
+#footer-header {
+  color: $primary-color; 
+}
+
+#contact-us-button {
+  background-color: $primary-color; 
+}
+
+@media screen and (max-height: 450px) {
+  .sidebar {
+    padding-top: 15px;
+  }
+  .sidebar a {
+    font-size: 18px;
+  }
+}
