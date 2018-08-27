@@ -144,12 +144,13 @@ app.controller('LoginCtrl', ($scope, $http, $location, $window) => {
   $scope.resetPassword = () => {
     $scope.error = false;
     $scope.success = true;
-    $scope.message = 'Reseting Password, please wait...'
+    $scope.message = 'Reseting Password, please wait...';
     //if passwords do not match display error
     if ($scope.password1 != $scope.password2)
     {
       $scope.error = true;
       $scope.message = 'Passwords do not match';
+      return;
     } else
     {
       $scope.parameters = {

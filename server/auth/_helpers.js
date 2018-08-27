@@ -166,9 +166,10 @@ function resetPassword(req, res) {
       return t.one('SELECT Username, Token, forgotPassword FROM UserData ' +
                    ' WHERE Username = $1', [req.body.username])
       .then(data => {
+        console.log(data);
         if (!compareHashed(req.body.token, data.token)) {
           throw 'Token hashes do not match';
-        } else if (!data.forgotPassword) {
+        } else if (!data.forgotpassword) {
           throw 'ForgotPassword not true';
         } else {
           const passSalt = bcrypt.genSaltSync();
