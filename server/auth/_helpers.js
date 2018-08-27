@@ -288,11 +288,11 @@ function sendEmail(req, res) {
     `;
 
   let transporter = nodemailer.createTransport({
-    host: 'smtp-mail.outlook.com', // host for outlook mail
+    host: 'smtp.gmail.com', // host for outlook mail
     port: 587,
-    secure: false, // true for 465, false for other ports
+    //secure: false, // true for 465, false for other ports
     auth: {
-        user: 'test123203@outlook.com', // email used for sending the message (will need to be changed)
+        user: 'learnsqltesting@gmail.com', // email used for sending the message (will need to be changed)
         pass: 'testing123!'
     },
     tls:{
@@ -305,7 +305,7 @@ function sendEmail(req, res) {
 
   // setup email data with unicode symbols
   let mailOptions = {
-    from: '"Nodemailer app 👻" <test123203@outlook.com>', // sender address
+    from: '"LearnSQL" <learnsqltesting@gmail.com>', // sender address
     to: req.body.receiver, // list of receivers (email will need to be changed)
     subject: req.body.emailTitle, // Subject line
     html: output // html body
@@ -315,6 +315,7 @@ function sendEmail(req, res) {
   transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
       logger.error('sendEmail: \n' + error);
+      console.log(error);
       return res.status(500).json({status: 'Could Not Send Email'});
     }
     console.log('Message sent: %s', info.messageId);
