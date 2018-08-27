@@ -11,7 +11,7 @@
 
 
 const bcrypt = require('bcryptjs');
-const db = require('../db/ldb.js');
+const ldb = require('../db/ldb.js');
 const logger = require('../logs/winston.js');
 const cryptoRandomString = require('crypto-random-string');
 const nodemailer = require('nodemailer');
@@ -54,7 +54,7 @@ function createUser(req, res) {
     const hashSalt = bcrypt.genSaltSync();
     const hashedToken = bcrypt.hashSync(token, hashSalt);
     const email = req.body.email;
-    db.none('INSERT INTO UserData(Username, FullName, Password, Email, token)  ' +
+    ldb.none('INSERT INTO UserData(Username, FullName, Password, Email, token)  ' +
     'VALUES(${username}, ${full}, ${pass}, ${email}, ${token})', {
       username: req.body.username,
       full: req.body.fullName,
@@ -102,7 +102,7 @@ function createUser(req, res) {
  // TODO: add timeout for verification token
 function forgotPassword(req, res) {
     return new Promise((resolve, reject) => {
-      return db.task(t => {
+      return ldb.task(t => {
         return t.oneOrNone('SELECT Email FROM UserData WHERE Email = $1 ', [req.body.email])
         .then(result => {
           if (result) {
@@ -162,7 +162,7 @@ function forgotPassword(req, res) {
  // TODO: add timeout for verification token
 function resetPassword(req, res) {
   return new Promise((resolve, reject) => {
-    db.task(t => {
+    ldb.task(t => {
       return t.one('SELECT Username, Token, forgotPassword FROM UserData ' +
                    ' WHERE Username = $1', [req.body.username])
       .then(data => {
@@ -209,7 +209,7 @@ function loginRequired(req, res, next) {
  */
 function adminRequired(req, res, next) {
   if (!req.user) return res.status(401).json({status: 'Please log in'});
-  return db.one('SELECT isAdmin FROM UserData WHERE Username = $1', [req.user.username])
+  return ldb.one('SELECT isAdmin FROM UserData WHERE Username = $1', [req.user.username])
   .then((user) => {
     if (!user.isadmin) return res.status(401).json({status: 'You are not authorized'});
     return next();
@@ -228,7 +228,7 @@ function adminRequired(req, res, next) {
  */
 function teacherRequired(req, res, next) {
   if (!req.user) return res.status(401).json({status: 'Please log in'});
-  return db.one('SELECT isAdmin, isTeacher FROM UserData WHERE Username = $1', [req.user.username])
+  return ldb.one('SELECT isAdmin, isTeacher FROM UserData WHERE Username = $1', [req.user.username])
   .then((user) => {
     console.log(user);
     if (!user.isadmin && !user.isteacher) return res.status(401).json({status: 'You are not authorized'});

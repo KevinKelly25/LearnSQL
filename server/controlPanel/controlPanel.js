@@ -9,58 +9,82 @@
 
 
 
-const db = require('../db/ldb.js');
+const ldb = require('../db/ldb.js');
 var uniqid = require('uniqid');
 const logger = require('../logs/winston.js');
+const dbCreator = require('../db/cdb.js');
 
-// TODO: Create class and drop class should be in teacher.js
+// TODO: Create class and drop class should be in teacher.js/instructor controlPanel
 
 
 /**
  * This function creates a class database using a ClassDB template Database. It
- *  also addes the class to the attends and class table of the learnsql database
+ *  also addes the class to the attends and class table of the learnsql database.
+ *  The access parameters for the database also is restored since they are not
+ *  copied over in the creation of the database using the template.
+ *
+ * @param {string} name the name of the class.
+ * @param {string} password the password the students will use to enter class
  */
 function createClass(req, res) {
 	return handleErrors(req)
 	.then(() => {
 		var classid = req.body.name + '_' + uniqid(); //guarantee uniqueness
 		//check to make sure that there is none conflicting ClassName for that user
-		db.none('SELECT Username, C.ClassID ' +
-						'FROM Attends AS A INNER JOIN Class AS C ON A.ClassID = C.ClassID ' +
-						'WHERE Username = $1 AND ClassName = $2', [req.user.username, req.body.name])
-						.then(() => {
-							db.task(t => {
-									return t.none('CREATE DATABASE $1~ WITH TEMPLATE classdb_template OWNER classdb', classid)
-											.then(() => {
-												return t.none('INSERT INTO class(classid, classname, password) VALUES(${id}, ${name}, ${password}) '
+		ldb.task( t => {
+			return t.oneOrNone('SELECT Username, C.ClassID ' +
+							 					 'FROM Attends AS A INNER JOIN Class AS C ' +
+												 'ON A.ClassID = C.ClassID ' +
+							 					 'WHERE Username = $1 AND ClassName = $2',
+												 [req.user.username, req.body.name])
+			.then((result) => {
+				if (result) {
+					throw 'Classname Already Exists';
+				} else {
+					return t.none('CREATE DATABASE $1~ WITH TEMPLATE classdb_template ' +
+												' OWNER classdb', classid)
+				}
+			})
+			.then(() => {
+				return t.none('INSERT INTO class(classid, classname, password) ' +
+											' VALUES(${id}, ${name}, ${password}) '
 											, {
 												id: classid,
 												name: req.body.name,
 												password: req.body.password
 											})
-											.then(() => {
-												//logger.info('test');
-												return t.none('INSERT INTO attends(username, classid, isteacher) VALUES(${name}, ${class}, ${isTeacher})'
-												, {
-													name: req.user.username,
-													class: classid,
-													isTeacher: true
-													});
-												});
-										});
-							})
-							.then(events => {
-									return res.status(200).json('Class Database Created Successfully');
-							})
-							.catch(error => {
-								console.log(error);
-									res.status(500).json({status: 'Database could not be created'});
-							});
-						})
-						.catch(error => {
-							logger.error('Create Class: \n' + error);
-						 	res.status(400).json({status: 'Class Already Exists With That Name'});
-						});
+			}).
+			then(() => {
+				return t.none('INSERT INTO attends(username, classid, isteacher) ' +
+											'VALUES(${name}, ${class}, ${isTeacher})'
+											, {
+												name: req.user.username,
+												class: classid,
+												isTeacher: true
+											});
+			})
+		})
+		.then(events => {
+			var db = dbCreator(classid);
+			db.any('SELECT reAddUserAccess()')
+			.then((result) => {
+				db.$pool.end();//closes the connection to the database. IMPORTANT!!
+				return res.status(200).json('Class Database Created Successfully');
+			})
+			.catch((error) => {
+				logger.error('reAddUserAccess: \n' + error);
+				return res.status(500).json({status: 'Database Privleges could not be added'});
+			})
+		})
+		.catch(error => {
+			if (error == 'Classname Already Exists') {
+				res.status(500).json({status: error});
+			}
+			else {
+				logger.error('create Class: \n' + error);
+				res.status(500).json({status: 'Database could not be created'});
+			}
+		});
 	})
 }
 
@@ -68,33 +92,37 @@ function createClass(req, res) {
 /**
  * This function drops a class database as well as removes it from the attends
  *  and class table from the learnsql database
+ *
+ * @param {string} name the name of the database
  */
 function dropClass(req, res) {
 	return handleErrors(req)
 	.then(() => {
-		db.task(t => {
-				return t.one('SELECT C.ClassID ' +
-								'FROM Attends AS A INNER JOIN Class AS C ON A.ClassID = C.ClassID ' +
-								'WHERE Username = $1 AND ClassName = $2', [req.user.username, req.body.name])
-						.then((result) => {
-							req.body.classid = result.classid;
-						  return t.none('DROP DATABASE $1~ ', result.classid)
-						})
-						.then(() => {
-							return t.none('DELETE FROM attends WHERE classid = $1', req.body.classid)
-						})
-						.then(() => {
-							return t.none('DELETE FROM class WHERE classid = $1', req.body.classid)
-						})
-						.then(() => {
-							return res.status(200).json('Class Database Created Successfully');
-						})
-						.catch(error => {
-							logger.error('Drop Class: \n' + error);
-							res.status(500).json({status: 'Database could not be Deleted'});
-						});
-					});
-		})
+		ldb.task(t => {
+			 return t.one('SELECT C.ClassID ' +
+										'FROM Attends AS A INNER JOIN Class AS C ' +
+										'ON A.ClassID = C.ClassID ' +
+										'WHERE Username = $1 AND ClassName = $2',
+										 [req.user.username, req.body.name])
+			.then((result) => {
+				req.body.classid = result.classid;
+			  return t.none('DROP DATABASE $1~ ', result.classid)
+			})
+			.then(() => {
+				return t.none('DELETE FROM attends WHERE classid = $1', req.body.classid)
+			})
+			.then(() => {
+				return t.none('DELETE FROM class WHERE classid = $1', req.body.classid)
+			})
+			.then(() => {
+				return res.status(200).json('Class Database Dropped Successfully');
+			})
+			.catch(error => {
+				logger.error('Drop Class: \n' + error);
+				res.status(500).json({status: 'Database could not be Deleted'});
+			});
+		});
+	})
 }
 
 /**
