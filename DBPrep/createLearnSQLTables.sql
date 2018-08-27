@@ -13,8 +13,8 @@
 --  the "Email" field characters are check to make sure they follow the scheme
 --   of a valid email
 --  a "token" represents a hashed token used for password reset and email validation
---  isVerified is true if the user verified thier email.
---  forgotPassword represents if the forgotPassword feature was used.
+--  "isVerified" represents whether the user verified their email.
+--  "forgotPassword" represents if the forgotPassword feature was used.
 CREATE TABLE IF NOT EXISTS UserData (
   Username                VARCHAR(256) NOT NULL PRIMARY KEY,
   FullName                VARCHAR(256) NOT NULL,

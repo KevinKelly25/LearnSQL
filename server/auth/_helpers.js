@@ -116,7 +116,7 @@ function forgotPassword(req, res) {
               req.body= {
                 receiver : email,
                 prompt : 'Use this link to renew your password',
-                content : 'http://localhost:3000/auth/forgotPassword/#?token=' + token,
+                content : 'http://localhost:3000/auth/resetPassword/#?token=' + token,
                 emailTitle: 'LearnSQL Forgot Password Reset',
                 successMessage: 'Email being sent to that address'
               };
@@ -126,9 +126,9 @@ function forgotPassword(req, res) {
           } else {
               req.body= {
               receiver : req.body.email,
-              prompt : 'This Email was used to try to reset a password for'
+              prompt : 'Password Reset Attempt Failed',
+              content :  'This Email was used to try to reset a password for'
               + 'LearnSQL, however, there is no associated account linked to this address',
-              content : 'http://localhost:3000/views/account/forgotPassword/#?token=' + token,
               emailTitle: 'Requested Password Reset LearnSQL',
               successMessage: 'Email being sent to that address'
           };
@@ -315,10 +315,7 @@ function sendEmail(req, res) {
   transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
       logger.error('sendEmail: \n' + error);
-      reject({
-        message: 'Email Sending Failed'
-      });
-      return;
+      return res.status(500).json({status: 'Could Not Send Email'});
     }
     console.log('Message sent: %s', info.messageId);
     console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
