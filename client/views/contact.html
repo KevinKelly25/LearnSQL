@@ -1,12 +1,12 @@
 <!-- contact.html - LearnSQL
-     
+
     Michael Torres
-     
+
     Web Applications and Databases for Education (WADE)
-     
-    The purpose of this file is to create a contact form so that 
-    a user may email directly through the contact.html page without 
-    having to navigate to their own email application to make a 
+
+    The purpose of this file is to create a contact form so that
+    a user may email directly through the contact.html page without
+    having to navigate to their own email application to make a
     contact request.
 -->
 
@@ -30,7 +30,7 @@
 
 </head>
 <body ng-app="LearnSQL">
-    
+
     <!-- NAVBAR -->
     <nav class="navbar navbar-expand-lg navbar-light bg-white" ng-controller="NavCtrl" data-ng-init="init()">
         <div class="container-fluid">
@@ -39,7 +39,7 @@
                 <a href="http://localhost:3000/" id="navbar-title">LearnSQL</a>
             </h2>
             <!-- end of navbar header -->
-            
+
             <!-- navbar sections -->
             <div class="collapse navbar-collapse" id="navbarCollapse">
                 <ul class="nav navbar-nav ml-auto">
@@ -85,7 +85,7 @@
 
     <!-- PAGE CONTENT -->
     <section id="page-content">
-        
+
         <!-- contact us page title -->
         <h1 id="page-title" class="text-center font-weight-bold">Contact Us</h1>
         <!-- end of contact us page title-->
@@ -95,7 +95,7 @@
             Please fill out the the contact form if you are experiencing a <br>
             problem, want to request a feature,or if you want to leave feedback.
             <br>
-            
+
             <p class="text-center text-danger lead mb-0">Please note</p>
 
             <p class="text-center lead">
@@ -130,7 +130,7 @@
                             </span>
 
                             <form>
-    
+
                                 <div class="row">
                                     <!-- full name-->
                                     <div class="col-md-6">
@@ -139,7 +139,7 @@
                                         </div>
                                     </div>
                                     <!-- end of full name -->
-    
+
                                     <!-- email -->
                                     <div class="col-md-6">
                                         <div class="form-group">
@@ -147,9 +147,9 @@
                                         </div>
                                     </div>
                                     <!-- end of email -->
-    
+
                                 </div>
-    
+
                                 <!-- message -->
                                 <div class="row">
                                     <div class="col-md-12">
@@ -159,15 +159,15 @@
                                     </div>
                                 </div>
                                 <!-- end of message -->
-    
+
                                 <!-- submit message button -->
                                 <div class="col-md-12">
                                     <button type="submit" value="submit" class="btn btn-outline-danger btn-block form-control" ng-click="submit()">Submit</button>
                                 </div>
                                 <!-- end of submit message button -->
-    
+
                             </form>
-    
+
                         </div>
                     </div>
                 </div>
@@ -206,7 +206,8 @@
     integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T"
     crossorigin="anonymous"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.6/angular.min.js"></script>
-    <script src="../javascripts/controllers.js"></script>
+    <script src="../../javascripts/controllers/mainControllers.js"></script>
+    <script src="../../javascripts/controllers/controllers.js"></script>
 
 </body>
 </html>

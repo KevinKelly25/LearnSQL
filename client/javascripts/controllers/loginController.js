@@ -47,7 +47,7 @@ app.controller('LoginCtrl', ($scope, $http, $location, $window) => {
     this.user.username = $scope.username;
     //if email was entered incorrectly or not entered
     if (!angular.isDefined($scope.email) || !angular.isDefined($scope.password)
-          || !angular.isDefined($scope.fullname) || !angular.isDefined($scope.username))
+          || !angular.isDefined($scope.fullName) || !angular.isDefined($scope.username))
     {
       $scope.success = false;
       $scope.error = true;
@@ -110,9 +110,8 @@ app.controller('LoginCtrl', ($scope, $http, $location, $window) => {
   $scope.forgotPassword = () => {
     $scope.error = false;
     $scope.success = true;
-    //$scope.message = 'Sending Email, Please Wait...';
-    //$scope.message = angular.isDefined($scope.email);
-    if (!angular.isDefined($scope.email)) {
+    $scope.message = 'Sending Email, Please Wait...';
+    if (!angular.isDefined($scope.forgotEmail)) {
       $scope.success = false;
       $scope.error = true;
       $scope.message = 'Not A Valid Email Address';
@@ -125,7 +124,7 @@ app.controller('LoginCtrl', ($scope, $http, $location, $window) => {
     .success((data) => {
         $scope.error = false;
         $scope.success = true;
-        $scope.message = data.status;
+        $scope.message = 'Email was sent';
     })
     .error((error) => {
       $scope.success = false;
