@@ -1,13 +1,9 @@
+<a href="https://postgresql.org"><img src="https://img.shields.io/badge/Powered%20by-PostgreSQL-blue.svg"/></a>
+<a href="https://github.com"><img src="https://img.shields.io/badge/Hosted%20on-GitHub-brightgreen.svg"/></a>
+<a href="https://zenhub.com"><img src="https://raw.githubusercontent.com/ZenHubIO/support/master/zenhub-badge.png"/></a>
+
 # LearnSQL
 
-LearnSQL is an easy to use and easy to access Web Class Database that is specialized for learning SQL.
-This site has two main sections, the learning section where there is a large amount of tutorials about SQL.
-In these tutorials we bring students the SQL standard definitions. After the written tutorial there
-is questions based on the tutorial the student just did. In these questions the students
-will write there own SQL statements and submit these statments to a live database to see if their
-answers are correct. These answers will provide real database responses so students are exposed
-to the real situations they may see out in the working world.
+LearnSQL is an easy to use and easy to access Web Class Database that is specialized for learning SQL. This site currently has one main section that is a sandbox environment for students to practice SQL. Teachers are able to create these "sandbox" databases for each of their classes. For each database the instructor can view all their students work in that database. However, all students are only allowed to see thier own work. Teachers are also allowed to see student connections history and DDL activity. This is all done by using specialized databases using ClassDB. See here for more info: https://github.com/DASSL/ClassDB 
 
-The second section is going to be an area for students to be able to test and practice thier own SQL code
-in a sandbox envirment of thier own database. Teachers will also be able to look at these databases to check thier activity
-and help with thier progress.
+Another planned section is the learning section where there is a large amount of tutorials about SQL. In these tutorials we bring students the SQL standard definitions. After the written tutorial there are questions based on the tutorial the student just did. In these questions the students will write there own SQL statements and submit these statments to a live database to see if their answers are correct. These answers will provide real database responses so students are exposed to the real situations they may see out in the working world.
