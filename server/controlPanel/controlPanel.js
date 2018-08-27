@@ -13,6 +13,8 @@ const db = require('../db/ldb.js');
 var uniqid = require('uniqid');
 const logger = require('../logs/winston.js');
 
+// TODO: Create class and drop class should be in teacher.js
+
 
 /**
  * This function creates a class database using a ClassDB template Database. It
@@ -57,7 +59,7 @@ function createClass(req, res) {
 						})
 						.catch(error => {
 							logger.error('Create Class: \n' + error);
-						  res.status(400).json({status: 'Class Already Exists With That Name'});
+						 	res.status(400).json({status: 'Class Already Exists With That Name'});
 						});
 	})
 }

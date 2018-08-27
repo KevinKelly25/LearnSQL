@@ -12,14 +12,20 @@
 --  a "Password" represents the hashed and salted password of a user
 --  the "Email" field characters are check to make sure they follow the scheme
 --   of a valid email
+--  a "token" represents a hashed token used for password reset and email validation
+--  "isVerified" represents whether the user verified their email.
+--  "forgotPassword" represents if the forgotPassword feature was used.
 CREATE TABLE IF NOT EXISTS UserData (
   Username                VARCHAR(256) NOT NULL PRIMARY KEY,
   FullName                VARCHAR(256) NOT NULL,
   Password                VARCHAR(60) NOT NULL,
   Email                   VARCHAR(319) NOT NULL CHECK(TRIM(Email) like '_%@_%._%'),
+  Token                   VARCHAR(60) NOT NULL,
   DateJoined              DATE DEFAULT CURRENT_DATE,
   isTeacher               BOOLEAN DEFAULT FALSE,
-  isAdmin                 BOOLEAN DEFAULT FALSE
+  isAdmin                 BOOLEAN DEFAULT FALSE,
+  isVerified              BOOLEAN DEFAULT FALSE,
+  ForgotPassword          BOOLEAN DEFAULT FALSE
 );
 
 

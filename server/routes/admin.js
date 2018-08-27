@@ -17,12 +17,17 @@ const authHelpers = require('../auth/_helpers');
 
 const logger = require('../logs/winston.js');
 
+
+
 router.post('/testLogWarning', authHelpers.adminRequired,(req, res, next)  => {
     logger.error('Performing ' + req.body.numberOfExpectedLogs + ' test(s) that'
                  + ' will result in log(s)');
     return res.status(200).json('Log Warning Added Successfully');
 });
 
+
+
+// TODO: refactor addClass and dropClass to teacher.js
 /**
  * This method create user using a helper function. If an error is encountered
  * an error status code and message is returned
@@ -34,6 +39,9 @@ router.post('/addClass', authHelpers.adminRequired,(req, res, next)  => {
 	});
 });
 
+
+
+
 router.post('/dropClass', authHelpers.adminRequired,(req, res, next)  => {
   return adminHelpers.dropClass(req, res)
 	.catch((err) => {
@@ -41,7 +49,16 @@ router.post('/dropClass', authHelpers.adminRequired,(req, res, next)  => {
 	});
 });
 
-//adds a status code and message to response
+
+
+/**
+ * This function is used to return http responses.
+ *
+ * @param {string} res the result object
+ * @param {string} code the http status code
+ * @param {string} statusMsg the message containing the status of the message
+ * @return an http responde with designated status code and attached
+ */
 function handleResponse(res, code, statusMsg) {
   res.status(code).json({status: statusMsg});
 }
