@@ -66,7 +66,7 @@ app.controller('LoginCtrl', ($scope, $http, $location, $window) => {
       $http.post('/auth/register', this.user)
       .success((data) => {
         $scope.success = true;
-        $scope.message = data;
+        $scope.message = data.status;
       })
       .error((error) => {
         $scope.success = false;

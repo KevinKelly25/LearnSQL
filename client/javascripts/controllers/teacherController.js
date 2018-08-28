@@ -16,16 +16,17 @@ var app = angular.module('LearnSQL');
  * This controller is used for the teacher control panel to add classes
  */
 app.controller('teacherCtrl', ($scope, $http) => {
-  $scope.error = false;
-  $scope.success = false;
 
   $scope.test = "hello it is working";
 
   $scope.init = () => {
-    $scope.names = [
-        { name: 'mike', color: 'blue'},
-        { name: 'kevin', color: 'red'}
-    ];
+    $http.get('/teacher/getClasses')
+    .success((data) => {
+      $scope.names = data;
+    })
+    .error((error) => {
+      //do something if encounters an error
+    });
   }
 
   /**

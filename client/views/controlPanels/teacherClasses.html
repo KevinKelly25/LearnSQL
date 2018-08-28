@@ -5,7 +5,7 @@
   Web Applications and Databases for Education (WADE)
 
   This file contains the html view of the instructor control panel which
-  list all classes the instructor is currently teaching for the LearnSQL website 
+  list all classes the instructor is currently teaching for the LearnSQL website
 -->
 
 <!DOCTYPE html>
@@ -21,14 +21,13 @@
         crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.css" />
     <link rel="stylesheet" href="../../stylesheets/font-awesome.min.css">
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css"> 
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.1/semantic.min.css">
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/dataTables.semanticui.min.css">
     <link rel="stylesheet" href="../../stylesheets/bootstrap.css">
     <link rel="stylesheet" href="../../stylesheets/instuctor.css">
+    <link rel="stylesheet" href="../../stylesheets/angular-datatables.css">
 </head>
 <body ng-app="LearnSQL">
-    
+
     <!-- NAVBAR -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light" ng-controller="NavCtrl" data-ng-init="init()">
         <div class="container-fluid">
@@ -37,7 +36,7 @@
                 <a href="http://localhost:3000/" class="text-primary">LearnSQL</a>
             </h2>
             <!-- end of navbar header -->
-            
+
             <!-- navbar sections -->
             <div class="collapse navbar-collapse" id="navbarCollapse">
                 <ul class="nav navbar-nav ml-auto">
@@ -83,9 +82,10 @@
 
     <!-- PAGE CONTENT -->
     <section id="page-content" class="mt-5" ng-controller="teacherCtrl" data-ng-init="init()">
-        <div class="container">
-           <!-- tables of classes --> 
-            <table id="table_id" class="ui celled table row-border hover order-column shadow-lg">
+        <div class="container"  ng-if="names">
+           <!-- tables of classes -->
+            <table id="table_id" class="ui celled table row-border hover order-column shadow-lg"
+              onload="../../javascripts/datatable.js">
                 <caption class="text-primary">List of classes</caption>
                 <thead>
                     <!-- Add row / delete row -->
@@ -115,8 +115,14 @@
                 </thead>
                 <tbody>
                     <tr ng-repeat="x in names">
-                        <td>{{ x.name }}</td>
-                        <td>{{ x.color }}</td>
+                        <td></td>
+                        <td>{{ x.classname }}</td>
+                        <td>{{ x.section }}</td>
+                        <td>{{ x.times }}</td>
+                        <td>{{ x.days }}</td>
+                        <td>{{ x.startdate }}</td>
+                        <td>{{ x.enddate }}</td>
+                        <td>{{ x.studentcount }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -135,31 +141,9 @@
     integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T"
     crossorigin="anonymous"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.6/angular.min.js"></script>
-    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+    <script src="../../javascripts/angular-datatables.min.js"></script>
     <script src="../../javascripts/controllers/mainControllers.js"></script>
     <script src="../../javascripts/controllers/teacherController.js"></script>
 
-    <!-- Zero configuration -->
-    <script>
-        $(document).ready( function () {
-            $('#table_id').DataTable();
-        } );
-    </script>
-
-    <!-- highlighting rows and columns -->
-    <script>
-        $(document).ready(function() {
-            var table = $('#table_id').DataTable();
-                
-            $('#table_id tbody')
-            .on( 'mouseenter', 'td', function () {
-                    var colIdx = table.cell(this).index().column;
-            
-                    $( table.cells().nodes() ).removeClass( 'highlight' );
-                    $( table.column( colIdx ).nodes() ).addClass( 'highlight' );
-            } );
-        } );
-    </script>
-    
 </body>
 </html>

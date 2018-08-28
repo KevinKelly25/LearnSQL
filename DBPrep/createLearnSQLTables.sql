@@ -53,21 +53,6 @@ CREATE TABLE IF NOT EXISTS Class_t (
 
 
 
--- Define a view to return Class data
---  This view has all attributes of Class_t with an added derived attribute
---  "studentCount"
---  "studentCount" represents the number of students in a class.
-CREATE OR REPLACE VIEW CLASS AS 
-SELECT ClassID, ClassName, Section, Times, Days, StartDate, EndDate, 
-  (
-    SELECT COUNT(*) 
-    FROM Attends
-    WHERE Attends.ClassID = Class_t.ClassID AND isTeacher = FALSE
-  ) AS studentCount
-FROM Class_t;
-
-
-
 -- Define a table that represents the relation between UserData and Class
 --  a "Username" is a unique id that represents a human user from UserData table
 --  a "ClassID" is a unique id that represents a class from Class table
@@ -78,3 +63,18 @@ CREATE TABLE IF NOT EXISTS Attends (
   isTeacher               BOOLEAN DEFAULT FALSE,
   PRIMARY KEY (ClassID, Username)
 );
+
+
+
+-- Define a view to return Class data
+--  This view has all attributes of Class_t with an added derived attribute
+--  "studentCount"
+--  "studentCount" represents the number of students in a class.
+CREATE OR REPLACE VIEW CLASS AS
+SELECT ClassID, ClassName, Section, Times, Days, StartDate, EndDate, Password,
+  (
+    SELECT COUNT(*)
+    FROM Attends
+    WHERE Attends.ClassID = Class_t.ClassID AND isTeacher = FALSE
+  ) AS studentCount
+FROM Class_t;

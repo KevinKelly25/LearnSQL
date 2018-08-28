@@ -5,7 +5,11 @@ const sass = require("gulp-sass");
 // Compile Sass & Inject Into Browser
 gulp.task("sass", function() {
 	return gulp
-    .src(["node_modules/bootstrap/scss/bootstrap.scss", "client/scss/*.scss"])
+    .src([
+			"node_modules/bootstrap/scss/bootstrap.scss",
+			"node_modules/angular-datatables/dist/css/angular-datatables.css",
+			"client/scss/*.scss"
+		])
     .pipe(sass().on("error", sass.logError))
     .pipe(gulp.dest("client/stylesheets"))
 	.pipe(browserSync.stream());
@@ -17,7 +21,9 @@ gulp.task("js", function() {
 		.src([
 			"node_modules/bootstrap/dist/js/bootstrap.min.js",
 			"node_modules/jquery/dist/jquery.min.js",
-			"node_modules/popper.js/dist/umd/popper.min.js"
+			"node_modules/popper.js/dist/umd/popper.min.js",
+			"node_modules/angular-datatables/dist/angular-datatables.min.js",
+			"node_modules/datatables.net/js/jquery.dataTables.min.js"
 		])
 		.pipe(gulp.dest("client/javascripts"))
 		.pipe(browserSync.stream());

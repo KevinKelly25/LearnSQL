@@ -8,7 +8,7 @@
  * LearnSQL website
  */
 
-var app = angular.module('LearnSQL', []);
+var app = angular.module('LearnSQL', ['datatables']);
 
 
 /**
