@@ -33,7 +33,7 @@ function addStudent(req, res) {
 				'FROM Attends AS A INNER JOIN Class AS C ON A.ClassID = C.ClassID ' +
 				'WHERE Username = $1 AND ClassName = $2', [req.user.username, req.body.classname])
 				.then((result) => {
-					var db = dbCreator(result);
+					var db = dbCreator(result.classid);
 					db.func('ClassDB.createStudent',
 						[req.body.username, req.body.fullname])
 					.then((result) => {
@@ -81,7 +81,7 @@ function dropStudent(req, res) {
 				'FROM Attends AS A INNER JOIN Class AS C ON A.ClassID = C.ClassID ' +
 				'WHERE Username = $1 AND ClassName = $2', [req.user.username, req.body.classname])
 				.then((result) => {
-					var db = dbCreator(result);
+					var db = dbCreator(result.classid);
 					db.func('ClassDB.dropStudent', [req.body.username, false,
 							true, 'drop'])
 					.then((result) => {
@@ -125,7 +125,7 @@ function getClass(req, res) {
 				'FROM Attends AS A INNER JOIN Class AS C ON A.ClassID = C.ClassID ' +
 				'WHERE Username = $1 AND ClassName = $2', [req.user.username, req.body.classname])
 				.then((result) => {
-					var db = dbCreator(result);
+					var db = dbCreator(result.classid);
 					db.any('SELECT * FROM ClassDB.StudentActivitySummary')
 					.then((result) => {
 						resolve();
