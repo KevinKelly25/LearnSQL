@@ -82,7 +82,7 @@
     <!-- END OF NAVBAR -->
 
     <!-- PAGE CONTENT -->
-    <section id="page-content" class="mt-5">
+    <section id="page-content" class="mt-5" ng-controller="teacherCtrl" data-ng-init="init()">
         <div class="container">
            <!-- tables of classes --> 
             <table id="table_id" class="ui celled table row-border hover order-column shadow-lg">
@@ -114,6 +114,10 @@
                     </tr>
                 </thead>
                 <tbody>
+                    <tr ng-repeat="x in names">
+                        <td>{{ x.name }}</td>
+                        <td>{{ x.color }}</td>
+                    </tr>
                 </tbody>
             </table>
 
@@ -132,56 +136,13 @@
     crossorigin="anonymous"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.6/angular.min.js"></script>
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
-    <script src="../javascripts/controllers.js"></script>
+    <script src="../../javascripts/controllers/mainControllers.js"></script>
+    <script src="../../javascripts/controllers/teacherController.js"></script>
 
     <!-- Zero configuration -->
     <script>
         $(document).ready( function () {
             $('#table_id').DataTable();
-        } );
-    </script>
-
-    <!-- Row selection and deletion (single row) -->
-    <script>
-        $(document).ready(function() {
-            var table = $('#table_id').DataTable();
-
-            $('#table_id tbody').on( 'click', 'tr', function () {
-                if ( $(this).hasClass('selected') ) {
-                    $(this).removeClass('selected');
-                }
-                else {
-                    table.$('tr.selected').removeClass('selected');
-                    $(this).addClass('selected');
-                }
-            } );
-
-            $('#trash').click( function () {
-                table.row('.selected').remove().draw( false );
-            } );
-        } );
-    </script>
-    
-    <!-- Add rows -->
-    <script>
-        $(document).ready(function() {
-            var t = $('#table_id').DataTable();
-            var counter = 0;
-        
-            $('#addRow').on( 'click', function () {
-                t.row.add( [
-                    counter + 1,
-                    'Enter data...',
-                    'Enter data...',
-                    'Enter data...',
-                    'Enter data...',
-                    'Enter data...',
-                    'Enter data...',
-                    'Enter data...'
-                ] ).draw( false );
-        
-                counter++;
-            } );
         } );
     </script>
 
