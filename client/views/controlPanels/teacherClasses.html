@@ -19,12 +19,15 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css"
         integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp"
         crossorigin="anonymous">
+    <link rel="stylesheet" href="../../stylesheets/angular-datatables.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.css" />
     <link rel="stylesheet" href="../../stylesheets/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css"> 
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.1/semantic.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/dataTables.semanticui.min.css">
     <link rel="stylesheet" href="../../stylesheets/bootstrap.css">
     <link rel="stylesheet" href="../../stylesheets/instuctor.css">
-    <link rel="stylesheet" href="../../stylesheets/angular-datatables.css">
+
 </head>
 <body ng-app="LearnSQL">
 
@@ -82,10 +85,9 @@
 
     <!-- PAGE CONTENT -->
     <section id="page-content" class="mt-5" ng-controller="teacherCtrl" data-ng-init="init()">
-        <div class="container"  ng-if="names">
+        <div ng-if="names">
            <!-- tables of classes -->
-            <table id="table_id" class="ui celled table row-border hover order-column shadow-lg"
-              onload="../../javascripts/datatable.js">
+            <table class="ui celled table row-border hover order-column shadow-lg" datatable="">
                 <caption class="text-primary">List of classes</caption>
                 <thead>
                     <!-- Add row / delete row -->
@@ -131,19 +133,14 @@
     </section>
     <!-- END OF PAGE CONTENT -->
 
-    <script src="http://code.jquery.com/jquery-3.3.1.min.js"
-    integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-    crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
-    integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
-    crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"
-    integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T"
-    crossorigin="anonymous"></script>
+    <script src="../../javascripts/jquery.min.js"></script>
+    <script src="../../javascripts/jquery.dataTables.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.6/angular.min.js"></script>
-    <script src="../../javascripts/angular-datatables.min.js"></script>
     <script src="../../javascripts/controllers/mainControllers.js"></script>
     <script src="../../javascripts/controllers/teacherController.js"></script>
+    <script src="../../javascripts/angular-datatables.min.js"></script>
+    <script src="../../javascripts/popper.min.js"></script>
+    <script src="../../javascripts/bootstrap.min.js"></script>
 
 </body>
 </html>
