@@ -44,7 +44,7 @@ router.post('/addStudent', authHelpers.teacherRequired, (req, res, next)  => {
  * @param {string} classname the classname the student will be added to
  * @return response
  */
-router.get('/getClasses', authHelpers.teacherRequired, (req, res, next)  => {
+router.get('/getClasses', authHelpers.teacherRequired, (req, res, next)  => {	
 	return teacherHelpers.getClasses(req, res)
 	.catch((err) => {
 		handleResponse(res, 500, err);

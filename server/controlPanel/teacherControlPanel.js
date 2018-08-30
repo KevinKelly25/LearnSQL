@@ -172,6 +172,7 @@ function getClasses(req, res) {
 				return res.status(200).json(result);
 			})
 			.catch((error) => {//goes here if you can't find the class
+				logger.error('getClasses: \n' + error);
 				reject({
 					message: 'Could query the classes'
 				});

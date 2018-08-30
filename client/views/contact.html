@@ -49,8 +49,8 @@
                     <li class="nav-item">
                         <a href="../views/workshop.html" class="nav-link text-dark">Workshop</a>
                     </li>
-                    <li class="nav-item active">
-                        <a href="../views/learn/select.html" id="learn-tab" class="nav-link shadow-lg text-white">Learn</a>
+                    <li class="nav-item">
+                        <a href="../views/learn/select.html" class="nav-link text-dark">Learn</a>
                     </li>
                     <li class="nav-item">
                         <a href="../quizzes.html" class="nav-link text-dark">Quizzes</a>
@@ -58,6 +58,11 @@
                     <span ng-show="!currentUser">
                         <li class="nav-item">
                             <a href="../views/Account/signIn.html" class="nav-link text-dark">Sign in</a>
+                        </li>
+                    </span>
+                    <span ng-show="currentUser.isteacher">
+                        <li class="nav-item">
+                          <a href="../views/controlPanels/teacherClasses.html" class="nav-link border-right px-4">Classes</a>
                         </li>
                     </span>
                     <span ng-show="currentUser.isadmin">
