@@ -15,8 +15,8 @@ const logger = require('../logs/winston.js');
 function editInformation(req, res) {
   return new Promise((resolve, reject) => {
 		ldb.none('UPDATE userdata ' +
-				    'SET username = $1' +
-				    'WHERE username = $2', [req.body.newUsername, req.body.oldUsername])
+				     'SET username = $1' +
+				     'WHERE username = $2', [req.body.newUsername, req.body.oldUsername])
           .then((result) => {
             console.log("RESULT: " + result);
 						resolve();
@@ -33,11 +33,11 @@ function editInformation(req, res) {
 				})   
 };
 
-function getPassword(req, res) {
+function confirmPassword(req, res) {
   return new Promise((resolve, reject) => {
-		ldb.none('UPDATE userdata ' +
-				    'SET username = $1' +
-				    'WHERE username = $2', [req.body.newUsername, req.body.oldUsername])
+		ldb.one('SELECT password ' +
+				     'FROM userdata' +
+				     'WHERE username = $1', [req.body.newUsername])
           .then((result) => {
             console.log("RESULT: " + result);
 						resolve();
@@ -56,5 +56,5 @@ function getPassword(req, res) {
 
 module.exports = {
   editInformation,
-  getPassword
+  confirmPassword
 };

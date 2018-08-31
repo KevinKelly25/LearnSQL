@@ -74,14 +74,21 @@ app.controller('ProfileCtrl', ($scope, $http) => {
 
     };
 
+
     // Use the `/editInformation` route to run the query which inserts new values into the database
     $http.post('/editInformation', $scope.newUsername_Info)
     .success((data) => {
       $scope.success = true;
       $scope.message = 'User information updated sucessfully';
 
+      $scope.updatedUser = {
+
+        userName: $scope.newUsername,
+        password: $scope.passwordPrompt
+      };
+
       // If the new username is updated in the table, automatically perform the login process
-      $http.post('/auth/login', $scope.newUsername_Info.newUsername)
+      $http.post('/auth/login', $scope.updatedUser)
       .success((data) => {
       $window.location.href = 'http://localhost:3000/views/account/profile.html';
       })
