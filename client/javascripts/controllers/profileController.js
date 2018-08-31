@@ -49,4 +49,54 @@ app.controller('ProfileCtrl', ($scope, $http) => {
     return date.getMonth()+1 + "/" + date.getDate() + "/" + date.getFullYear();
   }
 
+  $scope.editInformation = () => {
+
+    // Confirm new usernames match
+    if($scope.newUsername != $scope.newUsername_Confirm)
+    {
+      $scope.success = false;
+      $scope.error = true;
+      $scope.message = 'Usernames do not match';
+      return;
+    }
+    /*else
+    {
+      $scope.success = true;
+      $scope.error = false;
+      $scope.message = 'Usernames match';
+     
+    }*/
+
+    $scope.newUsername_Info = {
+
+      newUsername: $scope.newUsername,
+      oldUsername: $scope.userName
+
+    };
+
+    // Use the `/editInformation` route to run the query which inserts new values into the database
+    $http.post('/editInformation', $scope.newUsername_Info)
+    .success((data) => {
+      $scope.success = true;
+      $scope.message = 'User information updated sucessfully';
+
+      // If the new username is updated in the table, automatically perform the login process
+      $http.post('/auth/login', $scope.newUsername_Info.newUsername)
+      .success((data) => {
+      $window.location.href = 'http://localhost:3000/views/account/profile.html';
+      })
+      .error((error) => {
+      $scope.error = true;
+      $scope.message = error.status;
+      });
+
+    })
+    .error((error) => {
+      $scope.success = false;
+      $scope.error = true;
+      $scope.message = error.status;
+    });
+
+  }
+
 });
