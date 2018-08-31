@@ -1,3 +1,13 @@
+<!-- select.html - LearnSQL
+
+    Michael Torres, Kevin Kelly
+
+    Web Applications and Databases for Education (WADE)
+
+    The purpose of this file is to teach the user SQL
+    SELECT statements and provide them questions to 
+    practice. 
+-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,6 +23,7 @@
   <link rel="stylesheet" href="../../stylesheets/font-awesome.min.css">
   <link rel="stylesheet" href="../../stylesheets/bootstrap.css">
   <link rel="stylesheet" href="../../stylesheets/learn.css">
+  <link rel="stylesheet" href="../../stylesheets/angular-datatables.css">
   <link href = "../../stylesheets/prism.css" rel = "stylesheet" />
 
 </head>
@@ -150,10 +161,20 @@
               <li class="nav-item">
                 <a href="../quizes.html" class="nav-link text-dark">Quizzes</a>
               </li>
+              <span ng-show="currentUser.isteacher">
+                <li class="nav-item">
+                  <a href="../controlPanels/teacherClasses.html" class="nav-link border-right px-4">Classes</a>
+                </li>
+              </span>
               <span ng-show="!currentUser">
               <li class="nav-item">
                 <a href="../Account/signIn.html" class="nav-link text-dark">Sign in</a>
               </li>
+              </span>
+              <span ng-show="currentUser.isadmin">
+                <li class="nav-item">
+                  <a href="../controlPanels/admin.html" class="nav-link border-right px-4">Admin Control Panel</a>
+                </li>
               </span>
               <span ng-show="currentUser">
               <li class="nav-item">
@@ -381,7 +402,7 @@ Customerid, Customername, CustomerAddress, CustomerCity, CustomerState, and Cust
                   <a href="http://localhost:3000/">LearnSQL</a>
                 </h1>
                 <p>Copyright &copy; 2018</p>
-                <a href="contact.html" id="contactUsButton" class="btn shadow" role="button">Contact Us</a>
+                <a href="../contact.html" id="contactUsButton" class="btn shadow" role="button">Contact Us</a>
               </div>
             </div>
           </div>
@@ -393,20 +414,14 @@ Customerid, Customername, CustomerAddress, CustomerCity, CustomerState, and Cust
   </div>
 
   <script src="../../javascripts/prism.js"></script>
-  <script src="http://code.jquery.com/jquery-3.3.1.min.js"
-  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-  crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
-  integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
-  crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"
-  integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T"
-  crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
-
+  <script src="../../javascripts/jquery.min.js"></script>
+  <script src="../../javascripts/jquery.dataTables.min.js"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.6/angular.min.js"></script>
   <script src="../../javascripts/controllers/mainControllers.js"></script>
   <script src="../../javascripts/controllers/questionController.js"></script>
+  <script src="../../javascripts/angular-datatables.min.js"></script>
+  <script src="../../javascripts/popper.min.js"></script>
+  <script src="../../javascripts/bootstrap.min.js"></script>
 
   <!-- THE CURRENT YEAR OF THE COPYRIGHT -->
   <script>

@@ -46,11 +46,18 @@ function createClass(req, res) {
 				}
 			})
 			.then(() => {
-				return t.none('INSERT INTO class(classid, classname, password) ' +
-											' VALUES(${id}, ${name}, ${password}) '
+				return t.none('INSERT INTO class_t(Classid, ClassName, Section, Times, ' +
+											'Days, StartDate, EndDate, Password) ' +
+											'VALUES(${id}, ${name}, ${section}, ${times}, ${days}, ' +
+											'${startDate}, ${endDate}, ${password} ) '
 											, {
 												id: classid,
 												name: req.body.name,
+												section: req.body.section,
+												times: req.body.times,
+												days: req.body.days,
+												startDate: req.body.startDate,
+												endDate: req.body.endDate,
 												password: req.body.password
 											})
 			}).

@@ -6,3 +6,5 @@ client/javascripts/bootstrap.min.js
 client/javascripts/jquery.min.js
 client/javascripts/popper.min.js
 *.log
+client/javascripts/jquery.dataTables.min.js
+client/javascripts/angular-datatables.min.js

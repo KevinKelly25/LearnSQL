@@ -5,7 +5,7 @@
   Web Applications and Databases for Education (WADE)
 
   This file contains the html view of the instructor control panel which
-  list all classes the instructor is currently teaching for the LearnSQL website 
+  list all classes the instructor is currently teaching for the LearnSQL website
 -->
 
 <!DOCTYPE html>
@@ -19,6 +19,7 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css"
         integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp"
         crossorigin="anonymous">
+    <link rel="stylesheet" href="../../stylesheets/angular-datatables.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.css" />
     <link rel="stylesheet" href="../../stylesheets/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css"> 
@@ -26,9 +27,10 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/dataTables.semanticui.min.css">
     <link rel="stylesheet" href="../../stylesheets/bootstrap.css">
     <link rel="stylesheet" href="../../stylesheets/instuctor.css">
+
 </head>
 <body ng-app="LearnSQL">
-    
+
     <!-- NAVBAR -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light" ng-controller="NavCtrl" data-ng-init="init()">
         <div class="container-fluid">
@@ -37,7 +39,7 @@
                 <a href="http://localhost:3000/" class="text-primary">LearnSQL</a>
             </h2>
             <!-- end of navbar header -->
-            
+
             <!-- navbar sections -->
             <div class="collapse navbar-collapse" id="navbarCollapse">
                 <ul class="nav navbar-nav ml-auto">
@@ -45,27 +47,32 @@
                         <a href="http://localhost:3000/" class="nav-link text-dark">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a href="../views/workshop.html" class="nav-link text-dark">Workshop</a>
+                        <a href="../workshop.html" class="nav-link text-dark">Workshop</a>
                     </li>
-                    <li class="nav-item active">
-                        <a href="../views/learn/select.html" class="nav-link shadow-lg bg-primary text-white">Learn</a>
+                    <li class="nav-item">
+                        <a href="../learn/select.html" class="nav-link  text-dark">Learn</a>
                     </li>
                     <li class="nav-item">
                         <a href="../quizzes.html" class="nav-link text-dark">Quizzes</a>
                     </li>
+                    <span ng-show="currentUser.isteacher">
+                        <li class="nav-item active">
+                          <a href="../controlPanels/teacherClasses.html" class="nav-link shadow-lg bg-primary text-white border-right px-4">Classes</a>
+                        </li>
+                    </span>
                     <span ng-show="!currentUser">
                         <li class="nav-item">
-                            <a href="../views/Account/signIn.html" class="nav-link text-dark">Sign in</a>
+                            <a href="../Account/signIn.html" class="nav-link text-dark">Sign in</a>
                         </li>
                     </span>
                     <span ng-show="currentUser.isadmin">
                         <li class="nav-item">
-                          <a href="../views/controlPanels/admin.html" class="nav-link border-right px-4">Admin Control Panel</a>
+                          <a href="../controlPanels/admin.html" class="nav-link border-right px-4">Admin Control Panel</a>
                         </li>
                     </span>
                     <span ng-show="currentUser">
                         <li class="nav-item">
-                            <a href="../views/Account/profile.html" class="nav-link text-dark">Profile</a>
+                            <a href="../Account/profile.html" class="nav-link text-dark">Profile</a>
                         </li>
                     </span>
                     <span ng-show="currentUser">
@@ -82,10 +89,10 @@
     <!-- END OF NAVBAR -->
 
     <!-- PAGE CONTENT -->
-    <section id="page-content" class="mt-5">
-        <div class="container">
-           <!-- tables of classes --> 
-            <table id="table_id" class="ui celled table row-border hover order-column shadow-lg">
+    <section id="page-content" class="mt-5" ng-controller="teacherCtrl" data-ng-init="init()">
+        <div ng-if="names">
+           <!-- tables of classes -->
+            <table class="ui celled table row-border hover order-column shadow-lg" datatable="">
                 <caption class="text-primary">List of classes</caption>
                 <thead>
                     <!-- Add row / delete row -->
@@ -97,7 +104,7 @@
                         </td>
                         <td colspan="1">
                             <button type="button" id="trash" class="btn btn-outline-primary btn-block btn-lg">
-                                remove
+                                Remove
                             </button>
                         </td>
                     </tr>
@@ -114,6 +121,16 @@
                     </tr>
                 </thead>
                 <tbody>
+                    <tr ng-repeat="x in names">
+                        <td></td>
+                        <td>{{ x.classname }}</td>
+                        <td>{{ x.section }}</td>
+                        <td>{{ x.times }}</td>
+                        <td>{{ x.days }}</td>
+                        <td>{{ x.startdate }}</td>
+                        <td>{{ x.enddate }}</td>
+                        <td>{{ x.studentcount }}</td>
+                    </tr>
                 </tbody>
             </table>
 
@@ -121,84 +138,14 @@
     </section>
     <!-- END OF PAGE CONTENT -->
 
-    <script src="http://code.jquery.com/jquery-3.3.1.min.js"
-    integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-    crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
-    integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
-    crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"
-    integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T"
-    crossorigin="anonymous"></script>
+    <script src="../../javascripts/jquery.min.js"></script>
+    <script src="../../javascripts/jquery.dataTables.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.6/angular.min.js"></script>
-    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
-    <script src="../javascripts/controllers.js"></script>
+    <script src="../../javascripts/controllers/mainControllers.js"></script>
+    <script src="../../javascripts/controllers/teacherController.js"></script>
+    <script src="../../javascripts/angular-datatables.min.js"></script>
+    <script src="../../javascripts/popper.min.js"></script>
+    <script src="../../javascripts/bootstrap.min.js"></script>
 
-    <!-- Zero configuration -->
-    <script>
-        $(document).ready( function () {
-            $('#table_id').DataTable();
-        } );
-    </script>
-
-    <!-- Row selection and deletion (single row) -->
-    <script>
-        $(document).ready(function() {
-            var table = $('#table_id').DataTable();
-
-            $('#table_id tbody').on( 'click', 'tr', function () {
-                if ( $(this).hasClass('selected') ) {
-                    $(this).removeClass('selected');
-                }
-                else {
-                    table.$('tr.selected').removeClass('selected');
-                    $(this).addClass('selected');
-                }
-            } );
-
-            $('#trash').click( function () {
-                table.row('.selected').remove().draw( false );
-            } );
-        } );
-    </script>
-    
-    <!-- Add rows -->
-    <script>
-        $(document).ready(function() {
-            var t = $('#table_id').DataTable();
-            var counter = 0;
-        
-            $('#addRow').on( 'click', function () {
-                t.row.add( [
-                    counter + 1,
-                    'Enter data...',
-                    'Enter data...',
-                    'Enter data...',
-                    'Enter data...',
-                    'Enter data...',
-                    'Enter data...',
-                    'Enter data...'
-                ] ).draw( false );
-        
-                counter++;
-            } );
-        } );
-    </script>
-
-    <!-- highlighting rows and columns -->
-    <script>
-        $(document).ready(function() {
-            var table = $('#table_id').DataTable();
-                
-            $('#table_id tbody')
-            .on( 'mouseenter', 'td', function () {
-                    var colIdx = table.cell(this).index().column;
-            
-                    $( table.cells().nodes() ).removeClass( 'highlight' );
-                    $( table.column( colIdx ).nodes() ).addClass( 'highlight' );
-            } );
-        } );
-    </script>
-    
 </body>
 </html>

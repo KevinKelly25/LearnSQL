@@ -1,6 +1,6 @@
 -- createLearnSQLTables.sql - LearnSQL
 
--- Kevin Kelly
+-- Kevin Kelly, Michael Torres
 -- Web Applications and Databases for Education (WADE)
 
 -- This file supplies the tables and unique index for the backend of the LearnSQL
@@ -34,15 +34,21 @@ CREATE TABLE IF NOT EXISTS UserData (
 CREATE UNIQUE INDEX idx_Unique_Email ON UserData(LOWER(TRIM(Email)));
 
 
+
 -- Define a table of classes for this DB
 --  a "ClassID" is a unique id that represents a classname plus a random ID
 --  a "ClassName" is the classID without the random ID
---  the "Password" field will be used for students to create thier student
+--  the "Password" field will be used for students to create their student
 --   account in the classdb database
-CREATE TABLE IF NOT EXISTS Class (
+CREATE TABLE IF NOT EXISTS Class_t (
   ClassID                 VARCHAR(256) NOT NULL PRIMARY KEY,
-  ClassName               VARCHAR(236),
-  Password                VARCHAR(60)
+  ClassName               VARCHAR(236) NOT NULL,
+  Section                 VARCHAR(256) NOT NULL,
+  Times                   VARCHAR(256) NOT NULL,
+  Days                    VARCHAR(256) NOT NULL,
+  StartDate               VARCHAR(256) NOT NULL,
+  EndDate                 VARCHAR(256) NOT NULL,
+  Password                VARCHAR(60)  NOT NULL
 );
 
 
@@ -52,8 +58,23 @@ CREATE TABLE IF NOT EXISTS Class (
 --  a "ClassID" is a unique id that represents a class from Class table
 --  "isTeacher" defines whether user is a teacher for that specific class
 CREATE TABLE IF NOT EXISTS Attends (
-  ClassID                 VARCHAR(256) NOT NULL REFERENCES Class,
+  ClassID                 VARCHAR(256) NOT NULL REFERENCES Class_t,
   Username                VARCHAR(256) NOT NULL REFERENCES UserData,
-  isTeacher               BOOLEAN,
+  isTeacher               BOOLEAN DEFAULT FALSE,
   PRIMARY KEY (ClassID, Username)
 );
+
+
+
+-- Define a view to return Class data
+--  This view has all attributes of Class_t with an added derived attribute
+--  "studentCount"
+--  "studentCount" represents the number of students in a class.
+CREATE OR REPLACE VIEW CLASS AS
+SELECT ClassID, ClassName, Section, Times, Days, StartDate, EndDate, Password,
+  (
+    SELECT COUNT(*)
+    FROM Attends
+    WHERE Attends.ClassID = Class_t.ClassID AND isTeacher = FALSE
+  ) AS studentCount
+FROM Class_t;

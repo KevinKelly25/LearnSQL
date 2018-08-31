@@ -12,10 +12,7 @@
   const passport = require('passport');
   const nodemailer = require('nodemailer');
     
-  // *** view folders *** //
-  const viewFolders = [
-    path.join(__dirname, '..', 'views')
-  ];
+
 
   // *** load environment variables *** //
   require('dotenv').config();

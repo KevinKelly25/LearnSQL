@@ -1,7 +1,7 @@
 <!--
   profile.html - LearnSQL
 
-  Christopher Innaco
+  Christopher Innaco, Michael Torres
   Web Applications and Databases for Education (WADE)
 
   This file contains the HTML view of the user profile page for the
@@ -21,6 +21,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
   <link rel="stylesheet" href="../../stylesheets/font-awesome.min.css">
   <link rel="stylesheet" href="../../stylesheets/bootstrap.css">
+  <link rel="stylesheet" href="../../stylesheets/angular-datatables.css">
   <link rel="stylesheet" href="../../stylesheets/profile.css">
 </head>
 <body ng-app="LearnSQL">
@@ -49,6 +50,11 @@
                 <li class="nav-item">
                     <a href="/quizzes.html" class="nav-link text-dark">Quizzes</a>
                 </li>
+                <span ng-show="currentUser.isteacher">
+                  <li class="nav-item">
+                    <a href="/views/controlPanels/teacherClasses.html" class="nav-link border-right px-4">Classes</a>
+                  </li>
+                </span>
                 <span ng-show="!currentUser">
                     <li class="nav-item">
                         <a href="/views/Account/signIn.html" class="nav-link text-dark">Sign in</a>
@@ -346,19 +352,14 @@
     </footer>
     <!-- End Footer-->
 
-    
-    <script src="http://code.jquery.com/jquery-3.3.1.min.js"
-    integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-    crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
-    integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
-    crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"
-    integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T"
-    crossorigin="anonymous"></script>
+    <script src="../../javascripts/jquery.min.js"></script>
+    <script src="../../javascripts/jquery.dataTables.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.6/angular.min.js"></script>
-    <script src="/javascripts/controllers/mainControllers.js"></script>
-    <script src="/javascripts/controllers/profileController.js"></script>
+    <script src="../../javascripts/controllers/mainControllers.js"></script>
+    <script src="../../javascripts/controllers/profileController.js"></script>
+    <script src="../../javascripts/angular-datatables.min.js"></script>
+    <script src="../../javascripts/popper.min.js"></script>
+    <script src="../../javascripts/bootstrap.min.js"></script>
 
 </body>
 </html>
