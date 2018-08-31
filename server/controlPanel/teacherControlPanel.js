@@ -162,9 +162,14 @@ function getStudents(req, res) {
  *  The access parameters for the database also is restored since they are not
  *  copied over in the creation of the database using the template.
  *
- * @param {string} name the name of the class.
- * @param {string} password the password the students will use to enter class
- * TODO: add right params
+ * @param {string} name the name of the class to be added
+ * @param {string} section the section of the class
+ * @param {string} times time the class is supposed to meet
+ * @param {string} days the days that the class is supposed to meet
+ * @param {string} startDate the date of the first class
+ * @param {string} endDate the last day of class
+ * @param {string} password the join password students need to join class
+ * @return http response if class was added or reject promise if error
  */
 function createClass(req, res) {
 	return handleErrors(req)
@@ -212,6 +217,7 @@ function createClass(req, res) {
 			})
 		})
 		.then(events => {
+			//Readd user access privileges on ClassDB instance
 			var db = dbCreator(classid);
 			db.any('SELECT reAddUserAccess()')
 			.then((result) => {
@@ -241,11 +247,9 @@ function createClass(req, res) {
  *  and class table from the learnsql database
  *
  * @param {string} name the name of the database
+ * @return http response on whether the class was successfully dropped
  */
 function dropClass(req, res) {
-	console.log('getting here 1');
-	console.log(req.body);
-	
 	return new Promise((resolve, reject) => {
 		ldb.task(t => {
 			 return t.one('SELECT C.ClassID ' +
@@ -310,6 +314,9 @@ function getClasses(req, res) {
 /**
  * handles errors, for now only checks the length of the password
  * Also, set to a low number for testing purposes.
+ * 
+ * @param {string} password a given password string
+ * @returns resolve or reject promise whether conditions were met
  */
 function handleErrors(req) {
   // TODO: fix length requirements

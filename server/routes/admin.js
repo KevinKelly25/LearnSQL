@@ -15,7 +15,14 @@ const authHelpers = require('../auth/_helpers');
 const logger = require('../logs/winston.js');
 
 
-// TODO: make comment here
+/**
+ * This logs a message that given number of errors will be logged. Used for
+ *  testing purposes.
+ *
+ * @param {string} numberOfExpectedLogs the number of error logs that will be 
+ *                                       created for testing purposes
+ * @return an http response
+ */
 router.post('/testLogWarning', authHelpers.adminRequired,(req, res, next)  => {
     logger.error('Performing ' + req.body.numberOfExpectedLogs + ' test(s) that'
                  + ' will result in log(s)');
@@ -30,7 +37,7 @@ router.post('/testLogWarning', authHelpers.adminRequired,(req, res, next)  => {
  * @param {string} res the result object
  * @param {string} code the http status code
  * @param {string} statusMsg the message containing the status of the message
- * @return an http responde with designated status code and attached
+ * @return an http response with designated status code and attached
  */
 function handleResponse(res, code, statusMsg) {
   res.status(code).json({status: statusMsg});

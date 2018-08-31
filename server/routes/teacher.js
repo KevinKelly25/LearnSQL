@@ -87,10 +87,21 @@ router.post('/dropStudent', authHelpers.teacherRequired, (req, res, next)  => {
 });
 
 
-// TODO: make better comment here
+
 /**
- * This method create user using a helper function. If an error is encountered
- * an error status code and message is returned
+ * This method creates a class for the teacher. Most functionality is
+ *  contained in `teacherControlPanel.js` createClass function. Expects a
+ *  promise to be returned
+ * 
+ * 
+ * @param {string} name the name of the class to be added
+ * @param {string} section the section of the class
+ * @param {string} times time the class is supposed to meet
+ * @param {string} days the days that the class is supposed to meet
+ * @param {string} startDate the date of the first class
+ * @param {string} endDate the last day of class
+ * @param {string} password the join password students need to join class
+ * @return http response if class was added
  */
 router.post('/addClass', authHelpers.teacherRequired,(req, res, next)  => {
   return teacherHelpers.createClass(req, res)
@@ -100,10 +111,15 @@ router.post('/addClass', authHelpers.teacherRequired,(req, res, next)  => {
 });
 
 
-// TODO: make comment here
+
 /**
- * This method create user using a helper function. If an error is encountered
- * an error status code and message is returned
+ * This method drops a class for the teacher. Most functionality is
+ *  contained in `teacherControlPanel.js` dropClass function. Expects a
+ *  promise to be returned
+ * 
+ * 
+ * @param {string} name the name of the class to be added
+ * @return http response if class was dropped
  */
 router.post('/dropClass', authHelpers.teacherRequired,(req, res, next)  => {
   return teacherHelpers.dropClass(req, res)
