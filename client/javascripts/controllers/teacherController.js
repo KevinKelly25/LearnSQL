@@ -78,6 +78,8 @@ app.controller('teacherCtrl', ($scope, $http, $location, $window) => {
 
 
   $scope.displayClassName = (className) => {
+    $scope.success = false;
+    $scope.error = false;
     $scope.dropClass = {
       name: className
     };
