@@ -52,6 +52,11 @@
               <a href="views/controlPanels/teacherClasses.html" class="nav-link border-right px-4">Classes</a>
             </li>
           </span>
+          <span ng-show="currentUser.isstudent">
+            <li class="nav-item">
+              <a href="views/controlPanels/students.html" class="nav-link border-right px-4">Student Classes</a>
+            </li>
+          </span>
           <span ng-show="currentUser.isadmin">
           <li class="nav-item">
             <a href="views/controlPanels/admin.html" class="nav-link border-right px-4">Admin Control Panel</a>
@@ -175,6 +180,15 @@
         </div>
       </div>
     </footer>
+
+    <!-- delete this  -->
+    <div class="container">
+			<div class="row">
+				<button class="btn btn-lg btn-info">
+					<a href="../views/controlPanels/students.html">click to get to students</a>
+				</button>
+			</div>
+		</div>
 
     <script src="./javascripts/jquery.min.js"></script>
     <script src="./javascripts/jquery.dataTables.min.js"></script>
