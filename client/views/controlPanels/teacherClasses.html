@@ -89,7 +89,7 @@
     <!-- END OF NAVBAR -->
 
     <!-- PAGE CONTENT -->
-    <section id="page-content" class="mt-5 container" ng-controller="teacherCtrl" data-ng-init="init()">
+    <section id="page-content" class="mt-5 container" ng-controller="teacherCtrl" data-ng-init="initClasses()">
         <!-- addClass Modal -->
         <div class="modal fade" id="addClass" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-dialog-centered" role="document">
@@ -192,7 +192,7 @@
               datatable="">
                 <caption class="text-primary">List of classes</caption>
                 <thead>
-                    <!-- Add row / delete row -->
+                    <!-- Add class row -->
                     <tr>
                         <td colspan="9">
                             <button type="button" id="addRow" class="btn btn-outline-success btn-block btn-lg"
@@ -217,7 +217,7 @@
                 <tbody>
                     <tr ng-repeat="x in classes">
                         <td>{{ $index + 1 }}</td>
-                        <td>{{ x.classname }}</td>
+                        <td><a ng-href="/teacher/class/#?class={{x.classname}}" style="color:blue;">{{ x.classname }}</a></td>
                         <td>{{ x.section }}</td>
                         <td>{{ x.times }}</td>
                         <td>{{ x.days }}</td>

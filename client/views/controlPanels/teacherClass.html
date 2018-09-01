@@ -19,13 +19,14 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css"
         integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp"
         crossorigin="anonymous">
+    <link rel="stylesheet" href="../../stylesheets/angular-datatables.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.css" />
     <link rel="stylesheet" href="../../stylesheets/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css"> 
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.1/semantic.min.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/dataTables.semanticui.min.css">
     <link rel="stylesheet" href="../../stylesheets/bootstrap.css">
-    <link rel="stylesheet" href="../../stylesheets/instuctor.css">
+    <link rel="stylesheet" href="../../stylesheets/teacher.css">
 
 </head>
 <body ng-app="LearnSQL">
@@ -87,11 +88,38 @@
     </nav>
     <!-- END OF NAVBAR -->
 
-    <section id="page-content" class="mt-5">
-        <div class="container">
-            <!-- table listing all students in a class -->
-            <table id="table_id" class="ui celled table row-border hover order-column shadow-lg">
-                <caption>List of students</caption>
+    <section id="page-content" class="mt-5 container" ng-controller="teacherCtrl" data-ng-init="initClass()">
+        <table class="ui celled table row-border hover order-column shadow-lg text-center">
+            <tr>
+                <td>ClassID</td>
+                <td>{{ class.classid }}</td>
+            </tr>
+            <tr>
+                <td>Section</td>
+                <td>{{ class.section }}</td>
+            </tr>
+            <tr>
+                <td>Meet Times</td>
+                <td>{{ class.times }}</td>
+            </tr>
+            <tr>
+                <td>Start Date</td>
+                <td>{{ class.startdate }}</td>
+            </tr>
+            <tr>
+                <td>End Date</td>
+                <td>{{ class.enddate }}</td>
+            </tr>
+            <tr>
+                <td>Number Of Students</td>
+                <td>{{ class.studentcount }}</td>
+            </tr>  
+        </table>
+        <div ng-if="classes">
+           <!-- tables of classes -->
+            <table class="ui celled table row-border hover order-column shadow-lg text-center"
+              datatable="">
+                <caption class="text-primary">List of All Students in {{ class }}</caption>
                 <thead>
                     <!-- add/ remove -->
                     <tr>
@@ -143,137 +171,44 @@
                             <button type="button" id="trash" class="btn btn-outline-primary btn-block btn-lg">Remove</button>
                         </td>
                     </tr>
+                <thead>
+                    <!-- column headings -->
                     <tr>
-                        <!-- column headings -->
                         <th></th>
-                        <th>column1</th>
-                        <th>column2</th>
-                        <th>column3</th>
-                        <th>column4</th>
-                        <th>column5</th>
-                        <th>column6</th>
-                        <th>column7</th>
+                        <th>Username</th>
+                        <th>DDL Count</th>
+                        <th>Last DDL Operation</th>
+                        <th>Last DDL Object</th>
+                        <th>Last DDL Activity At</th>
+                        <th>Connection Count</th>
+                        <th>Last Connection At</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <th>1</th>
-                        <td>
-                            <a class="btn btn-light" href="#">username 1</a>
-                        </td>
-                        <td>samle data</td>
-                        <td>sample data</td>
-                        <td>sample data</td>
-                        <td>sample data</td>
-                        <td>sample data</td>
-                        <td>sample data</td>
-                    </tr>
-                    <tr>
-                        <th>2</th>
-                        <td>username 2</td>
-                        <td>samle data</td>
-                        <td>sample data</td>
-                        <td>sample data</td>
-                        <td>sample data</td>
-                        <td>sample data</td>
-                        <td>sample data</td>
+                    <tr ng-repeat="x in class">
+                        <td>{{ $index + 1 }}</td>
+                        <td><a ng-href="/teacher/class/#?class={{x.username}}" style="color:blue;">{{ x.username }}</a></td>
+                        <td>{{ x.ddlcount }}</td>
+                        <td>{{ x.lastddloperation }}</td>
+                        <td>{{ x.lastddlobject }}</td>
+                        <td>{{ x.lastddlactivityat }}</td>
+                        <td>{{ x.connectioncount }}</td>
+                        <td>{{ x.lastconnectionat }}</td>
                     </tr>
                 </tbody>
             </table>
         </div>
     </section>
+    <!-- END OF PAGE CONTENT -->
 
-    <script src="http://code.jquery.com/jquery-3.3.1.min.js"
-    integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-    crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
-    integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
-    crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"
-    integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T"
-    crossorigin="anonymous"></script>
+    <script src="../../javascripts/jquery.min.js"></script>
+    <script src="../../javascripts/jquery.dataTables.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.6/angular.min.js"></script>
-    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
-    <script src="../javascripts/controllers.js"></script>
-
-   <!-- Zero configuration -->
-   <script>
-        $(document).ready( function () {
-            $('#table_id').DataTable();
-        } );
-    </script>
-
-    <!-- Row selection and deletion (single row) -->
-    <script>
-        $(document).ready(function() {
-            var table = $('#table_id').DataTable();
-
-            $('#table_id tbody').on( 'click', 'tr', function () {
-                if ( $(this).hasClass('selected') ) {
-                    $(this).removeClass('selected');
-                }
-                else {
-                    table.$('tr.selected').removeClass('selected');
-                    $(this).addClass('selected');
-                }
-            } );
-
-            $('#trash').click( function () {
-                table.row('.selected').remove().draw( false );
-            } );
-        } );
-    </script>
-    
-    <!-- Add rows -->
-    <script>
-        $(document).ready(function() {
-            var t = $('#table_id').DataTable();
-            var counter = 0;
-        
-            $('#addRow').on( 'click', function () {
-                t.row.add( [
-                    counter + 1,
-                    'Enter data...',
-                    'Enter data...',
-                    'Enter data...',
-                    'Enter data...',
-                    'Enter data...',
-                    'Enter data...',
-                    'Enter data...'
-                ] ).draw( false );
-        
-                counter++;
-            } );
-        } );
-    </script>
-
-    <!-- highlighting rows and columns -->
-    <script>
-        $(document).ready(function() {
-            var table = $('#table_id').DataTable();
-                
-            $('#table_id tbody')
-                .on( 'mouseenter', 'td', function () {
-                    var colIdx = table.cell(this).index().column;
-            
-                    $( table.cells().nodes() ).removeClass( 'highlight' );
-                    $( table.column( colIdx ).nodes() ).addClass( 'highlight' );
-            } );
-        } );
-    </script>
-
-    <script>
-        function myFunction() {
-            /* Get the text field */
-            var copyText = document.getElementById("myInput");
-
-            /* Select the text field */
-            copyText.select();
-
-            /* Copy the text inside the text field */
-            document.execCommand("copy");
-        }
-    </script>
+    <script src="../../javascripts/controllers/mainControllers.js"></script>
+    <script src="../../javascripts/controllers/teacherController.js"></script>
+    <script src="../../javascripts/angular-datatables.min.js"></script>
+    <script src="../../javascripts/popper.min.js"></script>
+    <script src="../../javascripts/bootstrap.min.js"></script>
 
 </body>
 </html>

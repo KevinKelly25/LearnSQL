@@ -20,10 +20,37 @@ app.controller('teacherCtrl', ($scope, $http, $location, $window) => {
     name: 'something'
   };
 
-  $scope.init = () => {
+
+
+
+  /**
+   * This function calls the /admin/addClass post method to create ClassDB databases
+   *  and updates the associated LearnSQL tables. While processing a message
+   *  appears to let the user know to wait.
+   */
+  $scope.initClasses = () => {
     $http.get('/teacher/getClasses')
     .success((data) => {
       $scope.classes = data;
+    })
+    .error((error) => {
+      //do something if encounters an error
+    });
+  }
+
+
+  /**
+   * This function calls the /admin/addClass post method to create ClassDB databases
+   *  and updates the associated LearnSQL tables. While processing a message
+   *  appears to let the user know to wait.
+   */
+  $scope.initClass = () => {
+    $scope.classInfo = {
+      className: $location.search().class
+    }; 
+    $http.post('/teacher/getStudents', $scope.classInfo)
+    .success((data) => {
+      $scope.class = data;
     })
     .error((error) => {
       //do something if encounters an error

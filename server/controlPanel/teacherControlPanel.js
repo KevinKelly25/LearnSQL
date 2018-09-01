@@ -120,15 +120,17 @@ function dropStudent(req, res) {
  *  See https://github.com/DASSL/ClassDB/wiki/Frequent-User-Views for more
  *  information on how ClassDB maintains the student activity
  *
- * @param {string} classname the classname the student will be added to
+ * @param {string} className the classname the student will be added to
  * @return unformatted student activity from a ClassDB database or an error response
  */
 function getStudents(req, res) {
 	return new Promise((resolve, reject) => {
+		console.log(req.body);
+		
 		ldb.one('SELECT C.ClassID ' +
 						'FROM Attends AS A INNER JOIN Class AS C ON A.ClassID = C.ClassID '+
 						'WHERE Username = $1 AND ClassName = $2',
-						[req.user.username, req.body.classname])
+						[req.user.username, req.body.className])
 			.then((result) => {
 				var db = dbCreator(result.classid);
 				db.any('SELECT * FROM ClassDB.StudentActivitySummary')
@@ -138,6 +140,7 @@ function getStudents(req, res) {
 					return res.status(200).json(result);
 				})
 				.catch((error)=> {
+					console.log(error)
 					reject({
 						message: 'StudentActivitySummary not working'
 					});
@@ -180,7 +183,8 @@ function createClass(req, res) {
 			return t.oneOrNone('SELECT Username, C.ClassID ' +
 							 					 'FROM Attends AS A INNER JOIN Class AS C ' +
 												 'ON A.ClassID = C.ClassID ' +
-							 					 'WHERE Username = $1 AND ClassName = $2',
+												 'WHERE Username = $1 AND ClassName = $2 AND ' +
+												 +	'isTeacher = true',
 												 [req.user.username, req.body.name])
 			.then((result) => {
 				if (result) {
@@ -255,7 +259,7 @@ function dropClass(req, res) {
 			 return t.one('SELECT C.ClassID ' +
 										'FROM Attends AS A INNER JOIN Class AS C ' +
 										'ON A.ClassID = C.ClassID ' +
-										'WHERE Username = $1 AND ClassName = $2',
+										'WHERE Username = $1 AND ClassName = $2 AND isTeacher = True',
 										 [req.user.username, req.body.name])
 			.then((result) => {
 				req.body.classid = result.classid;
@@ -309,6 +313,36 @@ function getClasses(req, res) {
 	});
 }
 
+// TODO: this will be repeated for student and teacher. Find a common place
+//        when student class page is added
+/**
+ * This function gets all the class information for a class when given a 
+ *  className
+ *
+ * @param className
+ * @return class information
+ */
+function getClass(req, res) {
+	return new Promise((resolve, reject) => {
+		ldb.any('SELECT Attends.ClassID, ClassName, Section, Times, Days, ' +
+						'StartDate, EndDate, StudentCount ' +
+						'FROM Attends INNER JOIN Class ON Attends.ClassID = Class.ClassID '+
+						'WHERE ClassName = $1 AND Username = $2 AND isTeacher = true', 
+						[req.body.classname, req.user.username])
+			.then((result) => {
+				resolve();
+				return res.status(200).json(result);
+			})
+			.catch((error) => {//goes here if you can't find the class
+				logger.error('getClasses: \n' + error);
+				reject({
+					message: 'Could query the classes'
+				});
+				return;
+			});
+	});
+}
+
 
 
 /**
@@ -339,5 +373,6 @@ module.exports = {
   getStudents,
 	getClasses,
 	createClass,
-	dropClass
+	dropClass,
+	getClass
 };
