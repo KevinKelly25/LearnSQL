@@ -11,6 +11,7 @@
 const ldb = require('../db/ldb.js');
 const dbCreator = require('../db/cdb.js');
 const logger = require('../logs/winston.js');
+const uniqid = require('uniqid');
 
 
 // TODO: add student to learnsql database as well
@@ -156,6 +157,133 @@ function getStudents(req, res) {
 
 
 /**
+ * This function creates a class database using a ClassDB template Database. It
+ *  also addes the class to the attends and class table of the learnsql database.
+ *  The access parameters for the database also is restored since they are not
+ *  copied over in the creation of the database using the template.
+ *
+ * @param {string} name the name of the class to be added
+ * @param {string} section the section of the class
+ * @param {string} times time the class is supposed to meet
+ * @param {string} days the days that the class is supposed to meet
+ * @param {string} startDate the date of the first class
+ * @param {string} endDate the last day of class
+ * @param {string} password the join password students need to join class
+ * @return http response if class was added or reject promise if error
+ */
+function createClass(req, res) {
+	return handleErrors(req)
+	.then(() => {
+		var classid = req.body.name + '_' + uniqid(); //guarantee uniqueness
+		//check to make sure that there is none conflicting ClassName for that user
+		ldb.task( t => {
+			return t.oneOrNone('SELECT Username, C.ClassID ' +
+							 					 'FROM Attends AS A INNER JOIN Class AS C ' +
+												 'ON A.ClassID = C.ClassID ' +
+							 					 'WHERE Username = $1 AND ClassName = $2',
+												 [req.user.username, req.body.name])
+			.then((result) => {
+				if (result) {
+					throw 'Classname Already Exists';
+				} else {
+					return t.none('CREATE DATABASE $1~ WITH TEMPLATE classdb_template ' +
+												' OWNER classdb', classid)
+				}
+			})
+			.then(() => {
+				return t.none('INSERT INTO class_t(Classid, ClassName, Section, Times, ' +
+											'Days, StartDate, EndDate, Password) ' +
+											'VALUES(${id}, ${name}, ${section}, ${times}, ${days}, ' +
+											'${startDate}, ${endDate}, ${password} ) '
+											, {
+												id: classid,
+												name: req.body.name,
+												section: req.body.section,
+												times: req.body.times,
+												days: req.body.days,
+												startDate: req.body.startDate,
+												endDate: req.body.endDate,
+												password: req.body.password
+											})
+			}).
+			then(() => {
+				return t.none('INSERT INTO attends(username, classid, isteacher) ' +
+											'VALUES(${name}, ${class}, ${isTeacher})'
+											, {
+												name: req.user.username,
+												class: classid,
+												isTeacher: true
+											});
+			})
+		})
+		.then(events => {
+			//Readd user access privileges on ClassDB instance
+			var db = dbCreator(classid);
+			db.any('SELECT reAddUserAccess()')
+			.then((result) => {
+				db.$pool.end();//closes the connection to the database. IMPORTANT!!
+				return res.status(200).json('Class Database Created Successfully');
+			})
+			.catch((error) => {
+				logger.error('reAddUserAccess: \n' + error);
+				return res.status(500).json({status: 'Database Privleges could not be added'});
+			})
+		})
+		.catch(error => {			
+			if (error == 'Classname Already Exists') {
+				res.status(500).json({status: error});
+			}
+			else {
+				logger.error('create Class: \n' + error);
+				res.status(500).json({status: 'Database could not be created'});
+			}
+		});
+	})
+}
+
+
+/**
+ * This function drops a class database as well as removes it from the attends
+ *  and class table from the learnsql database
+ *
+ * @param {string} name the name of the database
+ * @return http response on whether the class was successfully dropped
+ */
+function dropClass(req, res) {
+	return new Promise((resolve, reject) => {
+		ldb.task(t => {
+			 return t.one('SELECT C.ClassID ' +
+										'FROM Attends AS A INNER JOIN Class AS C ' +
+										'ON A.ClassID = C.ClassID ' +
+										'WHERE Username = $1 AND ClassName = $2',
+										 [req.user.username, req.body.name])
+			.then((result) => {
+				req.body.classid = result.classid;
+			  return t.none('DROP DATABASE $1~ ', result.classid)
+			})
+			.then(() => {
+				return t.none('DELETE FROM attends WHERE classid = $1', req.body.classid)
+			})
+			.then(() => {
+				return t.none('DELETE FROM class WHERE classid = $1', req.body.classid)
+			})
+			.then(() => {
+				resolve();
+				return res.status(200).json('Class Database Dropped Successfully');
+			})
+			.catch(error => {
+				reject({
+					message: 'Database could not be Deleted'
+				});
+				logger.error('Drop Class: \n' + error);
+			});
+		});
+	})
+}
+
+
+
+/**
  * This function gets all the classes regestered to teacher and relevent class
  *  information.
  *
@@ -183,9 +311,33 @@ function getClasses(req, res) {
 
 
 
+/**
+ * handles errors, for now only checks the length of the password
+ * Also, set to a low number for testing purposes.
+ * 
+ * @param {string} password a given password string
+ * @returns resolve or reject promise whether conditions were met
+ */
+function handleErrors(req) {
+  // TODO: fix length requirements
+  return new Promise((resolve, reject) => {
+  if (req.body.password.length < 1) {
+      reject({
+        message: 'Password must be longer than 6 characters'
+      });
+    } else {
+      resolve();
+    }
+  });
+}
+
+
+
 module.exports = {
   addStudent,
   dropStudent,
   getStudents,
-	getClasses
+	getClasses,
+	createClass,
+	dropClass
 };

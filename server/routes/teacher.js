@@ -19,7 +19,7 @@ const authHelpers = require('../auth/_helpers');
 
 /**
  * This method adds a student to a ClassDB database. Most functionality is in
- *  `instructorControlPanel.js` addStudent function but is expecting a promise
+ *  `teacherControlPanel.js` addStudent function but is expecting a promise
  *  to be returned
  *
  * @param {string} username the username of the student to be added
@@ -38,7 +38,7 @@ router.post('/addStudent', authHelpers.teacherRequired, (req, res, next)  => {
 
 /**
  * This method returns class information from a ClassDB database. Most
- *  functionality is in `instructorControlPanel.js` getClass function.
+ *  functionality is in `teacherControlPanel.js` getClass function.
  *  expects a promise to be returned
  *
  * @param {string} classname the classname the student will be added to
@@ -55,7 +55,7 @@ router.get('/getClasses', authHelpers.teacherRequired, (req, res, next)  => {
 
 /**
  * This method returns class information from a ClassDB database. Most
- *  functionality is in `instructorControlPanel.js` getClass function.
+ *  functionality is in `teacherControlPanel.js` getClass function.
  *  expects a promise to be returned
  *
  * @param {string} classname the classname the student will be added to
@@ -72,7 +72,7 @@ router.post('/getStudents', authHelpers.teacherRequired, (req, res, next)  => {
 
 /**
  * This method removes a student from a ClassDB database. Most functionality is
- *  contained in `instructorControlPanel.js` dropStudent function. Expects a
+ *  contained in `teacherControlPanel.js` dropStudent function. Expects a
  *  promise to be returned
  *
  * @param {string} username the username of the student to be added
@@ -81,6 +81,48 @@ router.post('/getStudents', authHelpers.teacherRequired, (req, res, next)  => {
  */
 router.post('/dropStudent', authHelpers.teacherRequired, (req, res, next)  => {
 	return teacherHelpers.dropStudent(req, res)
+	.catch((err) => {
+		handleResponse(res, 500, err);
+	});
+});
+
+
+
+/**
+ * This method creates a class for the teacher. Most functionality is
+ *  contained in `teacherControlPanel.js` createClass function. Expects a
+ *  promise to be returned
+ * 
+ * 
+ * @param {string} name the name of the class to be added
+ * @param {string} section the section of the class
+ * @param {string} times time the class is supposed to meet
+ * @param {string} days the days that the class is supposed to meet
+ * @param {string} startDate the date of the first class
+ * @param {string} endDate the last day of class
+ * @param {string} password the join password students need to join class
+ * @return http response if class was added
+ */
+router.post('/addClass', authHelpers.teacherRequired,(req, res, next)  => {
+  return teacherHelpers.createClass(req, res)
+	.catch((err) => {
+		handleResponse(res, 500, err);
+	});
+});
+
+
+
+/**
+ * This method drops a class for the teacher. Most functionality is
+ *  contained in `teacherControlPanel.js` dropClass function. Expects a
+ *  promise to be returned
+ * 
+ * 
+ * @param {string} name the name of the class to be added
+ * @return http response if class was dropped
+ */
+router.post('/dropClass', authHelpers.teacherRequired,(req, res, next)  => {
+  return teacherHelpers.dropClass(req, res)
 	.catch((err) => {
 		handleResponse(res, 500, err);
 	});

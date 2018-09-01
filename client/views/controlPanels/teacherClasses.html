@@ -4,8 +4,8 @@
   Michael Torres
   Web Applications and Databases for Education (WADE)
 
-  This file contains the html view of the instructor control panel which
-  list all classes the instructor is currently teaching for the LearnSQL website
+  This file contains the html view of the teacher control panel which
+  list all classes the teacher is currently teaching for the LearnSQL website
 -->
 
 <!DOCTYPE html>
@@ -26,7 +26,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.1/semantic.min.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/dataTables.semanticui.min.css">
     <link rel="stylesheet" href="../../stylesheets/bootstrap.css">
-    <link rel="stylesheet" href="../../stylesheets/instuctor.css">
+    <link rel="stylesheet" href="../../stylesheets/teacher.css">
 
 </head>
 <body ng-app="LearnSQL">
@@ -89,22 +89,115 @@
     <!-- END OF NAVBAR -->
 
     <!-- PAGE CONTENT -->
-    <section id="page-content" class="mt-5" ng-controller="teacherCtrl" data-ng-init="init()">
-        <div ng-if="names">
+    <section id="page-content" class="mt-5 container" ng-controller="teacherCtrl" data-ng-init="init()">
+        <!-- addClass Modal -->
+        <div class="modal fade" id="addClass" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                <div class="modal-header">
+        
+                    <h5 class="modal-title" >Add Class</h5>
+        
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <span ng-show="error">
+                        <div class="alert alert-danger">
+                            {{ message }}
+                        </div>
+                    </span>
+                    <span ng-show="success">
+                        <div class="alert alert-success">
+                            {{ message }}
+                        </div>
+                </span>
+                <div class="modal-body">
+                    <form>
+                    <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">Class Name:</label>
+                        <input type="text" class="form-control" ng-model="className">
+                    </div>
+                    <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">Section:</label>
+                        <input type="text" class="form-control" ng-model="section">
+                    </div>
+                    <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">Meeting Times:</label>
+                        <input type="text" class="form-control" ng-model="times">
+                    </div>
+                    <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">Days:</label>
+                        <input type="text" class="form-control" ng-model="days">
+                    </div>
+                    <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">Start Date:</label>
+                        <input type="text" class="form-control" ng-model="startDate">
+                    </div>
+                    <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">End Date:</label>
+                        <input type="text" class="form-control" ng-model="endDate">
+                    </div>
+                    <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">Join Password:</label>
+                        <input type="text" class="form-control" ng-model="password">
+                    </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" ng-click="addClass()">Add Class</button>
+                </div>
+                </div>
+            </div>
+            </div>
+            <!-- End addClass Modal -->
+            <!-- dropClass Modal -->
+        <div class="modal fade" id="dropClassModal" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" >Remove Class</h5>
+                
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <span ng-show="error">
+                                <div class="alert alert-danger">
+                                    {{ message }}
+                                </div>
+                            </span>
+                            <span ng-show="success">
+                                <div class="alert alert-success">
+                                    {{ message }}
+                                </div>
+                        </span>
+                        <div class="modal-body">
+                            <h3>Are You sure you want to remove {{ dropClass.name }} ?</h3>
+                            <p> <span class="font-weight-bold text-primary">WARNING:</span> Database cannot be recovered if removed</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-primary" ng-click="dropClassTeacher()">Remove Class</button>
+                        </div>
+                    </div>
+                </div>
+        </div>
+        <!-- End dropClass Modal -->
+        <div ng-if="classes">
            <!-- tables of classes -->
-            <table class="ui celled table row-border hover order-column shadow-lg" datatable="">
+            <table class="ui celled table row-border hover order-column shadow-lg text-center"
+              datatable="">
                 <caption class="text-primary">List of classes</caption>
                 <thead>
                     <!-- Add row / delete row -->
                     <tr>
-                        <td colspan="7">
-                            <button type="button" id="addRow" class="btn btn-outline-success btn-block btn-lg">
+                        <td colspan="9">
+                            <button type="button" id="addRow" class="btn btn-outline-success btn-block btn-lg"
+                              data-toggle="modal" data-target="#addClass">
                                 Add Class
-                            </button>
-                        </td>
-                        <td colspan="1">
-                            <button type="button" id="trash" class="btn btn-outline-primary btn-block btn-lg">
-                                Remove
                             </button>
                         </td>
                     </tr>
@@ -118,11 +211,12 @@
                         <th>Start Date</th>
                         <th>End Date</th>
                         <th># of Students</th>
+                        <th>Delete Class</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="x in names">
-                        <td></td>
+                    <tr ng-repeat="x in classes">
+                        <td>{{ $index + 1 }}</td>
                         <td>{{ x.classname }}</td>
                         <td>{{ x.section }}</td>
                         <td>{{ x.times }}</td>
@@ -130,10 +224,14 @@
                         <td>{{ x.startdate }}</td>
                         <td>{{ x.enddate }}</td>
                         <td>{{ x.studentcount }}</td>
+                        <td>
+                            <a href="" ng-click="displayClassName(x.classname)" data-toggle="modal" data-target="#dropClassModal">
+                                <i class="fa fa-trash" style="font-size:24px;color:red"></i> 
+                            </a>
+                        </td>
                     </tr>
                 </tbody>
             </table>
-
         </div>
     </section>
     <!-- END OF PAGE CONTENT -->
