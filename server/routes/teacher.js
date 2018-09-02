@@ -61,18 +61,20 @@ router.get('/getClasses', authHelpers.teacherRequired, (req, res, next)  => {
  * @param {string} classname the classname the student will be added to
  * @return response
  */
-router.get('/getClass', authHelpers.teacherRequired, (req, res, next)  => {	
-	return teacherHelpers.getClass(req, res)
-	.catch((err) => {
-		handleResponse(res, 500, err);
+	router.post('/getClassInfo', authHelpers.teacherRequired, (req, res, next)  => {
+		console.log('getting to route');
+		
+		return teacherHelpers.getClassInfo(req, res)
+		.catch((err) => {
+			handleResponse(res, 500, err);
+		});
 	});
-});
 
 
 
 /**
- * This method returns class information from a ClassDB database. Most
- *  functionality is in `teacherControlPanel.js` getClass function.
+ * This method returns student information from a ClassDB database. Most
+ *  functionality is in `teacherControlPanel.js` getStudents function.
  *  expects a promise to be returned
  *
  * @param {string} classname the classname the student will be added to
@@ -81,8 +83,6 @@ router.get('/getClass', authHelpers.teacherRequired, (req, res, next)  => {
 router.post('/getStudents', authHelpers.teacherRequired, (req, res, next)  => {
 	return teacherHelpers.getStudents(req, res)
 	.catch((err) => {
-		console.log(err);
-		
 		handleResponse(res, 500, err);
 	});
 });

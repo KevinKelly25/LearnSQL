@@ -124,9 +124,7 @@ function dropStudent(req, res) {
  * @return unformatted student activity from a ClassDB database or an error response
  */
 function getStudents(req, res) {
-	return new Promise((resolve, reject) => {
-		console.log(req.body);
-		
+	return new Promise((resolve, reject) => {		
 		ldb.one('SELECT C.ClassID ' +
 						'FROM Attends AS A INNER JOIN Class AS C ON A.ClassID = C.ClassID '+
 						'WHERE Username = $1 AND ClassName = $2',
@@ -140,7 +138,7 @@ function getStudents(req, res) {
 					return res.status(200).json(result);
 				})
 				.catch((error)=> {
-					console.log(error)
+					logger.error('getStudents: \n' + error);
 					reject({
 						message: 'StudentActivitySummary not working'
 					});
@@ -306,15 +304,13 @@ function getClasses(req, res) {
 			.catch((error) => {//goes here if you can't find the class
 				logger.error('getClasses: \n' + error);
 				reject({
-					message: 'Could query the classes'
+					message: 'Could not query the classes'
 				});
 				return;
 			});
 	});
 }
 
-// TODO: this will be repeated for student and teacher. Find a common place
-//        when student class page is added
 /**
  * This function gets all the class information for a class when given a 
  *  className
@@ -322,21 +318,23 @@ function getClasses(req, res) {
  * @param className
  * @return class information
  */
-function getClass(req, res) {
+function getClassInfo(req, res) {
+	console.log('getting to info');
+	
 	return new Promise((resolve, reject) => {
 		ldb.any('SELECT Attends.ClassID, ClassName, Section, Times, Days, ' +
 						'StartDate, EndDate, StudentCount ' +
 						'FROM Attends INNER JOIN Class ON Attends.ClassID = Class.ClassID '+
 						'WHERE ClassName = $1 AND Username = $2 AND isTeacher = true', 
-						[req.body.classname, req.user.username])
+						[req.body.className, req.user.username])
 			.then((result) => {
 				resolve();
 				return res.status(200).json(result);
 			})
 			.catch((error) => {//goes here if you can't find the class
-				logger.error('getClasses: \n' + error);
+				logger.error('getClass: \n' + error);
 				reject({
-					message: 'Could query the classes'
+					message: 'Could not query the classes'
 				});
 				return;
 			});
@@ -374,5 +372,5 @@ module.exports = {
 	getClasses,
 	createClass,
 	dropClass,
-	getClass
+	getClassInfo
 };

@@ -47,7 +47,6 @@ function compareHashed(unhashedString, hashedString) {
 function createUser(req, res) {
   return handleErrors(req)
   .then(() => {
-    console.log(req.body);
     const passSalt = bcrypt.genSaltSync();
     const hashedPass = bcrypt.hashSync(req.body.password, passSalt);
     const token = cryptoRandomString(20);
@@ -75,8 +74,6 @@ function createUser(req, res) {
         sendEmail(req, res);
     })
     .catch(error => {
-        console.log('getting to this error');
-        console.log(error);
       if (error.code == '23505' && error.constraint == 'idx_unique_email')//UNIQUE VIOLATION
         return res.status(400).json({status: "Email Already Exists"});
       else if (error.code == '23505' && error.constraint == 'userdata_pkey')//UNIQUE VIOLATION
@@ -166,7 +163,6 @@ function resetPassword(req, res) {
       return t.one('SELECT Username, Token, forgotPassword FROM UserData ' +
                    ' WHERE Username = $1', [req.body.username])
       .then(data => {
-        console.log(data);
         if (!compareHashed(req.body.token, data.token)) {
           throw 'Token hashes do not match';
         } else if (!data.forgotpassword) {
@@ -183,7 +179,6 @@ function resetPassword(req, res) {
       return res.status(200).json('Password Reset Successfully');
     })
     .catch((error) =>{
-      console.log(error);
       logger.error('reset Password: \n' + error);
       reject('Username or Token does not match');
       return;
@@ -230,7 +225,6 @@ function teacherRequired(req, res, next) {
   if (!req.user) return res.status(401).json({status: 'Please log in'});
   return ldb.one('SELECT isAdmin, isTeacher FROM UserData WHERE Username = $1', [req.user.username])
   .then((user) => {
-    console.log(user);
     if (!user.isadmin && !user.isteacher) return res.status(401).json({status: 'You are not authorized'});
     return next();
   })
@@ -316,7 +310,6 @@ function sendEmail(req, res) {
   transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
       logger.error('sendEmail: \n' + error);
-      console.log(error);
       return res.status(500).json({status: 'Could Not Send Email'});
     }
     console.log('Message sent: %s', info.messageId);

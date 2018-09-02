@@ -89,31 +89,40 @@
     <!-- END OF NAVBAR -->
 
     <section id="page-content" class="mt-5 container" ng-controller="teacherCtrl" data-ng-init="initClass()">
+        <h3>{{ test }}</h3>
+        <!-- TODO: Show teachers if more then just the one user -->
+        <h3 class="text-center">Class Information</h3>
         <table class="ui celled table row-border hover order-column shadow-lg text-center">
-            <tr>
-                <td>ClassID</td>
-                <td>{{ class.classid }}</td>
-            </tr>
-            <tr>
-                <td>Section</td>
-                <td>{{ class.section }}</td>
-            </tr>
-            <tr>
-                <td>Meet Times</td>
-                <td>{{ class.times }}</td>
-            </tr>
-            <tr>
-                <td>Start Date</td>
-                <td>{{ class.startdate }}</td>
-            </tr>
-            <tr>
-                <td>End Date</td>
-                <td>{{ class.enddate }}</td>
-            </tr>
-            <tr>
-                <td>Number Of Students</td>
-                <td>{{ class.studentcount }}</td>
-            </tr>  
+            <tbody>
+                    <tr>
+                        <td>ClassID</td>
+                        <td>{{ classInfo[0].classid }}</td>
+                    </tr>
+                    <tr>
+                        <td>ClassName</td>
+                        <td>{{ classInfo[0].classname }}</td>
+                    </tr>
+                    <tr>
+                        <td>Section</td>
+                        <td>{{ classInfo[0].section }}</td>
+                    </tr>
+                    <tr>
+                        <td>Meet Times</td>
+                        <td>{{ classInfo[0].times }}</td>
+                    </tr>
+                    <tr>
+                        <td>Start Date</td>
+                        <td>{{ classInfo[0].startdate }}</td>
+                    </tr>
+                    <tr>
+                        <td>End Date</td>
+                        <td>{{ classInfo[0].enddate }}</td>
+                    </tr>
+                    <tr>
+                        <td>Number Of Students</td>
+                        <td>{{ classInfo[0].studentcount }}</td>
+                    </tr> 
+            </tbody> 
         </table>
         <div ng-if="classes">
            <!-- tables of classes -->

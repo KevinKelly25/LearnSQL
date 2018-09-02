@@ -34,8 +34,6 @@ passport.use(new LocalStrategy({
     "FROM UserData " +
     "WHERE Username=$1", [username])
   .then((user)=> {
-      console.log('getting here');
-      console.log(user);
       if(!authHelpers.compareHashed(password, user.password)) {
           return done(null, false, {message: 'Wrong username or password'});
       } else {
