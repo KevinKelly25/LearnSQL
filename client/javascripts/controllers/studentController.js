@@ -1,7 +1,7 @@
 /**
  * studentController.js - LearnSQL
  *
- * Michael Torres
+ * Michael Torres, Kevin Kelly
  * Web Applications and Databases for Education (WADE)
  *
  * This file contains the angularJS controller used for the student functionality
@@ -25,6 +25,27 @@ app.controller('studentCtrl', ($scope, $http) => {
     })
     .error((error) => {
       //do something if encounters an error
+    });
+  }
+  
+  
+
+  $scope.joinClassFromPage = () => {
+    $scope.error = false;
+    $scope.success = true;
+    $scope.message = 'Joining Class, Please Wait...'
+    $scope.joinClass = {
+      classID: $scope.classID,
+      password: $scope.joinPassword
+    }
+    $http.post('/student/joinClass', $scope.joinClass)
+    .success((data) => {
+      $scope.message = 'Joined Class'
+    })
+    .error((error) => {
+      $scope.error = true;
+      $scope.success = false;
+      $scope.message = error.status;
     });
   }  
 });

@@ -1,7 +1,7 @@
 /**
  * student.js - LearnSQL
  *
- * Michael Torres
+ * Michael Torres, Kevin Kelly
  * Web Applications and Databases for Education (WADE)
  *
  * This file sets up the http routes associated with student functionality
@@ -24,6 +24,20 @@ const authHelpers = require('../auth/_helpers');
  */
 router.get('/getClasses', authHelpers.studentRequired, (req, res, next)  => {	
 	return studentHelpers.getClasses(req, res)
+	.catch((err) => {
+		handleResponse(res, 500, err);
+	});
+});
+
+
+
+/**
+ * This method adds a student to a ClassDB database as well as Attends table.
+ *  Most functionality is in `studentControlPanel.js` addStudent function.
+ *
+ */
+router.post('/joinClass', authHelpers.loginRequired, (req, res, next)  => {
+	return studentHelpers.addStudent(req, res)
 	.catch((err) => {
 		handleResponse(res, 500, err);
 	});
