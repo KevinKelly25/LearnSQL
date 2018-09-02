@@ -1,10 +1,10 @@
 /**
- * teacherController.js - LearnSQL
+ * studentController.js - LearnSQL
  *
- * Michael Torres, Kevin Kelly
+ * Michael Torres
  * Web Applications and Databases for Education (WADE)
  *
- * This file contains the angularJS controller used for the teacher functionality
+ * This file contains the angularJS controller used for the student functionality
  *  on the LearnSQL website
  */
 
@@ -13,9 +13,9 @@ var app = angular.module('LearnSQL');
 
 
 /**
- * This controller is used for the teacher control panel to add classes
+ * This controller is used for the student control panel to add classes
  */
-app.controller('studentCtrl', ($scope, $http, $location, $window) => {
+app.controller('studentCtrl', ($scope, $http) => {
   $scope.class = {
     name: 'something'
   };
@@ -28,5 +28,5 @@ app.controller('studentCtrl', ($scope, $http, $location, $window) => {
     .error((error) => {
       //do something if encounters an error
     });
-  }
+  }  
 });

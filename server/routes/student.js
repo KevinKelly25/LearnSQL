@@ -1,10 +1,10 @@
 /**
  * teacher.js - LearnSQL
  *
- * Kevin Kelly
+ * Michael Torres
  * Web Applications and Databases for Education (WADE)
  *
- * This file sets up the http routes associated with teacher functionality
+ * This file sets up the http routes associated with student functionality
  */
 
 
@@ -19,31 +19,11 @@ const authHelpers = require('../auth/_helpers');
 
 /**
  * This method returns class information from a ClassDB database. Most
- *  functionality is in `teacherControlPanel.js` getClass function.
- *  expects a promise to be returned
+ *  functionality is in `studentControlPanel.js` getClass function.
  *
- * @param {string} classname the classname the student will be added to
- * @return response
  */
-router.get('/getClasses', authHelpers.teacherRequired, (req, res, next)  => {	
+router.get('/getClasses', authHelpers.studentRequired, (req, res, next)  => {	
 	return teacherHelpers.getClasses(req, res)
-	.catch((err) => {
-		handleResponse(res, 500, err);
-	});
-});
-
-
-
-/**
- * This method returns class information from a ClassDB database. Most
- *  functionality is in `teacherControlPanel.js` getClass function.
- *  expects a promise to be returned
- *
- * @param {string} classname the classname the student will be added to
- * @return response
- */
-router.post('/getStudents', authHelpers.teacherRequired, (req, res, next)  => {
-	return teacherHelpers.getStudents(req, res)
 	.catch((err) => {
 		handleResponse(res, 500, err);
 	});

@@ -1,7 +1,7 @@
 /**
  * local.js - LearnSQL
  *
- * Kevin Kelly
+ * Kevin Kelly, Michael Torres
  * Web Applications and Databases for Education (WADE)
  *
  * This file contains the passport.js serialization and deserialization

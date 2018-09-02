@@ -80,10 +80,11 @@ SELECT ClassID, ClassName, Section, Times, Days, StartDate, EndDate, Password,
 FROM Class_t;
 
 
+
 -- Define a view to return UserData data
 -- This view has all attributes of UserData_t with an added derived attribute
 -- "isstudent"
--- "isstudent" TODO: finish comment description
+-- "isstudent" represents a student taking a class.
 CREATE OR REPLACE VIEW UserData AS 
 SELECT Username, Fullname, Password, Email, Token, DateJoined, isTeacher,
        isAdmin, isVerified, ForgotPassword,

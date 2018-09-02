@@ -59,6 +59,11 @@
                 <a href="../controlPanels/teacherClasses.html" class="nav-link border-right px-4">Classes</a>
               </li>
             </span>
+            <span ng-show="currentUser.isstudent">
+              <li class="nav-item">
+                <a href="../controlPanels/studentClasses.html" class="nav-link border-right px-4">Classes</a>
+              </li>
+            </span>
             <span ng-show="!currentUser">
             <li class="nav-item">
               <a href="../Account/signIn.html" class="nav-link text-dark">Sign in</a>

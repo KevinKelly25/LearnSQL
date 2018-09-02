@@ -1,7 +1,7 @@
 /**
  * _helpers.js - LearnSQL
  *
- * Kevin Kelly
+ * Kevin Kelly, Michael Torres
  * Web Applications and Databases for Education (WADE)
  *
  * This file contains the helper functions for the http methods relating to the
@@ -241,12 +241,17 @@ function teacherRequired(req, res, next) {
 
 
 
+/**
+ * If a user is not logged in returns a 401 status code and a status that says
+ * to log in. If user is logged in it checks to make sure the user is a student.
+ *
+ */
 function studentRequired(req, res, next) {
   if (!req.user) return res.status(401).json({status: 'Please log in'});
   return ldb.one('SELECT isstudent FROM UserData WHERE Username = $1', [req.user.username])
   .then((user) => {
     console.log(user);
-    if (!user.isadmin && !user.isteacher) return res.status(401).json({status: 'You are not authorized'});
+    if (!user.isstudent) return res.status(401).json({status: 'You are not authorized'});
     return next();
   })
   .catch((err) => {
