@@ -20,12 +20,19 @@ app.controller('teacherCtrl', ($scope, $http, $location, $window) => {
     name: 'something'
   };
 
+  //Converts the date from postgres format to readable format
+  function convertDate(inputDateString){
+    var date = new Date(inputDateString);
+    return date.getHours() + ":" + date.getMinutes() + "   " 
+      + (date.getMonth()+1) + "/" + date.getDate() + "/" + date.getFullYear();
+  }
 
 
 
+  // TODO: comment wrong
   /**
    * This function calls the /admin/addClass post method to create ClassDB databases
-   *  and updates the associated LearnSQL tables. While processing a message
+   *  and updates the associated LearnSQL tables. While processing, a message
    *  appears to let the user know to wait.
    */
   $scope.initClasses = () => {
@@ -38,10 +45,10 @@ app.controller('teacherCtrl', ($scope, $http, $location, $window) => {
     });
   }
 
-
+  // TODO: comment wrong
   /**
    * This function calls the /admin/addClass post method to create ClassDB databases
-   *  and updates the associated LearnSQL tables. While processing a message
+   *  and updates the associated LearnSQL tables. While processing, a message
    *  appears to let the user know to wait.
    */
   $scope.initClass = () => {
@@ -49,27 +56,22 @@ app.controller('teacherCtrl', ($scope, $http, $location, $window) => {
       className: $location.search().class
     };
 
+    
     $http.post('/teacher/getStudents', $scope.classInfo)
     .success((data) => {
+      data.forEach(element => {
+        element.lastddlactivityat = convertDate(element.lastddlactivityat);
+      });
       $scope.class = data;
     })
     .error((error) => {
       //do something if encounters an error
     });
 
+    $scope.test = 'help';
     $http.post('/teacher/getClassInfo', $scope.classInfo)
     .success((data) => {
       $scope.classInfo = data;
-      // $scope.classInfo = {
-      //   id: data.classid,
-      //   name: data.classname,
-      //   section: data.section,
-      //   times: data.times,
-      //   days: data.days,
-      //   startDate: data.startdate,
-      //   endDate: data.enddate,
-      //   studentCount: data.studentcount
-      // };
     })
     .error((error) => {
       //do something if encounters an error

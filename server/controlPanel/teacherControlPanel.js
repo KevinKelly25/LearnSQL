@@ -319,8 +319,6 @@ function getClasses(req, res) {
  * @return class information
  */
 function getClassInfo(req, res) {
-	console.log('getting to info');
-	
 	return new Promise((resolve, reject) => {
 		ldb.any('SELECT Attends.ClassID, ClassName, Section, Times, Days, ' +
 						'StartDate, EndDate, StudentCount ' +

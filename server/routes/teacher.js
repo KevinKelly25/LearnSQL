@@ -62,8 +62,6 @@ router.get('/getClasses', authHelpers.teacherRequired, (req, res, next)  => {
  * @return response
  */
 	router.post('/getClassInfo', authHelpers.teacherRequired, (req, res, next)  => {
-		console.log('getting to route');
-		
 		return teacherHelpers.getClassInfo(req, res)
 		.catch((err) => {
 			handleResponse(res, 500, err);

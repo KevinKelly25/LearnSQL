@@ -1,7 +1,7 @@
 <!--
   students.html - LearnSQL
 
-  Michael Torres
+  Michael Torres, Kevin Kelly
   Web Applications and Databases for Education (WADE)
 
   This file contains the html view of the teacher control panel which 
@@ -47,32 +47,32 @@
                         <a href="http://localhost:3000/" class="nav-link text-dark">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a href="../views/workshop.html" class="nav-link text-dark">Workshop</a>
+                        <a href="/views/workshop.html" class="nav-link text-dark">Workshop</a>
                     </li>
-                    <li class="nav-item active">
-                        <a href="../views/learn/select.html" class="nav-link shadow-lg bg-primary text-white">Learn</a>
+                    <li class="nav-item">
+                        <a href="/views/learn/select.html" class="nav-link text-dark">Learn</a>
                     </li>
                     <li class="nav-item">
                         <a href="../quizzes.html" class="nav-link text-dark">Quizzes</a>
                     </li>
                     <span ng-show="currentUser.isteacher">
-                        <li class="nav-item">
-                          <a href="../controlPanels/teacherClasses.html" class="nav-link border-right px-4">Classes</a>
+                        <li class="nav-item active">
+                          <a href="/views/controlPanels/teacherClasses.html" class="nav-link shadow-lg bg-primary text-white border-right px-4">Classes</a>
                         </li>
                     </span>
                     <span ng-show="!currentUser">
                         <li class="nav-item">
-                            <a href="../views/Account/signIn.html" class="nav-link text-dark">Sign in</a>
+                            <a href="/views/Account/signIn.html" class="nav-link text-dark">Sign in</a>
                         </li>
                     </span>
                     <span ng-show="currentUser.isadmin">
                         <li class="nav-item">
-                            <a href="../views/controlPanels/admin.html" class="nav-link border-right px-4">Admin Control Panel</a>
+                            <a href="/views/controlPanels/admin.html" class="nav-link border-right px-4">Admin Control Panel</a>
                         </li>
                     </span>
                     <span ng-show="currentUser">
                         <li class="nav-item">
-                            <a href="../views/Account/profile.html" class="nav-link text-dark">Profile</a>
+                            <a href="/views/Account/profile.html" class="nav-link text-dark">Profile</a>
                         </li>
                     </span>
                     <span ng-show="currentUser">
@@ -89,98 +89,93 @@
     <!-- END OF NAVBAR -->
 
     <section id="page-content" class="mt-5 container" ng-controller="teacherCtrl" data-ng-init="initClass()">
-        <h3>{{ test }}</h3>
         <!-- TODO: Show teachers if more then just the one user -->
         <h3 class="text-center">Class Information</h3>
         <table class="ui celled table row-border hover order-column shadow-lg text-center">
             <tbody>
-                    <tr>
-                        <td>ClassID</td>
-                        <td>{{ classInfo[0].classid }}</td>
+                    <tr class="d-flex">
+                        <td class="col-2">ClassName</td>
+                        <td class="col-8">{{ classInfo[0].classname }}</td>
+                        <td class="col-2">
+                            <a class="btn btn-edit" href="#">
+                                <i class="fa fa-pencil-square-o fa-2x" data-toggle="modal" data-target="#doesntwork" aria-hidden="true"></i>
+                            </a> 
+                        </td>
                     </tr>
-                    <tr>
-                        <td>ClassName</td>
-                        <td>{{ classInfo[0].classname }}</td>
+                    <tr class="d-flex">
+                        <td class="col-2">Section</td>
+                        <td class="col-8">{{ classInfo[0].section }}</td>
+                        <td class="col-2">
+                            <a class="btn btn-edit" href="#">
+                                <i class="fa fa-pencil-square-o fa-2x" data-toggle="modal" data-target="#doesntwork" aria-hidden="true"></i>
+                            </a> 
+                        </td>
                     </tr>
-                    <tr>
-                        <td>Section</td>
-                        <td>{{ classInfo[0].section }}</td>
+                    <tr class="d-flex">
+                        <td class="col-2">Meet Times</td>
+                        <td class="col-8">{{ classInfo[0].times }}</td>
+                        <td class="col-2">
+                            <a class="btn btn-edit" href="#">
+                                <i class="fa fa-pencil-square-o fa-2x" data-toggle="modal" data-target="#doesntwork" aria-hidden="true"></i>
+                            </a> 
+                        </td>
                     </tr>
-                    <tr>
-                        <td>Meet Times</td>
-                        <td>{{ classInfo[0].times }}</td>
+                    <tr class="d-flex">
+                        <td class="col-2">Start Date</td>
+                        <td class="col-8">{{ classInfo[0].startdate }}</td>
+                        <td class="col-2">
+                            <a class="btn btn-edit" href="#">
+                                <i class="fa fa-pencil-square-o fa-2x" data-toggle="modal" data-target="#doesntwork" aria-hidden="true"></i>
+                            </a> 
+                        </td>
                     </tr>
-                    <tr>
-                        <td>Start Date</td>
-                        <td>{{ classInfo[0].startdate }}</td>
+                    <tr class="d-flex">
+                        <td class="col-2">End Date</td>
+                        <td class="col-8">{{ classInfo[0].enddate }}</td>
+                        <td class="col-2">
+                            <a class="btn btn-edit" href="#">
+                                <i class="fa fa-pencil-square-o fa-2x" data-toggle="modal" data-target="#doesntwork" aria-hidden="true"></i>
+                            </a> 
+                        </td>
                     </tr>
-                    <tr>
-                        <td>End Date</td>
-                        <td>{{ classInfo[0].enddate }}</td>
+                    <tr class="d-flex">
+                        <td class="col-2">Join Password</td>
+                        <td class="col-8">&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;</td>
+                        <td class="col-2">
+                            <a class="btn btn-edit" href="#">
+                                <i class="fa fa-pencil-square-o fa-2x" data-toggle="modal" data-target="#doesntwork" aria-hidden="true"></i>
+                            </a> 
+                        </td>
                     </tr>
-                    <tr>
-                        <td>Number Of Students</td>
-                        <td>{{ classInfo[0].studentcount }}</td>
-                    </tr> 
-            </tbody> 
+                    <tr class="d-flex">
+                        <td class="col-2">Join link</td>
+                        <td class="col-10">Example.com/joinClass/#?classid=123jedjkajsd</td>
+                    </tr>
+                    <tr class="d-flex">
+                        <td class="col-2">ClassID</td>
+                        <td class="col-10">{{ classInfo[0].classid }}</td>
+                    </tr>
+                    <tr class="d-flex">
+                        <td class="col-2">Number Of Students</td>
+                        <td class="col-10">{{ classInfo[0].studentcount }}</td>
+                    </tr>
+                    <tr class="d-flex">
+                        <td class="col-12 font-weight-bold">
+                            To join Class students must either use the join link and password
+                            or go to join class page and enter classid and password.
+                        </td>
+                    </tr>
+            </tbody>
         </table>
-        <div ng-if="classes">
+        <div ng-if="class" class="py-5">
            <!-- tables of classes -->
             <table class="ui celled table row-border hover order-column shadow-lg text-center"
               datatable="">
-                <caption class="text-primary">List of All Students in {{ class }}</caption>
+                <caption class="text-primary">List of All Students in {{ classInfo[0].classname }}</caption>
                 <thead>
-                    <!-- add/ remove -->
                     <tr>
-                        <td colspan="7">
-                            <button type="button" class="btn btn-outline-success btn-block btn-lg" data-toggle="modal" data-target="#myModal">Class Invite Link & Password</button>
-                            <!-- The Modal -->
-                            <div class="modal" id="myModal">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                            
-                                        <!-- Modal Header -->
-                                        <div class="modal-header">
-                                            <h4 class="modal-title">Class Invite</h4>
-                                            <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                        </div>
-                                
-                                        <!-- Modal body -->
-                                        <div class="modal-body">
-
-                                                <input type="text" value="http:localhost:3000/classLinkExample" id="myInput">
-                                                <button type="button" class="btn btn-info" onclick="myFunction()">Copy Link</button>
-                                            <form>
-                                                <div class="form-group">
-                                                    <label>Old Password:</label>
-                                                    <input type="password" class="form-control" placeholder="enter old password here..." id="oldPassword">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label>New Password:</label>
-                                                    <input type="password" class="form-control" placeholder="enter new password here..." id="newPassword">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label>Confirm Password</label>
-                                                    <input type="password" class="form-control" placeholder="confirm new password here..." id="confirmPassword">
-                                                </div>
-                                            </form>
-                                        </div>
-                                        <!-- Modal footer -->
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-success">Save changes</button>
-                                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                                        </div>
-                            
-                                    </div>
-                                </div>
-                            </div>
-
-                        </td>
-                        <td colspan="1">
-                            <button type="button" id="trash" class="btn btn-outline-primary btn-block btn-lg">Remove</button>
-                        </td>
+                      <td colspan="8"><h2 class="text-center">Students</h2></td>
                     </tr>
-                <thead>
                     <!-- column headings -->
                     <tr>
                         <th></th>
