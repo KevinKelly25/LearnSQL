@@ -1,7 +1,7 @@
 /**
  * local.js - LearnSQL
  *
- * Kevin Kelly
+ * Kevin Kelly, Michael Torres
  * Web Applications and Databases for Education (WADE)
  *
  * This file contains the passport.js serialization and deserialization
@@ -31,7 +31,7 @@ module.exports = () => {
    * displaying the id that failed.
    */
   passport.deserializeUser((id, done)=>{
-    db.one("SELECT username, fullname, email, datejoined, isAdmin, isTeacher " +
+    db.one("SELECT username, fullname, email, datejoined, isAdmin, isTeacher, isstudent " +
            "FROM UserData " +
            "WHERE username = $1", id)
     .then((user)=>{

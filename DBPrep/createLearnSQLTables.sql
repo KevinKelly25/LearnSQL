@@ -15,7 +15,7 @@
 --  a "token" represents a hashed token used for password reset and email validation
 --  "isVerified" represents whether the user verified their email.
 --  "forgotPassword" represents if the forgotPassword feature was used.
-CREATE TABLE IF NOT EXISTS UserData (
+CREATE TABLE IF NOT EXISTS UserData_t (
   Username                VARCHAR(256) NOT NULL PRIMARY KEY,
   FullName                VARCHAR(256) NOT NULL,
   Password                VARCHAR(60) NOT NULL,
@@ -70,7 +70,7 @@ CREATE TABLE IF NOT EXISTS Attends (
 --  This view has all attributes of Class_t with an added derived attribute
 --  "studentCount"
 --  "studentCount" represents the number of students in a class.
-CREATE OR REPLACE VIEW CLASS AS
+CREATE OR REPLACE VIEW Class AS
 SELECT ClassID, ClassName, Section, Times, Days, StartDate, EndDate, Password,
   (
     SELECT COUNT(*)
@@ -78,3 +78,20 @@ SELECT ClassID, ClassName, Section, Times, Days, StartDate, EndDate, Password,
     WHERE Attends.ClassID = Class_t.ClassID AND isTeacher = FALSE
   ) AS studentCount
 FROM Class_t;
+
+
+
+-- Define a view to return UserData data
+-- This view has all attributes of UserData_t with an added derived attribute
+-- "isstudent"
+-- "isstudent" represents a student taking a class.
+CREATE OR REPLACE VIEW UserData AS 
+SELECT Username, Fullname, Password, Email, Token, DateJoined, isTeacher,
+       isAdmin, isVerified, ForgotPassword,
+EXISTS 
+  (
+    SELECT *
+    FROM Attends 
+    WHERE Attends.Username = UserData_t.Username AND Attends.isTeacher = FALSE
+  ) AS isstudent
+FROM UserData_t;
