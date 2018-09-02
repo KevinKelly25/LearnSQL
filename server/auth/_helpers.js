@@ -248,7 +248,7 @@ function teacherRequired(req, res, next) {
  */
 function studentRequired(req, res, next) {
   if (!req.user) return res.status(401).json({status: 'Please log in'});
-  return ldb.one('SELECT isstudent FROM UserData WHERE Username = $1', [req.user.username])
+  return ldb.one('SELECT isAdmin, isstudent FROM UserData WHERE Username = $1', [req.user.username])
   .then((user) => {
     console.log(user);
     if (!user.isadmin && !user.isstudent) return res.status(401).json({status: 'You are not authorized'});
