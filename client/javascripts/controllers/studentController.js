@@ -12,9 +12,7 @@
 var app = angular.module('LearnSQL');
 
 
-/**
- * This controller is used for the student control panel to add classes
- */
+
 app.controller('studentCtrl', ($scope, $http) => {
   $scope.class = {
     name: 'something'

@@ -1,5 +1,5 @@
 /**
- * teacher.js - LearnSQL
+ * student.js - LearnSQL
  *
  * Michael Torres
  * Web Applications and Databases for Education (WADE)
@@ -12,7 +12,7 @@
 const express = require('express');
 const router = express.Router();
 
-const teacherHelpers = require('../controlPanel/studentControlPanel.js');
+const studentHelpers = require('../controlPanel/studentControlPanel.js');
 const authHelpers = require('../auth/_helpers');
 
 
@@ -23,7 +23,7 @@ const authHelpers = require('../auth/_helpers');
  *
  */
 router.get('/getClasses', authHelpers.studentRequired, (req, res, next)  => {	
-	return teacherHelpers.getClasses(req, res)
+	return studentHelpers.getClasses(req, res)
 	.catch((err) => {
 		handleResponse(res, 500, err);
 	});

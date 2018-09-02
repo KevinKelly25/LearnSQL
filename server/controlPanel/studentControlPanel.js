@@ -1,5 +1,5 @@
 /**
- * controlPanel.js - LearnSQL
+ * studentControlPanel.js - LearnSQL
  *
  * Michael Torres
  * Web Applications and Databases for Education (WADE)
@@ -8,10 +8,9 @@
  */
 
 
+ 
 const ldb = require('../db/ldb.js');
-const dbCreator = require('../db/cdb.js');
 const logger = require('../logs/winston.js');
-const uniqid = require('uniqid');
 
 
 
