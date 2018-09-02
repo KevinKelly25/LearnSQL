@@ -13,7 +13,7 @@ var app = angular.module('LearnSQL');
 
 
 
-app.controller('studentCtrl', ($scope, $http) => {
+app.controller('studentCtrl', ($scope, $http, $window, $location) => {
   $scope.class = {
     name: 'something'
   };
@@ -40,7 +40,8 @@ app.controller('studentCtrl', ($scope, $http) => {
     }
     $http.post('/student/joinClass', $scope.joinClass)
     .success((data) => {
-      $scope.message = 'Joined Class'
+      $scope.message = 'Joined Class';
+      $window.location.href = 'http://localhost:3000/views/controlPanels/studentClasses.html';
     })
     .error((error) => {
       $scope.error = true;

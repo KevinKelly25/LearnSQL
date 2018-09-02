@@ -34,9 +34,7 @@ function getClasses(req, res) {
 			})
 			.catch((error) => {
 				logger.error('getClasses: \n' + error);
-				reject({
-					message: 'Could query the classes'
-				});
+				reject('Server Error: Could not query the classes');
 				return;
 			});
 	});
@@ -100,13 +98,15 @@ function addStudent(req, res) {
 						return res.status(200).json('student added successfully');
 					})
 					.catch((error)=> {
-						reject('Could not create student');
+						reject('Server Error: Could not create student');
 						db.$pool.end();
 						return;
 					});
 			})						 
 		})
 		.catch((error) => {
+			//if common error send it back to user, otherwise log it and send back
+			// server error message to user
 			if (error=='Join Password Incorrect'||error=='Already Joined The Class'){
 				reject(error);
 				return;
