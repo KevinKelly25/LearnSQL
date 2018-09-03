@@ -139,8 +139,8 @@
       <nav class="navbar navbar-expand-lg navbar-light bg-white" ng-controller="NavCtrl" data-ng-init="init()">
         <div class="container-fluid">
           <!-- NAVBAR HEADER -->
-          <h2 id="navbarTitle" class="font-weight-bold ml-3 mt-2">
-            <a href="http://localhost:3000/">LearnSQL</a>
+          <h2 class="font-weight-bold">
+            <a href="http://localhost:3000/" class="navbar-brand text-primary">LearnSQL</a>
           </h2>
           <!-- button to close sidebar -->
           <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
@@ -150,16 +150,16 @@
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="nav navbar-nav ml-auto">
               <li class="nav-item">
-                <a href="http://localhost:3000/" class="nav-link text-dark">Home</a>
+                <a href="http://localhost:3000/" class="nav-link border-right border-left px-4">Home</a>
               </li>
               <li class="nav-item">
-                <a href="../workshop.html" class="nav-link text-dark">Workshop</a>
+                <a href="../workshop.html" class="nav-link border-right px-4">Workshop</a>
               </li>
               <li class="nav-item active">
-                <a href="../learn/select.html" id="learnTab" class="nav-link shadow-lg text-white">Learn</a>
+                <a href="../learn/select.html" class="nav-link shadow-lg bg-primary text-white border-right border-left px-4">Learn</a>
               </li>
               <li class="nav-item">
-                <a href="../quizes.html" class="nav-link text-dark">Quizzes</a>
+                <a href="../quizes.html" class="nav-link border-right px-4">Quizzes</a>
               </li>
               <span ng-show="currentUser.isteacher">
                 <li class="nav-item">
@@ -173,7 +173,7 @@
               </span>
               <span ng-show="!currentUser">
               <li class="nav-item">
-                <a href="../Account/signIn.html" class="nav-link text-dark">Sign in</a>
+                <a href="../Account/signIn.html" class="nav-link border-right px-4">Sign in</a>
               </li>
               </span>
               <span ng-show="currentUser.isadmin">
@@ -183,12 +183,12 @@
               </span>
               <span ng-show="currentUser">
               <li class="nav-item">
-                <a href="../account/profile.html" class="nav-link text-dark">Profile</a>
+                <a href="../account/profile.html" class="nav-link border-right px-4">Profile</a>
               </li>
               </span>
               <span ng-show="currentUser">
               <li class="nav-item">
-                <a href="#" class="nav-link text-dark" ng-click="logout()">Logout</a>
+                <a href="http://localhost:3000/" class="nav-link border-right px-4 pl-4" ng-click="logout()">Logout</a>
               </li>
               </span>
             </ul>
@@ -398,16 +398,16 @@ Customerid, Customername, CustomerAddress, CustomerCity, CustomerState, and Cust
       </div>
 
       <!-- MAIN FOOTER -->
-      <footer id="main-footer" class="bg-white mt-3">
+      <footer id="main-footer" class="bg-light mt-3">
         <div class="container">
           <div class="row">
             <div class="col text-center">
               <div class="py-4">
-                <h1 id="learnSQLFooterHeader" class="h3">
+                <h1 class="h3">
                   <a href="http://localhost:3000/">LearnSQL</a>
                 </h1>
                 <p>Copyright &copy; 2018</p>
-                <a href="../contact.html" id="contactUsButton" class="btn shadow" role="button">Contact Us</a>
+                <a href="../contact.html" class="btn btn-primary text-white shadow">Contact Us</a>
               </div>
             </div>
           </div>
