@@ -1,7 +1,6 @@
 <!-- select.html - LearnSQL
 
     Michael Torres, Kevin Kelly
-
     Web Applications and Databases for Education (WADE)
 
     The purpose of this file is to teach the user SQL
@@ -136,7 +135,7 @@
     <!-- PAGE CONTENT  -->
     <div id="content">
       <!-- NAVBAR -->
-      <nav class="navbar navbar-expand-lg navbar-light bg-white" ng-controller="NavCtrl" data-ng-init="init()">
+      <nav class="navbar navbar-expand-lg navbar-light bg-light" ng-controller="NavCtrl" data-ng-init="init()">
         <div class="container-fluid">
           <!-- NAVBAR HEADER -->
           <h2 class="font-weight-bold">
@@ -173,7 +172,7 @@
               </span>
               <span ng-show="!currentUser">
               <li class="nav-item">
-                <a href="../Account/signIn.html" class="nav-link border-right px-4">Sign in</a>
+                <a href="../Account/signIn.html" class="nav-link px-4 pl-4">Sign in</a>
               </li>
               </span>
               <span ng-show="currentUser.isadmin">
@@ -188,7 +187,7 @@
               </span>
               <span ng-show="currentUser">
               <li class="nav-item">
-                <a href="http://localhost:3000/" class="nav-link border-right px-4 pl-4" ng-click="logout()">Logout</a>
+                <a href="http://localhost:3000/" class="nav-link px-4 pl-4" ng-click="logout()">Logout</a>
               </li>
               </span>
             </ul>
@@ -404,7 +403,7 @@ Customerid, Customername, CustomerAddress, CustomerCity, CustomerState, and Cust
             <div class="col text-center">
               <div class="py-4">
                 <h1 class="h3">
-                  <a href="http://localhost:3000/">LearnSQL</a>
+                  <a href="http://localhost:3000/" class="text-primary">LearnSQL</a>
                 </h1>
                 <p>Copyright &copy; 2018</p>
                 <a href="../contact.html" class="btn btn-primary text-white shadow">Contact Us</a>

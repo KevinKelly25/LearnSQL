@@ -27,11 +27,11 @@
 <body ng-app="LearnSQL">
 
   <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-light bg-white" ng-controller="NavCtrl" data-ng-init="init()" data-spy="affix" data-offset-top="197">
+  <nav class="navbar navbar-expand-sm navbar-light bg-light" ng-controller="NavCtrl" data-ng-init="init()" data-spy="affix" data-offset-top="197">
     <div class="container-fluid">
         <!-- Navbar header -->
-        <h2 class="font-weight-bold ml-3 mt-2">
-            <a href="http://localhost:3000/" id="navbar-title">LearnSQL</a>
+        <h2 class="font-weight-bold">
+            <a href="http://localhost:3000/" class="navbar-brand text-primary">LearnSQL</a>
         </h2>
         <!-- End Navbar header -->
         
@@ -39,16 +39,16 @@
         <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="nav navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a href="http://localhost:3000/" class="nav-link text-dark">Home</a>
+                    <a href="http://localhost:3000/" class="nav-link border-left border-right px-4">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a href="/views/workshop.html" class="nav-link text-dark">Workshop</a>
+                    <a href="/views/workshop.html" class="nav-link border-right px-4">Workshop</a>
                 </li>
                 <li class="nav-item">
-                    <a href="/views/learn/select.html" id="learn-tab" class="nav-link text-dark">Learn</a>
+                    <a href="/views/learn/select.html" id="learn-tab" class="nav-link border-right px-4">Learn</a>
                 </li>
                 <li class="nav-item">
-                    <a href="/quizzes.html" class="nav-link text-dark">Quizzes</a>
+                    <a href="/quizzes.html" class="nav-link border-right px-4">Quizzes</a>
                 </li>
                 <span ng-show="currentUser.isteacher">
                   <li class="nav-item">
@@ -62,7 +62,7 @@
                 </span>
                 <span ng-show="!currentUser">
                     <li class="nav-item">
-                        <a href="/views/Account/signIn.html" class="nav-link text-dark">Sign in</a>
+                        <a href="/views/Account/signIn.html" class="nav-link border-right px-4">Sign in</a>
                     </li>
                 </span>
                 <span ng-show="currentUser.isadmin">
@@ -72,12 +72,12 @@
                 </span>
                 <span ng-show="currentUser">
                     <li class="nav-item active">
-                        <a href="/views/Account/profile.html" id="profile-tab" class="nav-link shadow-lg text-white">Profile</a>
+                        <a href="/views/Account/profile.html" id="profile-tab" class="nav-link shadow-lg bg-primary text-white border-right px-4">Profile</a>
                     </li>
                 </span>
                 <span ng-show="currentUser">
                     <li class="nav-item">
-                        <a href="#" class="nav-link text-dark" ng-click="logout()">Logout</a>
+                        <a href="#" class="nav-link pl-4 px-4" ng-click="logout()">Logout</a>
                     </li>
                 </span>
             </ul>
