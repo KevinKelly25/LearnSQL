@@ -13,12 +13,13 @@ var app = angular.module('LearnSQL');
 
 
 /**
- * This controller is used for the teacher control panel to add classes
+ * This controller is used for teacher related angular functionality.
  */
 app.controller('teacherCtrl', ($scope, $http, $location, $window) => {
   $scope.class = {
     name: 'something'
   };
+
 
   //Converts the date from postgres format to readable format
   function convertDate(inputDateString){
@@ -30,8 +31,8 @@ app.controller('teacherCtrl', ($scope, $http, $location, $window) => {
 
 
   /**
-   * This function initializes the table in `teacherClasses.html` with the 
-   *  all the classes the teacher is in.  
+   * This function initializes the table in `teacherClasses.html` with all the 
+   *  classes the teacher is in.  
    */
   $scope.initClasses = () => {
     $http.get('/teacher/getClasses')
@@ -47,8 +48,9 @@ app.controller('teacherCtrl', ($scope, $http, $location, $window) => {
 
   
   /**
-   * This function initializes the table in `teacherClasses.html` with the 
-   *  all the classes the teacher is in.  
+   * This function initializes the table in `teacherClass.html` with the all the
+   *  students in the class and associated student information. It also retrieves
+   *  class information from the class view  
    */
   $scope.initClass = () => {
     $scope.classInfo = {
@@ -123,7 +125,14 @@ app.controller('teacherCtrl', ($scope, $http, $location, $window) => {
   };
 
 
-
+  /**
+   * This function updates the dropClass object to the current className so that
+   *  the correct class is displayed in the drop class warning modal. The
+   *  updated dropClass object is also used as a parameter to drop the class in 
+   *  the dropClassTeacher function.  
+   * 
+   * @param {string} className the classname that needs to be displays
+   */
   $scope.displayClassName = (className) => {
     $scope.success = false;
     $scope.error = false;
@@ -134,6 +143,11 @@ app.controller('teacherCtrl', ($scope, $http, $location, $window) => {
 
 
 
+   /**
+   * This function calls a http post method to drop a class. While waiting for
+   *  response a message pops up that tells user to wait for completion. Upon
+   *  success the user's class page will be reloaded to show updated information
+   */
   $scope.dropClassTeacher = () => {
     $scope.error = false;
     $scope.success = true;
