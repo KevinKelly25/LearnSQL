@@ -53,7 +53,7 @@
                         <a href="http://localhost:3000/" class="nav-link border-right border-left px-4">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a href="../workshop.html" class="nav-link border-right px-3">Workshop</a>
+                        <a href="../workshop.html" class="nav-link border-right px-4">Workshop</a>
                     </li>
                     <li class="nav-item">
                         <a href="../learn/select.html" class="nav-link border-right px-4">Learn</a>
@@ -63,7 +63,7 @@
                     </li>
                     <span ng-show="!currentUser">
                         <li class="nav-item">
-                            <a href="../Account/signIn.html" class="nav-link pl-4">Sign in</a>
+                            <a href="../Account/signIn.html" class="nav-link px-4 pl-4">Sign in</a>
                         </li>
                     </span>
                     <span ng-show="currentUser.isteacher">
@@ -88,7 +88,7 @@
                     </span>
                     <span ng-show="currentUser">
                         <li class="nav-item">
-                            <a href="http://localhost:3000/" class="nav-link pl-4" ng-click="logout()">Logout</a>
+                            <a href="http://localhost:3000/" class="nav-link px-4 pl-4" ng-click="logout()">Logout</a>
                         </li>
                     </span>
                 </ul>
@@ -180,7 +180,7 @@
     <!-- END OF PAGE CONTENT -->
 
     <!-- footer -->
-    <footer id="main-footer" class="bg-light">
+    <footer id="main-footer" class="bg-light fixed-bottom">
         <div class="container">
             <div class="row">
                 <div class="col text-center">
