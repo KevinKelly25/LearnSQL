@@ -13,7 +13,8 @@ const { Pool } = require('pg');
 const path = require('path');
 const nodemailer = require('nodemailer');
 const connectionStringQuestions = 'postgresql://postgres:password@localhost:5432/questions';
-const connectionStringLearnsql = 'postgresql://postgres:password@localhost:5432/learnsql';
+const authHelpers = require('../auth/_helpers');
+const tableHelpers = require('../controlPanel/tableControlPanel.js');
 
 //Basic get function for basic routing
 router.get('/', (req, res, next) => {
@@ -21,9 +22,11 @@ router.get('/', (req, res, next) => {
     __dirname, '..', '..', 'client', 'views', 'index.html'));
 });
 
+
+
 /**
  * This method is given a possible sql query. It sends this query to the database
- * If it is sucessful it will return the results in json. If an error occures it
+ * If it is successful it will return the results in json. If an error occurs it
  * will return the error statement/status
  */
  // TODO: update to pg-promise
@@ -56,6 +59,18 @@ router.post('/api/v1/questions', (req, res, next) => {
   });
 });
 
+
+
+/**
+ * Sends a support ticket to the support email with given information provided
+ *  by the user.
+ * 
+ * @param {string} fullName the full name of the user sending in support request
+ * @param {string} email the email the user wants support to contact
+ * @param {string} clientMessage the message the user wants to be in the body
+ *                                of the email
+ * @return the http response of whether the email sent successfully
+ */
 router.post('/sendContact', (req, res, next) => {
   const output = `
         <h3>You have a new contact request</h3>
@@ -103,5 +118,68 @@ router.post('/sendContact', (req, res, next) => {
       return res.status(200).json({status: 'email sent'});
   });
 });
+
+
+/**
+ * This route sends the user to tables.html. However, for it to work properly
+ *  it must have two attached url parameters, username and classID. An example 
+ *  of this is:
+ *  http://localhost:3000/table/#?username=teststu1&classID=testing1_1lvc01hojllf1r02 
+ */
+router.get('/table/', authHelpers.loginRequired, (req, res, next) => {
+  res.sendFile(path.join(
+    __dirname, '..', '..', 'client', 'views', 'controlPanels', 'tables.html'));
+});
+
+
+
+/**
+ *  This route retrieves all tables/views for a user. Most functionality is in 
+ *   `tableControlPanel.js` getTables function.
+ * 
+ * @param {string} username The username of the user who's tables are being 
+ *                           retrieved
+ * @param {string} classID The classID of the class the tables are in 
+ */
+router.post('/getTables', authHelpers.loginRequired, (req, res, next) => {
+  return tableHelpers.getTables(req, res)
+	.catch((err) => {
+		handleResponse(res, 500, err);
+	});
+});
+
+
+
+/**
+ * This route returns a table in JSON format when given a tableName. Most
+ *  functionality is in `tableControlPanel.js` getTable function.
+ *  
+ * @param {string} name the name of the table 
+ * @param {string} schema The schema the table is located in. Normally is the 
+ *                         username of the user who owns table
+ * @param {string} classID The classID of the class the table is in
+ * @return a table when given a tableName.
+ */
+router.post('/getTable', authHelpers.loginRequired, (req, res, next) => {
+  return tableHelpers.getTable(req, res)
+	.catch((err) => {
+		handleResponse(res, 500, err);
+	});
+});
+
+
+
+
+/**
+ * This function is used to return http responses.
+ *
+ * @param {string} res the result object
+ * @param {string} code the http status code
+ * @param {string} statusMsg the message containing the status of the message
+ * @return an http responde with designated status code and attached
+ */
+function handleResponse(res, code, statusMsg) {
+  res.status(code).json({status: statusMsg});
+}
 
 module.exports = router;
