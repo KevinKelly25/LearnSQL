@@ -10,5 +10,15 @@
 td.highlight {
   background-color: whitesmoke !important; }
 
+// overrides the font of the body
+body {
+  font-size: 16px;
+}
+
+// overrides the font of the navbar brand "LearnSQL"
+.navbar-brand {
+  font-size: 20px;
+}
+
 #footer-header {
   color: #ac4142; }
