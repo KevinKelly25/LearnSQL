@@ -1,0 +1,218 @@
+<!--
+  students.html - LearnSQL
+
+  Michael Torres, Kevin Kelly
+  Web Applications and Databases for Education (WADE)
+
+  This file contains the html view of the teacher control panel which 
+  list all students in a class for the LearnSQL website
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>Learn</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css"
+        integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp"
+        crossorigin="anonymous">
+    <link rel="stylesheet" href="../../stylesheets/angular-datatables.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.css" />
+    <link rel="stylesheet" href="../../stylesheets/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css"> 
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.1/semantic.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/dataTables.semanticui.min.css">
+    <link rel="stylesheet" href="../../stylesheets/bootstrap.css">
+    <link rel="stylesheet" href="../../stylesheets/teacher.css">
+
+</head>
+<body ng-app="LearnSQL">
+
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light" ng-controller="NavCtrl" data-ng-init="init()">
+        <div class="container-fluid">
+            <!-- navbar header -->
+            <h2 class="font-weight-bold ml-3 mt-2">
+                <a href="http://localhost:3000/" class="text-primary">LearnSQL</a>
+            </h2>
+            <!-- end of navbar header -->
+            
+            <!-- navbar sections -->
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <ul class="nav navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a href="http://localhost:3000/" class="nav-link text-dark">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/views/workshop.html" class="nav-link text-dark">Workshop</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/views/learn/select.html" class="nav-link text-dark">Learn</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="../quizzes.html" class="nav-link text-dark">Quizzes</a>
+                    </li>
+                    <span ng-show="currentUser.isteacher">
+                        <li class="nav-item active">
+                          <a href="/views/controlPanels/teacherClasses.html" class="nav-link shadow-lg bg-primary text-white border-right px-4">Classes</a>
+                        </li>
+                    </span>
+                    <span ng-show="!currentUser">
+                        <li class="nav-item">
+                            <a href="/views/Account/signIn.html" class="nav-link text-dark">Sign in</a>
+                        </li>
+                    </span>
+                    <span ng-show="currentUser.isadmin">
+                        <li class="nav-item">
+                            <a href="/views/controlPanels/admin.html" class="nav-link border-right px-4">Admin Control Panel</a>
+                        </li>
+                    </span>
+                    <span ng-show="currentUser">
+                        <li class="nav-item">
+                            <a href="/views/Account/profile.html" class="nav-link text-dark">Profile</a>
+                        </li>
+                    </span>
+                    <span ng-show="currentUser">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link text-dark" ng-click="logout()">Logout</a>
+                        </li>
+                    </span>
+                </ul>
+            </div>
+            <!-- end of navbar sections -->
+
+        </div>
+    </nav>
+    <!-- END OF NAVBAR -->
+
+    <section id="page-content" class="mt-5 container" ng-controller="teacherCtrl" data-ng-init="initClass()">
+        <!-- TODO: Show teachers if more then just the one user -->
+        <h3 class="text-center">Class Information</h3>
+        <table class="ui celled table row-border hover order-column shadow-lg text-center">
+            <tbody>
+                    <tr class="d-flex">
+                        <td class="col-2">ClassName</td>
+                        <td class="col-8">{{ classInfo[0].classname }}</td>
+                        <td class="col-2">
+                            <a class="btn btn-edit" href="#">
+                                <i class="fa fa-pencil-square-o fa-2x" data-toggle="modal" data-target="#doesntwork" aria-hidden="true"></i>
+                            </a> 
+                        </td>
+                    </tr>
+                    <tr class="d-flex">
+                        <td class="col-2">Section</td>
+                        <td class="col-8">{{ classInfo[0].section }}</td>
+                        <td class="col-2">
+                            <a class="btn btn-edit" href="#">
+                                <i class="fa fa-pencil-square-o fa-2x" data-toggle="modal" data-target="#doesntwork" aria-hidden="true"></i>
+                            </a> 
+                        </td>
+                    </tr>
+                    <tr class="d-flex">
+                        <td class="col-2">Meet Times</td>
+                        <td class="col-8">{{ classInfo[0].times }}</td>
+                        <td class="col-2">
+                            <a class="btn btn-edit" href="#">
+                                <i class="fa fa-pencil-square-o fa-2x" data-toggle="modal" data-target="#doesntwork" aria-hidden="true"></i>
+                            </a> 
+                        </td>
+                    </tr>
+                    <tr class="d-flex">
+                        <td class="col-2">Start Date</td>
+                        <td class="col-8">{{ classInfo[0].startdate }}</td>
+                        <td class="col-2">
+                            <a class="btn btn-edit" href="#">
+                                <i class="fa fa-pencil-square-o fa-2x" data-toggle="modal" data-target="#doesntwork" aria-hidden="true"></i>
+                            </a> 
+                        </td>
+                    </tr>
+                    <tr class="d-flex">
+                        <td class="col-2">End Date</td>
+                        <td class="col-8">{{ classInfo[0].enddate }}</td>
+                        <td class="col-2">
+                            <a class="btn btn-edit" href="#">
+                                <i class="fa fa-pencil-square-o fa-2x" data-toggle="modal" data-target="#doesntwork" aria-hidden="true"></i>
+                            </a> 
+                        </td>
+                    </tr>
+                    <tr class="d-flex">
+                        <td class="col-2">Join Password</td>
+                        <td class="col-8">&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;</td>
+                        <td class="col-2">
+                            <a class="btn btn-edit" href="#">
+                                <i class="fa fa-pencil-square-o fa-2x" data-toggle="modal" data-target="#doesntwork" aria-hidden="true"></i>
+                            </a> 
+                        </td>
+                    </tr>
+                    <tr class="d-flex">
+                        <td class="col-2">Join link</td>
+                        <td class="col-10">Example.com/joinClass/#?classid=123jedjkajsd</td>
+                    </tr>
+                    <tr class="d-flex">
+                        <td class="col-2">ClassID</td>
+                        <td class="col-10">{{ classInfo[0].classid }}</td>
+                    </tr>
+                    <tr class="d-flex">
+                        <td class="col-2">Number Of Students</td>
+                        <td class="col-10">{{ classInfo[0].studentcount }}</td>
+                    </tr>
+                    <tr class="d-flex">
+                        <td class="col-12 font-weight-bold">
+                            To join Class students must either use the join link and password
+                            or go to join class page and enter classid and password.
+                        </td>
+                    </tr>
+            </tbody>
+        </table>
+        <div ng-if="class" class="py-5">
+           <!-- tables of classes -->
+            <table class="ui celled table row-border hover order-column shadow-lg text-center"
+              datatable="">
+                <caption class="text-primary">List of All Students in {{ classInfo[0].classname }}</caption>
+                <thead>
+                    <tr>
+                      <td colspan="8"><h2 class="text-center">Students</h2></td>
+                    </tr>
+                    <!-- column headings -->
+                    <tr>
+                        <th></th>
+                        <th>Username</th>
+                        <th>DDL Count</th>
+                        <th>Last DDL Operation</th>
+                        <th>Last DDL Object</th>
+                        <th>Last DDL Activity At</th>
+                        <th>Connection Count</th>
+                        <th>Last Connection At</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="x in class">
+                        <td>{{ $index + 1 }}</td>
+                        <td><a ng-href="/teacher/class/#?class={{x.username}}" style="color:blue;">{{ x.username }}</a></td>
+                        <td>{{ x.ddlcount }}</td>
+                        <td>{{ x.lastddloperation }}</td>
+                        <td>{{ x.lastddlobject }}</td>
+                        <td>{{ x.lastddlactivityat }}</td>
+                        <td>{{ x.connectioncount }}</td>
+                        <td>{{ x.lastconnectionat }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+    <!-- END OF PAGE CONTENT -->
+
+    <script src="../../javascripts/jquery.min.js"></script>
+    <script src="../../javascripts/jquery.dataTables.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.6/angular.min.js"></script>
+    <script src="../../javascripts/controllers/mainControllers.js"></script>
+    <script src="../../javascripts/controllers/teacherController.js"></script>
+    <script src="../../javascripts/angular-datatables.min.js"></script>
+    <script src="../../javascripts/popper.min.js"></script>
+    <script src="../../javascripts/bootstrap.min.js"></script>
+
+</body>
+</html>
