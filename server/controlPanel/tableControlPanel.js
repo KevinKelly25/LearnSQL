@@ -1,10 +1,11 @@
 /**
- * controlPanel.js - LearnSQL
+ * tableControlPanel.js - LearnSQL
  *
  * Kevin Kelly
  * Web Applications and Databases for Education (WADE)
  *
- * This file contains the functions for admin control panel
+ * This file contains the functions related to the functionality of tables for a
+ *  user.
  */
 
 
