@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS UserData_t (
 
 
 -- Define a unique index on the trimmer and lowercase values of the email field
-CREATE UNIQUE INDEX idx_Unique_Email ON UserData(LOWER(TRIM(Email)));
+CREATE UNIQUE INDEX idx_Unique_Email ON UserData_t(LOWER(TRIM(Email)));
 
 
 
@@ -59,7 +59,7 @@ CREATE TABLE IF NOT EXISTS Class_t (
 --  "isTeacher" defines whether user is a teacher for that specific class
 CREATE TABLE IF NOT EXISTS Attends (
   ClassID                 VARCHAR(256) NOT NULL REFERENCES Class_t,
-  Username                VARCHAR(256) NOT NULL REFERENCES UserData,
+  Username                VARCHAR(256) NOT NULL REFERENCES UserData_t,
   isTeacher               BOOLEAN DEFAULT FALSE,
   PRIMARY KEY (ClassID, Username)
 );
