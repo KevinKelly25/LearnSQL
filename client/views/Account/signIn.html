@@ -23,10 +23,13 @@
 </head>
 <body ng-app="LearnSQL">
 
-  <!-- Nav Bar -->
-  <nav class="navbar navbar-expand-sm bg-primary navbar-dark fixed-top py-0" ng-controller="NavCtrl" data-ng-init="init()">
+  <!-- NAVBAR -->
+  <nav class="navbar navbar-expand-sm navbar-light bg-light fixed-top" ng-controller="NavCtrl" data-ng-init="init()">
     <div class="container-fluid">
-      <a href="http://localhost:3000/" class="navbar-brand mr-auto my-0">LearnSQL</a>
+      <!-- NAVBAR HEADER -->
+      <h2 class="font-weight-bold">
+        <a href="http://localhost:3000/" class="navbar-brand text-primary">LearnSQL</a>
+      </h2>
       <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -46,8 +49,8 @@
           </li>
           <!-- Dynamically show sign in tabs or profile/logout tabs depending if user is logged in -->
           <span ng-show="!currentUser">
-          <li class="nav-item">
-            <a href="./signIn.html" class="nav-link pl-4"> Sign in</a>
+          <li class="nav-item active">
+            <a href="./signIn.html" class="nav-link shadow-lg bg-primary text-white pl-4 px-4"> Sign in</a>
           </li>
           </span>
           <span ng-show="currentUser.isteacher">

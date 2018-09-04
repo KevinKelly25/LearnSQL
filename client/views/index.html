@@ -1,7 +1,7 @@
 <!--
   index.html - LearnSQL
 
-  Kevin Kelly
+  Kevin Kelly, Michael Torres
   Web Applications and Databases for Education (WADE)
 
   This file contains the html view of the index page for the LearnSQL website
@@ -22,19 +22,30 @@
 
 </head>
 <body ng-app="LearnSQL">
-  <nav class="navbar navbar-expand-sm bg-primary navbar-dark fixed-top py-0" ng-controller="NavCtrl" data-ng-init="init()">
+
+  <!-- navbar -->
+  <nav class="navbar navbar-expand-sm navbar-light bg-light fixed-top" ng-controller="NavCtrl" data-ng-init="init()">
     <div class="container-fluid">
-      <a href="http://localhost:3000/" class="navbar-brand mr-auto">LearnSQL</a>
+      <!-- navbar header -->
+      <h2 class="font-weight-bold">
+        <a href="http://localhost:3000/" class="navbar-brand text-primary">LearnSQL</a>
+      </h2>
+      <!-- end of navbar header -->
+      
+      <!-- collapsible menu button -->
       <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
         <span class="navbar-toggler-icon"></span>
       </button>
+      <!-- end of collapsible menu button -->
+      
+      <!-- navbar sections -->
       <div class="collapse navbar-collapse" id="navbarCollapse">
-        <ul class="navbar-nav ml-auto">
+        <ul class="nav navbar-nav ml-auto">
           <li class="nav-item active">
-            <a href="http://localhost:3000/" class="nav-link border-right border-left px-4">Home</a>
+            <a href="http://localhost:3000/" class="nav-link shadow-lg bg-primary text-white border-right border-left px-4">Home</a>
           </li>
           <li class="nav-item">
-            <a href="views/workshop.html" class="nav-link border-right px-3">Workshop</a>
+            <a href="views/workshop.html" class="nav-link border-right px-4">Workshop</a>
           </li>
           <li class="nav-item">
             <a href="views/learn/select.html" class="nav-link border-right px-4">Learn</a>
@@ -44,7 +55,7 @@
           </li>
           <span ng-show="!currentUser">
           <li class="nav-item">
-            <a href="views/account/signIn.html" class="nav-link pl-4"> Sign in</a>
+            <a href="views/account/signIn.html" class="nav-link px-4 pl-4"> Sign in</a>
           </li>
           </span>
           <span ng-show="!currentUser.isstudent && currentUser">
@@ -74,53 +85,54 @@
           </span>
           <span ng-show="currentUser">
           <li class="nav-item">
-            <a href="#" class="nav-link pl-4" ng-click="logout()">Logout</a>
+            <a href="#" class="nav-link px-4 pl-4" ng-click="logout()">Logout</a>
           </li>
           </span>
         </ul>
       </div>
+      <!-- end of navbar sections -->
     </div>
   </nav>
+  <!-- end of navbar -->
 
   <!-- Home Section  -->
-
-    <header id="home-section">
-      <div class="dark-overlay">
-        <div class="home-inner">
-          <div class="container">
-            <div class="row">
-              <div class="col text-white">
-                <h1 class="display-4 text-center"> Learn SQL And How To Build <br/>Relational Databases</h1>
-                  <div class="d-flex flex-row">
-                    <div class="p-5 align-self-start d-none d-lg-block">
-                      <i style="position: relative; top: 20px" class="fa fa-check"></i>
-                    </div>
-                    <div class="p-5 align-self-send">
-                      Go to our Learn section to see our wide variety of topics on SQL that covers all topics from Beginner to Expert.
-                      Each section covers a specific topic on SQL that starts with an overview of the topic. After the overview there will
-                      be examples of how to use the information that you just learned. After that there is a section of questions that will
-                      test what you have just learned
-                    </div>
-                  </div>
-                  <div class="d-flex flex-row">
-                    <div class="p-5 align-self-start d-none d-lg-block">
-                      <i style="position: relative; top: 20px" class="fa fa-check"></i>
-                    </div>
-                    <div class="p-5 align-self-send">
-                      Use our live database in our Workshop where students and teachers are in a secure sandbox environment.
-                      Here you can practice creating mock databases that can behave exactly like many commercial grade Databases without the
-                      worry of messing up and effecting other parts of the database
-                    </div>
-                  </div>
-                  <div class="d-flex flex-row">
-                    <div class="p-5 align-self-start d-none d-lg-block">
-                      <i style="position: relative; top: 10px" class="fa fa-check"></i>
-                    </div>
-                    <div class="p-5 align-self-send">
-                      Put your knowledge of SQL to the test with our Quiz section that can be configured to test the basics or more complex questions.
-                      All of our questions use a real time queries to check your answers vs ours on a pre-configured database
-                    </div>
-                  </div>
+  <header id="home-section">
+    <div class="dark-overlay">
+      <div class="home-inner">
+        <div class="container">
+          <div class="row">
+            <div class="col text-white">
+              <h1 class="display-4 text-center"> Learn SQL And How To Build <br/>Relational Databases</h1>
+              <div class="d-flex flex-row">
+                <div class="p-5 align-self-start d-none d-lg-block">
+                  <i style="position: relative; top: 20px" class="fa fa-check"></i>
+                </div>
+                <div class="p-5 align-self-send">
+                  Go to our Learn section to see our wide variety of topics on SQL that covers all topics from Beginner to Expert.
+                  Each section covers a specific topic on SQL that starts with an overview of the topic. After the overview there will
+                  be examples of how to use the information that you just learned. After that there is a section of questions that will
+                  test what you have just learned
+                </div>
+              </div>
+              <div class="d-flex flex-row">
+                <div class="p-5 align-self-start d-none d-lg-block">
+                  <i style="position: relative; top: 20px" class="fa fa-check"></i>
+                </div>
+                <div class="p-5 align-self-send">
+                  Use our live database in our Workshop where students and teachers are in a secure sandbox environment.
+                  Here you can practice creating mock databases that can behave exactly like many commercial grade Databases without the
+                  worry of messing up and effecting other parts of the database
+                </div>
+              </div>
+              <div class="d-flex flex-row">
+                <div class="p-5 align-self-start d-none d-lg-block">
+                  <i style="position: relative; top: 10px" class="fa fa-check"></i>
+                </div>
+                <div class="p-5 align-self-send">
+                  Put your knowledge of SQL to the test with our Quiz section that can be configured to test the basics or more complex questions.
+                  All of our questions use a real time queries to check your answers vs ours on a pre-configured database
+                </div>
+              </div>
               </div>
             </div>
           </div>
@@ -172,14 +184,16 @@
 
     <!-- main footer -->
 
-    <footer id="main-footer" class="bg-primary">
+    <footer id="main-footer" class="bg-light">
       <div class="container">
         <div class="row">
-          <div class="col text-center text-light">
+          <div class="col text-center">
             <div class="py-4">
-              <h1 class="h3">LearnSQL</h1>
+              <h1 class="h3">
+                <a href="http://localhost:3000/" class="text-primary">LearnSQL</a>
+              </h1>
               <p>Copyright &copy; 2018</p>
-              <a href="../views/contact.html" class="btn btn-primary" role="button">Contact Us</a>
+              <a href="../views/contact.html" class="btn btn-primary text-white shadow">Contact Us</a>
             </div>
           </div>
         </div>

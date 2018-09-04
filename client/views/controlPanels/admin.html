@@ -1,7 +1,7 @@
 <!--
   admin.html - LearnSQL
 
-  Kevin Kelly
+  Kevin Kelly, Michael Torres
   Web Applications and Databases for Education (WADE)
 
   This file contains the html view of the admin control panel page for the
@@ -29,30 +29,34 @@
 <body ng-app="LearnSQL">
 
     <!-- NAVBAR -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-white" ng-controller="NavCtrl" data-ng-init="init()">
+    <nav class="navbar navbar-expand-sm navbar-light bg-light" ng-controller="NavCtrl" data-ng-init="init()">
       <div class="container-fluid">
         <!-- NAVBAR HEADER -->
-        <h2 id="navbarTitle" class="font-weight-bold ml-3 mt-2">
-          <a href="http://localhost:3000/">LearnSQL</a>
+        <h2 class="font-weight-bold">
+          <a href="http://localhost:3000/" class="navbar-brand text-primary">LearnSQL</a>
         </h2>
-        <!-- button to close sidebar -->
+        <!-- EMD OF NAVBAR HEADER-->
+
+        <!-- COLLAPSIBLE MENU BUTTON -->
         <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
           <span class="navbar-toggler-icon"></span>
         </button>
+        <!-- END OF COLLAPSIBLE MENU BUTTON -->
+
         <!-- NAVBAR SECTIONS -->
         <div class="collapse navbar-collapse" id="navbarCollapse">
           <ul class="nav navbar-nav ml-auto">
             <li class="nav-item">
-              <a href="http://localhost:3000/" class="nav-link text-dark">Home</a>
+              <a href="http://localhost:3000/" class="nav-link border-left border-right px-4">Home</a>
             </li>
             <li class="nav-item">
-              <a href="../workshop.html" class="nav-link text-dark">Workshop</a>
+              <a href="../workshop.html" class="nav-link border-right px-4">Workshop</a>
             </li>
             <li class="nav-item">
-              <a href="../learn/select.html" class="nav-link text-dark">Learn</a>
+              <a href="../learn/select.html" class="nav-link border-right px-4">Learn</a>
             </li>
             <li class="nav-item">
-              <a href="../quizes.html" class="nav-link text-dark">Quizzes</a>
+              <a href="../quizes.html" class="nav-link border-right px-4">Quizzes</a>
             </li>
             <span ng-show="currentUser.isteacher">
               <li class="nav-item">
@@ -66,7 +70,7 @@
             </span>
             <span ng-show="!currentUser">
             <li class="nav-item">
-              <a href="../Account/signIn.html" class="nav-link text-dark">Sign in</a>
+              <a href="../Account/signIn.html" class="nav-link pl-4 px-4">Sign in</a>
             </li>
             </span>
             <span ng-show="currentUser.isadmin">
@@ -76,12 +80,12 @@
             </span>
             <span ng-show="currentUser">
             <li class="nav-item">
-              <a href="../account/profile.html" class="nav-link text-dark">Profile</a>
+              <a href="../account/profile.html" class="nav-link border-right px-4">Profile</a>
             </li>
             </span>
             <span ng-show="currentUser">
             <li class="nav-item">
-              <a href="#" class="nav-link text-dark" ng-click="logout()">Logout</a>
+              <a href="#" class="nav-link px-4 pl-4" ng-click="logout()">Logout</a>
             </li>
             </span>
           </ul>
@@ -124,6 +128,24 @@
 				<p class="mt-5 mb-3 text-muted">&copy; 2018-2019</p>
 			</form>
     </div>
+
+     <!-- main footer -->
+
+     <footer id="main-footer" class="bg-light fixed-bottom">
+        <div class="container">
+          <div class="row">
+            <div class="col text-center">
+              <div class="py-4">
+                <h1 class="h3">
+                  <a href="http://localhost:3000/" class="text-primary">LearnSQL</a>
+                </h1>
+                <p>Copyright &copy; 2018</p>
+                <a href="../views/contact.html" class="btn btn-primary text-white shadow">Contact Us</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </footer>
   
     <script src="../../javascripts/jquery.min.js"></script>
     <script src="../../javascripts/jquery.dataTables.min.js"></script>
