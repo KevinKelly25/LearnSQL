@@ -15,7 +15,7 @@ var app = angular.module('LearnSQL', ['datatables']);
  * This controller is used to dynamically display the navbar of the website
  *  to show whether a user is logged in or not.
  */
-app.controller('NavCtrl', ($scope, $http) => {
+app.controller('NavCtrl', ($scope, $http, $window, $location) => {
   $scope.currentUser = {};
   $scope.message = 'message';
 
@@ -28,7 +28,7 @@ app.controller('NavCtrl', ($scope, $http) => {
   $scope.logout = () => {
     $http.get('/auth/logout')
     .success((data) => {
-      $scope.init()
+      $window.location.href = 'http://localhost:3000';
     })
     .error((error) => {
       //could not log out

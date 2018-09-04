@@ -58,6 +58,11 @@
             <a href="views/account/signIn.html" class="nav-link px-4 pl-4"> Sign in</a>
           </li>
           </span>
+          <span ng-show="!currentUser.isstudent && currentUser">
+              <li class="nav-item">
+                <a href="views/controlPanels/joinClass.html" class="nav-link border-right px-4">Join Class</a>
+              </li>
+          </span>
           <span ng-show="currentUser.isteacher">
             <li class="nav-item">
               <a href="views/controlPanels/teacherClasses.html" class="nav-link border-right px-4">Classes</a>

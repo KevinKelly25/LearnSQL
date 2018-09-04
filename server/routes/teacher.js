@@ -11,9 +11,9 @@
 
 const express = require('express');
 const router = express.Router();
-
 const teacherHelpers = require('../controlPanel/teacherControlPanel.js');
 const authHelpers = require('../auth/_helpers');
+const path = require('path');
 
 
 
@@ -37,11 +37,10 @@ router.post('/addStudent', authHelpers.teacherRequired, (req, res, next)  => {
 
 
 /**
- * This method returns class information from a ClassDB database. Most
- *  functionality is in `teacherControlPanel.js` getClass function.
+ * This method returns the classes the teacher created. Most
+ *  functionality is in `teacherControlPanel.js` getClasses function.
  *  expects a promise to be returned
  *
- * @param {string} classname the classname the student will be added to
  * @return response
  */
 router.get('/getClasses', authHelpers.teacherRequired, (req, res, next)  => {	
@@ -53,9 +52,27 @@ router.get('/getClasses', authHelpers.teacherRequired, (req, res, next)  => {
 
 
 
+
 /**
  * This method returns class information from a ClassDB database. Most
  *  functionality is in `teacherControlPanel.js` getClass function.
+ *  expects a promise to be returned
+ *
+ * @param {string} classname the classname the student will be added to
+ * @return response
+ */
+	router.post('/getClassInfo', authHelpers.teacherRequired, (req, res, next)  => {
+		return teacherHelpers.getClassInfo(req, res)
+		.catch((err) => {
+			handleResponse(res, 500, err);
+		});
+	});
+
+
+
+/**
+ * This method returns student information from a ClassDB database. Most
+ *  functionality is in `teacherControlPanel.js` getStudents function.
  *  expects a promise to be returned
  *
  * @param {string} classname the classname the student will be added to
@@ -126,6 +143,18 @@ router.post('/dropClass', authHelpers.teacherRequired,(req, res, next)  => {
 	.catch((err) => {
 		handleResponse(res, 500, err);
 	});
+});
+
+
+
+/**
+ * This will redirect a user to the resetPassword page. The reset token needs
+ *  to be appended to the end of the link after #?token=. For example
+ *  http://localhost:3000/auth/resetPassword/#?token=59ff4734c92f789058b2
+ */
+router.get('/class/', (req, res, next) => {
+	res.sendFile(path.join(
+		__dirname, '..', '..', 'client', 'views', 'controlPanels', 'teacherClass.html'));
 });
 
 

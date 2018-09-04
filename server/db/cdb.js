@@ -16,10 +16,10 @@ const pgp = require('pg-promise')({
 /*
  * Exporting the database object for shared use
  *
- * @param {string} query the name of the database
+ * @param {string} classid the name of the database
  */
-module.exports = function (query) {
+module.exports = function (classid) {
 	const connectionString = 'postgresql://postgres:password@localhost:5432/'
-							 + query;
+							 + classid;
 	return db = pgp(connectionString);
 };
