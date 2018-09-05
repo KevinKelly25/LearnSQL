@@ -17,13 +17,28 @@ const nodemailer = require('nodemailer');
 const connectionStringQuestions = 'postgresql://postgres:password@localhost:5432/questions';
 const authHelpers = require('../auth/_helpers');
 const tableHelpers = require('../controlPanel/tableControlPanel.js');
+const logger = require('../logs/winston.js');
 
+
+
+/**
+ * This function is used to return http responses.
+ *
+ * @param {string} res the result object
+ * @param {string} code the http status code
+ * @param {string} statusMsg the message containing the status of the message
+ * @return an http responde with designated status code and attached
+ */
+function handleResponse(res, code, statusMsg) {
+  res.status(code).json({ status: statusMsg });
+}
 // Basic get function for basic routing
-router.get('/', (req, res, next) => {
+router.get('/', (res) => {
   res.sendFile(path.join(
     __dirname, '..', '..', 'client', 'views', 'index.html',
   ));
 });
+
 
 
 /**
@@ -32,7 +47,7 @@ router.get('/', (req, res, next) => {
  * will return the error statement/status
  */
 // TODO: update to pg-promise
-router.post('/api/v1/questions', (req, res, next) => {
+router.post('/api/v1/questions', (req, res) => {
   const results = [];
   const pool = new Pool({
     connectionString: connectionStringQuestions,
@@ -47,9 +62,9 @@ router.post('/api/v1/questions', (req, res, next) => {
       return res.status(500).json({ success: false, data: err });
     }
     // SQL Query > Select Data
-    const query = client.query(data.text, (err, response) => {
+    client.query(data.text, (error, response) => {
       done();
-      if (err) {
+      if (error) {
         return res.status(500).json({ success: false, data: err });
       }
       response.rows.forEach((row) => {
@@ -57,8 +72,10 @@ router.post('/api/v1/questions', (req, res, next) => {
       });
       return res.json(results);
     });
+    return res.status(200).json(results);
   });
 });
+
 
 
 /**
@@ -71,7 +88,7 @@ router.post('/api/v1/questions', (req, res, next) => {
  *                                of the email
  * @return the http response of whether the email sent successfully
  */
-router.post('/sendContact', (req, res, next) => {
+router.post('/sendContact', (req, res) => {
   const output = `
         <h3>You have a new contact request</h3>
         <ul>
@@ -108,16 +125,16 @@ router.post('/sendContact', (req, res, next) => {
   };
 
   // send mail with defined transport object
-  transporter.sendMail(mailOptions, (error, info) => {
+  transporter.sendMail(mailOptions, (error) => {
     if (error) {
-      return console.log(error);
+      logger.error(`verification: \n${error}`);
+      return new Error(error);
     }
-    console.log('Message sent: %s', info.messageId);
-    console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
 
     return res.status(200).json({ status: 'email sent' });
   });
 });
+
 
 
 /**
@@ -126,11 +143,12 @@ router.post('/sendContact', (req, res, next) => {
  *  of this is:
  *  http://localhost:3000/table/#?username=teststu1&classID=testing1_1lvc01hojllf1r02
  */
-router.get('/table/', authHelpers.loginRequired, (req, res, next) => {
+router.get('/table/', authHelpers.loginRequired, (res) => {
   res.sendFile(path.join(
     __dirname, '..', '..', 'client', 'views', 'controlPanels', 'tables.html',
   ));
 });
+
 
 
 /**
@@ -141,10 +159,11 @@ router.get('/table/', authHelpers.loginRequired, (req, res, next) => {
  *                           retrieved
  * @param {string} classID The classID of the class the tables are in
  */
-router.post('/getTables', authHelpers.loginRequired, (req, res, next) => tableHelpers.getTables(req, res)
+router.post('/getTables', authHelpers.loginRequired, (req, res) => tableHelpers.getTables(req, res)
   .catch((err) => {
     handleResponse(res, 500, err);
   }));
+
 
 
 /**
@@ -157,22 +176,11 @@ router.post('/getTables', authHelpers.loginRequired, (req, res, next) => tableHe
  * @param {string} classID The classID of the class the table is in
  * @return a table when given a tableName.
  */
-router.post('/getTable', authHelpers.loginRequired, (req, res, next) => tableHelpers.getTable(req, res)
+router.post('/getTable', authHelpers.loginRequired, (req, res) => tableHelpers.getTable(req, res)
   .catch((err) => {
     handleResponse(res, 500, err);
   }));
 
 
-/**
- * This function is used to return http responses.
- *
- * @param {string} res the result object
- * @param {string} code the http status code
- * @param {string} statusMsg the message containing the status of the message
- * @return an http responde with designated status code and attached
- */
-function handleResponse(res, code, statusMsg) {
-  res.status(code).json({ status: statusMsg });
-}
 
 module.exports = router;

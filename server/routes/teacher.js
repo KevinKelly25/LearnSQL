@@ -16,6 +16,20 @@ const teacherHelpers = require('../controlPanel/teacherControlPanel.js');
 const authHelpers = require('../auth/_helpers');
 
 
+
+/**
+ * This function is used to return http responses.
+ *
+ * @param {string} res the result object
+ * @param {string} code the http status code
+ * @param {string} statusMsg the message containing the status of the message
+ * @return an http responde with designated status code and attached
+ */
+function handleResponse(res, code, statusMsg) {
+  res.status(code).json({ status: statusMsg });
+}
+
+
 /**
  * This method adds a student to a ClassDB database. Most functionality is in
  *  `teacherControlPanel.js` addStudent function but is expecting a promise
@@ -26,10 +40,11 @@ const authHelpers = require('../auth/_helpers');
  * @param {string} classname the classname the student will be added to
  * @return response
  */
-router.post('/addStudent', authHelpers.teacherRequired, (req, res, next) => teacherHelpers.addStudent(req, res)
+router.post('/addStudent', authHelpers.teacherRequired, (req, res) => teacherHelpers.addStudent(req, res)
   .catch((err) => {
     handleResponse(res, 500, err);
   }));
+
 
 
 /**
@@ -39,10 +54,11 @@ router.post('/addStudent', authHelpers.teacherRequired, (req, res, next) => teac
  *
  * @return response
  */
-router.get('/getClasses', authHelpers.teacherRequired, (req, res, next) => teacherHelpers.getClasses(req, res)
+router.get('/getClasses', authHelpers.teacherRequired, (req, res) => teacherHelpers.getClasses(req, res)
   .catch((err) => {
     handleResponse(res, 500, err);
   }));
+
 
 
 /**
@@ -53,10 +69,11 @@ router.get('/getClasses', authHelpers.teacherRequired, (req, res, next) => teach
  * @param {string} classname the classname the student will be added to
  * @return response
  */
-router.post('/getClassInfo', authHelpers.teacherRequired, (req, res, next) => teacherHelpers.getClassInfo(req, res)
+router.post('/getClassInfo', authHelpers.teacherRequired, (req, res) => teacherHelpers.getClassInfo(req, res)
   .catch((err) => {
     handleResponse(res, 500, err);
   }));
+
 
 
 /**
@@ -67,10 +84,11 @@ router.post('/getClassInfo', authHelpers.teacherRequired, (req, res, next) => te
  * @param {string} classname the classname the student will be added to
  * @return response
  */
-router.post('/getStudents', authHelpers.teacherRequired, (req, res, next) => teacherHelpers.getStudents(req, res)
+router.post('/getStudents', authHelpers.teacherRequired, (req, res) => teacherHelpers.getStudents(req, res)
   .catch((err) => {
     handleResponse(res, 500, err);
   }));
+
 
 
 /**
@@ -82,10 +100,11 @@ router.post('/getStudents', authHelpers.teacherRequired, (req, res, next) => tea
  * @param {string} classname the classname the student will be added to
  * @return response
  */
-router.post('/dropStudent', authHelpers.teacherRequired, (req, res, next) => teacherHelpers.dropStudent(req, res)
+router.post('/dropStudent', authHelpers.teacherRequired, (req, res) => teacherHelpers.dropStudent(req, res)
   .catch((err) => {
     handleResponse(res, 500, err);
   }));
+
 
 
 /**
@@ -103,10 +122,11 @@ router.post('/dropStudent', authHelpers.teacherRequired, (req, res, next) => tea
  * @param {string} password the join password students need to join class
  * @return http response if class was added
  */
-router.post('/addClass', authHelpers.teacherRequired, (req, res, next) => teacherHelpers.createClass(req, res)
+router.post('/addClass', authHelpers.teacherRequired, (req, res) => teacherHelpers.createClass(req, res)
   .catch((err) => {
     handleResponse(res, 500, err);
   }));
+
 
 
 /**
@@ -118,10 +138,11 @@ router.post('/addClass', authHelpers.teacherRequired, (req, res, next) => teache
  * @param {string} name the name of the class to be added
  * @return http response if class was dropped
  */
-router.post('/dropClass', authHelpers.teacherRequired, (req, res, next) => teacherHelpers.dropClass(req, res)
+router.post('/dropClass', authHelpers.teacherRequired, (req, res) => teacherHelpers.dropClass(req, res)
   .catch((err) => {
     handleResponse(res, 500, err);
   }));
+
 
 
 /**
@@ -129,24 +150,12 @@ router.post('/dropClass', authHelpers.teacherRequired, (req, res, next) => teach
  *  to be appended to the end of the link after #?token=. For example
  *  http://localhost:3000/auth/resetPassword/#?token=59ff4734c92f789058b2
  */
-router.get('/class/', (req, res, next) => {
+router.get('/class/', (res) => {
   res.sendFile(path.join(
     __dirname, '..', '..', 'client', 'views', 'controlPanels', 'teacherClass.html',
   ));
 });
 
-
-/**
- * This function is used to return http responses.
- *
- * @param {string} res the result object
- * @param {string} code the http status code
- * @param {string} statusMsg the message containing the status of the message
- * @return an http responde with designated status code and attached
- */
-function handleResponse(res, code, statusMsg) {
-  res.status(code).json({ status: statusMsg });
-}
 
 
 module.exports = router;

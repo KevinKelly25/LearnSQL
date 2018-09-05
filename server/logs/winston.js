@@ -11,13 +11,8 @@
 const { createLogger, format, transports } = require('winston');
 
 const {
-  combine, timestamp, label, printf,
+  combine, timestamp, printf,
 } = format;
-
-const fs = require('fs');
-
-const env = process.env.NODE_ENV || 'development';
-const logDir = 'log';
 
 const myFormat = printf(info => `${info.timestamp} ${info.level}: ${info.message}`);
 
@@ -39,7 +34,7 @@ const logger = createLogger({
 
 module.exports = logger;
 module.exports.stream = {
-  write(message, encoding) {
+  write(message) {
     logger.info(message);
   },
 };

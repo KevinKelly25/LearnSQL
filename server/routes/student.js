@@ -16,6 +16,21 @@ const studentHelpers = require('../controlPanel/studentControlPanel.js');
 const authHelpers = require('../auth/_helpers');
 
 
+
+/**
+ * This function is used to return http responses.
+ *
+ * @param {string} res the result object
+ * @param {string} code the http status code
+ * @param {string} statusMsg the message containing the status of the message
+ * @return an http response with designated status code and attached
+ */
+function handleResponse(res, code, statusMsg) {
+  res.status(code).json({ status: statusMsg });
+}
+
+
+
 /**
  * This method returns class information from a ClassDB database. Most
  *  functionality is in `studentControlPanel.js` getClass function.
@@ -24,7 +39,7 @@ const authHelpers = require('../auth/_helpers');
  *          object which has the classes the user is in and relevant class
  *          information
  */
-router.get('/getClasses', authHelpers.studentRequired, (req, res, next) => studentHelpers.getClasses(req, res)
+router.get('/getClasses', authHelpers.studentRequired, (req, res) => studentHelpers.getClasses(req, res)
   .catch((err) => {
     handleResponse(res, 500, err);
   }));
@@ -38,23 +53,11 @@ router.get('/getClasses', authHelpers.studentRequired, (req, res, next) => stude
  * @param {string} classID the class id of the class the student will be added to
  * @return http response on if the student was successfully added
  */
-router.post('/joinClass', authHelpers.loginRequired, (req, res, next) => studentHelpers.addStudent(req, res)
+router.post('/joinClass', authHelpers.loginRequired, (req, res) => studentHelpers.addStudent(req, res)
   .catch((err) => {
     handleResponse(res, 500, err);
   }));
 
-
-/**
- * This function is used to return http responses.
- *
- * @param {string} res the result object
- * @param {string} code the http status code
- * @param {string} statusMsg the message containing the status of the message
- * @return an http response with designated status code and attached
- */
-function handleResponse(res, code, statusMsg) {
-  res.status(code).json({ status: statusMsg });
-}
 
 
 module.exports = router;

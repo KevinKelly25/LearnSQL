@@ -26,7 +26,7 @@ app.controller('ProfileCtrl', ($scope, $http) => {
   }
 
 
-  //function activates upon loading page obtaining current user information
+  // function activates upon loading page obtaining current user information
   $http.get('/auth/check')
     .success((data) => {
       // Upon loading the page, populate the table with the user information
@@ -47,5 +47,4 @@ app.controller('ProfileCtrl', ($scope, $http) => {
     .error(() => {
       $scope.error = 'Unable to retrieve user information';
     });
-
 });

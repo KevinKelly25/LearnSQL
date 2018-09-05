@@ -23,23 +23,12 @@ const logger = require('../logs/winston.js');
  *                                       created for testing purposes
  * @return an http response
  */
-router.post('/testLogWarning', authHelpers.adminRequired, (req, res, next) => {
+router.post('/testLogWarning', authHelpers.adminRequired, (req, res) => {
   logger.error(`Performing ${req.body.numberOfExpectedLogs} test(s) that`
                  + ' will result in log(s)');
   return res.status(200).json('Log Warning Added Successfully');
 });
 
 
-/**
- * This function is used to return http responses.
- *
- * @param {string} res the result object
- * @param {string} code the http status code
- * @param {string} statusMsg the message containing the status of the message
- * @return an http response with designated status code and attached
- */
-function handleResponse(res, code, statusMsg) {
-  res.status(code).json({ status: statusMsg });
-}
 
 module.exports = router;
