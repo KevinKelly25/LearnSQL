@@ -32,8 +32,11 @@ const logger = require('../logs/winston.js');
 function handleResponse(res, code, statusMsg) {
   res.status(code).json({ status: statusMsg });
 }
+
+
+
 // Basic get function for basic routing
-router.get('/', (res) => {
+router.get('/', (req, res) => {
   res.sendFile(path.join(
     __dirname, '..', '..', 'client', 'views', 'index.html',
   ));

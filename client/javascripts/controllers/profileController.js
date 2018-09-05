@@ -26,6 +26,7 @@ app.controller('ProfileCtrl', ($scope, $http) => {
   }
 
 
+
   // function activates upon loading page obtaining current user information
   $http.get('/auth/check')
     .success((data) => {

@@ -150,7 +150,7 @@ router.post('/dropClass', authHelpers.teacherRequired, (req, res) => teacherHelp
  *  to be appended to the end of the link after #?token=. For example
  *  http://localhost:3000/auth/resetPassword/#?token=59ff4734c92f789058b2
  */
-router.get('/class/', (res) => {
+router.get('/class/', (req, res) => {
   res.sendFile(path.join(
     __dirname, '..', '..', 'client', 'views', 'controlPanels', 'teacherClass.html',
   ));
