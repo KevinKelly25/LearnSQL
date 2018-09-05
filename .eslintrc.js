@@ -6,7 +6,8 @@ module.exports = {
     },
     "rules": {
         "no-multiple-empty-lines": [1,{"max":3}],
-        "no-unused-vars": ["error", { "argsIgnorePattern": "next", "argsIgnorePattern": "req" }]
+        "no-unused-vars": ["error", { "argsIgnorePattern": "next", "argsIgnorePattern": "req" }],
+        "linebreak-style": 0,
       },
     "globals": {
         "app": 1,

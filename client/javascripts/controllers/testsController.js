@@ -47,9 +47,9 @@ app.controller('TestsCtrl', ($scope, $http, $window) => {
       name: 'create_test1',
       password: 'test',
     };
-    $http.post('/admin/addClass', $scope.class1)
+    $http.post('/teacher/addClass', $scope.class1)
       .success(() => {
-        $http.post('/admin/dropClass', $scope.class1)
+        $http.post('/teacher/dropClass', $scope.class1)
           .success(() => {
             $scope.count += 1;
             if (angular.equals($scope.count, $scope.testStats.numberOfTests)) {
@@ -71,9 +71,9 @@ app.controller('TestsCtrl', ($scope, $http, $window) => {
       name: 'create_test2',
       password: 'test',
     };
-    $http.post('/admin/addClass', $scope.class2)
+    $http.post('/teacher/addClass', $scope.class2)
       .success(() => {
-        $http.post('/admin/dropClass', $scope.class2)
+        $http.post('/teacher/dropClass', $scope.class2)
           .success(() => {
             $scope.count += 1;
             if (angular.equals($scope.count, $scope.testStats.numberOfTests)) {
@@ -99,9 +99,9 @@ app.controller('TestsCtrl', ($scope, $http, $window) => {
     $http.post('/admin/addClass', $scope.class3)
       .success(() => {
         // This should fail
-        $http.post('/admin/addClass', $scope.class3)
+        $http.post('/teacher/addClass', $scope.class3)
           .success(() => $scope.addDropClassTestStatus = 'Fail Code 5').error(() => {
-            $http.post('/admin/dropClass', $scope.class3)
+            $http.post('/teacher/dropClass', $scope.class3)
               .success(() => {
                 $scope.count += 1;
                 if (angular.equals($scope.count, $scope.testStats.numberOfTests)) {
