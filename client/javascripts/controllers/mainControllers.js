@@ -8,14 +8,14 @@
  * LearnSQL website
  */
 
-var app = angular.module('LearnSQL', ['datatables']);
+const app = angular.module('LearnSQL', ['datatables']);
 
 
 /**
  * This controller is used to dynamically display the navbar of the website
  *  to show whether a user is logged in or not.
  */
-app.controller('NavCtrl', ($scope, $http, $window, $location) => {
+app.controller('NavCtrl', ($scope, $http, $window) => {
   $scope.currentUser = {};
   $scope.message = 'message';
 
@@ -27,12 +27,9 @@ app.controller('NavCtrl', ($scope, $http, $window, $location) => {
    */
   $scope.logout = () => {
     $http.get('/auth/logout')
-    .success((data) => {
-      $window.location.href = 'http://localhost:3000';
-    })
-    .error((error) => {
-      //could not log out
-    });
+      .success(() => {
+        $window.location.href = 'http://localhost:3000';// eslint-disable-line no-param-reassign
+      });
   };
 
   /**
@@ -42,11 +39,8 @@ app.controller('NavCtrl', ($scope, $http, $window, $location) => {
    */
   $scope.init = () => {
     $http.get('/auth/check')
-    .success((data) => {
-      $scope.currentUser = data;
-    })
-    .error((error) => {
-      //error
-    });
-  }
+      .success((data) => {
+        $scope.currentUser = data;
+      });
+  };
 });

@@ -8,13 +8,12 @@
  */
 
 
-
 const express = require('express');
+
 const router = express.Router();
+const path = require('path');
 const teacherHelpers = require('../controlPanel/teacherControlPanel.js');
 const authHelpers = require('../auth/_helpers');
-const path = require('path');
-
 
 
 /**
@@ -27,13 +26,10 @@ const path = require('path');
  * @param {string} classname the classname the student will be added to
  * @return response
  */
-router.post('/addStudent', authHelpers.teacherRequired, (req, res, next)  => {
-	return teacherHelpers.addStudent(req, res)
-	.catch((err) => {
-		handleResponse(res, 500, err);
-	});
-});
-
+router.post('/addStudent', authHelpers.teacherRequired, (req, res, next) => teacherHelpers.addStudent(req, res)
+  .catch((err) => {
+    handleResponse(res, 500, err);
+  }));
 
 
 /**
@@ -43,14 +39,10 @@ router.post('/addStudent', authHelpers.teacherRequired, (req, res, next)  => {
  *
  * @return response
  */
-router.get('/getClasses', authHelpers.teacherRequired, (req, res, next)  => {	
-	return teacherHelpers.getClasses(req, res)
-	.catch((err) => {
-		handleResponse(res, 500, err);
-	});
-});
-
-
+router.get('/getClasses', authHelpers.teacherRequired, (req, res, next) => teacherHelpers.getClasses(req, res)
+  .catch((err) => {
+    handleResponse(res, 500, err);
+  }));
 
 
 /**
@@ -61,13 +53,10 @@ router.get('/getClasses', authHelpers.teacherRequired, (req, res, next)  => {
  * @param {string} classname the classname the student will be added to
  * @return response
  */
-	router.post('/getClassInfo', authHelpers.teacherRequired, (req, res, next)  => {
-		return teacherHelpers.getClassInfo(req, res)
-		.catch((err) => {
-			handleResponse(res, 500, err);
-		});
-	});
-
+router.post('/getClassInfo', authHelpers.teacherRequired, (req, res, next) => teacherHelpers.getClassInfo(req, res)
+  .catch((err) => {
+    handleResponse(res, 500, err);
+  }));
 
 
 /**
@@ -78,13 +67,10 @@ router.get('/getClasses', authHelpers.teacherRequired, (req, res, next)  => {
  * @param {string} classname the classname the student will be added to
  * @return response
  */
-router.post('/getStudents', authHelpers.teacherRequired, (req, res, next)  => {
-	return teacherHelpers.getStudents(req, res)
-	.catch((err) => {
-		handleResponse(res, 500, err);
-	});
-});
-
+router.post('/getStudents', authHelpers.teacherRequired, (req, res, next) => teacherHelpers.getStudents(req, res)
+  .catch((err) => {
+    handleResponse(res, 500, err);
+  }));
 
 
 /**
@@ -96,21 +82,18 @@ router.post('/getStudents', authHelpers.teacherRequired, (req, res, next)  => {
  * @param {string} classname the classname the student will be added to
  * @return response
  */
-router.post('/dropStudent', authHelpers.teacherRequired, (req, res, next)  => {
-	return teacherHelpers.dropStudent(req, res)
-	.catch((err) => {
-		handleResponse(res, 500, err);
-	});
-});
-
+router.post('/dropStudent', authHelpers.teacherRequired, (req, res, next) => teacherHelpers.dropStudent(req, res)
+  .catch((err) => {
+    handleResponse(res, 500, err);
+  }));
 
 
 /**
  * This method creates a class for the teacher. Most functionality is
  *  contained in `teacherControlPanel.js` createClass function. Expects a
  *  promise to be returned
- * 
- * 
+ *
+ *
  * @param {string} name the name of the class to be added
  * @param {string} section the section of the class
  * @param {string} times time the class is supposed to meet
@@ -120,31 +103,25 @@ router.post('/dropStudent', authHelpers.teacherRequired, (req, res, next)  => {
  * @param {string} password the join password students need to join class
  * @return http response if class was added
  */
-router.post('/addClass', authHelpers.teacherRequired,(req, res, next)  => {
-  return teacherHelpers.createClass(req, res)
-	.catch((err) => {
-		handleResponse(res, 500, err);
-	});
-});
-
+router.post('/addClass', authHelpers.teacherRequired, (req, res, next) => teacherHelpers.createClass(req, res)
+  .catch((err) => {
+    handleResponse(res, 500, err);
+  }));
 
 
 /**
  * This method drops a class for the teacher. Most functionality is
  *  contained in `teacherControlPanel.js` dropClass function. Expects a
  *  promise to be returned
- * 
- * 
+ *
+ *
  * @param {string} name the name of the class to be added
  * @return http response if class was dropped
  */
-router.post('/dropClass', authHelpers.teacherRequired,(req, res, next)  => {
-  return teacherHelpers.dropClass(req, res)
-	.catch((err) => {
-		handleResponse(res, 500, err);
-	});
-});
-
+router.post('/dropClass', authHelpers.teacherRequired, (req, res, next) => teacherHelpers.dropClass(req, res)
+  .catch((err) => {
+    handleResponse(res, 500, err);
+  }));
 
 
 /**
@@ -153,10 +130,10 @@ router.post('/dropClass', authHelpers.teacherRequired,(req, res, next)  => {
  *  http://localhost:3000/auth/resetPassword/#?token=59ff4734c92f789058b2
  */
 router.get('/class/', (req, res, next) => {
-	res.sendFile(path.join(
-		__dirname, '..', '..', 'client', 'views', 'controlPanels', 'teacherClass.html'));
+  res.sendFile(path.join(
+    __dirname, '..', '..', 'client', 'views', 'controlPanels', 'teacherClass.html',
+  ));
 });
-
 
 
 /**
@@ -168,9 +145,8 @@ router.get('/class/', (req, res, next) => {
  * @return an http responde with designated status code and attached
  */
 function handleResponse(res, code, statusMsg) {
-  res.status(code).json({status: statusMsg});
+  res.status(code).json({ status: statusMsg });
 }
-
 
 
 module.exports = router;

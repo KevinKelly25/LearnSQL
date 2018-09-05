@@ -8,8 +8,8 @@
  */
 
 
-
 const express = require('express');
+
 const router = express.Router();
 const authHelpers = require('../auth/_helpers');
 const logger = require('../logs/winston.js');
@@ -19,16 +19,15 @@ const logger = require('../logs/winston.js');
  * This logs a message that given number of errors will be logged. Used for
  *  testing purposes.
  *
- * @param {string} numberOfExpectedLogs the number of error logs that will be 
+ * @param {string} numberOfExpectedLogs the number of error logs that will be
  *                                       created for testing purposes
  * @return an http response
  */
-router.post('/testLogWarning', authHelpers.adminRequired,(req, res, next)  => {
-    logger.error('Performing ' + req.body.numberOfExpectedLogs + ' test(s) that'
+router.post('/testLogWarning', authHelpers.adminRequired, (req, res, next) => {
+  logger.error(`Performing ${req.body.numberOfExpectedLogs} test(s) that`
                  + ' will result in log(s)');
-    return res.status(200).json('Log Warning Added Successfully');
+  return res.status(200).json('Log Warning Added Successfully');
 });
-
 
 
 /**
@@ -40,7 +39,7 @@ router.post('/testLogWarning', authHelpers.adminRequired,(req, res, next)  => {
  * @return an http response with designated status code and attached
  */
 function handleResponse(res, code, statusMsg) {
-  res.status(code).json({status: statusMsg});
+  res.status(code).json({ status: statusMsg });
 }
 
 module.exports = router;

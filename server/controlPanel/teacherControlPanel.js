@@ -8,105 +8,29 @@
  */
 
 
+const uniqid = require('uniqid');
 const ldb = require('../db/ldb.js');
 const dbCreator = require('../db/cdb.js');
 const logger = require('../logs/winston.js');
-const uniqid = require('uniqid');
 
 
-// TODO: add student to learnsql database as well
+
 /**
- * This function adds a student to a ClassDB database. Using the given classname
- *  and the user's username a ClassID is derived; the ClassID is also the ClassDB
- *  database name. Using the ClassID a connection is made to the database and a
- *  database object is returned. This db object then uses the given username and
- *  fullname to create a student in the ClassDB database. To do this a built in
- *  classdb function 'createStudent' is used. See https://github.com/DASSL/ClassDB/wiki/Adding-Users
- *  for more information on how ClassDB adds students
+ * handles errors, for now only checks the length of the password
+ * Also, set to a low number for testing purposes.
  *
- * @param {string} username the username of the student to be added
- * @param {string} fullname the full name of the student
- * @param {string} classname the classname the student will be added to
- * @return response
+ * @param {string} password a given password string
+ * @returns resolve or reject promise whether conditions were met
  */
-function addStudent(req, res) {
-	return new Promise((resolve, reject) => {
-		ldb.one('SELECT C.ClassID ' +
-				'FROM Attends AS A INNER JOIN Class AS C ON A.ClassID = C.ClassID ' +
-				'WHERE Username = $1 AND ClassName = $2', [req.user.username, req.body.classname])
-				.then((result) => {
-					var db = dbCreator(result.classid);
-					db.func('ClassDB.createStudent',
-						[req.body.username, req.body.fullname])
-					.then((result) => {
-						resolve();
-						db.$pool.end();//closes the connection to the database. IMPORTANT!!
-						return res.status(200).json('student added successfully');
-					})
-					.catch((error)=> {
-						reject({
-							message: 'Could not create student'
-						});
-						db.$pool.end();
-						return;
-					});
-				})
-				.catch((error) => {//goes here if you can't find the class
-					logger.error('addStudent: \n' + error);
-					reject({
-						message: 'Could not find the class'
-					});
-					return;
-				});
-		});
-}
-
-
-
-// TODO: remove student from learnsql database
-/**
- * This function drops a student to a ClassDB database. Using the given classname
- *  and the user's username a ClassID is derived; the ClassID is also the ClassDB
- *  database name. Using the ClassID a connection is made to the database and a
- *  database object is returned. This db object then uses the given username remove
- *  the student in the ClassDB database. This does not remove a student's role
- *  from the postgres server. To remove a student a built in classdb function
- * 'dropStudent' is used. See https://github.com/DASSL/ClassDB/wiki/Removing-Users
- *  for more information on how ClassDB removes students
- *
- * @param {string} username the username of the student to be added
- * @param {string} classname the classname the student will be added to
- * @return response
- */
-function dropStudent(req, res) {
-	return new Promise((resolve, reject) => {
-		ldb.one('SELECT C.ClassID ' +
-				'FROM Attends AS A INNER JOIN Class AS C ON A.ClassID = C.ClassID ' +
-				'WHERE Username = $1 AND ClassName = $2', [req.user.username, req.body.classname])
-				.then((result) => {
-					var db = dbCreator(result.classid);
-					db.func('ClassDB.dropStudent', [req.body.username, false,
-							true, 'drop'])
-					.then((result) => {
-						resolve();
-						db.$pool.end();//closes the connection to the database. IMPORTANT!!
-						return res.status(200).json('Student Dropped Successfully');
-					})
-					.catch((error)=> {
-						reject({
-							message: 'could not drop student'
-						});
-						return;
-					});
-				})
-				.catch((error) => {//goes here if you can't find the class
-					logger.error('dropStudent: \n' + error);
-					reject({
-						message: 'Could not find the class'
-					});
-					return;
-				});
-		});
+function handleErrors(req) {
+  // TODO: fix length requirements
+  return new Promise((resolve, reject) => {
+    if (req.body.password.length < 1) {
+      reject(new Error('Password must be longer than 6 characters'));
+    } else {
+      resolve();
+    }
+  });
 }
 
 
@@ -124,37 +48,30 @@ function dropStudent(req, res) {
  * @return unformatted student activity from a ClassDB database or an error response
  */
 function getStudents(req, res) {
-	return new Promise((resolve, reject) => {		
-		ldb.one('SELECT C.ClassID ' +
-						'FROM Attends AS A INNER JOIN Class AS C ON A.ClassID = C.ClassID '+
-						'WHERE Username = $1 AND ClassName = $2',
-						[req.user.username, req.body.className])
-			.then((result) => {
-				var db = dbCreator(result.classid);
-				db.any('SELECT * FROM ClassDB.StudentActivitySummary')
-				.then((result) => {
-					resolve();
-					db.$pool.end();//closes the connection to the database. IMPORTANT!!
-					return res.status(200).json(result);
-				})
-				.catch((error)=> {
-					logger.error('getStudents: \n' + error);
-					reject({
-						message: 'StudentActivitySummary not working'
-					});
-					return;
-				});
-			})
-			.catch((error) => {//goes here if you can't find the class
-				logger.error('getStudents: \n' + error);
-				reject({
-					message: 'Could not find the class'
-				});
-				return;
-			});
-	});
+  return new Promise((resolve, reject) => {
+    ldb.one('SELECT C.ClassID '
+            + 'FROM Attends AS A INNER JOIN Class AS C ON A.ClassID = C.ClassID '
+            + 'WHERE Username = $1 AND ClassName = $2',
+    [req.user.username, req.body.className])
+      .then((result) => {
+        const db = dbCreator(result.classid);
+        db.any('SELECT * FROM ClassDB.StudentActivitySummary')
+          .then((result2) => {
+            resolve();
+            db.$pool.end();// closes the connection to the database. IMPORTANT!!
+            return res.status(200).json(result2);
+          })
+          .catch((error) => {
+            logger.error(`getStudents: \n${error}`);
+            reject(new Error('StudentActivitySummary not working'));
+          });
+      })
+      .catch((error) => { // goes here if you can't find the class
+        logger.error(`getStudents: \n${error}`);
+        reject(new Error('Could not find the class'));
+      });
+  });
 }
-
 
 
 /**
@@ -173,74 +90,60 @@ function getStudents(req, res) {
  * @return http response if class was added or reject promise if error
  */
 function createClass(req, res) {
-	return handleErrors(req)
-	.then(() => {
-		var classid = req.body.name + '_' + uniqid(); //guarantee uniqueness
-		//check to make sure that there is none conflicting ClassName for that user
-		ldb.task( t => {
-			return t.oneOrNone('SELECT Username, C.ClassID ' +
-							 					 'FROM Attends AS A INNER JOIN Class AS C ' +
-												 'ON A.ClassID = C.ClassID ' +
-												 'WHERE Username = $1 AND ClassName = $2 AND ' +
-												 +	'isTeacher = true',
-												 [req.user.username, req.body.name])
-			.then((result) => {
-				if (result) {
-					throw 'Classname Already Exists';
-				} else {
-					return t.none('CREATE DATABASE $1~ WITH TEMPLATE classdb_template ' +
-												' OWNER classdb', classid)
-				}
-			})
-			.then(() => {
-				return t.none('INSERT INTO class_t(Classid, ClassName, Section, Times, ' +
-											'Days, StartDate, EndDate, Password) ' +
-											'VALUES(${id}, ${name}, ${section}, ${times}, ${days}, ' +
-											'${startDate}, ${endDate}, ${password} ) '
-											, {
-												id: classid,
-												name: req.body.name,
-												section: req.body.section,
-												times: req.body.times,
-												days: req.body.days,
-												startDate: req.body.startDate,
-												endDate: req.body.endDate,
-												password: req.body.password
-											})
-			}).
-			then(() => {
-				return t.none('INSERT INTO attends(username, classid, isteacher) ' +
-											'VALUES(${name}, ${class}, ${isTeacher})'
-											, {
-												name: req.user.username,
-												class: classid,
-												isTeacher: true
-											});
-			})
-		})
-		.then(events => {
-			//Readd user access privileges on ClassDB instance
-			var db = dbCreator(classid);
-			db.any('SELECT reAddUserAccess()')
-			.then((result) => {
-				db.$pool.end();//closes the connection to the database. IMPORTANT!!
-				return res.status(200).json('Class Database Created Successfully');
-			})
-			.catch((error) => {
-				logger.error('reAddUserAccess: \n' + error);
-				return res.status(500).json({status: 'Database Privleges could not be added'});
-			})
-		})
-		.catch(error => {			
-			if (error == 'Classname Already Exists') {
-				res.status(500).json({status: error});
-			}
-			else {
-				logger.error('create Class: \n' + error);
-				res.status(500).json({status: 'Database could not be created'});
-			}
-		});
-	})
+  return handleErrors(req)
+    .then(() => {
+      const classid = `${req.body.name}_${uniqid()}`; // guarantee uniqueness
+      // check to make sure that there is none conflicting ClassName for that user
+      ldb.task(t => t.oneOrNone('SELECT Username, C.ClassID '
+                         + 'FROM Attends AS A INNER JOIN Class AS C '
+                         + 'ON A.ClassID = C.ClassID '
+                         + 'WHERE Username = $1 AND ClassName = $2 AND '
+                         + 'isTeacher = true',
+      [req.user.username, req.body.name])
+        .then((result) => {
+          if (result) {
+            throw new Error('Classname Already Exists');
+          } else {
+            return t.none('CREATE DATABASE $1~ WITH TEMPLATE classdb_template '
+                          + ' OWNER classdb', classid);
+          }
+        })
+        .then(() => t.none(
+          'INSERT INTO class_t(Classid, ClassName, Section, Times, '
+          + 'Days, StartDate, EndDate, Password) '
+          + 'VALUES($1, $2, $3, $4, $5, $6, $7, $8)',
+          [
+            classid, req.body.name, req.body.section, req.body.times,
+            req.body.days, req.body.startDate, req.body.endDate, req.body.password,
+          ],
+        ))
+        .then(() => t.none(
+          'INSERT INTO attends(username, classid, isteacher) '
+          + 'VALUES($1, $2, $3)',
+          [req.user.username, classid, true],
+        )))
+        .then(() => {
+          // Readd user access privileges on ClassDB instance
+          const db = dbCreator(classid);
+          db.any('SELECT reAddUserAccess()')
+            .then(() => {
+              db.$pool.end();// closes the connection to the database. IMPORTANT!!
+              return res.status(200).json('Class Database Created Successfully');
+            })
+            .catch((error) => {
+              logger.error(`reAddUserAccess: \n${error}`);
+              return res.status(500).json({ status: 'Database Privleges could not be added' });
+            });
+        })
+        .catch((error) => {
+          if (error === 'Classname Already Exists') {
+            res.status(500).json({ status: error });
+          } else {
+            logger.error(`create Class: \n${error}`);
+            res.status(500).json({ status: 'Database could not be created' });
+          }
+        });
+    });
 }
 
 
@@ -252,37 +155,30 @@ function createClass(req, res) {
  * @return http response on whether the class was successfully dropped
  */
 function dropClass(req, res) {
-	return new Promise((resolve, reject) => {
-		ldb.task(t => {
-			 return t.one('SELECT C.ClassID ' +
-										'FROM Attends AS A INNER JOIN Class AS C ' +
-										'ON A.ClassID = C.ClassID ' +
-										'WHERE Username = $1 AND ClassName = $2 AND isTeacher = True',
-										 [req.user.username, req.body.name])
-			.then((result) => {
-				req.body.classid = result.classid;
-			  return t.none('DROP DATABASE $1~ ', result.classid)
-			})
-			.then(() => {
-				return t.none('DELETE FROM attends WHERE classid = $1', req.body.classid)
-			})
-			.then(() => {
-				return t.none('DELETE FROM class WHERE classid = $1', req.body.classid)
-			})
-			.then(() => {
-				resolve();
-				return res.status(200).json('Class Database Dropped Successfully');
-			})
-			.catch(error => {
-				reject({
-					message: 'Database could not be Deleted'
-				});
-				logger.error('Drop Class: \n' + error);
-			});
-		});
-	})
+  return new Promise((resolve, reject) => {
+    ldb.task(t => t.one(
+      'SELECT C.ClassID '
+      + 'FROM Attends AS A INNER JOIN Class AS C '
+      + 'ON A.ClassID = C.ClassID '
+      + 'WHERE Username = $1 AND ClassName = $2 AND isTeacher = True',
+      [req.user.username, req.body.name],
+    )
+      .then((result) => {
+        req.body.classid = result.classid;
+        return t.none('DROP DATABASE $1~ ', result.classid);
+      })
+      .then(() => t.none('DELETE FROM attends WHERE classid = $1', req.body.classid))
+      .then(() => t.none('DELETE FROM class WHERE classid = $1', req.body.classid))
+      .then(() => {
+        resolve();
+        return res.status(200).json('Class Database Dropped Successfully');
+      })
+      .catch((error) => {
+        reject(new Error('Database could not be Deleted'));
+        logger.error(`Drop Class: \n${error}`);
+      }));
+  });
 }
-
 
 
 /**
@@ -292,83 +188,57 @@ function dropClass(req, res) {
  * @return the classes the user is in and relevent class information
  */
 function getClasses(req, res) {
-	return new Promise((resolve, reject) => {
-		ldb.any('SELECT ClassName, Section, Times, Days, StartDate, ' +
-						'EndDate, StudentCount ' +
-						'FROM Attends INNER JOIN Class ON Attends.ClassID = Class.ClassID '+
-						'WHERE Username = $1 AND isTeacher = true', [req.user.username])
-			.then((result) => {
-				resolve();
-				return res.status(200).json(result);
-			})
-			.catch((error) => {//goes here if you can't find the class
-				logger.error('getClasses: \n' + error);
-				reject({
-					message: 'Could not query the classes'
-				});
-				return;
-			});
-	});
+  return new Promise((resolve, reject) => {
+    ldb.any(
+      'SELECT ClassName, Section, Times, Days, StartDate, '
+      + 'EndDate, StudentCount '
+      + 'FROM Attends INNER JOIN Class ON Attends.ClassID = Class.ClassID '
+      + 'WHERE Username = $1 AND isTeacher = true', [req.user.username],
+    )
+      .then((result) => {
+        resolve();
+        return res.status(200).json(result);
+      })
+      .catch((error) => { // goes here if you can't find the class
+        logger.error(`getClasses: \n${error}`);
+        reject(new Error('Could not query the classes'));
+      });
+  });
 }
 
 /**
- * This function gets all the class information for a class when given a 
+ * This function gets all the class information for a class when given a
  *  className
  *
  * @param className
  * @return class information
  */
 function getClassInfo(req, res) {
-	return new Promise((resolve, reject) => {
-		ldb.any('SELECT Attends.ClassID, ClassName, Section, Times, Days, ' +
-						'StartDate, EndDate, StudentCount ' +
-						'FROM Attends INNER JOIN Class ON Attends.ClassID = Class.ClassID '+
-						'WHERE ClassName = $1 AND Username = $2 AND isTeacher = true', 
-						[req.body.className, req.user.username])
-			.then((result) => {
-				resolve();
-				return res.status(200).json(result);
-			})
-			.catch((error) => {//goes here if you can't find the class
-				logger.error('getClass: \n' + error);
-				reject({
-					message: 'Could not query the classes'
-				});
-				return;
-			});
-	});
-}
-
-
-
-/**
- * handles errors, for now only checks the length of the password
- * Also, set to a low number for testing purposes.
- * 
- * @param {string} password a given password string
- * @returns resolve or reject promise whether conditions were met
- */
-function handleErrors(req) {
-  // TODO: fix length requirements
   return new Promise((resolve, reject) => {
-  if (req.body.password.length < 1) {
-      reject({
-        message: 'Password must be longer than 6 characters'
+    ldb.any(
+      'SELECT Attends.ClassID, ClassName, Section, Times, Days, '
+      + 'StartDate, EndDate, StudentCount '
+      + 'FROM Attends INNER JOIN Class ON Attends.ClassID = Class.ClassID '
+      + 'WHERE ClassName = $1 AND Username = $2 AND isTeacher = true',
+      [req.body.className, req.user.username],
+    )
+      .then((result) => {
+        resolve();
+        return res.status(200).json(result);
+      })
+      .catch((error) => { // goes here if you can't find the class
+        logger.error(`getClass: \n${error}`);
+        reject(new Error('Could not query the classes'));
       });
-    } else {
-      resolve();
-    }
   });
 }
 
 
 
 module.exports = {
-  addStudent,
-  dropStudent,
   getStudents,
-	getClasses,
-	createClass,
-	dropClass,
-	getClassInfo
+  getClasses,
+  createClass,
+  dropClass,
+  getClassInfo,
 };

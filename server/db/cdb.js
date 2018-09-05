@@ -10,7 +10,7 @@
 
 // Loading and initializing the library:
 const pgp = require('pg-promise')({
-    // Initialization Options
+  // Initialization Options
 });
 
 /*
@@ -18,8 +18,10 @@ const pgp = require('pg-promise')({
  *
  * @param {string} classid the name of the database
  */
+  // TODO: find better way to do this
+  /* eslint-disable */
 module.exports = function (classid) {
-	const connectionString = 'postgresql://postgres:password@localhost:5432/'
-							 + classid;
-	return db = pgp(connectionString);
+  const connectionString = `postgresql://postgres:password@localhost:5432/${
+    classid}`;
+  return db = pgp(connectionString);
 };

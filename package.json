@@ -5,7 +5,8 @@
   "main": "gulpfile.js",
   "scripts": {
     "start": "npm run gulp && nodemon ./bin/www",
-    "gulp": "gulp"
+    "gulp": "gulp",
+    "pretest": "eslint --ignore-path .gitignore ."
   },
   "repository": {
     "type": "git",
@@ -51,6 +52,9 @@
   },
   "devDependencies": {
     "browser-sync": "^2.23.6",
+    "eslint": "^5.5.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.14.0",
     "gulp": "^3.9.1",
     "gulp-sass": "^4.0.1"
   }

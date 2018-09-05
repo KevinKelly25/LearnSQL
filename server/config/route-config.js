@@ -8,11 +8,7 @@
  */
 
 (function (routeConfig) {
-
-  'use strict';
-
   routeConfig.init = function (app) {
-
     // *** routes *** //
     const routes = require('../routes/index');
     const authRoutes = require('../routes/auth');
@@ -28,7 +24,5 @@
     app.use('/admin', adminRoutes);
     app.use('/teacher', teacherRoutes);
     app.use('/student', studentRoutes);
-
   };
-
-})(module.exports);
+}(module.exports));

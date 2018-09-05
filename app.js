@@ -1,7 +1,4 @@
-(function() {
-
-  'use strict';
-
+(function () {
   // *** dependencies *** //
   const express = require('express');
 
@@ -18,5 +15,4 @@
   errorConfig.init(app);
 
   module.exports = app;
-
 }());
