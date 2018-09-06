@@ -1,3 +1,11 @@
+/**
+ * gulp.js - LearnSQL
+ *
+ * Kevin Kelly
+ * Web Applications and Databases for Education (WADE)
+ *
+ * This file automates the start up process of the webapp. 
+ */
 /* eslint-disable */
 
 const gulp = require('gulp');
@@ -27,6 +35,14 @@ gulp.task('js', () => gulp
   .pipe(gulp.dest('client/javascripts'))
   .pipe(browserSync.stream()));
 
+// Move test JS Files to src/js/testControllers
+gulp.task('testsJS', () => gulp
+  .src([
+    '../../tests/controllerTests/*.js',
+  ])
+  .pipe(gulp.dest('client/javascripts/controllers/testControllers'))
+  .pipe(browserSync.stream()));
+
 gulp.task('default', ['build', 'watch', 'connect'], () => {
   express;
 });
@@ -41,4 +57,4 @@ gulp.task('fa', () => gulp
   .src('node_modules/font-awesome/css/font-awesome.min.css')
   .pipe(gulp.dest('client/stylesheets')));
 
-gulp.task('default', ['js', 'sass', 'fa', 'fonts']);
+gulp.task('default', ['js', 'sass', 'fa', 'fonts', 'testsJS']);

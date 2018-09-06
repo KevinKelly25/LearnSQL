@@ -1,3 +1,11 @@
+/**
+ * app.js - LearnSQL
+ *
+ * Kevin Kelly
+ * Web Applications and Databases for Education (WADE)
+ *
+ * This file is the base startup config for the webapp
+ */
 (function () {
   // *** dependencies *** //
   const express = require('express');
