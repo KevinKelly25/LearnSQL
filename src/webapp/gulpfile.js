@@ -1,3 +1,11 @@
+/**
+ * gulp.js - LearnSQL
+ *
+ * Kevin Kelly
+ * Web Applications and Databases for Education (WADE)
+ *
+ * This file automates the start up process of the webapp. 
+ */
 /* eslint-disable */
 
 const gulp = require('gulp');
