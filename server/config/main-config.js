@@ -1,7 +1,13 @@
-(function(appConfig) {
-
-  'use strict';
-
+/**
+ * error-config.js - LearnSQL
+ *
+ * Kevin Kelly
+ * Web Applications and Databases for Education (WADE)
+ *
+ * This file contains the server configuration related to error handling
+ */
+/* eslint-disable */
+(function (appConfig) {
   // *** main dependencies *** //
   const path = require('path');
   const cookieParser = require('cookie-parser');
@@ -11,16 +17,14 @@
   const morgan = require('morgan');
   const passport = require('passport');
   const nodemailer = require('nodemailer');
-    
 
 
   // *** load environment variables *** //
   require('dotenv').config();
 
-  appConfig.init = function(app, express) {
-
+  appConfig.init = function (app, express) {
     app.set('view engine', 'html');
-    
+
     // *** app middleware *** //
     if (process.env.NODE_ENV !== 'test') {
       app.use(morgan('dev'));
@@ -34,12 +38,11 @@
     app.use(session({
       secret: 'anything',
       resave: false,
-      saveUninitialized: true
+      saveUninitialized: true,
     }));
     app.use(passport.initialize());
     app.use(passport.session());
     app.use(flash());
     app.use(express.static(path.join(__dirname, '..', '..', 'client')));
   };
-
-})(module.exports);
+}(module.exports));

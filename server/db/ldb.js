@@ -1,6 +1,6 @@
 // Loading and initializing the library:
 const pgp = require('pg-promise')({
-    // Initialization Options
+  // Initialization Options
 });
 
 // Preparing the connection details:

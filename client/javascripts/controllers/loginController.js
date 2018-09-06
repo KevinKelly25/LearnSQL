@@ -7,8 +7,7 @@
  * This file contains the angularJS controllers that are used throughout the
  * LearnSQL website
  */
-
-
+/* eslint-disable no-param-reassign */
 
 /**
  * This controller is used to display and use the login operations
@@ -18,14 +17,13 @@ app.controller('LoginCtrl', ($scope, $http, $location, $window) => {
   $scope.error = false;
   $scope.success = false;
 
-  //user information
+  // user information
   this.user = {
-     username: null,
-     email: null,
-     password: null,
-     fullName: null
+    username: null,
+    email: null,
+    password: null,
+    fullName: null,
   };
-
 
 
   /**
@@ -39,40 +37,34 @@ app.controller('LoginCtrl', ($scope, $http, $location, $window) => {
   $scope.register = () => {
     $scope.error = false;
     $scope.success = true;
-    $scope.message = 'User Being Created, Please Wait...'
+    $scope.message = 'User Being Created, Please Wait...';
     // TODO: do these work directly in the html page?
     this.user.email = $scope.email;
     this.user.password = $scope.password;
     this.user.fullName = $scope.fullName;
     this.user.username = $scope.username;
-    //if email was entered incorrectly or not entered
+    // if email was entered incorrectly or not entered
     if (!angular.isDefined($scope.email) || !angular.isDefined($scope.password)
-          || !angular.isDefined($scope.fullName) || !angular.isDefined($scope.username))
-    {
+          || !angular.isDefined($scope.fullName) || !angular.isDefined($scope.username)) {
       $scope.success = false;
       $scope.error = true;
       $scope.message = 'Please Fill Out All Fields';
-      return;
-    }
-    //if passwords do not match display error
-    else if ($scope.password != $scope.password2)
-    {
+    // if passwords do not match display error
+    } else if ($scope.password !== $scope.password2) {
       $scope.success = false;
       $scope.error = true;
       $scope.message = 'Passwords do not match';
-      return;
-    } else
-    {
+    } else {
       $http.post('/auth/register', this.user)
-      .success((data) => {
-        $scope.success = true;
-        $scope.message = data.status;
-      })
-      .error((error) => {
-        $scope.success = false;
-        $scope.error = true;
-        $scope.message = error.status;
-      });
+        .success((data) => {
+          $scope.success = true;
+          $scope.message = data.status;
+        })
+        .error((error) => {
+          $scope.success = false;
+          $scope.error = true;
+          $scope.message = error.status;
+        });
     }
   };
 
@@ -83,8 +75,7 @@ app.controller('LoginCtrl', ($scope, $http, $location, $window) => {
   $scope.login = () => {
     $scope.error = false;
     $scope.success = false;
-    if (!angular.isDefined($scope.username) || !angular.isDefined($scope.password))
-    {
+    if (!angular.isDefined($scope.username) || !angular.isDefined($scope.password)) {
       $scope.error = true;
       $scope.message = 'Please Fill Out All Fields';
       return;
@@ -92,13 +83,13 @@ app.controller('LoginCtrl', ($scope, $http, $location, $window) => {
     this.user.username = $scope.username;
     this.user.password = $scope.password;
     $http.post('/auth/login', this.user)
-    .success((data) => {
-      $window.location.href = 'http://localhost:3000';
-    })
-    .error((error) => {
-      $scope.error = true;
-      $scope.message = error.status;
-    });
+      .success(() => {
+        $window.location.href = 'http://localhost:3000';
+      })
+      .error((error) => {
+        $scope.error = true;
+        $scope.message = error.status;
+      });
   };
 
 
@@ -118,21 +109,20 @@ app.controller('LoginCtrl', ($scope, $http, $location, $window) => {
       return;
     }
     $scope.email = {
-        email: $scope.forgotEmail
+      email: $scope.forgotEmail,
     };
     $http.post('/auth/forgotPasswordEmail', $scope.email)
-    .success((data) => {
+      .success(() => {
         $scope.error = false;
         $scope.success = true;
         $scope.message = 'Email was sent';
-    })
-    .error((error) => {
-      $scope.success = false;
-      $scope.error = true;
-      $scope.message = error.status;
-    });
+      })
+      .error((error) => {
+        $scope.success = false;
+        $scope.error = true;
+        $scope.message = error.status;
+      });
   };
-
 
 
   /**
@@ -145,21 +135,19 @@ app.controller('LoginCtrl', ($scope, $http, $location, $window) => {
     $scope.error = false;
     $scope.success = true;
     $scope.message = 'Reseting Password, please wait...';
-    //if passwords do not match display error
-    if ($scope.password1 != $scope.password2)
-    {
+    // if passwords do not match display error
+    if ($scope.password1 !== $scope.password2) {
       $scope.error = true;
       $scope.message = 'Passwords do not match';
       return;
-    } else
-    {
-      $scope.parameters = {
-          token: $location.search().token,
-          password: $scope.password1,
-          username: $scope.username
-      };
-      $http.post('/auth/resetPassword', $scope.parameters)
-      .success((data) => {
+    }
+    $scope.parameters = {
+      token: $location.search().token,
+      password: $scope.password1,
+      username: $scope.username,
+    };
+    $http.post('/auth/resetPassword', $scope.parameters)
+      .success(() => {
         $scope.message = 'Password Reset';
       })
       .error((error) => {
@@ -167,7 +155,5 @@ app.controller('LoginCtrl', ($scope, $http, $location, $window) => {
         $scope.success = false;
         $scope.message = error;
       });
-  }
   };
-
 });

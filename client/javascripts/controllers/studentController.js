@@ -7,46 +7,39 @@
  * This file contains the angularJS controller used for the student functionality
  *  on the LearnSQL website
  */
+/* eslint-disable no-param-reassign */
 
 
-var app = angular.module('LearnSQL');
-
-
-
-app.controller('studentCtrl', ($scope, $http, $window, $location) => {
+app.controller('studentCtrl', ($scope, $http, $window) => {
   $scope.class = {
-    name: 'something'
+    name: 'something',
   };
 
   $scope.init = () => {
     $http.get('/student/getClasses')
-    .success((data) => {
-      $scope.classes = data;
-    })
-    .error((error) => {
-      //do something if encounters an error
-    });
-  }
-  
-  
+      .success((data) => {
+        $scope.classes = data;
+      });
+  };
+
 
   $scope.joinClassFromPage = () => {
     $scope.error = false;
     $scope.success = true;
-    $scope.message = 'Joining Class, Please Wait...'
+    $scope.message = 'Joining Class, Please Wait...';
     $scope.joinClass = {
       classID: $scope.classID,
-      password: $scope.joinPassword
-    }
+      password: $scope.joinPassword,
+    };
     $http.post('/student/joinClass', $scope.joinClass)
-    .success((data) => {
-      $scope.message = 'Joined Class';
-      $window.location.href = 'http://localhost:3000/views/controlPanels/studentClasses.html';
-    })
-    .error((error) => {
-      $scope.error = true;
-      $scope.success = false;
-      $scope.message = error.status;
-    });
-  }  
+      .success(() => {
+        $scope.message = 'Joined Class';
+        $window.location.href = 'http://localhost:3000/views/controlPanels/studentClasses.html';
+      })
+      .error((error) => {
+        $scope.error = true;
+        $scope.success = false;
+        $scope.message = error.status;
+      });
+  };
 });

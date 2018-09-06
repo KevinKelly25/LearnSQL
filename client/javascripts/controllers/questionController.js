@@ -8,14 +8,12 @@
  */
 
 
-
 /**
  * The Question controller is used to create dynamic questions for the user using
  *  the function answerQuestion
  */
- // TODO: test whether all deletes are needed or can be cleaned up
+// TODO: test whether all deletes are needed or can be cleaned up
 app.controller('Question', ($scope, $http) => {
-
   /**
    * The answeQuestion function is passed a user's query, $formData, and the correct
    *  answer, $statement. The controller will route the user's query to a post
@@ -27,47 +25,45 @@ app.controller('Question', ($scope, $http) => {
    *  appear
    */
   $scope.answerQuestion = () => {
-    $scope.statement = {"text":$scope.statementInHTML};
-    $http.post('/api/v1/questions', $scope.formData)//The submitted answer
-    .success((data1) => {
-      delete $scope.formData;
-      $scope.answerData = data1;
-      $http.post('/api/v1/questions', $scope.statement)//the correct answer
-      .success((data2) => {
-        delete $scope.statement;
-        $scope.correctData = data2;
-        $scope.answer = $scope.answerData;
-        //if the correct answer and submitted answer match
-        if (angular.equals($scope.answerData,$scope.correctData)) {
-          $scope.answer = 'Your Answer Is Correct';
-          $scope.backgroundColor = 'green';
-          delete $scope.answerData;
-          delete $scope.correctData;
-        } else {
-          $scope.answer = 'Your Answer Is Incorrect';
-          $scope.backgroundColor = 'red';
-          delete $scope.answerData;
-          delete $scope.correctData;
-        }
+    $scope.statement = { text: $scope.statementInHTML };
+    $http.post('/api/v1/questions', $scope.formData)// The submitted answer
+      .success((data1) => {
+        delete $scope.formData;
+        $scope.answerData = data1;
+        $http.post('/api/v1/questions', $scope.statement)// the correct answer
+          .success((data2) => {
+            delete $scope.statement;
+            $scope.correctData = data2;
+            $scope.answer = $scope.answerData;
+            // if the correct answer and submitted answer match
+            if (angular.equals($scope.answerData, $scope.correctData)) {
+              $scope.answer = 'Your Answer Is Correct';
+              $scope.backgroundColor = 'green';
+              delete $scope.answerData;
+              delete $scope.correctData;
+            } else {
+              $scope.answer = 'Your Answer Is Incorrect';
+              $scope.backgroundColor = 'red';
+              delete $scope.answerData;
+              delete $scope.correctData;
+            }
+          })
+        // If the correct answer has an error processing
+          .error(() => {
+            $scope.answer = 'Your Answer is Incorrect';
+            $scope.backgroundColor = 'red';
+            delete $scope.statement;
+            delete $scope.answerData;
+            delete $scope.correctData;
+          });
       })
-      //if the correct answer has an error processing
-      .error((error) => {
-        $scope.answer = "Your Answer is Incorrect";
+    // If the submitted answer conneciton fails
+      .error(() => {
+        $scope.answer = 'Your Answer is Incorrect';
         $scope.backgroundColor = 'red';
         delete $scope.statement;
         delete $scope.answerData;
         delete $scope.correctData;
-        return;
       });
-    })
-    //if the submitted answer conneciton fails
-    .error((error) => {
-      $scope.answer = "Your Answer is Incorrect";
-      $scope.backgroundColor = 'red';
-      delete $scope.statement;
-      delete $scope.answerData;
-      delete $scope.correctData;
-      return;
-    });
   };
 });

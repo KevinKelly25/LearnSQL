@@ -1,3 +1,12 @@
+/**
+ * error-config.js - LearnSQL
+ *
+ * Kevin Kelly
+ * Web Applications and Databases for Education (WADE)
+ *
+ * This file contains the server configuration related to error handling
+ */
+/* eslint-disable */
 (function (errorConfig) {
 
   'use strict';

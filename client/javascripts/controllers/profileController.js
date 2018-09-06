@@ -8,7 +8,6 @@
  *  on the LearnSQL website
  */
 
-var app = angular.module('LearnSQL');
 
 /**
   * This controller dynamically updates the HTML view for the profile.html page.
@@ -19,9 +18,18 @@ app.controller('ProfileCtrl', ($scope, $http) => {
   $scope.error = false;
   $scope.success = false;
 
+
+  // Converts the date from postgres format to readable format
+  function convertDate(inputDateString) {
+    const date = new Date(inputDateString);
+    return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
+  }
+
+
+
+  // Function activates upon loading page obtaining current user information
   $http.get('/auth/check')
     .success((data) => {
-
       // Upon loading the page, populate the table with the user information
       //  from the passport.deserializeUser() function.
       $scope.userName = data.username;
@@ -29,24 +37,15 @@ app.controller('ProfileCtrl', ($scope, $http) => {
       $scope.email = data.email;
       $scope.dateJoined = convertDate(data.datejoined);
 
-      if(data.isteacher)
-      {
+      if (data.isteacher) {
         $scope.showInstructorRow = true;
       }
 
-      if(data.isadmin)
-      {
+      if (data.isadmin) {
         $scope.showAdminRow = true;
       }
-
     })
-    .error((error) => {
-      $scope.error = "Unable to retrieve user information";
+    .error(() => {
+      $scope.error = 'Unable to retrieve user information';
     });
-
-  function convertDate(inputDateString){
-    var date = new Date(inputDateString);
-    return date.getMonth()+1 + "/" + date.getDate() + "/" + date.getFullYear();
-  }
-
 });

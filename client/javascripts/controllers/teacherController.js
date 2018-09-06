@@ -7,9 +7,8 @@
  * This file contains the angularJS controller used for the teacher functionality
  *  on the LearnSQL website
  */
+/* eslint-disable no-param-reassign */
 
-
-var app = angular.module('LearnSQL');
 
 
 /**
@@ -17,70 +16,57 @@ var app = angular.module('LearnSQL');
  */
 app.controller('teacherCtrl', ($scope, $http, $location, $window) => {
   $scope.class = {
-    name: 'something'
+    name: 'something',
   };
 
 
-  //Converts the date from postgres format to readable format
-  function convertDate(inputDateString){
-    var date = new Date(inputDateString);
-    return date.getHours() + ":" + date.getMinutes() + "   " 
-      + (date.getMonth()+1) + "/" + date.getDate() + "/" + date.getFullYear();
+  // Converts the date from postgres format to readable format
+  function convertDate(inputDateString) {
+    const date = new Date(inputDateString);
+    return `${date.getHours()}:${date.getMinutes()}   ${
+      date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
   }
 
 
-
   /**
-   * This function initializes the table in `teacherClasses.html` with all the 
-   *  classes the teacher is in.  
+   * This function initializes the table in `teacherClasses.html` with all the
+   *  classes the teacher is in.
    */
   $scope.initClasses = () => {
     $http.get('/teacher/getClasses')
-    .success((data) => {
-      $scope.classes = data;
-    })
-    .error((error) => {
-      //do something if encounters an error
-    });
-  }
+      .success((data) => {
+        $scope.classes = data;
+      });
+  };
 
 
-
-  
   /**
    * This function initializes the table in `teacherClass.html` with the all the
    *  students in the class and associated student information. It also retrieves
-   *  class information from the class view  
+   *  class information from the class view
    */
   $scope.initClass = () => {
     $scope.classInfo = {
-      className: $location.search().class
+      className: $location.search().class,
     };
 
-    
+
     $http.post('/teacher/getStudents', $scope.classInfo)
-    .success((data) => {
-      data.forEach(element => {
-        element.lastddlactivityat = convertDate(element.lastddlactivityat);
+      .success((data) => {
+        data.forEach((element) => {
+          element.lastddlactivityat = convertDate(element.lastddlactivityat);
+        });
+        $scope.class = data;
       });
-      $scope.class = data;
-    })
-    .error((error) => {
-      //do something if encounters an error
-    });
 
     $scope.test = 'help';
     $http.post('/teacher/getClassInfo', $scope.classInfo)
-    .success((data) => {
-      $scope.classInfo = data;
-    })
-    .error((error) => {
-      //do something if encounters an error
-    });
-  }
+      .success((data) => {
+        $scope.classInfo = data;
+      });
+  };
 
 
-  
   /**
    * This function calls the /admin/addClass post method to create ClassDB databases
    *  and updates the associated LearnSQL tables. While processing a message
@@ -99,28 +85,26 @@ app.controller('teacherCtrl', ($scope, $http, $location, $window) => {
       days: $scope.days,
       startDate: $scope.startDate,
       endDate: $scope.endDate,
-      password: $scope.password
+      password: $scope.password,
     };
 
-    //make sure that is a valid name
-    var regex = new RegExp("^[a-zA-Z0-9_]*$");
-    if (regex.test($scope.class.name))
-    {
+    // Make sure that is a valid name
+    const regex = new RegExp('^[a-zA-Z0-9_]*$');
+    if (regex.test($scope.class.name)) {
       $http.post('/teacher/addClass', $scope.class)
-      .success((data) => {
-        $scope.success = true;
-        $scope.message = 'Class Successfully Created';
-        $window.location.reload();
-      })
-      .error((error) => {
-        $scope.success = false;
-        $scope.error = true;
-        $scope.message = error.status;
-      });
-    } else
-    {
-      $scope.message = 'Invalid Characters Detected! Please Use only the following ' +
-                       'characters: A-Z, 0-9, - only (case insensitive)';
+        .success(() => {
+          $scope.success = true;
+          $scope.message = 'Class Successfully Created';
+          $window.location.reload();
+        })
+        .error((error) => {
+          $scope.success = false;
+          $scope.error = true;
+          $scope.message = error.status;
+        });
+    } else {
+      $scope.message = 'Invalid Characters Detected! Please Use only the following '
+                       + 'characters: A-Z, 0-9, - only (case insensitive)';
     }
   };
 
@@ -128,22 +112,21 @@ app.controller('teacherCtrl', ($scope, $http, $location, $window) => {
   /**
    * This function updates the dropClass object to the current className so that
    *  the correct class is displayed in the drop class warning modal. The
-   *  updated dropClass object is also used as a parameter to drop the class in 
-   *  the dropClassTeacher function.  
-   * 
-   * @param {string} className the classname that needs to be displays
+   *  updated dropClass object is also used as a parameter to drop the class in
+   *  the dropClassTeacher function.
+   *
+   * @param {string} className The classname that needs to be displays
    */
   $scope.displayClassName = (className) => {
     $scope.success = false;
     $scope.error = false;
     $scope.dropClass = {
-      name: className
+      name: className,
     };
   };
 
 
-
-   /**
+  /**
    * This function calls a http post method to drop a class. While waiting for
    *  response a message pops up that tells user to wait for completion. Upon
    *  success the user's class page will be reloaded to show updated information
@@ -154,16 +137,15 @@ app.controller('teacherCtrl', ($scope, $http, $location, $window) => {
     $scope.message = 'Class Being Dropped, Please Wait...';
 
     $http.post('/teacher/dropClass', $scope.dropClass)
-    .success((data) => {
-      $scope.success = true;
-      $scope.message = 'Class Successfully Dropped';
-      $window.location.reload();
-    })
-    .error((error) => {
-      $scope.success = false;
-      $scope.error = true;
-      $scope.message = error.status;
-    });
+      .success(() => {
+        $scope.success = true;
+        $scope.message = 'Class Successfully Dropped';
+        $window.location.reload();
+      })
+      .error((error) => {
+        $scope.success = false;
+        $scope.error = true;
+        $scope.message = error.status;
+      });
   };
-
 });
