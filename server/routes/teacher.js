@@ -20,10 +20,10 @@ const authHelpers = require('../auth/_helpers');
 /**
  * This function is used to return http responses.
  *
- * @param {string} res the result object
- * @param {string} code the http status code
- * @param {string} statusMsg the message containing the status of the message
- * @return an http responde with designated status code and attached
+ * @param {string} res The result object
+ * @param {string} code The http status code
+ * @param {string} statusMsg The message containing the status of the message
+ * @return An http response with designated status code and attached
  */
 function handleResponse(res, code, statusMsg) {
   res.status(code).json({ status: statusMsg });
@@ -35,10 +35,10 @@ function handleResponse(res, code, statusMsg) {
  *  `teacherControlPanel.js` addStudent function but is expecting a promise
  *  to be returned
  *
- * @param {string} username the username of the student to be added
- * @param {string} fullname the full name of the student
- * @param {string} classname the classname the student will be added to
- * @return response
+ * @param {string} username The username of the student to be added
+ * @param {string} fullname The full name of the student
+ * @param {string} classname The classname the student will be added to
+ * @return Response
  */
 router.post('/addStudent', authHelpers.teacherRequired, (req, res) => teacherHelpers.addStudent(req, res)
   .catch((err) => {
@@ -66,8 +66,8 @@ router.get('/getClasses', authHelpers.teacherRequired, (req, res) => teacherHelp
  *  functionality is in `teacherControlPanel.js` getClass function.
  *  expects a promise to be returned
  *
- * @param {string} classname the classname the student will be added to
- * @return response
+ * @param {string} classname Rhe classname the student will be added to
+ * @return Response
  */
 router.post('/getClassInfo', authHelpers.teacherRequired, (req, res) => teacherHelpers.getClassInfo(req, res)
   .catch((err) => {
@@ -81,8 +81,8 @@ router.post('/getClassInfo', authHelpers.teacherRequired, (req, res) => teacherH
  *  functionality is in `teacherControlPanel.js` getStudents function.
  *  expects a promise to be returned
  *
- * @param {string} classname the classname the student will be added to
- * @return response
+ * @param {string} classname The classname the student will be added to
+ * @return Response
  */
 router.post('/getStudents', authHelpers.teacherRequired, (req, res) => teacherHelpers.getStudents(req, res)
   .catch((err) => {
@@ -96,9 +96,9 @@ router.post('/getStudents', authHelpers.teacherRequired, (req, res) => teacherHe
  *  contained in `teacherControlPanel.js` dropStudent function. Expects a
  *  promise to be returned
  *
- * @param {string} username the username of the student to be added
- * @param {string} classname the classname the student will be added to
- * @return response
+ * @param {string} username The username of the student to be added
+ * @param {string} classname The classname the student will be added to
+ * @return Response
  */
 router.post('/dropStudent', authHelpers.teacherRequired, (req, res) => teacherHelpers.dropStudent(req, res)
   .catch((err) => {
@@ -113,14 +113,14 @@ router.post('/dropStudent', authHelpers.teacherRequired, (req, res) => teacherHe
  *  promise to be returned
  *
  *
- * @param {string} name the name of the class to be added
- * @param {string} section the section of the class
- * @param {string} times time the class is supposed to meet
- * @param {string} days the days that the class is supposed to meet
- * @param {string} startDate the date of the first class
- * @param {string} endDate the last day of class
- * @param {string} password the join password students need to join class
- * @return http response if class was added
+ * @param {string} name The name of the class to be added
+ * @param {string} section The section of the class
+ * @param {string} times Time the class is supposed to meet
+ * @param {string} days The days that the class is supposed to meet
+ * @param {string} startDate The date of the first class
+ * @param {string} endDate The last day of class
+ * @param {string} password The join password students need to join class
+ * @return Http response if class was added
  */
 router.post('/addClass', authHelpers.teacherRequired, (req, res) => teacherHelpers.createClass(req, res)
   .catch((err) => {
@@ -135,8 +135,8 @@ router.post('/addClass', authHelpers.teacherRequired, (req, res) => teacherHelpe
  *  promise to be returned
  *
  *
- * @param {string} name the name of the class to be added
- * @return http response if class was dropped
+ * @param {string} name The name of the class to be added
+ * @return Http response if class was dropped
  */
 router.post('/dropClass', authHelpers.teacherRequired, (req, res) => teacherHelpers.dropClass(req, res)
   .catch((err) => {

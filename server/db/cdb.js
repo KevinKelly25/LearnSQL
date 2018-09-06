@@ -16,9 +16,9 @@ const pgp = require('pg-promise')({
 /*
  * Exporting the database object for shared use
  *
- * @param {string} classid the name of the database
+ * @param {string} classid The name of the database
  */
-// TODO: find better way to do this
+// TODO: Find better way to do this
 /* eslint-disable */
 module.exports = function (classid) {
   const connectionString = `postgresql://postgres:password@localhost:5432/${

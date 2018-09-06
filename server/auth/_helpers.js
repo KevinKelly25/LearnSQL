@@ -18,8 +18,8 @@ const logger = require('../logs/winston.js');
 
 
 /**
- * handles errors when registering. For now only checks the length of the password
- * Also, set to a low number for testing purposes.
+ * Handles errors when registering. For now only checks the length of the password
+ *  Also, set to a low number for testing purposes.
  *
  * @param {string} password password the user wishes to use
  */
@@ -40,9 +40,9 @@ function handleErrors(req) {
  * Uses the built in bcrypt module to compare given plain string to an already
  *  hashed string.
  *
- * @param {string} unhashedString a string that needs to be hashed and salted for comparison
- * @param {string} hashedString already hashed string that will compared
- * @return a boolean on whether the passwords match after salting/hashing
+ * @param {string} unhashedString A string that needs to be hashed and salted for comparison
+ * @param {string} hashedString Already hashed string that will compared
+ * @return A boolean on whether the passwords match after salting/hashing
  */
 function compareHashed(unhashedString, hashedString) {
   return bcrypt.compareSync(unhashedString, hashedString);
@@ -57,7 +57,7 @@ function compareHashed(unhashedString, hashedString) {
  * @param {string} prompt H3 header of the email
  * @param {string} content The content of the email, can be html
  * @param {string} receiver Address that the email is being sent to
- * @param {string} emailTitle email subjectline/title
+ * @param {string} emailTitle Email subjectline/title
  * @param {string} successMessage The message that will be http response upon
  *                                 success of the email
  */
@@ -70,20 +70,20 @@ function sendEmail(req, res) {
   const transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com', // host for outlook mail
     port: 587,
-    // secure: false, // true for 465, false for other ports
+    // Secure: false, // true for 465, false for other ports
     auth: {
       user: 'learnsqltesting@gmail.com', // email used for sending the message (will need to be changed)
       pass: 'testing123!',
     },
     tls: {
-      // rejectUnauthorized:false will probably need to be changed for production because
-      // it can leave you vulnerable to MITM attack - secretly relays and alters the
-      // communication betwee two parties.
+      // RejectUnauthorized:false will probably need to be changed for production because
+      //  it can leave you vulnerable to MITM attack - secretly relays and alters the
+      //  communication betwee two parties.
       rejectUnauthorized: false,
     },
   });
 
-  // setup email data with unicode symbols
+  // Setup email data with unicode symbols
   const mailOptions = {
     from: '"LearnSQL" <learnsqltesting@gmail.com>', // sender address
     to: req.body.receiver, // list of receivers (email will need to be changed)
@@ -91,7 +91,7 @@ function sendEmail(req, res) {
     html: output, // html body
   };
 
-  // send mail with defined transport object
+  // Send mail with defined transport object
   transporter.sendMail(mailOptions, (error) => {
     if (error) {
       logger.error(`sendEmail: \n${error}`);
@@ -112,11 +112,11 @@ function sendEmail(req, res) {
  *  error because email already exists that message is returned. Otherwise, the
  *  database error is returned
  *
- * @param {string} password the password the user wants to use
- * @param {string} username the username the user wants to use
- * @param {string} fullName the full name of the user
- * @param {string} email the email the user wants to use
- * @return http response with status message
+ * @param {string} password The password the user wants to use
+ * @param {string} username The username the user wants to use
+ * @param {string} fullName The full name of the user
+ * @param {string} email The email the user wants to use
+ * @return Http response with status message
  */
 function createUser(req, res) {
   return handleErrors(req)
@@ -165,8 +165,8 @@ function createUser(req, res) {
  *  token. If not registed will send a general email explaining that the email
  *  is not registered on the site.
  *
- * @param {string} email the email that will be used to send forgot password link
- * @return http response with status message
+ * @param {string} email The email that will be used to send forgot password link
+ * @return Http response with status message
  */
 // TODO: add timeout for verification token
 function forgotPassword(req, res) {
@@ -219,10 +219,10 @@ function forgotPassword(req, res) {
  *  to the hashed token. If matched and forgotPassword is true the password is
  *  updated to the given new password
  *
- * @param {string} username the username that needs password reset
- * @param {string} password the new password of the user
- * @param {string} token token needed for the new password reset
- * @return http response with status message stating whether reset was successful
+ * @param {string} username The username that needs password reset
+ * @param {string} password The new password of the user
+ * @param {string} token Token needed for the new password reset
+ * @return Http response with status message stating whether reset was successful
  */
 // TODO: add timeout for verification token
 function resetPassword(req, res) {
@@ -253,7 +253,7 @@ function resetPassword(req, res) {
 
 /**
  * If a user is not logged in returns a 401 status code and a status that says
- * to log in.
+ *  to log in.
  */
 function loginRequired(req, res, next) {
   if (!req.user) return res.status(401).json({ status: 'Please log in' });
@@ -264,7 +264,7 @@ function loginRequired(req, res, next) {
 
 /**
  * If a user is not logged in returns a 401 status code and a status that says
- * to log in. If user is logged in it checks to make sure the user is an admin.
+ *  to log in. If user is logged in it checks to make sure the user is an admin.
  */
 function adminRequired(req, res, next) {
   if (!req.user) return res.status(401).json({ status: 'Please log in' });
@@ -283,7 +283,7 @@ function adminRequired(req, res, next) {
 
 /**
  * If a user is not logged in returns a 401 status code and a status that says
- * to log in. If user is logged in it checks to make sure the user is a teacher.
+ *  to log in. If user is logged in it checks to make sure the user is a teacher.
  *
  */
 function teacherRequired(req, res, next) {
@@ -303,7 +303,7 @@ function teacherRequired(req, res, next) {
 
 /**
  * If a user is not logged in returns a 401 status code and a status that says
- * to log in. If user is logged in it checks to make sure the user is a student.
+ *  to log in. If user is logged in it checks to make sure the user is a student.
  *
  */
 function studentRequired(req, res, next) {
@@ -323,7 +323,7 @@ function studentRequired(req, res, next) {
 
 /**
  * If a user is logged in returns a 401 status code and a status that says
- * already logged in.
+ *  already logged in.
  */
 function loginRedirect(req, res, next) {
   if (req.user) {

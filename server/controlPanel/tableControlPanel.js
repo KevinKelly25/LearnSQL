@@ -82,7 +82,7 @@ function getTables(req, res) {
  * This function returns a table when given a tableName and the schema qualifier
  *  Schema qualifier is typically the username of the user who created table
  *
- * @param {string} name the name of the table
+ * @param {string} name The name of the table
  * @param {string} schema The schema the table is located in. Normally is the
  *                         username of the user who owns table
  * @param {string} classID The classID of the class the table is in
@@ -91,7 +91,7 @@ function getTables(req, res) {
 function getTable(req, res) {
   return new Promise((resolve, reject) => {
     const db = dbCreator(req.body.classID);
-    // select all from given table. ~ is used for SQL names in pg-promise.
+    // Select all from given table. ~ is used for SQL names in pg-promise.
     // $1 is the schema qualifier and $2 is the name of the table
     db.any('SELECT * '
            + 'FROM $1~.$2~ ',

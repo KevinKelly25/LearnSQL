@@ -20,8 +20,8 @@ init();
 
 /**
  * This function sets up the local strategy for the passport.js module. usernameField
- * and passwordField are set to the database equivalent of their names.
- * Using pg-promise the query returns userdata if there is a matching userID
+ *  and passwordField are set to the database equivalent of their names.
+ *  Using pg-promise the query returns userdata if there is a matching userID
  */
 passport.use(new LocalStrategy({
   usernameField: 'username',

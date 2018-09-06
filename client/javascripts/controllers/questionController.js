@@ -48,7 +48,7 @@ app.controller('Question', ($scope, $http) => {
               delete $scope.correctData;
             }
           })
-        // if the correct answer has an error processing
+        // If the correct answer has an error processing
           .error(() => {
             $scope.answer = 'Your Answer is Incorrect';
             $scope.backgroundColor = 'red';
@@ -57,7 +57,7 @@ app.controller('Question', ($scope, $http) => {
             delete $scope.correctData;
           });
       })
-    // if the submitted answer conneciton fails
+    // If the submitted answer conneciton fails
       .error(() => {
         $scope.answer = 'Your Answer is Incorrect';
         $scope.backgroundColor = 'red';

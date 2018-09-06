@@ -17,10 +17,10 @@ const logger = require('../logs/winston.js');
 
 /**
  * handles errors, for now only checks the length of the password
- * Also, set to a low number for testing purposes.
+ *  Also, set to a low number for testing purposes.
  *
- * @param {string} password a given password string
- * @returns resolve or reject promise whether conditions were met
+ * @param {string} password A given password string
+ * @returns Resolve or reject promise whether conditions were met
  */
 function handleErrors(req) {
   // TODO: fix length requirements
@@ -44,8 +44,8 @@ function handleErrors(req) {
  *  See https://github.com/DASSL/ClassDB/wiki/Frequent-User-Views for more
  *  information on how ClassDB maintains the student activity
  *
- * @param {string} className the classname the student will be added to
- * @return unformatted student activity from a ClassDB database or an error response
+ * @param {string} className The classname the student will be added to
+ * @return Unformatted student activity from a ClassDB database or an error response
  */
 function getStudents(req, res) {
   return new Promise((resolve, reject) => {
@@ -76,24 +76,24 @@ function getStudents(req, res) {
 
 /**
  * This function creates a class database using a ClassDB template Database. It
- *  also addes the class to the attends and class table of the learnsql database.
+ *  also adds the class to the attends and class table of the learnsql database.
  *  The access parameters for the database also is restored since they are not
  *  copied over in the creation of the database using the template.
  *
- * @param {string} name the name of the class to be added
- * @param {string} section the section of the class
- * @param {string} times time the class is supposed to meet
- * @param {string} days the days that the class is supposed to meet
- * @param {string} startDate the date of the first class
- * @param {string} endDate the last day of class
- * @param {string} password the join password students need to join class
- * @return http response if class was added or reject promise if error
+ * @param {string} name The name of the class to be added
+ * @param {string} section The section of the class
+ * @param {string} times Time the class is supposed to meet
+ * @param {string} days The days that the class is supposed to meet
+ * @param {string} startDate The date of the first class
+ * @param {string} endDate The last day of class
+ * @param {string} password The join password students need to join class
+ * @return Http response if class was added or reject promise if error
  */
 function createClass(req, res) {
   return handleErrors(req)
     .then(() => {
-      const classid = `${req.body.name}_${uniqid()}`; // guarantee uniqueness
-      // check to make sure that there is none conflicting ClassName for that user
+      const classid = `${req.body.name}_${uniqid()}`; // Guarantee uniqueness
+      // Check to make sure that there is none conflicting ClassName for that user
       ldb.task(t => t.oneOrNone('SELECT Username, C.ClassID '
                          + 'FROM Attends AS A INNER JOIN Class AS C '
                          + 'ON A.ClassID = C.ClassID '
@@ -151,8 +151,8 @@ function createClass(req, res) {
  * This function drops a class database as well as removes it from the attends
  *  and class table from the learnsql database
  *
- * @param {string} name the name of the database
- * @return http response on whether the class was successfully dropped
+ * @param {string} name The name of the database
+ * @return Http response on whether the class was successfully dropped
  */
 function dropClass(req, res) {
   return new Promise((resolve, reject) => {
@@ -185,7 +185,7 @@ function dropClass(req, res) {
  * This function gets all the classes regestered to teacher and relevent class
  *  information.
  *
- * @return the classes the user is in and relevent class information
+ * @return The classes the user is in and relevent class information
  */
 function getClasses(req, res) {
   return new Promise((resolve, reject) => {

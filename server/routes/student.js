@@ -20,10 +20,10 @@ const authHelpers = require('../auth/_helpers');
 /**
  * This function is used to return http responses.
  *
- * @param {string} res the result object
- * @param {string} code the http status code
- * @param {string} statusMsg the message containing the status of the message
- * @return an http response with designated status code and attached
+ * @param {string} res The result object
+ * @param {string} code The http status code
+ * @param {string} statusMsg The message containing the status of the message
+ * @return An http response with designated status code and attached
  */
 function handleResponse(res, code, statusMsg) {
   res.status(code).json({ status: statusMsg });
@@ -35,7 +35,7 @@ function handleResponse(res, code, statusMsg) {
  * This method returns class information from a ClassDB database. Most
  *  functionality is in `studentControlPanel.js` getClass function.
  *
- * @return http response on if the student was successfully added with attached
+ * @return Http response on if the student was successfully added with attached
  *          object which has the classes the user is in and relevant class
  *          information
  */
@@ -49,8 +49,8 @@ router.get('/getClasses', authHelpers.studentRequired, (req, res) => studentHelp
  * This method adds a student to a ClassDB database as well as Attends table.
  *  Most functionality is in `studentControlPanel.js` addStudent function.
  *
- * @param {string} password the password used in order to join class
- * @param {string} classID the class id of the class the student will be added to
+ * @param {string} password The password used in order to join class
+ * @param {string} classID The class id of the class the student will be added to
  * @return http response on if the student was successfully added
  */
 router.post('/joinClass', authHelpers.loginRequired, (req, res) => studentHelpers.addStudent(req, res)

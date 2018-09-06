@@ -88,7 +88,7 @@ app.controller('teacherCtrl', ($scope, $http, $location, $window) => {
       password: $scope.password,
     };
 
-    // make sure that is a valid name
+    // Make sure that is a valid name
     const regex = new RegExp('^[a-zA-Z0-9_]*$');
     if (regex.test($scope.class.name)) {
       $http.post('/teacher/addClass', $scope.class)
@@ -115,7 +115,7 @@ app.controller('teacherCtrl', ($scope, $http, $location, $window) => {
    *  updated dropClass object is also used as a parameter to drop the class in
    *  the dropClassTeacher function.
    *
-   * @param {string} className the classname that needs to be displays
+   * @param {string} className The classname that needs to be displays
    */
   $scope.displayClassName = (className) => {
     $scope.success = false;

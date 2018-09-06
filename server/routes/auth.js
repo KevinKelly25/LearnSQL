@@ -28,10 +28,10 @@ const logger = require('../logs/winston.js');
 /**
  * This function is used to return http responses.
  *
- * @param {string} res the result object
- * @param {string} code the http status code
- * @param {string} statusMsg the message containing the status of the message
- * @return an http responde with designated status code and attached
+ * @param {string} res The result object
+ * @param {string} code The http status code
+ * @param {string} statusMsg The message containing the status of the message
+ * @return An http responde with designated status code and attached
  */
 function handleResponse(res, code, statusMsg) {
   res.status(code).json({ status: statusMsg });
@@ -41,7 +41,7 @@ function handleResponse(res, code, statusMsg) {
 
 /**
  * This method create user using a helper function. If an error is encountered
- * an error status code and message is returned
+ *  an error status code and message is returned
  */
 router.post('/register', authHelpers.loginRedirect, (req, res) => authHelpers.createUser(req, res)
   .catch(() => {
@@ -52,9 +52,9 @@ router.post('/register', authHelpers.loginRedirect, (req, res) => authHelpers.cr
 
 /**
  * This method allows a user to log in. First the user is authenticated using
- * passport.js local stategy. If sucessful it will log the user in and serialize
- * the UserID into a session for later authentication. If there is an error or
- * user exists already the relevent status and message is returned.
+ *  passport.js local stategy. If sucessful it will log the user in and serialize
+ *  the UserID into a session for later authentication. If there is an error or
+ *  user exists already the relevent status and message is returned.
  */
 router.post('/login', authHelpers.loginRedirect, (req, res, next) => {
   passport.authenticate('local', (err, user) => {
@@ -77,7 +77,7 @@ router.post('/login', authHelpers.loginRedirect, (req, res, next) => {
 
 /**
  * This method logs a user out and removes the userid from the session. It then
- * sends back a sucess response.
+ *  sends back a success response.
  */
 router.get('/logout', authHelpers.loginRequired, (req, res) => {
   req.logout();
@@ -95,12 +95,12 @@ router.get('/check', (req, res) => res.status(200).json(req.user));
 
 /**
  * This method recieves a token and username from the url. It then hashes it and
- *  comapares it to the database verification token. If the tokens match the
+ *  compares it to the database verification token. If the tokens match the
  *  user's account will be validated and user will be sent to a success page.
  *  If tokens do not match the user will be sent to a validation failed page.
  *
- * @param token the unhashed token for verification of user account. In URL param
- * @param email the email of the user trying to verify account
+ * @param token The unhashed token for verification of user account. In URL param
+ * @param email The email of the user trying to verify account
  */
 // TODO: add timeout for verification token
 router.get('/verification/:token/:username', (req, res) => {
@@ -132,7 +132,7 @@ router.get('/verification/:token/:username', (req, res) => {
  *  is in `_helpers.js` forgotPassword function but is expecting a promise
  *  to be returned
  *
- * @param {string} email the email that will be used to send forgot password link
+ * @param {string} email The email that will be used to send forgot password link
  */
 router.post('/forgotPasswordEmail', (req, res) => authHelpers.forgotPassword(req, res)
   .catch((err) => {
@@ -159,10 +159,10 @@ router.get('/resetPassword/', (res) => {
  *  is in `_helpers.js` forgotPassword function but is expecting a promise
  *  to be returned
  *
- * @param {string} username the username that needs password reset
- * @param {string} password the new password of the user
- * @param {string} token token needed for the new password reset
- * @return http response with status message stating whether reset was successful
+ * @param {string} username The username that needs password reset
+ * @param {string} password The new password of the user
+ * @param {string} token Token needed for the new password reset
+ * @return Http response with status message stating whether reset was successful
  */
 router.post('/resetPassword', (req, res) => authHelpers.resetPassword(req, res)
   .catch((err) => {

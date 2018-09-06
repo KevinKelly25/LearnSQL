@@ -11,7 +11,7 @@
 
 /**
   * This controller is used to display success and error messages
-  * in the contact form
+  *  in the contact form
   */
 app.controller('ContactCtrl', ($scope, $http) => {
   $scope.error = false;
@@ -26,7 +26,7 @@ app.controller('ContactCtrl', ($scope, $http) => {
 
   /**
     * This function takes in user information only, (their full name, email, and their message)
-    * and check to see if any of the input fields are missing (left empty).
+    *  and check to see if any of the input fields are missing (left empty).
     */
 
   $scope.submit = () => {
@@ -38,21 +38,21 @@ app.controller('ContactCtrl', ($scope, $http) => {
     this.user.email = $scope.email;
     this.user.clientMessage = $scope.clientMessage;
 
-    // if user does not enter their name
+    // If user does not enter their name
     if (!$scope.fullName) {
       $scope.error = true;
       $scope.success = false;
       $scope.msg = 'first name missing';
     }
 
-    // if user does not enter their email
+    // If user does not enter their email
     if (!$scope.email) {
       $scope.error = true;
       $scope.success = false;
       $scope.msg = 'email missing';
     }
 
-    // if user does not enter the message to be delivered
+    // If user does not enter the message to be delivered
     if (!$scope.clientMessage) {
       $scope.error = true;
       $scope.success = false;

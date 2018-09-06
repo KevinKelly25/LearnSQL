@@ -91,7 +91,7 @@ app.controller('TestsCtrl', ($scope, $http, $window) => {
       });
 
 
-    // tests that addClass will reject another class with same ClassName
+    // Tests that addClass will reject another class with same ClassName
     $scope.class3 = {
       name: 'create_test3',
       password: 'test',

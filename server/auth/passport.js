@@ -23,10 +23,10 @@ module.exports = () => {
 
   /**
    * Uses the built in Passport.js module functionality to deserialize the UserID
-   * from the session. The UserID is then used to return userid, fullname, email
-   * and datejoined from the database using pg-promise. It then returns the user
-   * object created from that query. If there is an error it returns an error message
-   * displaying the id that failed.
+   *  from the session. The UserID is then used to return userid, fullname, email
+   *  and datejoined from the database using pg-promise. It then returns the user
+   *  object created from that query. If there is an error it returns an error message
+   *  displaying the id that failed.
    */
   passport.deserializeUser((id, done) => {
     db.one('SELECT username, fullname, email, datejoined, isAdmin, isTeacher, isstudent '

@@ -19,9 +19,9 @@ const logger = require('../logs/winston.js');
  * This logs a message that given number of errors will be logged. Used for
  *  testing purposes.
  *
- * @param {string} numberOfExpectedLogs the number of error logs that will be
+ * @param {string} numberOfExpectedLogs The number of error logs that will be
  *                                       created for testing purposes
- * @return an http response
+ * @return An http response
  */
 router.post('/testLogWarning', authHelpers.adminRequired, (req, res) => {
   logger.error(`Performing ${req.body.numberOfExpectedLogs} test(s) that`
