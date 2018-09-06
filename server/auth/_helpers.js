@@ -126,7 +126,7 @@ function createUser(req, res) {
       const token = cryptoRandomString(20);
       const hashSalt = bcrypt.genSaltSync();
       const hashedToken = bcrypt.hashSync(token, hashSalt);
-      const { email } = req.body.email;
+      const { email } = req.body;
       ldb.none('INSERT INTO UserData(Username, FullName, Password, Email, token) '
                + 'VALUES($1, $2, $3, $4, $5)', [
         req.body.username, req.body.fullName, hashedPass, req.body.email,
@@ -148,7 +148,7 @@ function createUser(req, res) {
           if (error.code === '23505' && error.constraint === 'idx_unique_email') { // UNIQUE VIOLATION
             return res.status(400).json({ status: 'Email Already Exists' });
           }
-          if (error.code === '23505' && error.constraint === 'userdata_pkey') { // UNIQUE VIOLATION
+          if (error.code === '23505' && error.constraint === 'userdata_t_pkey') { // UNIQUE VIOLATION
             return res.status(400).json({ status: 'Username Already Exists' });
           }
           logger.error(`createUser: \n${error}`);
@@ -178,7 +178,7 @@ function forgotPassword(req, res) {
           const token = cryptoRandomString(20);
           const { salt } = bcrypt.genSaltSync();
           const hashedToken = bcrypt.hashSync(token, salt);
-          const { email } = result.email;
+          const { email } = result;
           return t.none('UPDATE USERDATA SET Token = $1, forgotPassword '
                           + '= true WHERE Email = $2 ', [hashedToken, email])
             .then(() => {
