@@ -1,0 +1,98 @@
+<!--
+  verificationSuccess.html - LearnSQL
+
+	Kevin Kelly, Michael Torres
+  Web Applications and Databases for Education (WADE)
+
+  This file contains the html view of the verificationSuccess page for the
+   LearnSQL website
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>LearnSQL</title>
+  <link rel="stylesheet" href="../../../stylesheets/style.css" media="screen">
+  <link rel="stylesheet" href="../../../stylesheets/font-awesome.min.css">
+	<link rel="stylesheet" href="../../../stylesheets/bootstrap.css">
+	<link rel="stylesheet" href="../../../stylesheets/angular-datatables.css">
+  <link href='https://fonts.googleapis.com/css?family=Alegreya:400,700,700i' rel='stylesheet'>
+  <link href="https://fonts.googleapis.com/css?family=Merriweather:400,700" rel="stylesheet">
+</head>
+<body ng-app="LearnSQL">
+
+
+	<!-- NAVBAR -->
+	<nav class="navbar navbar-expand-sm navbar-light bg-light" ng-controller="NavCtrl" data-ng-init="init()">
+	  <div class="container-fluid">
+		<!-- NAVBAR HEADER -->
+		<h2 class="font-weight-bold">
+		  <a href="http://localhost:3000/" class="navbar-brand text-primary">LearnSQL</a>
+		</h2>
+		<!-- button to close sidebar -->
+		<button class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+		  <span class="navbar-toggler-icon"></span>
+		</button>
+		<!-- NAVBAR SECTIONS -->
+		<div class="collapse navbar-collapse" id="navbarCollapse">
+		  <ul class="nav navbar-nav ml-auto">
+			<li class="nav-item">
+			  <a href="http://localhost:3000/" class="nav-link border-left border-right px-4">Home</a>
+			</li>
+			<li class="nav-item">
+			  <a href="/views/learn/select.html" class="nav-link border-right px-4">Learn</a>
+			</li>
+			<span ng-show="!currentUser">
+			<li class="nav-item">
+			  <a href="/views/account/signIn.html" class="nav-link pl-4 px-4">Sign in</a>
+			</li>
+			</span>
+			<span ng-show="currentUser.isteacher">
+				<li class="nav-item">
+					<a href="/views/controlPanels/teacherClasses.html" class="nav-link border-right px-4">Classes</a>
+				</li>
+			</span>
+			<span ng-show="currentUser.isstudent">
+				<li class="nav-item">
+					<a href="/views/controlPanels/studentClasses.html" class="nav-link border-right px-4">Classes</a>
+				</li>
+			</span>
+			<span ng-show="currentUser.isadmin">
+			<li class="nav-item">
+				<a href="views/controlPanels/admin.html" class="nav-link border-right px-4">Admin Control Panel</a>
+			</li>
+			</span>
+			<span ng-show="currentUser">
+			<li class="nav-item">
+			  <a href="/views/account/profile.html" class="nav-link border-right px-4">Profile</a>
+			</li>
+			</span>
+			<span ng-show="currentUser">
+			<li class="nav-item">
+			  <a href="#" class="nav-link px-4 pl-4" ng-click="logout()">Logout</a>
+			</li>
+			</span>
+		  </ul>
+		</div>
+	  </div>
+	</nav>
+
+	<body>
+		<div class="alert alert-success text-center">
+			<h3>Account Has Been Verified</h3>
+		</div>
+	</body>
+
+	<script src="/javascripts/jquery.min.js"></script>
+  <script src="/javascripts/jquery.dataTables.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.6/angular.min.js"></script>
+  <script src="/javascripts/controllers/mainControllers.js"></script>
+  <script src="/javascripts/angular-datatables.min.js"></script>
+  <script src="/javascripts/popper.min.js"></script>
+	<script src="/javascripts/bootstrap.min.js"></script>
+
+</body>
+</html>

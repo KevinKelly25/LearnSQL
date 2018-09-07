@@ -1,0 +1,122 @@
+<!--
+  adminTest.html - LearnSQL
+
+  Kevin Kelly, Michael Torres
+  Web Applications and Databases for Education (WADE)
+
+  This file contains the html view of the admin test suite page for the
+   LearnSQL website
+-->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <title>Learn</title>
+  <link rel = "stylesheet" type = "text/css" href = "../../stylesheets/style.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css"
+    integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp"
+    crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
+  <link rel="stylesheet" href="../../stylesheets/font-awesome.min.css">
+  <link rel="stylesheet" href="../stylesheets/angular-datatables.css">
+  <link rel="stylesheet" href="../../stylesheets/bootstrap.css">
+  <link rel="stylesheet" href="../../stylesheets/admin.css">
+</head>
+<body ng-app="LearnSQL">
+
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white" ng-controller="NavCtrl" data-ng-init="init()">
+      <div class="container-fluid">
+        <!-- NAVBAR HEADER -->
+        <h2 id="navbarTitle" class="font-weight-bold ml-3 mt-2">
+          <a href="http://localhost:3000/">LearnSQL</a>
+        </h2>
+        <!-- button to close sidebar -->
+        <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <!-- NAVBAR SECTIONS -->
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+          <ul class="nav navbar-nav ml-auto">
+            <li class="nav-item">
+              <a href="http://localhost:3000/" class="nav-link text-dark">Home</a>
+            </li>
+            <li class="nav-item active">
+              <a href="../learn/select.html" id="learnTab" class="nav-link shadow-lg text-white">Learn</a>
+            </li>
+            <span ng-show="!currentUser">
+            <li class="nav-item">
+              <a href="../Account/signIn.html" class="nav-link text-dark">Sign in</a>
+            </li>
+            </span>
+						<span ng-show="currentUser.isadmin">
+						<li class="nav-item">
+							<a href="views/controlPanels/admin.html" class="nav-link border-right px-4">Admin Control Panel</a>
+						</li>
+						</span>
+            <span ng-show="currentUser">
+            <li class="nav-item">
+              <a href="../account/profile.html" class="nav-link text-dark">Profile</a>
+            </li>
+            </span>
+            <span ng-show="currentUser">
+            <li class="nav-item">
+              <a href="#" class="nav-link text-dark" ng-click="logout()">Logout</a>
+            </li>
+            </span>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+		<div class="container" ng-controller="TestsCtrl">
+		  <h2>Unit Tests Needs to be Updated</h2>
+		  <p>The Following Contains Automated Unit Tests</p>
+		  <table class="table table-striped text-centered" style="text-align: center;">
+		    <thead >
+		      <tr>
+		        <th>Unit Test</th>
+		        <th>Test File</th>
+		        <th>Run Test</th>
+						<th>Status</th>
+		      </tr>
+		    </thead>
+		    <tbody>
+		      <tr>
+		        <td>Adding/Removing Classes</td>
+		        <td>testsController.js</td>
+		        <td><button type="button" class="btn btn-info" ng-click="testAddDropClass()">Run Test</button></td>
+						<td>{{ addDropClassTestStatus }}</td>
+		      </tr>
+		      <tr>
+		        <td>Success Test example</td>
+		        <td>Testfile.js</td>
+		        <td><button type="button" class="btn btn-info" ng-click="testSuccess()">Run Test</button></td>
+						<td>{{ successTestStatus }}</td>
+		      </tr>
+		      <tr>
+		        <td>Fail Test example</td>
+		        <td>Testfile.js</td>
+		        <td><button type="button" class="btn btn-info" ng-click="testFail()">Run Test</button></td>
+						<td>{{ failTestStatus }}</td>
+		      </tr>
+		    </tbody>
+		  </table>
+    </div>
+    
+  <script src="../../javascripts/jquery.min.js"></script>
+  <script src="../../javascripts/jquery.dataTables.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.6/angular.min.js"></script>
+  <script src="../../javascripts/controllers/mainControllers.js"></script>
+	<script src="../../javascripts/controllers/testControllers/testsController.js"></script>
+  <script src="../../javascripts/angular-datatables.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
+  <script src="../../javascripts/popper.min.js"></script>
+  <script src="../../javascripts/bootstrap.min.js"></script>
+  
+</body>
+</html>

@@ -1,6 +1,11 @@
-node_modules/
-client/fonts
-client/stylesheets
-client/javascripts/bootstrap.min.js
-client/javascripts/jquery.min.js
-client/javascripts/popper.min.js
+src/webapp/node_modules/*
+!src/webapp/node_modules/bootstrap
+src/webapp/client/fonts
+src/webapp/client/stylesheets
+src/webapp/client/javascripts/bootstrap.min.js
+src/webapp/client/javascripts/jquery.min.js
+src/webapp/client/javascripts/popper.min.js
+*.log
+src/webapp/client/javascripts/jquery.dataTables.min.js
+src/webapp/client/javascripts/angular-datatables.min.js
+src/webapp/client/javascripts/controllers/testControllers/

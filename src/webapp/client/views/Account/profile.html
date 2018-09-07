@@ -1,0 +1,364 @@
+<!--
+  profile.html - LearnSQL
+
+  Christopher Innaco, Michael Torres
+  Web Applications and Databases for Education (WADE)
+
+  This file contains the HTML view of the user profile page for the
+   LearnSQL website
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Account</title>
+  <link rel = "stylesheet" type = "text/css" href = "../../stylesheets/style.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css"
+    integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp"
+    crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
+  <link rel="stylesheet" href="../../stylesheets/font-awesome.min.css">
+  <link rel="stylesheet" href="../../stylesheets/bootstrap.css">
+  <link rel="stylesheet" href="../../stylesheets/angular-datatables.css">
+  <link rel="stylesheet" href="../../stylesheets/profile.css">
+</head>
+<body ng-app="LearnSQL">
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-sm navbar-light bg-light" ng-controller="NavCtrl" data-ng-init="init()" data-spy="affix" data-offset-top="197">
+    <div class="container-fluid">
+        <!-- Navbar header -->
+        <h2 class="font-weight-bold">
+            <a href="http://localhost:3000/" class="navbar-brand text-primary">LearnSQL</a>
+        </h2>
+        <!-- End Navbar header -->
+        
+        <!-- Navbar sections -->
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="nav navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a href="http://localhost:3000/" class="nav-link border-left border-right px-4">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a href="/views/learn/select.html" id="learn-tab" class="nav-link border-right px-4">Learn</a>
+                </li>
+                <span ng-show="currentUser.isteacher">
+                  <li class="nav-item">
+                    <a href="/views/controlPanels/teacherClasses.html" class="nav-link border-right px-4">Classes</a>
+                  </li>
+                </span>
+                <span ng-show="currentUser.isstudent">
+                  <li class="nav-item">
+                    <a href="/views/controlPanels/studentClasses.html" class="nav-link border-right px-4">Classes</a>
+                  </li>
+                </span>
+                <span ng-show="!currentUser">
+                    <li class="nav-item">
+                        <a href="/views/Account/signIn.html" class="nav-link border-right px-4">Sign in</a>
+                    </li>
+                </span>
+                <span ng-show="currentUser.isadmin">
+                    <li class="nav-item">
+                      <a href="/views/controlPanels/admin.html" class="nav-link border-right px-4">Admin Control Panel</a>
+                    </li>
+                </span>
+                <span ng-show="currentUser">
+                    <li class="nav-item active">
+                        <a href="/views/Account/profile.html" id="profile-tab" class="nav-link shadow-lg bg-primary text-white border-right px-4">Profile</a>
+                    </li>
+                </span>
+                <span ng-show="currentUser">
+                    <li class="nav-item">
+                        <a href="#" class="nav-link pl-4 px-4" ng-click="logout()">Logout</a>
+                    </li>
+                </span>
+            </ul>
+        </div>
+        <!-- End Navbar sections -->
+      </div>
+    </nav>
+
+    <!-- End Navbar -->
+
+    <!-- Section using ProfileCtrl -->
+    <div ng-controller="ProfileCtrl">
+
+    <!-- Page content -->
+    <section id="page-content">
+
+      <h1 id="page-title" class="text-center font-weight-bold">My Profile</h1>
+
+      <section id="page-body">
+
+        <!-- Info section -->
+
+        <div class="container-fluid"> 
+
+          <table class="table table-dark table-striped">   
+            <tbody>
+              <tr>
+                <th scope="row" class="iconCol" style="width: 2%">
+                  <span class="fa fa-user-o"></span>
+                </th>
+                <td>Username</td>
+                <td>{{ userName }}</td>
+                <td>
+                  <a class="btn btn-edit" href="#">
+                    <i class="fa fa-pencil-square-o fa-2x" data-toggle="modal" data-target="#changeUsername" aria-hidden="true"></i>
+                  </a>  
+                </td>         
+              </tr>
+              <tr>
+                <th scope="row" class="iconCol">
+                  <span class="fa fa-lock"></span> 
+                </th>
+                <td>Password</td>
+                <td>&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;</td>
+                <td>
+                  <a class="btn btn-edit" href="#">
+                    <i class="fa fa-pencil-square-o fa-2x" data-toggle="modal" data-target="#changePassword" aria-hidden="true"></i>
+                  </a>  
+                </td>
+              </tr>
+              <tr>
+                <th scope="row" class="iconCol">
+                  <span class="fa fa-id-card-o"></span> 
+                </th>
+                <td>Full Name</td>
+                <td>{{ fullName }}</td>
+                <td>
+                  <a class="btn btn-edit" href="#">
+                    <i class="fa fa-pencil-square-o fa-2x" data-toggle="modal" data-target="#changeFullName" aria-hidden="true"></i>
+                  </a>     
+                </td>
+              </tr>
+              <tr>
+                <th scope="row" class="iconCol">
+                  <span class="fa fa-envelope-o"></span>
+                </th>
+                <td>E-mail</td>
+                <td>{{ email }}</td>
+                <td>
+                  <a class="btn btn-edit" href="#">
+                    <i class="fa fa-pencil-square-o fa-2x" data-toggle="modal" data-target="#changeEmail" aria-hidden="true"></i>
+                  </a>                 
+                </td>
+              </tr>
+              <tr>
+                <th scope="row" class="iconCol">
+                  <span class="fa fa-calendar"></span> 
+                </th>
+                <td>Date Joined</td>
+                <td>{{ dateJoined }}</td>
+                <td></td>
+              </tr>
+              <tr ng-show="showInstructorRow">
+                <th scope="row" class="iconCol">
+                  <span class="fa fa-mortar-board"></span>
+                </th>
+                <td>Instructor</td>
+                <td>Yes</td>
+                <td></td>
+              </tr>
+              <tr ng-show="showAdminRow">
+                <th scope="row" class="iconCol">
+                  <span class="fa fa-shield"></span>
+                </th>
+                <td>Administrator</td>
+                <td>Yes</td>
+                <td></td>    
+              </tr>
+            </tbody>    
+          </table>
+        </div>
+        <!-- End Info section -->
+
+      </section>
+    </section>
+    <!-- End Page content -->
+
+    <!-- Modals -->
+
+    <!-- changeUsername Modal -->
+    <div class="modal fade" id="changeUsername" tabindex="-1" role="dialog">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+
+            <h5 class="modal-title" id="exampleModalLongTitle">Change Username</h5>
+
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+
+          <div class="modal-body">
+            <form>
+              <div class="form-group">
+                <label for="recipient-name" class="col-form-label">New Username:</label>
+                  <input type="text" class="form-control" id="newUsername">
+              </div>
+              <div class="form-group">
+                <label for="message-text" class="col-form-label">Confirm New Username:</label>
+                <input type="text" class="form-control" id="newUsername_Confirm">
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-primary">Save changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- End changeUsername Modal -->
+
+    <!-- changePassword Modal -->
+    <div class="modal fade" id="changePassword" tabindex="-1" role="dialog">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+  
+            <h5 class="modal-title" id="exampleModalLongTitle">Change Password</h5>
+  
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+  
+          <div class="modal-body">
+            <form>
+              <div class="form-group">
+                <label for="recipient-name" class="col-form-label">Old Password:</label>
+                <input type="text" class="form-control" id="oldPassword">
+              </div>
+              <div class="form-group">
+                <label for="recipient-name" class="col-form-label">New Password:</label>
+                  <input type="text" class="form-control" id="newPassword">
+              </div>
+              <div class="form-group">
+                <label for="message-text" class="col-form-label">Confirm New Password:</label>
+                <input type="text" class="form-control" id="newPassword_Confirm">
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-primary">Save changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- End changePassword Modal -->
+
+    <!-- changeFullName Modal -->
+    <div class="modal fade" id="changeFullName" tabindex="-1" role="dialog">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+    
+            <h5 class="modal-title" id="exampleModalLongTitle">Change Name</h5>
+    
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+    
+          <div class="modal-body">
+            <form>
+              <div class="form-group">
+                <label for="recipient-name" class="col-form-label">New Name:</label>
+                  <input type="text" class="form-control" id="newName">
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-primary">Save changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- End changeFullName Modal -->
+
+    <!-- changeEmail Modal -->
+    <div class="modal fade" id="changeEmail" tabindex="-1" role="dialog">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+      
+            <h5 class="modal-title" id="exampleModalLongTitle">Change E-mail</h5>
+      
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+      
+            <div class="modal-body">
+              <form>              
+                <div class="form-group">
+                    <label for="recipient-name" class="col-form-label">New E-mail:</label>
+                    <input type="text" class="form-control" id="newEmail">
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+              <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+      </div>
+    </div>
+    <!-- End changeFullName Modal -->    
+
+    <!-- End Modals -->
+
+    </div>
+    <!-- End Section using ProfileCtrl-->
+
+    <!-- Dynamic Alert messages -->
+    <span ng-show="error">
+			<div class="alert alert-danger">
+				{{ message }}
+      </div>
+    </span>
+    
+    <span ng-show="success">
+      <div class="alert alert-success">
+        {{ message }}
+      </div>
+    </span>
+
+    <!-- End Dynamic Alert messages -->
+
+    <!-- Footer -->
+    <footer id="main-footer" class="bg-light mt-3 fixed-bottom">
+        <div class="container">
+            <div class="row">
+                <div class="col text-center">
+                    <div class="py-4">
+                        <h1 id="learnSQLFooterHeader" class="h3">
+                            <a href="http://localhost:3000/" id="footer-header">LearnSQL</a>
+                        </h1>
+                        <p>Copyright &copy; 2018</p>
+                        <a href="../contact.html" id="contact-us-button" class="btn text-white shadow" role="button">Contact Us</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- End Footer-->
+
+    <script src="../../javascripts/jquery.min.js"></script>
+    <script src="../../javascripts/jquery.dataTables.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.6/angular.min.js"></script>
+    <script src="../../javascripts/controllers/mainControllers.js"></script>
+    <script src="../../javascripts/controllers/profileController.js"></script>
+    <script src="../../javascripts/angular-datatables.min.js"></script>
+    <script src="../../javascripts/popper.min.js"></script>
+    <script src="../../javascripts/bootstrap.min.js"></script>
+
+</body>
+</html>

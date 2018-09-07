@@ -1,0 +1,65 @@
+$bg-color:#333;
+$font-color:#fff;
+$dark-overlay: rgba(0,0,0,0.7);
+$primary-color:#008ed6;
+$icon-size:30px;
+
+#home-section{
+  background: url('../views/imgs/home-background.jpg') no-repeat;
+  background-size: 100% 100%;
+  background-attachment:fixed;
+  min-height: 800px;
+
+
+  .dark-overlay{
+    background-color: $dark-overlay;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    min-height: 800px;
+  }
+
+  .home-inner {
+    padding-top: 120px;
+  }
+
+  .fa {
+    color: $primary-color;
+    background-color: #fff;
+    padding: 4px;
+    border-radius: 5px;
+    font-size: $icon-size;
+  }
+}
+
+li.active a{
+   background-color: #bf0000;
+}
+
+li.active a {
+background-color: #bf0000; }
+
+.form-signin {
+  width: 100%;
+  max-width: 330px;
+  padding: 15px;
+  margin: auto;
+}
+.form-signin .checkbox {
+  font-weight: 400;
+}
+.form-signin .form-control {
+  position: relative;
+  box-sizing: border-box;
+  height: auto;
+  padding: 10px;
+  font-size: 16px;
+}
+.form-signin .form-control:focus {
+  z-index: 2;
+}
+.form-signin input {
+  margin-bottom: 10px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0; }

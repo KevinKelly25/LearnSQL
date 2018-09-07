@@ -1,0 +1,461 @@
+<!-- select.html - LearnSQL
+
+    Michael Torres, Kevin Kelly
+    Web Applications and Databases for Education (WADE)
+
+    The purpose of this file is to teach the user SQL
+    SELECT statements and provide them questions to 
+    practice. 
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <title>Learn</title>
+  <link rel = "stylesheet" type = "text/css" href = "../../stylesheets/style.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css"
+    integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp"
+    crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
+  <link rel="stylesheet" href="../../stylesheets/font-awesome.min.css">
+  <link rel="stylesheet" href="../../stylesheets/bootstrap.css">
+  <link rel="stylesheet" href="../../stylesheets/learn.css">
+  <link rel="stylesheet" href="../../stylesheets/angular-datatables.css">
+  <link href = "../../stylesheets/prism.css" rel = "stylesheet" />
+
+</head>
+<body ng-app="LearnSQL">
+
+  <div class="wrapper">
+
+    <!-- SIDEBAR  -->
+    <nav id="sidebar">
+      <ul class="list-unstyled components">
+        <!-- SIDEBAR HEADER -->
+        <h2 id="sidebarHeader" class="text-center font-weight-bold mt-4">Sections</h2>
+        <!-- SIDEBAR SECTIONS -->
+        <li class="nav-item w-100">
+          <a href="./learn.html" class="nav-link text-center">What is SQL?</a>
+        </li>
+        <li class="nav-item w-100">
+          <a href="./relationalDatabases.html" class="nav-link text-center">Relational Databases</a>
+        </li>
+        <li class="nav-item w-100">
+          <a href="./keys.html" class="nav-link text-center">Primary and Foreign Keys</a>
+        </li>
+        <li class="nav-item w-100">
+          <a href="./select.html" id="bss" class="active nav-link text-center bg-white shadow-lg mr-2 ml-2 font-weight-bold">Basic Select Statements</a>
+        </li>
+        <li class="nav-item w-100">
+          <a href="./where.html" class="nav-link text-center">Use of Where</a>
+        </li>
+        <li class="nav-item w-100">
+          <a href="./order.html" class="nav-link text-center">Order By</a>
+        </li>
+        <li class="nav-item w-100">
+          <a href="./distict.html" class="nav-link text-center">Distinct</a>
+        </li>
+        <li class="nav-item w-100">
+          <a href="./predicateOperators.html" class="nav-link text-center">Predicate Operators</a>
+        </li>
+        <li class="nav-item w-100">
+          <a href="./expressions.html" class="nav-link text-center">Expressions</a>
+        </li>
+        <li class="nav-item w-100">
+          <a href="./scalar.html" class="nav-link text-center">Scalar Function</a>
+        </li>
+        <li class="nav-item w-100">
+          <a href="./aggregate.html" class="nav-link text-center">Aggregate Functions</a>
+        </li>
+        <li class="nav-item w-100">
+          <a href="./group.html" class="nav-link text-center">Group By</a>
+        </li>
+        <li class="nav-item w-100">
+          <a href="./having.html" class="nav-link text-center">Having with Group By</a>
+        </li>
+        <li class="nav-item w-100">
+          <a href="./insert.html" class="nav-link text-center">Insert Into</a>
+        </li>
+        <li class="nav-item w-100">
+          <a href="./update.html" class="nav-link text-center">Update</a>
+        </li>
+        <li class="nav-item w-100">
+          <a href="./delete.html" class="nav-link text-center">Delete From</a>
+        </li>
+        <li class="nav-item w-100">
+          <a href="./rollback.html" class="nav-link text-center">Rollback and Commit</a>
+        </li>
+        <li class="nav-item w-100">
+          <a href="./types.html" class="nav-link text-center">Data Types</a>
+        </li>
+        <li class="nav-item w-100">
+          <a href="./tableCreation.html" class="nav-link text-center">Table Creation</a>
+        </li>
+        <li class="nav-item w-100">
+          <a href="./addAttributes.html" class="nav-link text-center">Adding/Removing Attributes</a>
+        </li>
+        <li class="nav-item w-100">
+          <a href="./selectInto.html" class="nav-link text-center">Select Into</a>
+        </li>
+        <li class="nav-item w-100">
+          <a href="./views.html" class="nav-link text-center">Views</a>
+        </li>
+        <li class="nav-item w-100">
+          <a href="./union.html" class="nav-link text-center">Union</a>
+        </li>
+        <li class="nav-item w-100">
+          <a href="./intersect.html" class="nav-link text-center">Intersect and Except</a>
+        </li>
+        <li class="nav-item w-100">
+          <a href="./sub.html" class="nav-link text-center">Sub-Queries</a>
+        </li>
+        <li class="nav-item w-100">
+          <a href="./derived.html" class="nav-link text-center">Derived Tables</a>
+        </li>
+        <li class="nav-item w-100">
+          <a href="./joins.html" class="nav-link text-center">Joins</a>
+        </li>
+        <li class="nav-item w-100">
+          <a href="./transactions.html" class="nav-link text-center">Transactions</a>
+        </li>
+        <li class="nav-item w-100">
+          <a href="./cursors.html" class="nav-link text-center">Cursors</a>
+        </li>
+        <li class="nav-item w-100">
+          <a href="./functions.html" class="nav-link text-center">Functions</a>
+        </li>
+        <li class="nav-item w-100">
+          <a href="./triggers.html" class="nav-link text-center">Triggers</a>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- PAGE CONTENT  -->
+    <div id="content">
+      <!-- NAVBAR -->
+      <nav class="navbar navbar-expand-lg navbar-light bg-light" ng-controller="NavCtrl" data-ng-init="init()">
+        <div class="container-fluid">
+          <!-- NAVBAR HEADER -->
+          <h2 class="font-weight-bold">
+            <a href="http://localhost:3000/" class="navbar-brand text-primary">LearnSQL</a>
+          </h2>
+          <!-- button to close sidebar -->
+          <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <!-- NAVBAR SECTIONS -->
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="nav navbar-nav ml-auto">
+              <li class="nav-item">
+                <a href="http://localhost:3000/" class="nav-link border-right border-left px-4">Home</a>
+              </li>
+              <li class="nav-item">
+                <a href="../workshop.html" class="nav-link border-right px-4">Workshop</a>
+              </li>
+              <li class="nav-item active">
+                <a href="../learn/select.html" class="nav-link shadow-lg bg-primary text-white border-right border-left px-4">Learn</a>
+              </li>
+              <li class="nav-item">
+                <a href="../quizes.html" class="nav-link border-right px-4">Quizzes</a>
+              </li>
+              <span ng-show="currentUser.isteacher">
+                <li class="nav-item">
+                  <a href="../controlPanels/teacherClasses.html" class="nav-link border-right px-4">Classes</a>
+                </li>
+              </span>
+              <span ng-show="currentUser.isstudent">
+                <li class="nav-item">
+                  <a href="../controlPanels/studentClasses.html" class="nav-link border-right px-4">Classes</a>
+                </li>
+              </span>
+              <span ng-show="!currentUser">
+              <li class="nav-item">
+                <a href="../Account/signIn.html" class="nav-link px-4 pl-4">Sign in</a>
+              </li>
+              </span>
+              <span ng-show="currentUser.isadmin">
+                <li class="nav-item">
+                  <a href="../controlPanels/admin.html" class="nav-link border-right px-4">Admin Control Panel</a>
+                </li>
+              </span>
+              <span ng-show="currentUser">
+              <li class="nav-item">
+                <a href="../account/profile.html" class="nav-link border-right px-4">Profile</a>
+              </li>
+              </span>
+              <span ng-show="currentUser">
+              <li class="nav-item">
+                <a href="http://localhost:3000/" class="nav-link px-4 pl-4" ng-click="logout()">Logout</a>
+              </li>
+              </span>
+            </ul>
+          </div>
+        </div>
+      </nav>
+
+      <!-- PAGE TITLE -->
+      <h2 id="pageTitle" class="text-center shadow-none font-weight-bold">
+        <!-- TOGGLE SIDEBAR BUTTON -->
+        <button type="button" id="sidebarCollapse" class="btn btn-dark float-left" style="margin-left: -1em">
+          <span><i class="fas fa-angle-left"></i></span>
+        </button>Basic Select Statements
+      </h2>
+      <!-- INTRODUCTION TO BASIC SELECT STATEMENTS -->
+      <p class="text-left ml-5 mr-5 mb-5">SELECT is a clause used to return data from a database.
+          The data returned is stored in a result table, called the result-set. This result set
+          contains 0 or more rows of data depending on the table and selected attributes and
+          is a unstored table.
+          To use Select in an SQL statement you write SELECT then the name of the attribute
+          columns, each seperated by a comma. SELECT has to be used with the
+          FROM clause, which designates which table the SELECT attributes
+          are acting on. This is shown here:</p>
+
+      <!-- EXAMPLE 1 -->
+      <div id="example" class="bg-light text-dark shadow-lg ml-5 mr-5">
+        <h4 id="exampleHeader" class="font-weight-bold">Example 1</h4>
+<pre class="line-numbers"><code class="language-sql"> SELECT attribute1, attribute2, attribute3
+ FROM table_name;</code></pre>
+
+          <p id="exampleComment">
+            Here, attribute1, attribute2 and attribute3 are the field/attribute names of the table you
+            want to select data from. "table_name" represents any table in the database.
+            In plain english this means for each row in "table_name" display attribute1, attribute2, and attribute3.
+          </p>
+      </div>
+
+      <p class="ml-5 mr-5 mt-5 mb-5">
+        There has to be at least one attribute selected but if you want to select all
+        the fields available in the table, use * in place of the attributes. As
+        shown in the next example:
+      </p>
+
+      <!-- EXAMPLE 2 -->
+      <div id="example" class="bg-light text-dark shadow-lg ml-5 mr-5">
+        <h4 id="exampleHeader" class="font-weight-bold">Example 2</h4>
+        <div class="example">
+<pre class="line-numbers"><code class="language-sql">SELECT *
+FROM table_name;</code></pre>
+
+          <p id="exampleComment">
+            Here, all fields in the table are selected because of the use of * in place of the attributes.
+          </p>
+        </div>
+      </div>
+
+      <p class="ml-5 mr-5 mt-5 mb-5">
+        Any SQL query to retrieve data from a table will always have at least two Clauses: SELECT and FROM. All queries are ended with a semicolon.
+        Many clauses are typically added to the select statement to narrow down the result set even more then just selecting individual attributes
+        such as <a href="./where.html" style="color:blue;">Where</a> and <a href="./group.html" style="color:blue;">Group By</a> statements.
+        Even other queries can be used to as an input as long as it fits into the rules discussed in a later sections. Also,
+        SELECT attributes can be renamed in the result set with the AS clause. To do this you add AS "alias" after the attribute name. This is shown
+        in this following example:
+      </p>
+
+      <!-- EXAMPLE 3 -->
+      <div id="example" class="bg-light text-dark shadow-lg ml-5 mr-5">
+        <h4 id="exampleHeader" class="font-weight-bold">Example 3</h4>
+        <div class="example">
+<pre class="line-numbers"><code class="language-sql">SELECT CustomerID AS ID, CustomerName AS Name, CustomerAddress AS Address
+FROM Customer_Table;</code></pre>
+
+          <p id="exampleComment">
+            Here the result set will display ID, Name, Address instead of CustomerID, CustomerName, CustomerAddress.
+            This will not alter the attribute names of the called table.
+          </p>
+        </div>
+      </div>
+
+      <p class="ml-5 mr-5 mt-5 mb-5">
+        While the query is written SELECT Then FROM it is actaully executed FROM and then SELECT.
+        It is important to know the order of operations, especially when there a more clauses, because
+        the order will affect the results.
+        </br>
+        The DISTINCT modifier can be added after SELECT to ensure that all rows are unique. This means that any rows that are repeated
+        will only show one row instead of many in the result set.
+      </p>
+      <br>
+
+      <!-- PRACTICE QUESTIONS -->
+      <div id="accordion" class="shadow-lg ml-5 mr-5">
+        <div class="card bg-dark">
+          <!-- PARENT HEADING (ACCORDION) -->
+          <div class="card-header" id="headingOne">
+            <h5 class="mb-0 d-inline">
+              <div data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne" class="text-white">
+                Practice Questions <i class="fas fa-angle-down js-rotate-if-collapsed"></i>
+              </div>
+            </h5>
+          </div>
+
+          <!-- PROBLEMS (INNER ACCORDION) -->
+          <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+            <div id="child1" class="card-body">
+              <div>
+
+                <!-- PROBLEM 1 -->
+                <div id="problem" class="card mb-1">
+                  <div class="card-header">
+                    <h5 class="mb-0">
+                      <div href="#" data-toggle="collapse" data-target="#collapseOneA">
+                        problem 1 <i class="fas fa-angle-down js-rotate-if-collapsed"></i>
+                      </div>
+                    </h5>
+                  </div>
+                  <div id="collapseOneA" class="collapse card-body" data-parent="#child1">
+                    <div class="card-body">
+                      <div ng-controller="Question">
+                        <div class="question">
+                          <pre id="practiceQ">
+From a table named customer_t that has the following attributes:
+CustomerId, CustomerName, CustomerAddress, CustomerState, and CustomerPostalCode
+                          </pre>
+                          <p class="text-center font-weight-bold">
+                            Write a select statement that returns all attributes.
+                          </p>
+                        </div>
+                        <form>
+                          <textarea style="width:96.5%; height:60px;" type="text" class="bg-white form-control input-lg" placeholder="Write your answer here..." ng-model="formData.text"></textarea>
+                          <br>
+                          <button id="submitButton" type="submit" class="btn btn-lg btn-block text-white" ng-init="statementInHTML = 'select * from customer_t'" ng-click="answerQuestion()">Submit</button>
+                        </form>
+                        <h3 id="problem-one-font" style="color:{{backgroundColor}}" class="text-center">{{ answer }}</h3>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- PROBLEM 2 -->
+                <div id="problem" class="card mb-1">
+                  <div class="card-header">
+                    <h5 class="mb-0">
+                      <div href="#" data-toggle="collapse" data-target="#collapseOneB">
+                        problem 2 <i class="fas fa-angle-down js-rotate-if-collapsed"></i>
+                      </div>
+                    </h5>
+                  </div>
+                  <div id="collapseOneB" class="collapse card-body" data-parent="#child1">
+                    <div class="card-body">
+                      <div ng-controller="Question">
+                        <div class="question">
+                          <pre id="practiceQ">
+From a table named <em>Customer</em> that has the following attributes:
+Customerid, Customername, CustomerAddress, CustomerCity, CustomerState, and CustomerPostalCode.
+                          </pre>
+                          <p class="text-center font-weight-bold">
+                            Write a SELECT Statement that returns all the CustomerIDs
+                          </p>
+                        </div>
+                        <form>
+                          <textarea style="width:96.5%; height:60px;" type="text" class="bg-white form-control input-lg" placeholder="Write your answer here..." ng-model="formData.text"></textarea>
+                          <br>
+                          <button id="submitButton" type="submit" class="btn btn-lg btn-block text-white" ng-init="statementInHTML = 'select customerid from customer_t'" ng-click="answerQuestion()">Submit</button>
+                        </form>
+                        <h3 id="problem-two-font" style="color:{{backgroundColor}}" class="text-center">{{ answer }}</h3>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- PROBLEM 3 -->
+                <div id="problem" class="card mb-1">
+                  <div class="card-header">
+                    <h5 class="mb-0">
+                      <div href="#" data-toggle="collapse" data-target="#collapseOneC">
+                        problem 3 <i class="fas fa-angle-down js-rotate-if-collapsed"></i>
+                      </div>
+                    </h5>
+                  </div>
+                  <div id="collapseOneC" class="collapse card-body" data-parent="#child1">
+                    <div class="card-body">
+                      <div ng-controller="Question">
+                        <div class="question">
+                          <pre id="practiceQ">
+From a table named <em>Customer</em> that has the following attributes:
+Customerid, Customername, CustomerAddress, CustomerCity, CustomerState, and CustomerPostalCode.
+                          </pre>
+                          <p class="text-center font-weight-bold">
+                            Write a SELECT Statement that returns CustomerName, CustomerAddress, CustomerCity, CustomerState, and CustomerPostalCode
+                          </p>
+                        </div>
+                        <form>
+                          <textarea style="width:96.5%; height:60px;" type="text" class="bg-white form-control input-lg" placeholder="Write your answer here..." ng-model="formData.text"></textarea>
+                          <br>
+                          <button id="submitButton" type="submit" class="btn btn-lg btn-block text-white" ng-init="statementInHTML = 'select CustomerName, CustomerAddress, CustomerCity, CustomerState, CustomerPostalCode from customer_t'" ng-click="answerQuestion()">Submit</button>
+                        </form>
+                        <h3 id="problem-three-font" style="color:{{backgroundColor}};" class="text-center">{{ answer }}</h3>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MAIN FOOTER -->
+      <footer id="main-footer" class="bg-light mt-3">
+        <div class="container">
+          <div class="row">
+            <div class="col text-center">
+              <div class="py-4">
+                <h1 class="h3">
+                  <a href="http://localhost:3000/" class="text-primary">LearnSQL</a>
+                </h1>
+                <p>Copyright &copy; 2018</p>
+                <a href="../contact.html" class="btn btn-primary text-white shadow">Contact Us</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </footer>
+
+    </div>
+
+  </div>
+
+  <script src="../../javascripts/prism.js"></script>
+  <script src="../../javascripts/jquery.min.js"></script>
+  <script src="../../javascripts/jquery.dataTables.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.6/angular.min.js"></script>
+  <script src="../../javascripts/controllers/mainControllers.js"></script>
+  <script src="../../javascripts/controllers/questionController.js"></script>
+  <script src="../../javascripts/angular-datatables.min.js"></script>
+  <script src="../../javascripts/popper.min.js"></script>
+  <script src="../../javascripts/bootstrap.min.js"></script>
+
+  <!-- THE CURRENT YEAR OF THE COPYRIGHT -->
+  <script>
+    $('#year').text(new Date().getFullYear());
+  </script>
+
+  <!-- ADDED SCRIPT THAT ALLOWS THE BUTTON TO BE PRESSED TO TOGGLE THE SIDEBAR TO OPEN AND CLOSE -->
+  <script type="text/javascript">
+    $(document).ready(function () {
+      $("#sidebar").mCustomScrollbar({
+        theme: "minimal"
+      });
+
+      $('#sidebarCollapse').on('click', function () {
+        $('#sidebar, #content').toggleClass('active');
+        $('.collapse.in').toggleClass('in');
+        $('a[aria-expanded=true]').attr('aria-expanded', 'false');
+      });
+    });
+</script>
+
+<!-- ADDED SCRIPT FOR PAGE TO SCROLL AUTOMATICALLY WHEN THE ACCORDION IS OPENED AND TO THE CLOSEST OPENED CARD -->
+<script>
+$('.collapse').on('shown.bs.collapse', function(e) {
+  var $card = $(this).closest('.card');
+  $('html,body').animate({
+    scrollTop: $card.offset().top - 50
+  }, 500);
+});
+</script>
+
+</body>
+</html>
