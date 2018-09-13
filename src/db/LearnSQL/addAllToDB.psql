@@ -13,7 +13,8 @@
 -- used rather then the program's current directory
 
 \set ON_ERROR_STOP on
-\ir createLearnSQLTables.sql
+\ir initializeServer.sql
+\ir initializeDB.sql
 \ir userMgmt.sql
 
 

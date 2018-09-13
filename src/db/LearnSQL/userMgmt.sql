@@ -9,6 +9,51 @@
 START TRANSACTION;
 
 
+
+--Make sure the current user has sufficient privilege to run this script
+-- privilege required: superuser
+DO
+$$
+BEGIN
+   IF NOT EXISTS (SELECT * FROM pg_catalog.pg_roles
+                  WHERE rolname = CURRENT_USER AND rolsuper = TRUE
+                 ) THEN
+      RAISE EXCEPTION 'Insufficient privileges: script must be run as a user '
+                      'with superuser privileges';
+   END IF;
+END
+$$;
+
+
+
+-- Define a table of user information for this DB
+--  a "Username" is a unique id that represents a human user
+--  a "Password" represents the hashed and salted password of a user
+--  the "Email" field characters are check to make sure they follow the scheme
+--   of a valid email
+--  a "token" represents a hashed token used for password reset and email validation
+--  "isVerified" represents whether the user verified their email.
+--  "forgotPassword" represents if the forgotPassword feature was used.
+CREATE TABLE IF NOT EXISTS UserData_t (
+  Username                VARCHAR(256) NOT NULL PRIMARY KEY,
+  FullName                VARCHAR(256) NOT NULL,
+  Password                VARCHAR(60) NOT NULL,
+  Email                   VARCHAR(319) NOT NULL CHECK(TRIM(Email) like '_%@_%._%'),
+  Token                   VARCHAR(60) NOT NULL,
+  DateJoined              DATE DEFAULT CURRENT_DATE,
+  isTeacher               BOOLEAN DEFAULT FALSE,
+  isAdmin                 BOOLEAN DEFAULT FALSE,
+  isVerified              BOOLEAN DEFAULT FALSE,
+  ForgotPassword          BOOLEAN DEFAULT FALSE
+);
+
+
+
+-- Define a unique index on the trimmer and lowercase values of the email field
+CREATE UNIQUE INDEX idx_Unique_Email ON UserData_t(LOWER(TRIM(Email)));
+
+
+
 --Define function to register a user.
 CREATE OR REPLACE FUNCTION
   LearnSQL.createUser(UserName VARCHAR(256),
