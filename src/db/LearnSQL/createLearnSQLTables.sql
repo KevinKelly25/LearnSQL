@@ -7,6 +7,12 @@
 --  website.
 
 
+
+--Create a schema to hold app's admin info and assign privileges on that schema
+CREATE SCHEMA IF NOT EXISTS LearnSQL AUTHORIZATION postgres;
+
+
+
 -- Define a table of userdata for this DB
 --  a "Username" is a unique id that represents a human user
 --  a "Password" represents the hashed and salted password of a user
