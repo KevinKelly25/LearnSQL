@@ -26,48 +26,27 @@ $$;
 
 
 
--- Define a table of user information for this DB
---  a "Username" is a unique id that represents a human user
---  a "Password" represents the hashed and salted password of a user
---  the "Email" field characters are check to make sure they follow the scheme
---   of a valid email
---  a "token" represents a hashed token used for password reset and email validation
---  "isVerified" represents whether the user verified their email.
---  "forgotPassword" represents if the forgotPassword feature was used.
-CREATE TABLE IF NOT EXISTS UserData_t (
-  Username                VARCHAR(256) NOT NULL PRIMARY KEY,
-  FullName                VARCHAR(256) NOT NULL,
-  Password                VARCHAR(60) NOT NULL,
-  Email                   VARCHAR(319) NOT NULL CHECK(TRIM(Email) like '_%@_%._%'),
-  Token                   VARCHAR(60) NOT NULL,
-  DateJoined              DATE DEFAULT CURRENT_DATE,
-  isTeacher               BOOLEAN DEFAULT FALSE,
-  isAdmin                 BOOLEAN DEFAULT FALSE,
-  isVerified              BOOLEAN DEFAULT FALSE,
-  ForgotPassword          BOOLEAN DEFAULT FALSE
-);
-
-
-
--- Define a unique index on the trimmer and lowercase values of the email field
-CREATE UNIQUE INDEX idx_Unique_Email ON UserData_t(LOWER(TRIM(Email)));
-
-
-
---Define function to register a user.
+--Define function to register a user. This function will create a role within
+-- the database and also a user within the tables of the LearnSQL database.
+--If any errors are encountered an exception will be raised and the function
+-- will stop execution.
 CREATE OR REPLACE FUNCTION
-  LearnSQL.createUser(UserName VARCHAR(256),
-                      FullName VARCHAR(256),
-                      Password VARCHAR(60),
-                      Email    VARCHAR(319))
+  LearnSQL.createUser(UserName  LearnSQL.UserData_t.UserName%Type,
+                      FullName  LearnSQL.UserData_t.FullName%Type,
+                      Password  VARCHAR(319),
+                      Email     VARCHAR(319),
+                      isTeacher LearnSQL.UserData_t.isTeacher%Type DEFAULT FALSE,
+                      isAdmin   LearnSQL.UserData_t.isAdmin%Type DEFAULT FALSE)
    RETURNS VOID AS
 $$
+DECLARE
+  Token VARCHAR(60);--token to be stored for email validation
 BEGIN
   --Check if username exists
   IF EXISTS (SELECT *
              FROM UserData_t
              WHERE UserData_t.UserName = $1
-      ) THEN
+            ) THEN
     RAISE EXCEPTION 'Username Already Exists';
   END IF;
 
@@ -80,12 +59,96 @@ BEGIN
     RAISE EXCEPTION 'Email Already Exists';
   END IF;
 
+
+  --SELECT MD5(random()::text) generated a random token that will be used for
+  -- email validation.
+  Token = SELECT MD5(random()::text);
+
   --Add user information to the LearnSQL UserData table
-  INSERT INTO UserData_t VALUES ($1,$2,$3,$4, (SELECT MD5(random()::text)));
+  INSERT INTO UserData_t VALUES ($1,$2,$3,$4, Token, $5, $6);
 
   --create database user
-  EXECUTE FORMAT('CREATE USER %s WITH ENCRYPTED PASSWORD %L',$1, $3)
+  EXECUTE FORMAT('CREATE USER %s WITH ENCRYPTED PASSWORD %L',$1, $3);
 
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+--Define function to delete a user. This function will delete a role within
+-- the database and also a user within the tables of the LearnSQL database.
+--If any errors are encountered an exception will be raised and the function
+-- will stop execution.
+CREATE OR REPLACE FUNCTION
+  LearnSQL.dropUser(UserName LearnSQL.UserData_t.UserName%Type,
+                    dropFromServer DEFAULT TRUE)
+   RETURNS VOID AS
+$$
+BEGIN
+  --Check if username exists in LearnSQL tables
+  IF NOT EXISTS (SELECT *
+                 FROM UserData_t
+                 WHERE UserData_t.UserName = $1
+                ) THEN
+    RAISE EXCEPTION 'User does not exist in tables';
+  END IF;
+
+  --Check if user exists in database
+  IF $2 THEN
+    IF NOT EXISTS (SELECT * FROM pg_catalog.pg_roles
+                    WHERE rolname = $1
+                  ) THEN
+      RAISE EXCEPTION 'User does not exist in database';
+    END IF;
+
+    --Delete user from the database
+    EXECUTE FORMAT('DROP USER %s',$1);
+  END IF;
+
+
+  --Delete user information to the LearnSQL UserData and Attends table
+  DELETE FROM Attends WHERE UserName = $1;
+  DELETE FROM UserData_t WHERE UserName = $1;
+
+END;
+$$ LANGUAGE plpgsql;
+
+
+--Define function to delete a user. This function will delete a role within
+-- the database and also a user within the tables of the LearnSQL database.
+--If any errors are encountered an exception will be raised and the function
+-- will stop execution.
+CREATE OR REPLACE FUNCTION
+  LearnSQL.changeUsername(oldUserName LearnSQL.UserData_t.UserName%Type,
+                          newUserName LearnSQL.UserData_t.UserName%Type)
+   RETURNS VOID AS
+$$
+BEGIN
+
+  --check if new username is already taken
+  IF EXISTS (SELECT *
+             FROM UserData_t
+             WHERE UserData_t.UserName = $2
+            ) THEN
+    RAISE EXCEPTION 'New username already exists';
+  END IF;
+
+  --Check if username exists in LearnSQL tables
+  IF NOT EXISTS (SELECT *
+                 FROM UserData_t
+                 WHERE UserData_t.UserName = $1
+                ) THEN
+    RAISE EXCEPTION 'User does not exist in tables';
+  END IF;
+
+  --Update database rolename to the new value
+  EXECUTE FORMAT('ALTER USER %s RENAME TO %s',$1,$2);
+  
+  --Update tables to reflect new username
+  UPDATE LearnSQL.UserData_t 
+  SET UserName = $2
+  WHERE UserName = $1;
+ 
 END;
 $$ LANGUAGE plpgsql;
 

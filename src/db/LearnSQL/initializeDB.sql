@@ -42,8 +42,34 @@ END
 $$;
 
 
+-- Define a table of user information for this DB
+--  A "Username" is a unique id that represents a human user
+--  A "Password" represents the hashed and salted password of a user
+--  The "Email" field characters are check to make sure they follow the scheme
+--   of a valid email
+--  A "token" represents a hashed token used for password reset and email validation
+--  "isVerified" represents whether the user verified their email.
+--  "forgotPassword" represents if the forgotPassword feature was used.
+CREATE TABLE IF NOT EXISTS UserData_t (
+  Username                VARCHAR(256) NOT NULL PRIMARY KEY,
+  FullName                VARCHAR(256) NOT NULL,
+  Password                VARCHAR(60) NOT NULL,
+  Email                   VARCHAR(319) NOT NULL CHECK(TRIM(Email) like '_%@_%._%'),
+  Token                   VARCHAR(60) NOT NULL,
+  isTeacher               BOOLEAN DEFAULT FALSE,
+  isAdmin                 BOOLEAN DEFAULT FALSE,
+  DateJoined              DATE DEFAULT CURRENT_DATE,
+  isVerified              BOOLEAN DEFAULT FALSE,
+  ForgotPassword          BOOLEAN DEFAULT FALSE
+);
 
---TODO: move Class Tables to ClassMgmt script
+
+
+-- Define a unique index on the trimmed and lowercase values of the email field
+CREATE UNIQUE INDEX idx_Unique_Email ON UserData_t(LOWER(TRIM(Email)));
+
+
+
 -- Define a table of classes for this DB
 --  a "ClassID" is a unique id that represents a classname plus a random ID
 --  a "ClassName" is the classID without the random ID

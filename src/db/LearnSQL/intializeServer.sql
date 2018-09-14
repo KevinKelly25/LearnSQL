@@ -25,6 +25,10 @@ $$;
 DO
 $$
 BEGIN
-  CREATE USER learnsql WITH SUPERUSER;
+   IF NOT EXISTS (SELECT * FROM pg_catalog.pg_roles
+                  WHERE rolname = 'learnsql'
+                 ) THEN
+      CREATE USER learnsql WITH SUPERUSER;
+   END IF;
 END
 $$;
