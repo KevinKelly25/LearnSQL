@@ -15,9 +15,9 @@ START TRANSACTION;
 DO
 $$
 BEGIN
-   IF NOT EXISTS (SELECT * FROM pg_catalog.pg_roles
-                  WHERE rolname = CURRENT_USER AND rolsuper = TRUE
-                 ) THEN
+  IF NOT EXISTS (SELECT * FROM pg_catalog.pg_roles
+                 WHERE rolname = CURRENT_USER AND rolsuper = TRUE
+                ) THEN
       RAISE EXCEPTION 'Insufficient privileges: script must be run as a user '
                       'with superuser privileges';
    END IF;
@@ -37,7 +37,7 @@ CREATE OR REPLACE FUNCTION
                       Email     VARCHAR(319),
                       isTeacher LearnSQL.UserData_t.isTeacher%Type DEFAULT FALSE,
                       isAdmin   LearnSQL.UserData_t.isAdmin%Type DEFAULT FALSE)
-   RETURNS VOID AS
+  RETURNS VOID AS
 $$
 DECLARE
   Token VARCHAR(60);--token to be stored for email validation
@@ -82,7 +82,7 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION
   LearnSQL.dropUser(UserName LearnSQL.UserData_t.UserName%Type,
                     dropFromServer DEFAULT TRUE)
-   RETURNS VOID AS
+  RETURNS VOID AS
 $$
 BEGIN
   --Check if username exists in LearnSQL tables
@@ -114,14 +114,11 @@ END;
 $$ LANGUAGE plpgsql;
 
 
---Define function to delete a user. This function will delete a role within
--- the database and also a user within the tables of the LearnSQL database.
---If any errors are encountered an exception will be raised and the function
--- will stop execution.
+--TODO: update comment
 CREATE OR REPLACE FUNCTION
   LearnSQL.changeUsername(oldUserName LearnSQL.UserData_t.UserName%Type,
                           newUserName LearnSQL.UserData_t.UserName%Type)
-   RETURNS VOID AS
+  RETURNS VOID AS
 $$
 BEGIN
 
@@ -149,6 +146,95 @@ BEGIN
   SET UserName = $2
   WHERE UserName = $1;
  
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+--TODO: Update Comment
+CREATE OR REPLACE FUNCTION
+  LearnSQL.changePassword(UserName LearnSQL.UserData_t.UserName%Type,
+                          oldPassword VARCHAR(256),
+                          newPassword VARCHAR(256))
+  RETURNS VOID AS
+$$
+BEGIN
+
+  --Checks that old password matches the correct password before updating the
+  -- old password. If wrong password is supplied an exception is raised.
+  --We currently store the passwords with MD5. On postgres the table pg_authid
+  -- stores these passwords. However, md5 is added to the beginning and before
+  -- hashing the password the user's username is appended to password. 
+  --Taken and modified from ClassDB testClassDBRoleMgmt.sql
+  IF EXISTS (
+      SELECT * FROM pg_catalog.pg_authid
+      WHERE RolName = $1 AND (
+            RolPassword = 'md5' || pg_catalog.MD5($2 || $1)
+            OR (RolPassword IS NULL AND $2 IS NULL) )
+      )
+    THEN
+      --Update database rolename to the new value
+      EXECUTE FORMAT('ALTER USER %s WITH PASSWORD %L',$1,$3);
+    ELSE
+      RAISE EXCEPTION 'Old Password Does Not Match';
+    END IF;
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+--TODO: Update Comment
+CREATE OR REPLACE FUNCTION
+  LearnSQL.changePassword(UserName LearnSQL.UserData_t.UserName%Type,
+                          oldPassword VARCHAR(256),
+                          newPassword VARCHAR(256))
+  RETURNS VOID AS
+$$
+BEGIN
+  --Checks that old password matches the correct password before updating the
+  -- old password. If wrong password is supplied an exception is raised.
+  --We currently store the passwords with MD5. On postgres the table pg_authid
+  -- stores these passwords. However, md5 is added to the beginning and before
+  -- hashing the password the user's username is appended to password. 
+  --Taken and modified from ClassDB testClassDBRoleMgmt.sql
+  IF EXISTS (
+      SELECT * FROM pg_catalog.pg_authid
+      WHERE RolName = $1 AND (
+            RolPassword = 'md5' || pg_catalog.MD5($2 || $1)
+            OR (RolPassword IS NULL AND $2 IS NULL) )
+      )
+    THEN
+      --Update database rolename to the new value
+      EXECUTE FORMAT('ALTER USER %s WITH PASSWORD %L',$1,$3);
+    ELSE
+      RAISE EXCEPTION 'Old Password Does Not Match';
+    END IF;
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+--TODO: Update Comment
+CREATE OR REPLACE FUNCTION
+  LearnSQL.changeFullName(userName LearnSQL.UserData_t.UserName%Type,
+                          newFullName LearnSQL.UserData_t.FullName%Type)
+  RETURNS VOID AS
+$$
+BEGIN
+  UPDATE UserData_t SET FullName = $2 WHERE UserName = $1;
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+--TODO: Update Comment
+CREATE OR REPLACE FUNCTION
+  LearnSQL.changeEmail(userName LearnSQL.UserData_t.UserName%Type,
+                       Email LearnSQL.UserData_t.Email%Type)
+  RETURNS VOID AS
+$$
+BEGIN
+  UPDATE UserData_t SET Email = $2 WHERE UserName = $1;
 END;
 $$ LANGUAGE plpgsql;
 
