@@ -34,7 +34,7 @@ CREATE OR REPLACE FUNCTION
   LearnSQL.createUser(UserName  LearnSQL.UserData_t.UserName%Type,
                       FullName  LearnSQL.UserData_t.FullName%Type,
                       Password  VARCHAR(319),
-                      Email     VARCHAR(319),
+                      Email     LearnSQL.UserData_t.Email%Type,
                       isTeacher LearnSQL.UserData_t.isTeacher%Type DEFAULT FALSE,
                       isAdmin   LearnSQL.UserData_t.isAdmin%Type DEFAULT FALSE)
   RETURNS VOID AS
@@ -43,7 +43,8 @@ DECLARE
   Token VARCHAR(60);--token to be stored for email validation
 BEGIN
   --Check if username exists
-  IF EXISTS (SELECT *
+  IF EXISTS (
+             SELECT *
              FROM UserData_t
              WHERE UserData_t.UserName = $1
             ) THEN
@@ -52,10 +53,11 @@ BEGIN
 
 
   --Check if Email exists
-  IF EXISTS (SELECT *
+  IF EXISTS (
+             SELECT *
              FROM UserData_t
              WHERE UserData_t.Email = $4
-      ) THEN
+            ) THEN
     RAISE EXCEPTION 'Email Already Exists';
   END IF;
 
@@ -166,18 +168,19 @@ BEGIN
   -- stores these passwords. However, md5 is added to the beginning and before
   -- hashing the password the user's username is appended to password. 
   --Taken and modified from ClassDB testClassDBRoleMgmt.sql
+  --Authors: Andrew Figueroa, Steven Rollo, Sean Murthy
   IF EXISTS (
-      SELECT * FROM pg_catalog.pg_authid
-      WHERE RolName = $1 AND (
-            RolPassword = 'md5' || pg_catalog.MD5($2 || $1)
-            OR (RolPassword IS NULL AND $2 IS NULL) )
-      )
+              SELECT * FROM pg_catalog.pg_authid
+              WHERE RolName = $1 AND (
+                RolPassword = 'md5' || pg_catalog.MD5($2 || $1)
+                OR (RolPassword IS NULL AND $2 IS NULL) )
+            )
     THEN
       --Update database rolename to the new value
       EXECUTE FORMAT('ALTER USER %s WITH PASSWORD %L',$1,$3);
     ELSE
       RAISE EXCEPTION 'Old Password Does Not Match';
-    END IF;
+  END IF;
 END;
 $$ LANGUAGE plpgsql;
 
