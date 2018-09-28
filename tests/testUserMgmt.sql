@@ -192,6 +192,27 @@ BEGIN
   PERFORM LearnSQL.createUser('testUser1', 'Test user 1', 'testPass1',
                               'testUser1@testemail.com', true);
 
+    --Create user with teacher and admin privileges 
+  PERFORM LearnSQL.createUser('testUser2', 'Test user 2', 'testPass2',
+                              'testUser1@testemail.com', true, true);
+
+  --Check if the username was created and properly set
+  IF NOT (pg_temp.checkIfUsernameExists('testUser0')
+     AND  pg_temp.checkIfUsernameExists('testUser1')
+     AND  pg_temp.checkIfUsernameExists('testUser1')) 
+  THEN
+    RETURN 'Fail Code 1';
+  END IF;
+
+  --Check if the full name set
+  IF NOT (pg_temp.checkFullName('Test User 0')
+     AND  pg_temp.checkFullName('Test User 1')
+     AND  pg_temp.checkFullName('Test User 1')) 
+  THEN
+    RETURN 'Fail Code 2';
+  END IF;
+
+
                               --not done
 END;
 $$ LANGUAGE plpgsql;
