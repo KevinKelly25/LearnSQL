@@ -35,11 +35,11 @@ CREATE EXTENSION IF NOT EXISTS pgcrypto;
 --If any errors are encountered an exception will be raised and the function
 -- will stop execution.
 CREATE OR REPLACE FUNCTION
-  LearnSQL.createUser(UserName  LearnSQL.UserData_t.UserName%Type,
-                      FullName  LearnSQL.UserData_t.FullName%Type,
-                      Password  LearnSQL.UserData_t.Password%Type,
-                      Email     LearnSQL.UserData_t.Email%Type,
-                      Token     LearnSQL.UserData_t.Token%Type,
+  LearnSQL.createUser(userName  LearnSQL.UserData_t.UserName%Type,
+                      fullName  LearnSQL.UserData_t.FullName%Type,
+                      password  LearnSQL.UserData_t.Password%Type,
+                      email     LearnSQL.UserData_t.Email%Type,
+                      token     LearnSQL.UserData_t.Token%Type,
                       isTeacher LearnSQL.UserData_t.isTeacher%Type DEFAULT FALSE,
                       isAdmin   LearnSQL.UserData_t.isAdmin%Type DEFAULT FALSE)
   RETURNS VOID AS
@@ -66,13 +66,13 @@ BEGIN
     RAISE EXCEPTION 'Email Already Exists';
   END IF;
 
-  --create "hashed" password using blowfish cipher.
+  --Create "hashed" password using blowfish cipher.
   encryptedPassword = crypt($3, gen_salt('bf'));
 
   --Add user information to the LearnSQL UserData table
   INSERT INTO UserData_t VALUES (LOWER($1),$2,encryptedPassword,$4, $5, $6, $7);
 
-  --create database user
+  --Create database user
   EXECUTE FORMAT('CREATE USER %s WITH ENCRYPTED PASSWORD %L',LOWER($1), $3);
 
 END;
@@ -88,14 +88,14 @@ $$ LANGUAGE plpgsql;
 --If any errors are encountered an exception will be raised and the function
 -- will stop execution.
 CREATE OR REPLACE FUNCTION
-  LearnSQL.dropUser(User LearnSQL.UserData_t.UserName%Type,
-                    DatabasePassword VARCHAR DEFAULT NULL)
+  LearnSQL.dropUser(user LearnSQL.UserData_t.UserName%Type,
+                    databasePassword VARCHAR DEFAULT NULL)
   RETURNS VOID AS
 $$
 BEGIN
   --Check if username exists in LearnSQL tables
   IF NOT EXISTS (SELECT *
-                 FROM UserData_t
+                 FROM LearnSQL.UserData_t
                  WHERE UserData_t.UserName = $1
                 ) THEN
     RAISE EXCEPTION 'User does not exist in tables';
@@ -129,7 +129,7 @@ BEGIN
 
   --Delete user information to the LearnSQL UserData and Attends table
   DELETE FROM Attends WHERE UserName = $1;
-  DELETE FROM UserData_t WHERE UserName = $1;
+  DELETE FROM LearnSQL.UserData_t WHERE UserName = $1;
 
 END;
 $$ LANGUAGE plpgsql;
@@ -147,7 +147,7 @@ BEGIN
 
   --check if new username is already taken
   IF EXISTS (SELECT *
-             FROM UserData_t
+             FROM LearnSQL.UserData_t
              WHERE UserData_t.UserName = $2
             ) THEN
     RAISE EXCEPTION 'New username already exists';
@@ -155,7 +155,7 @@ BEGIN
 
   --Check if username exists in LearnSQL tables
   IF NOT EXISTS (SELECT *
-                 FROM UserData_t
+                 FROM LearnSQL.UserData_t
                  WHERE UserData_t.UserName = $1
                 ) THEN
     RAISE EXCEPTION 'User does not exist in tables';
@@ -178,7 +178,7 @@ $$ LANGUAGE plpgsql;
 -- it applies the new password it checks to make sure the given old password 
 -- matches the password stored in the database. 
 CREATE OR REPLACE FUNCTION
-  LearnSQL.changePassword(UserName     LearnSQL.UserData_t.Password%Type,
+  LearnSQL.changePassword(userName     LearnSQL.UserData_t.Password%Type,
                           oldPassword  LearnSQL.UserData_t.Password%Type,
                           newPassword  LearnSQL.UserData_t.Password%Type)
   RETURNS VOID AS
@@ -186,7 +186,8 @@ $$
 DECLARE
   encryptedPassword VARCHAR(60); --hashed password from UserData_t
 BEGIN
-  encryptedPassword = SELECT password FROM UserData_t WHERE UserName = $1;  
+  encryptedPassword = SELECT password FROM LearnSQL.UserData_t 
+                      WHERE UserData_t.UserName = $1;  
 
   IF (encryptedPassword = crypt($2, encryptedPassword)) )
     THEN
@@ -200,62 +201,74 @@ $$ LANGUAGE plpgsql;
 
 
 
---TODO: Update Comment
-CREATE OR REPLACE FUNCTION
-  LearnSQL.changePassword(UserName LearnSQL.UserData_t.UserName%Type,
-                          oldPassword VARCHAR(256),
-                          newPassword VARCHAR(256))
-  RETURNS VOID AS
-$$
-BEGIN
-  --Checks that old password matches the correct password before updating the
-  -- old password. If wrong password is supplied an exception is raised.
-  --We currently store the passwords with MD5. On postgres the table pg_authid
-  -- stores these passwords. However, md5 is added to the beginning and before
-  -- hashing the password the user's username is appended to password. 
-  --Taken and modified from ClassDB testClassDBRoleMgmt.sql
-  IF EXISTS (
-      SELECT * FROM pg_catalog.pg_authid
-      WHERE RolName = $1 AND (
-            RolPassword = 'md5' || pg_catalog.MD5($2 || $1)
-            OR (RolPassword IS NULL AND $2 IS NULL) )
-      )
-    THEN
-      --Update database rolename to the new value
-      EXECUTE FORMAT('ALTER USER %s WITH PASSWORD %L',$1,$3);
-    ELSE
-      RAISE EXCEPTION 'Old Password Does Not Match';
-    END IF;
-END;
-$$ LANGUAGE plpgsql;
-
-
-
---TODO: Update Comment
+--This function updates the given username with the given Full Name
 CREATE OR REPLACE FUNCTION
   LearnSQL.changeFullName(userName LearnSQL.UserData_t.UserName%Type,
                           newFullName LearnSQL.UserData_t.FullName%Type)
   RETURNS VOID AS
 $$
 BEGIN
-  UPDATE UserData_t SET FullName = $2 WHERE UserName = $1;
+  UPDATE LearnSQL.UserData_t SET FullName = $2 WHERE UserData_t.UserName = $1;
 END;
 $$ LANGUAGE plpgsql;
 
 
 
---TODO: Update Comment
+--This function updates the given username with the given Email
 CREATE OR REPLACE FUNCTION
   LearnSQL.changeEmail(userName LearnSQL.UserData_t.UserName%Type,
-                       Email LearnSQL.UserData_t.Email%Type)
+                       email LearnSQL.UserData_t.Email%Type)
   RETURNS VOID AS
 $$
 BEGIN
-  UPDATE UserData_t SET Email = $2 WHERE UserName = $1;
+  UPDATE LearnSQL.UserData_t SET email = $2 WHERE UserData_t.UserName = $1;
 END;
 $$ LANGUAGE plpgsql;
 
 
+
+--This function resets the password of a user as long as the token is correct
+-- for the given user.
+CREATE OR REPLACE FUNCTION
+  LearnSQL.forgotPasswordReset(userName     LearnSQL.UserData_t.UserName%Type,
+                               token        LearnSQL.UserData_t.Token%Type,
+                               newPassword  LearnSQL.UserData_t.Token%Type)
+  RETURNS VOID AS
+$$
+DECLARE
+  encryptedPassword VARCHAR(60); --hashed password to be stored in UserData_t
+  hashedToken VARCHAR(60); --hashed token that was stored in UserData_t
+BEGIN
+  --Check to make sure the user token has not expired
+  IF EXISTS(SELECT 1 FROM UserData_t 
+            WHERE UserData_t.UserName = $1 
+            AND UserData_t.TokenTimestamp < now() - '30 minutes'::interval)
+  THEN
+    RAISE EXCEPTION 'Token has expired';
+  END IF;
+
+  --Retrieve the hashed token that was stored in the UserData when
+  hashedToken = SELECT Token FROM LearnSQL.UserData_t 
+                WHERE UserData_t.UserName = $1; 
+
+  --Check if the given token and the username is correct
+  IF (hashedToken = crypt($2, hashedToken))
+  THEN
+    --Create "hashed" password using blowfish cipher
+    encryptedPassword = crypt($3, gen_salt('bf'));
+
+    --Update UserData_t with the new password
+    UPDATE LearnSQL.UserData_t SET PASSWORD = encryptedPassword 
+    WHERE UserData_t.UserName = $1;
+
+    --Update database rolename to the new value
+    EXECUTE FORMAT('ALTER USER %s WITH PASSWORD %L',$1,$3);
+  
+  ELSE
+    RAISE EXCEPTION 'Token is incorrect';
+  END IF;
+END;
+$$ LANGUAGE plpgsql;
 
 
 COMMIT;

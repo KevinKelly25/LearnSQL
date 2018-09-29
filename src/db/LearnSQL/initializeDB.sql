@@ -60,7 +60,8 @@ CREATE TABLE IF NOT EXISTS UserData_t (
   isAdmin                 BOOLEAN DEFAULT FALSE,
   DateJoined              DATE DEFAULT CURRENT_DATE,
   isVerified              BOOLEAN DEFAULT FALSE,
-  ForgotPassword          BOOLEAN DEFAULT FALSE
+  ForgotPassword          BOOLEAN DEFAULT FALSE,
+  TokenTimestamp          DATE DEFAULT CURRENT_TIMESTAMP
 );
 
 
@@ -122,7 +123,7 @@ FROM Class_t;
 -- "isstudent" represents a student taking a class.
 CREATE OR REPLACE VIEW UserData AS 
 SELECT Username, Fullname, Password, Email, Token, DateJoined, isTeacher,
-       isAdmin, isVerified, ForgotPassword,
+       isAdmin, isVerified, ForgotPassword, TokenTimestamp,
 EXISTS 
   (
     SELECT *
