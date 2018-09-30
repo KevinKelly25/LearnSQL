@@ -120,7 +120,7 @@ FROM Class_t;
 -- Define a view to return UserData data
 -- This view has all attributes of UserData_t with an added derived attribute
 -- "isstudent"
--- "isstudent" represents a student taking a class.
+-- The attribute "isstudent" represents if a student taking a class.
 CREATE OR REPLACE VIEW UserData AS 
 SELECT Username, Fullname, Password, Email, Token, DateJoined, isTeacher,
        isAdmin, isVerified, ForgotPassword, TokenTimestamp,

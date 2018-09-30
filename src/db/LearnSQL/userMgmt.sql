@@ -46,6 +46,7 @@ CREATE OR REPLACE FUNCTION
 $$
 DECLARE
   encryptedPassword VARCHAR(60); --hashed password to be stored in UserData_t
+  encryptedToken VARCHAR(60); --hashed password to be stored in UserData_t
 BEGIN
   --Check if username exists
   IF EXISTS (
@@ -69,8 +70,12 @@ BEGIN
   --Create "hashed" password using blowfish cipher.
   encryptedPassword = crypt($3, gen_salt('bf'));
 
+  --Create "hashed" token using blowfish cipher.
+  encryptedToken = crypt($5, gen_salt('bf'));
+
   --Add user information to the LearnSQL UserData table
-  INSERT INTO UserData_t VALUES (LOWER($1),$2,encryptedPassword,$4, $5, $6, $7);
+  INSERT INTO UserData_t VALUES (LOWER($1),$2,encryptedPassword,$4,
+                                 encryptedToken, $6, $7);
 
   --Create database user
   EXECUTE FORMAT('CREATE USER %s WITH ENCRYPTED PASSWORD %L',LOWER($1), $3);
@@ -144,7 +149,6 @@ CREATE OR REPLACE FUNCTION
   RETURNS VOID AS
 $$
 BEGIN
-
   --check if new username is already taken
   IF EXISTS (SELECT *
              FROM LearnSQL.UserData_t
@@ -189,7 +193,7 @@ BEGIN
   encryptedPassword = SELECT password FROM LearnSQL.UserData_t 
                       WHERE UserData_t.UserName = $1;  
 
-  IF (encryptedPassword = crypt($2, encryptedPassword)) )
+  IF (encryptedPassword = crypt($2, encryptedPassword)) 
     THEN
       --Update database rolename to the new value
       EXECUTE FORMAT('ALTER USER %s WITH PASSWORD %L',$1,$3);
@@ -258,7 +262,8 @@ BEGIN
     encryptedPassword = crypt($3, gen_salt('bf'));
 
     --Update UserData_t with the new password
-    UPDATE LearnSQL.UserData_t SET PASSWORD = encryptedPassword 
+    UPDATE LearnSQL.UserData_t 
+    SET PASSWORD = encryptedPassword AND ForgotPassword = FALSE
     WHERE UserData_t.UserName = $1;
 
     --Update database rolename to the new value
