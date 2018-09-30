@@ -98,8 +98,9 @@ $$ LANGUAGE plpgsql;
 --If any errors are encountered an exception will be raised and the function
 -- will stop execution.
 CREATE OR REPLACE FUNCTION
-  LearnSQL.dropUser(username LearnSQL.UserData_t.UserName%Type,
-                    databasePassword VARCHAR DEFAULT NULL)
+  LearnSQL.dropUser(username           LearnSQL.UserData_t.UserName%Type,
+                    databaseUsername   VARCHAR DEFAULT NULL,
+                    databasePassword   VARCHAR DEFAULT NULL)
   RETURNS VOID AS
 $$
 DECLARE
@@ -114,7 +115,7 @@ BEGIN
   END IF;
 
   --Check if user exists in database
-  IF ($2 IS NOT NULL) THEN
+  IF ($2 IS NOT NULL AND $3 IS NOT NULL) THEN
     IF NOT EXISTS (SELECT * FROM pg_catalog.pg_roles
                     WHERE rolname = $1
                   ) THEN
@@ -129,7 +130,7 @@ BEGIN
       SELECT ClassID FROM Attends WHERE Attends.UserName = $1
     LOOP
       SELECT *
-      FROM dblink('user=postgres dbname='|| rec.ClassID || ' password=' || $2, 
+      FROM dblink('user='|| $2 ||' dbname='|| rec.ClassID || ' password=' || $3, 
                   'DROP OWNED BY '|| $1)
       AS throwAway(blank VARCHAR(30));--needed for dblink but unused
     END LOOP;
@@ -205,6 +206,11 @@ BEGIN
     THEN
       --Update database rolename to the new value
       EXECUTE FORMAT('ALTER USER %s WITH PASSWORD %L',$1,$3);
+
+      --Update LearnSQL database password
+      UPDATE LearnSQL.UserData_t 
+      SET Password = crypt($3, gen_salt('bf'))
+      WHERE UserData_t.Username = $1;
     ELSE
       RAISE EXCEPTION 'Old Password Does Not Match';
   END IF;
@@ -252,15 +258,15 @@ DECLARE
   hashedToken VARCHAR(60); --hashed token that was stored in UserData_t
 BEGIN
   --Check to make sure the user token has not expired
-  IF EXISTS(SELECT 1 FROM UserData_t 
+  IF EXISTS(SELECT 1 FROM LearnSQL.UserData_t 
             WHERE UserData_t.UserName = $1 
-            AND UserData_t.TokenTimestamp < now() - '30 minutes'::interval)
+            AND UserData_t.TokenTimestamp > now() - '30 minutes'::interval)
   THEN
     RAISE EXCEPTION 'Token has expired';
   END IF;
 
   --Retrieve the hashed token that was stored in the UserData when
-  SELECT Token INTO hashedToken
+  SELECT UserData_t.Token INTO hashedToken
   FROM LearnSQL.UserData_t 
   WHERE UserData_t.UserName = $1; 
 
@@ -272,7 +278,7 @@ BEGIN
 
     --Update UserData_t with the new password
     UPDATE LearnSQL.UserData_t 
-    SET PASSWORD = encryptedPassword AND ForgotPassword = FALSE
+    SET Password = encryptedPassword, ForgotPassword = FALSE
     WHERE UserData_t.UserName = $1;
 
     --Update database rolename to the new value

@@ -210,6 +210,31 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+
+--Define a temporary function to delete the user in userdata_t table and the
+-- database role without the need of a database password like in dropUser().
+--Should only be used to clean up at the end of test functions. 
+CREATE OR REPLACE FUNCTION
+  pg_temp.dropUser(UserName  LearnSQL.UserData_t.UserName%Type)
+  RETURNS VOID AS
+$$
+BEGIN
+  --Delete user from LearnSQL tables
+  DELETE FROM LearnSQL.UserData_t WHERE UserData_t.Username = $1;
+
+  --Check if username is a postgres rolename and if so delete
+  IF EXISTS (
+              SELECT *
+              FROM pg_catalog.pg_roles
+              WHERE rolname = $1 
+            )
+  THEN
+    --Delete role from database
+    EXECUTE FORMAT('DROP USER %s',$1);
+  END IF;
+END;
+$$ LANGUAGE plpgsql;
+
 /*------------------------------------------------------------------------------
                  End of Temporary functions helpers
 ------------------------------------------------------------------------------*/
@@ -225,6 +250,11 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION pg_temp.createAndDropUserTest() RETURNS TEXT AS
 $$
 BEGIN
+  --Ensure the test users do not exist
+  PERFORM pg_temp.dropUser('testuser0');
+  PERFORM pg_temp.dropUser('testuser1');
+  PERFORM pg_temp.dropUser('testuser2');
+
   --Create user with basic privileges 
   PERFORM LearnSQL.createUser('testuser0', 'Test user 0', 'testPass0',
                               'testUser0@testemail.com',
@@ -287,11 +317,13 @@ BEGIN
   THEN
     RETURN 'Fail Code 6';
   END IF;
-
-  --Drop All Test users
-  PERFORM LearnSQL.dropUser('testuser0');
-  PERFORM LearnSQL.dropUser('testuser1');
-  PERFORM LearnSQL.dropUser('testuser2');
+  
+  --Drop All Test users. Ignore values are provided so that it deletes role
+  -- without needing database password. This would break drop function if there
+  -- was classes connected to user but since we know there is not we can do this
+  PERFORM LearnSQL.dropUser('testuser0', 'ignore', 'ignore');
+  PERFORM LearnSQL.dropUser('testuser1', 'ignore', 'ignore');
+  PERFORM LearnSQL.dropUser('testuser2', 'ignore', 'ignore');
 
   --Check that the users were successfully dropped
   IF NOT (pg_temp.checkIfDropped('testuser0')
@@ -314,6 +346,11 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION pg_temp.changeUsernameTest() RETURNS TEXT AS
 $$
 BEGIN
+  --Ensure the test users do not exist
+  PERFORM pg_temp.dropUser('testuser0');
+  PERFORM pg_temp.dropUser('testuser1');
+  PERFORM pg_temp.dropUser('testuser2');
+
   --Create user with basic privileges 
   PERFORM LearnSQL.createUser('testuser0', 'Test user 0', 'testPass0',
                               'testUser0@testemail.com',
@@ -351,9 +388,9 @@ BEGIN
   END IF;
 
   --Clean up test users
-  PERFORM LearnSQL.dropUser('testuser3');
-  PERFORM LearnSQL.dropUser('testuser4');
-  PERFORM LearnSQL.dropUser('testuser5');
+  PERFORM pg_temp.dropUser('testuser3');
+  PERFORM pg_temp.dropUser('testuser4');
+  PERFORM pg_temp.dropUser('testuser5');
 
   RETURN 'Passed';
 
@@ -368,6 +405,11 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION pg_temp.changePasswordTest() RETURNS TEXT AS
 $$
 BEGIN
+  --Ensure the test users do not exist
+  PERFORM pg_temp.dropUser('testuser0');
+  PERFORM pg_temp.dropUser('testuser1');
+  PERFORM pg_temp.dropUser('testuser2');
+
   --Create user with basic privileges 
   PERFORM LearnSQL.createUser('testuser0', 'Test user 0', 'testPass0',
                               'testuser0@testemail.com',
@@ -389,17 +431,17 @@ BEGIN
   PERFORM LearnSQL.changePassword('testuser2', 'testPass2', 'newPass2');
 
   --Check if the username was changed
-  IF NOT (pg_temp.checkPassword('testuser1', 'newPass0')
-     AND  pg_temp.checkPassword('testuser2', 'newPass1')
-     AND  pg_temp.checkPassword('testuser3', 'newPass2')) 
+  IF NOT (pg_temp.checkPassword('testuser0', 'newPass0')
+     AND  pg_temp.checkPassword('testuser1', 'newPass1')
+     AND  pg_temp.checkPassword('testuser2', 'newPass2')) 
   THEN
     RETURN 'Fail Code 1';
   END IF;
 
   --Clean up test users
-  PERFORM LearnSQL.dropUser('testuser0');
-  PERFORM LearnSQL.dropUser('testuser1');
-  PERFORM LearnSQL.dropUser('testuser2');
+  PERFORM pg_temp.dropUser('testuser0');
+  PERFORM pg_temp.dropUser('testuser1');
+  PERFORM pg_temp.dropUser('testuser2');
 
   RETURN 'Passed';
 
@@ -414,6 +456,12 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION pg_temp.changeFullNameTest() RETURNS TEXT AS
 $$
 BEGIN
+  --Ensure the test users do not exist
+  PERFORM pg_temp.dropUser('testuser0');
+  PERFORM pg_temp.dropUser('testuser1');
+  PERFORM pg_temp.dropUser('testuser2');
+
+
   --Create user with basic privileges 
   PERFORM LearnSQL.createUser('testuser0', 'Test user 0', 'testPass0',
                               'testuser0@testemail.com',
@@ -443,9 +491,9 @@ BEGIN
   END IF;
 
   --Clean up test users
-  PERFORM LearnSQL.dropUser('Testuser0');
-  PERFORM LearnSQL.dropUser('Testuser1');
-  PERFORM LearnSQL.dropUser('Testuser2');
+  PERFORM pg_temp.dropUser('testuser0');
+  PERFORM pg_temp.dropUser('testuser1');
+  PERFORM pg_temp.dropUser('testuser2');
 
   RETURN 'Passed';
 
@@ -460,6 +508,11 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION pg_temp.changeEmailTest() RETURNS TEXT AS
 $$
 BEGIN
+  --Ensure the test users do not exist
+  PERFORM pg_temp.dropUser('testuser0');
+  PERFORM pg_temp.dropUser('testuser1');
+  PERFORM pg_temp.dropUser('testuser2');
+
   --Create user with basic privileges 
   PERFORM LearnSQL.createUser('testuser0', 'Test user 0', 'testPass0',
                               'testUser0@testemail.com',
@@ -489,9 +542,9 @@ BEGIN
   END IF;
 
   --Clean up test users
-  PERFORM LearnSQL.dropUser('testuser0');
-  PERFORM LearnSQL.dropUser('testuser1');
-  PERFORM LearnSQL.dropUser('testuser2');
+  PERFORM pg_temp.dropUser('testuser0');
+  PERFORM pg_temp.dropUser('testuser1');
+  PERFORM pg_temp.dropUser('testuser2');
 
   RETURN 'Passed';
 
@@ -506,6 +559,11 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION pg_temp.forgotPasswordResetTest() RETURNS TEXT AS
 $$
 BEGIN
+  --Ensure the test users do not exist
+  PERFORM pg_temp.dropUser('testuser0');
+  PERFORM pg_temp.dropUser('testuser1');
+  PERFORM pg_temp.dropUser('testuser2');
+
   --Create user with basic privileges 
   PERFORM LearnSQL.createUser('testuser0', 'Test user 0', 'testPass0',
                               'testUser0@testemail.com',
@@ -522,28 +580,28 @@ BEGIN
                               'b57810b0c4cb11e8b5680800200c9a66', true, true);
 
   --Change all usernames 
-  PERFORM LearnSQL.forgotPasswordReset('testUser0', 
+  PERFORM LearnSQL.forgotPasswordReset('testuser0', 
                                       '7a92db10c4cb11e8b5680800200c9a66', 
                                        'newPass0');
-  PERFORM LearnSQL.forgotPasswordReset('testUser1', 
+  PERFORM LearnSQL.forgotPasswordReset('testuser1', 
                                        '9f40a820c4cb11e8b5680800200c9a66',
                                        'newPass1');
-  PERFORM LearnSQL.forgotPasswordReset('testUser2', 
+  PERFORM LearnSQL.forgotPasswordReset('testuser2', 
                                        'b57810b0c4cb11e8b5680800200c9a66', 
                                        'newPass2');
 
   --Check if the username was changed
-  IF NOT (pg_temp.checkPassword('testUser1', 'newPass0')
-     AND  pg_temp.checkPassword('testUser2', 'newPass1')
-     AND  pg_temp.checkPassword('testUser3', 'newPass2')) 
+  IF NOT (pg_temp.checkPassword('testuser0', 'newPass0')
+     AND  pg_temp.checkPassword('testuser1', 'newPass1')
+     AND  pg_temp.checkPassword('testuser2', 'newPass2')) 
   THEN
     RETURN 'Fail Code 1';
   END IF;
 
   --Clean up test users
-  PERFORM LearnSQL.dropUser('TestUser0');
-  PERFORM LearnSQL.dropUser('TestUser1');
-  PERFORM LearnSQL.dropUser('TestUser2');
+  PERFORM pg_temp.dropUser('testuser0');
+  PERFORM pg_temp.dropUser('testuser1');
+  PERFORM pg_temp.dropUser('testuser2');
 
   RETURN 'Passed';
 
@@ -556,11 +614,11 @@ CREATE OR REPLACE FUNCTION pg_temp.userMgmtTest() RETURNS VOID AS
 $$
 BEGIN
    RAISE INFO '%   createAndDropUserTest()',  pg_temp.createAndDropUserTest();
-   --RAISE INFO '%   changeUsernameTest()',     pg_temp.changeUsernameTest();
-   --RAISE INFO '%   changePasswordTest()',     pg_temp.changePasswordTest();
-   --RAISE INFO '%   changeFullNameTest()',     pg_temp.changeFullNameTest();
-   --RAISE INFO '%   changeEmailTest()',        pg_temp.changeEmailTest();
-   --RAISE INFO '%   forgotPasswordResetTest()',pg_temp.forgotPasswordResetTest();
+   RAISE INFO '%   changeUsernameTest()',     pg_temp.changeUsernameTest();
+   RAISE INFO '%   changePasswordTest()',     pg_temp.changePasswordTest();
+   RAISE INFO '%   changeFullNameTest()',     pg_temp.changeFullNameTest();
+   RAISE INFO '%   changeEmailTest()',        pg_temp.changeEmailTest();
+   RAISE INFO '%   forgotPasswordResetTest()',pg_temp.forgotPasswordResetTest();
 END;
 $$  LANGUAGE plpgsql;
 
