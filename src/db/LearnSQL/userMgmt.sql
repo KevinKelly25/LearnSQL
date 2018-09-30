@@ -25,6 +25,11 @@ END
 $$;
 
 
+--Suppress NOTICEs for this script only, this will not apply to functions
+-- defined within. This hides unimportant, but possibly confusing messages
+SET LOCAL client_min_messages TO WARNING;
+
+
 --Enable the pgcrypto extension for PostgreSQL for hashing and generating salts
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
@@ -51,7 +56,7 @@ BEGIN
   --Check if username exists
   IF EXISTS (
              SELECT *
-             FROM UserData_t
+             FROM LearnSQL.UserData_t
              WHERE UserData_t.UserName = $1
             ) THEN
     RAISE EXCEPTION 'Username Already Exists';
@@ -61,7 +66,7 @@ BEGIN
   --Check if Email exists
   IF EXISTS (
              SELECT *
-             FROM UserData_t
+             FROM LearnSQL.UserData_t
              WHERE UserData_t.Email = $4
             ) THEN
     RAISE EXCEPTION 'Email Already Exists';
@@ -74,8 +79,8 @@ BEGIN
   encryptedToken = crypt($5, gen_salt('bf'));
 
   --Add user information to the LearnSQL UserData table
-  INSERT INTO UserData_t VALUES (LOWER($1),$2,encryptedPassword,$4,
-                                 encryptedToken, $6, $7);
+  INSERT INTO LearnSQL.UserData_t VALUES (LOWER($1),$2,encryptedPassword,$4,
+                                          encryptedToken, $6, $7);
 
   --Create database user
   EXECUTE FORMAT('CREATE USER %s WITH ENCRYPTED PASSWORD %L',LOWER($1), $3);
@@ -93,10 +98,12 @@ $$ LANGUAGE plpgsql;
 --If any errors are encountered an exception will be raised and the function
 -- will stop execution.
 CREATE OR REPLACE FUNCTION
-  LearnSQL.dropUser(user LearnSQL.UserData_t.UserName%Type,
+  LearnSQL.dropUser(username LearnSQL.UserData_t.UserName%Type,
                     databasePassword VARCHAR DEFAULT NULL)
   RETURNS VOID AS
 $$
+DECLARE
+    rec RECORD;
 BEGIN
   --Check if username exists in LearnSQL tables
   IF NOT EXISTS (SELECT *
@@ -107,7 +114,7 @@ BEGIN
   END IF;
 
   --Check if user exists in database
-  IF $2 NOT NULL THEN
+  IF ($2 IS NOT NULL) THEN
     IF NOT EXISTS (SELECT * FROM pg_catalog.pg_roles
                     WHERE rolname = $1
                   ) THEN
@@ -118,11 +125,11 @@ BEGIN
     --This will drop all objects owned by that user in each ClassDB database it is
     -- in. This may cause cascade issues until ClassDB has Multi-DB remove User
     -- support.
-    FOR temprow IN
-      SELECT ClassID FROM Attends WHERE UserName = $1;
+    FOR rec IN
+      SELECT ClassID FROM Attends WHERE Attends.UserName = $1
     LOOP
       SELECT *
-      FROM dblink('user=postgres dbname='|| temprow.ClassID || ' password=' || $2, 
+      FROM dblink('user=postgres dbname='|| rec.ClassID || ' password=' || $2, 
                   'DROP OWNED BY '|| $1)
       AS throwAway(blank VARCHAR(30));--needed for dblink but unused
     END LOOP;
@@ -133,8 +140,8 @@ BEGIN
 
 
   --Delete user information to the LearnSQL UserData and Attends table
-  DELETE FROM Attends WHERE UserName = $1;
-  DELETE FROM LearnSQL.UserData_t WHERE UserName = $1;
+  DELETE FROM Attends WHERE Attends.UserName = $1;
+  DELETE FROM LearnSQL.UserData_t WHERE UserData_t.UserName = $1;
 
 END;
 $$ LANGUAGE plpgsql;
@@ -190,8 +197,9 @@ $$
 DECLARE
   encryptedPassword VARCHAR(60); --hashed password from UserData_t
 BEGIN
-  encryptedPassword = SELECT password FROM LearnSQL.UserData_t 
-                      WHERE UserData_t.UserName = $1;  
+  SELECT password INTO encryptedPassword
+  FROM LearnSQL.UserData_t 
+  WHERE UserData_t.UserName = $1;  
 
   IF (encryptedPassword = crypt($2, encryptedPassword)) 
     THEN
@@ -252,8 +260,9 @@ BEGIN
   END IF;
 
   --Retrieve the hashed token that was stored in the UserData when
-  hashedToken = SELECT Token FROM LearnSQL.UserData_t 
-                WHERE UserData_t.UserName = $1; 
+  SELECT Token INTO hashedToken
+  FROM LearnSQL.UserData_t 
+  WHERE UserData_t.UserName = $1; 
 
   --Check if the given token and the username is correct
   IF (hashedToken = crypt($2, hashedToken))

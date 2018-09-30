@@ -50,7 +50,7 @@ $$;
 --  A "token" represents a hashed token used for password reset and email validation
 --  "isVerified" represents whether the user verified their email.
 --  "forgotPassword" represents if the forgotPassword feature was used.
-CREATE TABLE IF NOT EXISTS UserData_t (
+CREATE TABLE IF NOT EXISTS LearnSQL.UserData_t (
   Username                VARCHAR(256) NOT NULL PRIMARY KEY,
   FullName                VARCHAR(256) NOT NULL,
   Password                VARCHAR(60) NOT NULL,
@@ -67,7 +67,7 @@ CREATE TABLE IF NOT EXISTS UserData_t (
 
 
 -- Define a unique index on the trimmed and lowercase values of the email field
-CREATE UNIQUE INDEX idx_Unique_Email ON UserData_t(LOWER(TRIM(Email)));
+CREATE UNIQUE INDEX idx_Unique_Email ON LearnSQL.UserData_t(LOWER(TRIM(Email)));
 
 
 
@@ -95,7 +95,7 @@ CREATE TABLE IF NOT EXISTS Class_t (
 --  "isTeacher" defines whether user is a teacher for that specific class
 CREATE TABLE IF NOT EXISTS Attends (
   ClassID                 VARCHAR(256) NOT NULL REFERENCES Class_t,
-  Username                VARCHAR(256) NOT NULL REFERENCES UserData_t,
+  Username                VARCHAR(256) NOT NULL REFERENCES LearnSQL.UserData_t,
   isTeacher               BOOLEAN DEFAULT FALSE,
   PRIMARY KEY (ClassID, Username)
 );
@@ -130,6 +130,6 @@ EXISTS
     FROM Attends 
     WHERE Attends.Username = UserData_t.Username AND Attends.isTeacher = FALSE
   ) AS isstudent
-FROM UserData_t;
+FROM LearnSQL.UserData_t;
 
 COMMIT;
