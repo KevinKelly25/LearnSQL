@@ -246,7 +246,10 @@ $$ LANGUAGE plpgsql;
 
 
 --This function resets the password of a user as long as the token is correct
--- for the given user.
+-- for the given user. When given a username it extracts
+-- what is supposed to be the correct hashed token and compares the given token
+-- to the hashed token. If matched and forgotPassword is true the password is
+-- updated to the given new password
 CREATE OR REPLACE FUNCTION
   LearnSQL.forgotPasswordReset(userName     LearnSQL.UserData_t.UserName%Type,
                                token        LearnSQL.UserData_t.Token%Type,
