@@ -9,3 +9,4 @@ src/webapp/client/javascripts/popper.min.js
 src/webapp/client/javascripts/jquery.dataTables.min.js
 src/webapp/client/javascripts/angular-datatables.min.js
 src/webapp/client/javascripts/controllers/testControllers/
+src/webapp/.env
