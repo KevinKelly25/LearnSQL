@@ -45,9 +45,9 @@ function handleResponse(res, code, statusMsg) {
  */
 router.post('/register', authHelpers.loginRedirect, (req, res) => {
   authHelpers.createUser(req, res)
-  .catch(() => {
-    handleResponse(res, 500, 'error');
-  })
+    .catch(() => {
+      handleResponse(res, 500, 'error');
+    });
 });
 
 
@@ -168,21 +168,18 @@ router.get('/resetPassword/', (res) => {
  */
 router.post('/resetPassword', (req, res) => {
   db.func('LearnSQL.forgotPasswordReset',
-  [req.body.username, req.body.token, req.body.password])
-  .then(() => {
-    return res.status(200).json('Password Reset Successfully');
-  })
-  .catch((error) => {
-    //if known error send that known error back, otherwise send back general
+    [req.body.username, req.body.token, req.body.password])
+    .then(() => res.status(200).json('Password Reset Successfully'))
+    .catch((error) => {
+    // if known error send that known error back, otherwise send back general
     // server error response
-    if (error.message == 'Token has expired' || 
-        error.message == 'Token is incorrect') {
-      return res.status(400).json(error.message);
-    } else {
+      if (error.message === 'Token has expired'
+          || error.message === 'Token is incorrect') {
+        return res.status(400).json(error.message);
+      }
       logger.error(`forgotPasswordReset: \n${error}`);
       return res.status(500).json('Server Error - Password could not be reset');
-    }
-  });
+    });
 });
 
 

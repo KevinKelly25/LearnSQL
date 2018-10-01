@@ -106,9 +106,9 @@ function sendEmail(req, res) {
 
 /**
  * This function creates a user in the database. A username is given by
- *  the user and has to be unique for the database. Using pg-promise the user 
+ *  the user and has to be unique for the database. Using pg-promise the user
  *  information is then inserted into the UserData via the CreateUser function
- *  in the database. If successful a success response and message is returned. 
+ *  in the database. If successful a success response and message is returned.
  *  If there was an error the database error is returned
  *
  * @param {string} password The password the user wants to use
@@ -122,32 +122,31 @@ function createUser(req, res) {
     .then(() => {
       const token = cryptoRandomString(20);
       const { email } = req.body;
-      //Create user with CreateUser function on db
+      // Create user with CreateUser function on db
       ldb.func('LearnSQL.createUser',
-      [req.body.username, req.body.fullName, req.body.password, email, token])
-      .then(() => {
-        req.body = {
-          receiver: email,
-          prompt: 'Click this link to verify your account',
-          content: `http://localhost:3000/auth/verification/${token}/${
-            req.body.username}<br>`
+        [req.body.username, req.body.fullName, req.body.password, email, token])
+        .then(() => {
+          req.body = {
+            receiver: email,
+            prompt: 'Click this link to verify your account',
+            content: `http://localhost:3000/auth/verification/${token}/${
+              req.body.username}<br>`
                     + 'Link will expire in 30 minutes',
-          emailTitle: 'LearnSQL Email Verification',
-          successMessage: 'Email Verification Sent',
-        };
-        sendEmail(req, res);
-      })
-      .catch((error) => {
-        //if known error send that known error back, otherwise send back general
+            emailTitle: 'LearnSQL Email Verification',
+            successMessage: 'Email Verification Sent',
+          };
+          sendEmail(req, res);
+        })
+        .catch((error) => {
+        // if known error send that known error back, otherwise send back general
         // server error response
-        if (error.message == 'Username Already Exists' || 
-            error.message == 'Email Already Exists') {
-          return res.status(400).json(error.message);
-        } else {
+          if (error.message === 'Username Already Exists'
+              || error.message === 'Email Already Exists') {
+            return res.status(400).json(error.message);
+          }
           logger.error(`createUser: \n${error}`);
           return res.status(500).json('Server Error - User could not be added');
-        }
-      });
+        });
     });
 }
 
@@ -300,5 +299,5 @@ module.exports = {
   teacherRequired,
   studentRequired,
   loginRedirect,
-  forgotPassword
+  forgotPassword,
 };
