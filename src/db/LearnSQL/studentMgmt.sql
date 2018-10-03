@@ -56,41 +56,10 @@ BEGIN
                 ) THEN
     RAISE EXCEPTION 'User is not enrolled in any classes';
   END IF;
-
-
-
-/*ClassName     LearnSQL.Class_t.ClassName%Type,
-                  Section       LearnSQL.Class_t.Section%Type,
-                  Times         LearnSQL.Class_t.Times%Type,
-                  Days          LearnSQL.Class_t.Days%Type,
-                  StartDate     LearnSQL.Class_t.StartDate%Type,
-                  EndDate       LearnSQL.Class_t.EndDate%Type,
-                  StudentCount  LearnSQL.Class_t.StudentCount%Type*/
-
-  --Check if Email exists
- /* IF EXISTS (
-             SELECT *
-             FROM LearnSQL.UserData_t
-             WHERE UserData_t.Email = $4
-            ) THEN
-    RAISE EXCEPTION 'Email Already Exists';
-  END IF;
-
-  --Add user information to the LearnSQL UserData table
-  INSERT INTO LearnSQL.UserData_t VALUES (LOWER($1),$2,encryptedPassword,$4,
-                                          encryptedToken, $6, $7);
-
-  --Create database user
-  EXECUTE FORMAT('CREATE USER %s WITH ENCRYPTED PASSWORD %L',LOWER($1), $3);*/
-
 END;
 $$ LANGUAGE plpgsql;
 
-/*
---Define function to register a user. This function will create a role within
--- the database and also a user within the tables of the LearnSQL database.
---If any errors are encountered an exception will be raised and the function
--- will stop execution.
+
 CREATE OR REPLACE FUNCTION
   LearnSQL.createUser(userName  LearnSQL.UserData_t.UserName%Type,
                       fullName  LearnSQL.UserData_t.FullName%Type,
