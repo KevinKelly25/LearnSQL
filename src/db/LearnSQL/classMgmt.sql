@@ -28,90 +28,59 @@ $$;
 
 
 
---Enable the pgcrypto extension for PostgreSQL for hashing and generating salts
-CREATE EXTENSION IF NOT EXISTS pgcrypto;
-
-
-
 -- Define function to create a class. TODO: add some more comments
 CREATE OR REPLACE FUNCTION 
   LearnSQL.createClass(
-                       classID LearnSQL.Class_t.ClassID%Type,
-                       className LearnSQL.Class_t.ClassName%Type,
-                       section LearnSQL.Class_t.Section%Type,
-                       times LearnSQL.Class_t.Times%Type,
-                       days LearnSQL.Class_t.Days%Type,
-                       startDate LearnSQL.Class_t.StartDate%Type,
-                       endDate LearnSQL.Class_t.EndDate%Type,
-                       password LearnSQL.Class_t.Password%Type,
-                       userName LearnSQL.UserData_t.UserName%Type
+                        userName LearnSQL.UserData_t.UserName%Type,
+                        password LearnSQL.Class_t.Password%Type,
+                        classID LearnSQL.Class_t.ClassID%Type,
+                        className LearnSQL.Class_t.ClassName%Type,
+                        section LearnSQL.Class_t.Section%Type,
+                        times LearnSQL.Class_t.Times%Type,
+                        days LearnSQL.Class_t.Days%Type,
+                        startDate LearnSQL.Class_t.StartDate%Type
+                          DEFAULT NULL,
+                        endDate LearnSQL.Class_t.EndDate%Type DEFAULT NULL
                       )
   RETURNS VOID AS
 $$
-  DECLARE
-    ecryptedPassword VARCHAR(60); -- hashed password to be stored in Class_t
-  BEGIN
-    -- Check if user creating class is a teacher
-    IF NOT EXISTS (
+BEGIN
+  -- Check if user creating class is a teacher
+  IF NOT EXISTS (
                   SELECT 1 
-                  FROM UserData_t
+                  FROM LearnSQL.UserData_t
                   WHERE UserData_t.userName = $9
                   AND UserData_t.isTeacher = TRUE 
-                  ) THEN 
-      RAISE EXCEPTION 'Class Creation Not Possible For Current User'
-    END IF;
+                ) THEN 
+    RAISE EXCEPTION 'Class Creation Not Possible For Current User';
+  END IF;
 
-    -- Check if classID already exists
-    IF EXISTS (
+  -- Check if classID already exists
+  IF EXISTS (
               SELECT * 
-              FROM Class_t
+              FROM LearnSQL.Class_t
               WHERE Class_t.ClassID = $1
-              ) THEN 
-      RAISE EXCEPTION 'ClassID Already Exists';
-    END IF;
+            ) THEN 
+    RAISE EXCEPTION 'ClassID Already Exists';
+  END IF;
 
-    -- Check if class section already exists
+  -- Check if class name and class section for user logged in already exists
+  IF EXISTS (
+              SELECT 1 
+              FROM LearnSQL.Class_t INNER JOIN LearnSQL.Attends
+              ON Attends.classID = Class_t.classID
+              WHERE Attends.userName = $9
+              AND Class_t.className = $2
+              AND Class_t.section = $3
+            ) THEN 
+    RAISE EXCEPTION 'section and class name already exists!';
+  END IF;
 
+  --dblink create database dbname with template classdb_template with owner classdb
 
+  --insert into class all class information
 
-    -- Create "hashed" password using blowfish cipher.
-    encryptedPassword = crypt($8, gen_salt('bf'));
+  --insert into attends classid, username, isteacher=true
 
-    -- Add class information to the LearnSQL Class table
-    INSERT INTO Class_t VALUES ($1, $2, $3, $4, $5, $6, $7, 
-                                encryptedPassword);
-
-    -- Create database class
-    EXECUTE FORMAT('CREATE CLASS %s WITH ENCRYPTED PASSWORD %L', $1, $8);
-  END;
-$$ LANGUGAGE plpgsql;
-
---Define function to delete a class.
-CREATE OR REPLACE FUNCTION 
-  LearnSQL.dropClass(class LearnSQL.Class_t.ClassID%Type,
-                     databasePassword VARCHAR DEFAULT NULL)
-  RETURN VOID AS 
-$$ 
-  BEGIN 
-    -- Check if classid exists in LearnSQL tables
-    IF NOT EXISTS (
-                   SELECT *
-                   FROM LearnSQL.Class_t
-                   WHERE Class_t.ClassID = $1
-                  ) THEN 
-      RAISE EXCEPTION 'Class does not exists in tables';
-    END IF;
-
-    --Check if class exists in database
-    IF $2 NOT NULL THEN 
-      IF NOT EXISTS (
-                     SELECT *
-                     FROM pg_catalog.pg_roles
-                     WHERE rolname = $1
-                    ) THEN 
-        RAISE EXCEPTION 'Class does not exists in database';
-      END IF;
-
-      -- drop class
-
-    END IF;
+END
+$$ LANGUAGE plpgsql;
