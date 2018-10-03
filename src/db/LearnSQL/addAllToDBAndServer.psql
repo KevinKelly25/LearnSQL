@@ -3,7 +3,7 @@
 -- Kevin Kelly
 -- Web Applications and Databases for Education (WADE)
 
--- This script runs all the necessary SQL scripts . This script must be executed as a superuser
+-- This script runs all the necessary SQL scripts. This script must be executed as a superuser
 
 -- This script uses psql meta-commands run other scripts and so it should be run using psql.
 --  the script can be run using the -f command line switch of psql or using the \i command
