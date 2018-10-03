@@ -30,7 +30,7 @@ $$;
 SET LOCAL client_min_messages TO WARNING;
 
 
---Enable the pgcrypto extension for PostgreSQL for hashing and generating salts
+-- Enable the pgcrypto extension for PostgreSQL for hashing and generating salts
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
 
@@ -103,10 +103,10 @@ BEGIN
       RAISE EXCEPTION 'User does not exist in database';
   END IF;
 
-    --TODO: add Schema qualifier once it is added to the attends table
-    --This will drop all objects owned by that user in each ClassDB database it is
-    -- in. This may cause cascade issues until ClassDB has Multi-DB remove User
-    -- support
+    -- TODO: add Schema qualifier once it is added to the attends table
+    -- This will drop all objects owned by that user in each ClassDB database it is
+    --  in. This may cause cascade issues until ClassDB has Multi-DB remove User
+    --  support
     FOR rec IN
       SELECT ClassID FROM Attends WHERE Attends.UserName = $1
     LOOP
