@@ -53,25 +53,6 @@ DECLARE
   encryptedPassword VARCHAR(60); --hashed password to be stored in UserData_t
   encryptedToken VARCHAR(60); --hashed password to be stored in UserData_t
 BEGIN
-  --Check if username exists
-  IF EXISTS (
-             SELECT *
-             FROM LearnSQL.UserData_t
-             WHERE UserData_t.UserName = $1
-            ) THEN
-    RAISE EXCEPTION 'Username Already Exists';
-  END IF;
-
-
-  --Check if Email exists
-  IF EXISTS (
-             SELECT *
-             FROM LearnSQL.UserData_t
-             WHERE UserData_t.Email = $4
-            ) THEN
-    RAISE EXCEPTION 'Email Already Exists';
-  END IF;
-
   --Create "hashed" password using blowfish cipher.
   encryptedPassword = crypt($3, gen_salt('bf'));
 
@@ -111,7 +92,7 @@ BEGIN
                  FROM LearnSQL.UserData_t
                  WHERE UserData_t.UserName = $1
                 ) THEN
-    RAISE EXCEPTION 'User does not exist in tables';
+      RAISE EXCEPTION 'User does not exist in tables';
   END IF;
 
   --Check if user exists in database
@@ -120,7 +101,7 @@ BEGIN
                     WHERE rolname = $1
                   ) THEN
       RAISE EXCEPTION 'User does not exist in database';
-    END IF;
+  END IF;
 
     --TODO: add Schema qualifier once it is added to the attends table
     --This will drop all objects owned by that user in each ClassDB database it is
@@ -157,22 +138,6 @@ CREATE OR REPLACE FUNCTION
   RETURNS VOID AS
 $$
 BEGIN
-  --check if new username is already taken
-  IF EXISTS (SELECT *
-             FROM LearnSQL.UserData_t
-             WHERE UserData_t.UserName = $2
-            ) THEN
-    RAISE EXCEPTION 'New username already exists';
-  END IF;
-
-  --Check if username exists in LearnSQL tables
-  IF NOT EXISTS (SELECT *
-                 FROM LearnSQL.UserData_t
-                 WHERE UserData_t.UserName = $1
-                ) THEN
-    RAISE EXCEPTION 'User does not exist in tables';
-  END IF;
-
   --Update database rolename to the new value
   EXECUTE FORMAT('ALTER USER %s RENAME TO %s',$1,$2);
   

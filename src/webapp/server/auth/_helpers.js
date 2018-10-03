@@ -138,11 +138,13 @@ function createUser(req, res) {
           sendEmail(req, res);
         })
         .catch((error) => {
-        // if known error send that known error back, otherwise send back general
-        // server error response
-          if (error.message === 'Username Already Exists'
-              || error.message === 'Email Already Exists') {
-            return res.status(400).json(error.message);
+          // if known error send that known error back, otherwise send back general
+          //  server error response
+          if (error.constraint === 'idx_unique_email') {
+            return res.status(400).json('Email Already Exists');
+          }
+          if (error.constraint === 'userdata_t_pkey') {
+            return res.status(400).json('Username Already Exists');
           }
           logger.error(`createUser: \n${error}`);
           return res.status(500).json('Server Error - User could not be added');
