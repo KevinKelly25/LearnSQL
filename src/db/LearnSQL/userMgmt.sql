@@ -36,9 +36,9 @@ CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
 
 -- Define function to register a user. This function will create a role within
---  the database and also a user within the tables of the LearnSQL database.
+--  the database and also a user within the tables of the LearnSQL database
 -- If any errors are encountered an exception will be raised and the function
---  will stop execution.
+--  will stop execution
 CREATE OR REPLACE FUNCTION
   LearnSQL.createUser(userName  LearnSQL.UserData_t.UserName%Type,
                       fullName  LearnSQL.UserData_t.FullName%Type,
@@ -53,10 +53,10 @@ DECLARE
   encryptedPassword VARCHAR(60); -- hashed password to be stored in UserData_t
   encryptedToken VARCHAR(60); -- hashed password to be stored in UserData_t
 BEGIN
-  -- Create "hashed" password using blowfish cipher.
+  -- Create "hashed" password using blowfish cipher
   encryptedPassword = crypt($3, gen_salt('bf'));
 
-  -- Create "hashed" token using blowfish cipher.
+  -- Create "hashed" token using blowfish cipher
   encryptedToken = crypt($5, gen_salt('bf'));
 
   -- Add user information to the LearnSQL UserData table
@@ -75,9 +75,9 @@ $$ LANGUAGE plpgsql;
 --  the database and also a user within the tables of the LearnSQL database. If
 --  the "DatabasePassword" is not null, which it is by default, it will also drop 
 --  all objects in all other ClassDB databases will be dropped. If user owns any
---  objects in non-ClassDB databases the drop will fail.
+--  objects in non-ClassDB databases the drop will fail
 -- If any errors are encountered an exception will be raised and the function
---  will stop execution.
+--  will stop execution
 CREATE OR REPLACE FUNCTION
   LearnSQL.dropUser(username           LearnSQL.UserData_t.UserName%Type,
                     databaseUsername   VARCHAR DEFAULT NULL,
@@ -153,7 +153,7 @@ $$ LANGUAGE plpgsql;
 
 -- This function updates the given user's password with a new password. Before
 --  it applies the new password it checks to make sure the given old password 
---  matches the password stored in the database. 
+--  matches the password stored in the database 
 CREATE OR REPLACE FUNCTION
   LearnSQL.changePassword(userName     LearnSQL.UserData_t.Password%Type,
                           oldPassword  LearnSQL.UserData_t.Password%Type,

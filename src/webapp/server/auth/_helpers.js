@@ -138,7 +138,7 @@ function createUser(req, res) {
           sendEmail(req, res);
         })
         .catch((error) => {
-          // if known error send that known error back, otherwise send back general
+          // If known error send that known error back, otherwise send back general
           //  server error response
           if (error.constraint === 'idx_unique_email') {
             return res.status(400).json('Email Already Exists');
