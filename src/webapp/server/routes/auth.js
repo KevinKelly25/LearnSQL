@@ -172,7 +172,7 @@ router.post('/resetPassword', (req, res) => {
     .then(() => res.status(200).json('Password Reset Successfully'))
     .catch((error) => {
     // if known error send that known error back, otherwise send back general
-    // server error response
+    //  server error response
       if (error.message === 'Token has expired'
           || error.message === 'Token is incorrect') {
         return res.status(400).json(error.message);

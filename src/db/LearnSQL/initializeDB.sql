@@ -7,8 +7,8 @@
 
 START TRANSACTION;
 
---Make sure the current user has sufficient privilege to run this script
--- privilege required: superuser
+-- Make sure the current user has sufficient privilege to run this script
+--  privilege required: superuser
 DO
 $$
 BEGIN
@@ -21,12 +21,12 @@ BEGIN
 END
 $$;
 
---Create a schema to hold app's admin info and assign privileges on that schema
+-- Create a schema to hold app's admin info and assign privileges on that schema
 CREATE SCHEMA IF NOT EXISTS LearnSQL AUTHORIZATION learnsql;
 
 
 
---Remove access to the database from anyone other then superusers
+-- Remove access to the database from anyone other then superusers
 DO
 $$
 DECLARE
@@ -34,8 +34,8 @@ DECLARE
 BEGIN
    currentDB := current_database();
 
-   --Disallow DB connection to all users
-   -- Postgres grants CONNECT to all by default
+   -- Disallow DB connection to all users
+   --  Postgres grants CONNECT to all by default
    EXECUTE format('REVOKE CONNECT ON DATABASE %I FROM PUBLIC', currentDB);
 
 END
@@ -48,8 +48,8 @@ $$;
 --  The "Email" field characters are check to make sure they follow the scheme
 --   of a valid email
 --  A "token" represents a hashed token used for password reset and email validation
---  "isVerified" represents whether the user verified their email.
---  "forgotPassword" represents if the forgotPassword feature was used.
+--  "isVerified" represents whether the user verified their email
+--  "forgotPassword" represents if the forgotPassword feature was used
 CREATE TABLE IF NOT EXISTS LearnSQL.UserData_t (
   Username                VARCHAR(256) NOT NULL PRIMARY KEY,
   FullName                VARCHAR(256) NOT NULL,
@@ -74,7 +74,7 @@ CREATE UNIQUE INDEX idx_Unique_Email ON LearnSQL.UserData_t(LOWER(TRIM(Email)));
 -- Define a table of classes for this DB
 --  a "ClassID" is a unique id that represents a classname plus a random ID
 --  a "ClassName" is the classID without the random ID
---  the "Password" field will be used for students to create their student
+--  The "Password" field will be used for students to create their student
 --   account in the classdb database
 CREATE TABLE IF NOT EXISTS Class_t (
   ClassID                 VARCHAR(256) NOT NULL PRIMARY KEY,
@@ -104,8 +104,8 @@ CREATE TABLE IF NOT EXISTS Attends (
 
 -- Define a view to return Class data
 --  This view has all attributes of Class_t with an added derived attribute
---  "studentCount"
---  "studentCount" represents the number of students in a class.
+--   "studentCount"
+--  A "studentCount" represents the number of students in a class
 CREATE OR REPLACE VIEW Class AS
 SELECT ClassID, ClassName, Section, Times, Days, StartDate, EndDate, Password,
   (
@@ -119,8 +119,8 @@ FROM Class_t;
 
 -- Define a view to return UserData data
 -- This view has all attributes of UserData_t with an added derived attribute
--- "isstudent"
--- The attribute "isstudent" represents if a student taking a class.
+--  "isstudent"
+-- The attribute "isstudent" represents if a student is taking a class
 CREATE OR REPLACE VIEW UserData AS 
 SELECT Username, Fullname, Password, Email, Token, DateJoined, isTeacher,
        isAdmin, isVerified, ForgotPassword, TokenTimestamp,

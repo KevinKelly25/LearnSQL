@@ -7,8 +7,8 @@
 
 START TRANSACTION;
 
---Make sure the current user has sufficient privilege to run this script
--- privilege required: superuser
+-- Make sure the current user has sufficient privilege to run this script
+--  privilege required: superuser
 DO
 $$
 BEGIN
@@ -21,7 +21,7 @@ BEGIN
 END
 $$;
 
---Create App-specific superuser 
+-- Create App-specific superuser 
 DO
 $$
 BEGIN
