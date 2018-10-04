@@ -28,8 +28,8 @@ passport.use(new LocalStrategy({
   passwordField: 'password',
 },
 (username, password, done) => db.one('SELECT * '
-    + 'FROM UserData '
-    + 'WHERE Username=$1', [username])
+                                   + 'FROM UserData '
+                                   + 'WHERE Username=$1', [username])
   .then((user) => {
     if (!authHelpers.compareHashed(password, user.password)) {
       return done(null, false, { message: 'Wrong username or password' });
