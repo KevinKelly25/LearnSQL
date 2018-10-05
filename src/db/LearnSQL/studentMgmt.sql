@@ -17,7 +17,8 @@ BEGIN
   IF NOT EXISTS (
                   SELECT * FROM pg_catalog.pg_roles
                   WHERE rolname = CURRENT_USER AND rolsuper = TRUE
-                ) THEN
+                ) 
+    THEN
       RAISE EXCEPTION 'Insufficient privileges: User must hold superuser '
                       'permissions to execute this script';
    END IF;
@@ -41,11 +42,11 @@ CREATE OR REPLACE FUNCTION
                   StartDate     LearnSQL.Class_t.StartDate%Type,
                   EndDate       LearnSQL.Class_t.EndDate%Type,
                   StudentCount  LearnSQL.Class.StudentCount%Type
-                ) AS
+                ) 
+    AS
 
 $$
-DECLARE
-  
+
 BEGIN
   -- Check if the user is enrolled in at least one class
   IF NOT EXISTS (
@@ -53,7 +54,8 @@ BEGIN
                   EndDate, StudentCount 
                   FROM Attends INNER JOIN Class ON Attends.ClassID = Class.ClassID 
                   WHERE Username = studentName AND isTeacher = false
-                ) THEN
+                )
+    THEN
     RAISE EXCEPTION 'User is not enrolled in any classes';
   END IF;
 END;
@@ -61,53 +63,63 @@ $$ LANGUAGE plpgsql;
 
 
 CREATE OR REPLACE FUNCTION
-  LearnSQL.createUser(userName  LearnSQL.UserData_t.UserName%Type,
-                      fullName  LearnSQL.UserData_t.FullName%Type,
-                      password  LearnSQL.UserData_t.Password%Type,
-                      email     LearnSQL.UserData_t.Email%Type,
-                      token     LearnSQL.UserData_t.Token%Type,
-                      isTeacher LearnSQL.UserData_t.isTeacher%Type DEFAULT FALSE,
-                      isAdmin   LearnSQL.UserData_t.isAdmin%Type DEFAULT FALSE)
+  LearnSQL.addStudent(
+                        userName      Attends.userName%Type, 
+                        classID       Attends.classID%Type,
+                        password      Class_t.password%Type,
+                        userFullName  LearnSQL.UserData_t.fullName%Type         
+                     )
   RETURNS VOID AS
+
 $$
 DECLARE
-  encryptedPassword VARCHAR(60); --hashed password to be stored in UserData_t
-  encryptedToken VARCHAR(60); --hashed password to be stored in UserData_t
+
+  storedPassword Class_t.password%Type;
+
 BEGIN
-  --Check if username exists
+
+  -- Check if the student is already a member of the class
   IF EXISTS (
-             SELECT *
-             FROM LearnSQL.UserData_t
-             WHERE UserData_t.UserName = $1
-            ) THEN
-    RAISE EXCEPTION 'Username Already Exists';
+              SELECT 1
+              FROM Attends
+              WHERE userName = $2
+              AND classID = $1
+            ) 
+    THEN
+    RAISE EXCEPTION 'Student is already a member of the specified class';
+
   END IF;
 
-
-  --Check if Email exists
+  -- Check if the given password matches the stored password
+  -- Allows for users to join classes for which no password is set
   IF EXISTS (
-             SELECT *
-             FROM LearnSQL.UserData_t
-             WHERE UserData_t.Email = $4
-            ) THEN
-    RAISE EXCEPTION 'Email Already Exists';
+              SELECT password
+              INTO storedPassword
+              FROM Class
+              WHERE classID = $2
+            ) 
+    THEN
+
+    IF storedPassword = $3 THEN
+
+      -- Add the student to the class
+      INSERT INTO Attends VALUES($2, $1, 'false');
+
+      -- Create the user under the ClassDB student role using a cross-
+      -- database query
+      SELECT *
+      FROM dblink('dbname = ClassDB', 'SELECT ClassDB.createStudent('|| $1 ||','|| $4')')
+
+    ELSE
+
+      RAISE EXCEPTION 'Password incorrect for the desired class';
+
+    END IF
+
   END IF;
-
-  --Create "hashed" password using blowfish cipher.
-  encryptedPassword = crypt($3, gen_salt('bf'));
-
-  --Create "hashed" token using blowfish cipher.
-  encryptedToken = crypt($5, gen_salt('bf'));
-
-  --Add user information to the LearnSQL UserData table
-  INSERT INTO LearnSQL.UserData_t VALUES (LOWER($1),$2,encryptedPassword,$4,
-                                          encryptedToken, $6, $7);
-
-  --Create database user
-  EXECUTE FORMAT('CREATE USER %s WITH ENCRYPTED PASSWORD %L',LOWER($1), $3);
 
 END;
 $$ LANGUAGE plpgsql;
-*/
+
 
 COMMIT;
