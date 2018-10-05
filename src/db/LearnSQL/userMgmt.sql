@@ -15,12 +15,14 @@ START TRANSACTION;
 DO
 $$
 BEGIN
-  IF NOT EXISTS (SELECT * FROM pg_catalog.pg_roles
-                 WHERE rolname = CURRENT_USER AND rolsuper = TRUE
-                ) THEN
-      RAISE EXCEPTION 'Insufficient privileges: script must be run as a user '
+  IF NOT EXISTS ( 
+                  SELECT * FROM pg_catalog.pg_roles
+                  WHERE rolname = CURRENT_USER AND rolsuper = TRUE
+                ) 
+  THEN
+    RAISE EXCEPTION 'Insufficient privileges: script must be run as a user '
                       'with superuser privileges';
-   END IF;
+  END IF;
 END
 $$;
 
@@ -88,20 +90,24 @@ DECLARE
     rec RECORD;
 BEGIN
   -- Check if username exists in LearnSQL tables
-  IF NOT EXISTS (SELECT *
-                 FROM LearnSQL.UserData_t
-                 WHERE UserData_t.UserName = $1
-                ) THEN
-      RAISE EXCEPTION 'User does not exist in tables';
+  IF NOT EXISTS (
+                  SELECT *
+                  FROM LearnSQL.UserData_t
+                  WHERE UserData_t.UserName = $1
+                ) 
+  THEN
+    RAISE EXCEPTION 'User does not exist in tables';
   END IF;
 
   -- Check if user exists in database
   IF ($2 IS NOT NULL AND $3 IS NOT NULL) THEN
-    IF NOT EXISTS (SELECT * FROM pg_catalog.pg_roles
+    IF NOT EXISTS (
+                    SELECT * FROM pg_catalog.pg_roles
                     WHERE rolname = $1
-                  ) THEN
+                  ) 
+    THEN
       RAISE EXCEPTION 'User does not exist in database';
-  END IF;
+    END IF;
 
     -- TODO: add Schema qualifier once it is added to the attends table
     -- This will drop all objects owned by that user in each ClassDB database it is
@@ -226,9 +232,11 @@ DECLARE
   hashedToken VARCHAR(60); -- Hashed token that was stored in UserData_t
 BEGIN
   -- Check to make sure the user token has not expired
-  IF EXISTS(SELECT 1 FROM LearnSQL.UserData_t 
-            WHERE UserData_t.UserName = $1 
-            AND UserData_t.TokenTimestamp > now() - '30 minutes'::interval)
+  IF EXISTS (
+              SELECT 1 FROM LearnSQL.UserData_t 
+              WHERE UserData_t.UserName = $1 
+              AND UserData_t.TokenTimestamp > now() - '30 minutes'::interval
+            )
   THEN
     RAISE EXCEPTION 'Token has expired';
   END IF;

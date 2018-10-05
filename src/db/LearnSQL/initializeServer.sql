@@ -12,12 +12,14 @@ START TRANSACTION;
 DO
 $$
 BEGIN
-   IF NOT EXISTS (SELECT * FROM pg_catalog.pg_roles
+  IF NOT EXISTS (
+                  SELECT * FROM pg_catalog.pg_roles
                   WHERE rolname = CURRENT_USER AND rolsuper = TRUE
-                 ) THEN
+                ) 
+  THEN
       RAISE EXCEPTION 'Insufficient privileges: script must be run as a user '
                       'with superuser privileges';
-   END IF;
+  END IF;
 END
 $$;
 
@@ -25,11 +27,13 @@ $$;
 DO
 $$
 BEGIN
-   IF NOT EXISTS (SELECT * FROM pg_catalog.pg_roles
+  IF NOT EXISTS (
+                  SELECT * FROM pg_catalog.pg_roles
                   WHERE rolname = 'learnsql'
-                 ) THEN
+                ) 
+  THEN
       CREATE USER learnsql WITH SUPERUSER;
-   END IF;
+  END IF;
 END
 $$;
 
