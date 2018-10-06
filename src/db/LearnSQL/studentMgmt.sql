@@ -41,7 +41,7 @@ CREATE OR REPLACE FUNCTION
                   Days          LearnSQL.Class_t.Days%Type,
                   StartDate     LearnSQL.Class_t.StartDate%Type,
                   EndDate       LearnSQL.Class_t.EndDate%Type,
-                  StudentCount  LearnSQL.Class.StudentCount%Type
+                  StudentCount  Class.StudentCount%Type
                 ) 
     AS
 
@@ -50,10 +50,14 @@ $$
 BEGIN
   -- Check if the user is enrolled in at least one class
   IF NOT EXISTS (
-                  RETURN QUERY SELECT ClassName, Section, Times, Days, StartDate,
-                  EndDate, StudentCount 
-                  FROM Attends INNER JOIN Class ON Attends.ClassID = Class.ClassID 
-                  WHERE Username = studentName AND isTeacher = false
+                  --RETURN QUERY 
+
+                  SELECT ClassName, Section, Times, Days, StartDate,
+                         EndDate, StudentCount 
+                  FROM LearnSQL.Attends INNER JOIN Class 
+                  ON LearnSQL.Attends.ClassID = Class.ClassID 
+                  WHERE LearnSQL.Attends.Username = studentName 
+                  AND Attends.isTeacher = false
                 )
     THEN
     RAISE EXCEPTION 'User is not enrolled in any classes';
@@ -64,26 +68,28 @@ $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION
   LearnSQL.addStudent(
-                        userName      Attends.userName%Type, 
-                        classID       Attends.classID%Type,
-                        password      Class_t.password%Type,
-                        userFullName  LearnSQL.UserData_t.fullName%Type         
+                        userName        LearnSQL.Attends.userName%Type, 
+                        userFullName    LearnSQL.UserData_t.fullName%Type,
+                        userPassword    LearnSQL.UserData_t.password%Type,
+                        classID         LearnSQL.Attends.classID%Type,
+                        classPassword   LearnSQL.Class_t.password%Type
+                                 
                      )
   RETURNS VOID AS
 
 $$
 DECLARE
 
-  storedPassword Class_t.password%Type;
+  storedPassword LearnSQL.Class_t.password%Type;
 
 BEGIN
 
   -- Check if the student is already a member of the class
   IF EXISTS (
               SELECT 1
-              FROM Attends
-              WHERE userName = $2
-              AND classID = $1
+              FROM LearnSQL.Attends
+              WHERE LearnSQL.Attends.userName = $1
+              AND LearnSQL.Attends.classID = $4
             ) 
     THEN
     RAISE EXCEPTION 'Student is already a member of the specified class';
@@ -92,34 +98,31 @@ BEGIN
 
   -- Check if the given password matches the stored password
   -- Allows for users to join classes for which no password is set
-  IF EXISTS (
-              SELECT password
-              INTO storedPassword
-              FROM Class
-              WHERE classID = $2
-            ) 
-    THEN
+  
+  SELECT password
+  INTO storedPassword
+  FROM Class
+  WHERE Class.classID = $4;
 
-    IF storedPassword = $3 THEN
+  IF storedPassword = $5 THEN
 
-      -- Add the student to the class
-      INSERT INTO Attends VALUES($2, $1, 'false');
+    -- Add the student to the class
+    INSERT INTO LearnSQL.Attends VALUES($4, $1, 'false');
 
-      -- Create the user under the ClassDB student role using a cross-
-      -- database query
-      SELECT *
-      FROM dblink('dbname = ClassDB', 'SELECT ClassDB.createStudent('|| $1 ||','|| $4')')
+    -- Create the user under the ClassDB student role using a cross-
+    -- database query
+    SELECT *
+    FROM dblink('user=' || $1 || 'password=' || $3 || 'dbname=classdb_template', 
+                'SELECT ClassDB.createStudent(' || $1 || ',' || $2 || ')' )
+    AS throwAway(blank VARCHAR(30)); -- Unused return variable for `dblink`
 
-    ELSE
+  ELSE
 
-      RAISE EXCEPTION 'Password incorrect for the desired class';
-
-    END IF
+    RAISE EXCEPTION 'Password incorrect for the desired class';
 
   END IF;
 
 END;
 $$ LANGUAGE plpgsql;
-
 
 COMMIT;
