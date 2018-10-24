@@ -76,7 +76,7 @@ CREATE UNIQUE INDEX idx_Unique_Email ON LearnSQL.UserData_t(LOWER(TRIM(Email)));
 --  a "ClassName" is the classID without the random ID
 --  The "Password" field will be used for students to create their student
 --   account in the classdb database
-CREATE TABLE IF NOT EXISTS Class_t (
+CREATE TABLE IF NOT EXISTS LearnSQL.Class_t (
   ClassID                 VARCHAR(256) NOT NULL PRIMARY KEY,
   ClassName               VARCHAR(236) NOT NULL,
   Section                 VARCHAR(256) NOT NULL,
@@ -93,7 +93,7 @@ CREATE TABLE IF NOT EXISTS Class_t (
 --  a "Username" is a unique id that represents a human user from UserData table
 --  a "ClassID" is a unique id that represents a class from Class table
 --  "isTeacher" defines whether user is a teacher for that specific class
-CREATE TABLE IF NOT EXISTS Attends (
+CREATE TABLE IF NOT EXISTS LearnSQL.Attends (
   ClassID                 VARCHAR(256) NOT NULL REFERENCES Class_t,
   Username                VARCHAR(256) NOT NULL REFERENCES LearnSQL.UserData_t,
   isTeacher               BOOLEAN DEFAULT FALSE,

@@ -28,7 +28,14 @@ $$;
 
 
 
--- Define function to create a class. TODO: add some more comments
+-- Suppress NOTICEs for this script only, this will not apply to functions
+--  defined within. This hides unimportant, but possibly confusing messages
+SET LOCAL client_min_messages TO WARNING;
+
+
+
+-- Define function to create a class. 
+-- TODO: create more comments
 CREATE OR REPLACE FUNCTION 
   LearnSQL.createClass(
                         userName LearnSQL.UserData_t.UserName%Type,
@@ -39,19 +46,23 @@ CREATE OR REPLACE FUNCTION
                         times LearnSQL.Class_t.Times%Type,
                         days LearnSQL.Class_t.Days%Type,
                         startDate LearnSQL.Class_t.StartDate%Type
-                          DEFAULT NULL,
-                        endDate LearnSQL.Class_t.EndDate%Type DEFAULT NULL
+                          DEFAULT CURRENT_DATE,
+                        endDate LearnSQL.Class_t.EndDate%Type 
+                          DEFAULT 'NOT AVAILABLE' 
                       )
   RETURNS VOID AS
 $$
+DECLARE
+  encryptedPassword VARCHAR(60); -- hashed password to be stored in UserData_t
 BEGIN
   -- Check if user creating class is a teacher
   IF NOT EXISTS (
                   SELECT 1 
                   FROM LearnSQL.UserData_t
-                  WHERE UserData_t.userName = $9
+                  WHERE UserData_t.userName = $1
                   AND UserData_t.isTeacher = TRUE 
-                ) THEN 
+                ) 
+  THEN 
     RAISE EXCEPTION 'Class Creation Not Possible For Current User';
   END IF;
 
@@ -59,8 +70,9 @@ BEGIN
   IF EXISTS (
               SELECT * 
               FROM LearnSQL.Class_t
-              WHERE Class_t.ClassID = $1
-            ) THEN 
+              WHERE Class_t.ClassID = $3
+            ) 
+  THEN 
     RAISE EXCEPTION 'ClassID Already Exists';
   END IF;
 
@@ -69,18 +81,32 @@ BEGIN
               SELECT 1 
               FROM LearnSQL.Class_t INNER JOIN LearnSQL.Attends
               ON Attends.classID = Class_t.classID
-              WHERE Attends.userName = $9
-              AND Class_t.className = $2
-              AND Class_t.section = $3
-            ) THEN 
-    RAISE EXCEPTION 'section and class name already exists!';
+              WHERE Attends.userName = $1
+              AND Class_t.className = $4
+              AND Class_t.section = $5
+            ) 
+  THEN 
+    RAISE EXCEPTION 'Section And Class Name Already Exists!';
   END IF;
 
+  -- Create "hashed" password using blowfish cipher
+  encryptedPassword = crypt($3, gen_salt('bf'));
+
   --dblink create database dbname with template classdb_template with owner classdb
+  EXECUTE FORMAT(
+                  'CREATE CLASS %s WITH ENCRYPTED PASSWORD %L', 
+                  LOWER($4), LOWER($1), $2)
+                );
 
   --insert into class all class information
+  -- Add user information to the LearnSQL UserData table
+  INSERT INTO LearnSQL.Class_t 
+  VALUES ($3, $4, $5, $6, $7, $8, $9, $2);
 
   --insert into attends classid, username, isteacher=true
+  INSERT INTO LearnSQL.Attends VALUES ($3, LOWER($1), true);
 
 END
 $$ LANGUAGE plpgsql;
+
+select learnsql.createClass('user3', 'pass', '01', 'cs305', '01', 'times', 'days');
