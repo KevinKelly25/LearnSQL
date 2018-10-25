@@ -166,7 +166,7 @@ function createUser(req, res) {
 // TODO: add timeout for verification token
 function forgotPassword(req, res) {
   return new Promise((resolve, reject) => ldb.task(
-    t => t.oneOrNone('SELECT Email FROM UserData WHERE Email = $1 ',
+    t => t.oneOrNone('SELECT Email FROM LearnSQL.UserData WHERE Email = $1 ',
       [req.body.email])
       .then((result) => {
         if (result) {
@@ -174,7 +174,7 @@ function forgotPassword(req, res) {
           const { salt } = bcrypt.genSaltSync();
           const hashedToken = bcrypt.hashSync(token, salt);
           const { email } = result;
-          return t.none('UPDATE USERDATA SET Token = $1, forgotPassword '
+          return t.none('UPDATE LearnSQL.USERDATA SET Token = $1, forgotPassword '
                           + '= true WHERE Email = $2 ', [hashedToken, email])
             .then(() => {
               req.body = {
@@ -225,7 +225,7 @@ function loginRequired(req, res, next) {
  */
 function adminRequired(req, res, next) {
   if (!req.user) return res.status(401).json({ status: 'Please log in' });
-  return ldb.one('SELECT isAdmin FROM UserData WHERE Username = $1',
+  return ldb.one('SELECT isAdmin FROM LearnSQL.UserData WHERE Username = $1',
     [req.user.username])
     .then((user) => {
       if (!user.isadmin) {
@@ -245,7 +245,7 @@ function adminRequired(req, res, next) {
  */
 function teacherRequired(req, res, next) {
   if (!req.user) return res.status(401).json({ status: 'Please log in' });
-  return ldb.one('SELECT isAdmin, isTeacher FROM UserData WHERE Username = $1',
+  return ldb.one('SELECT isAdmin, isTeacher FROM LearnSQL.UserData WHERE Username = $1',
     [req.user.username])
     .then((user) => {
       if (!user.isadmin && !user.isteacher) {
@@ -265,7 +265,7 @@ function teacherRequired(req, res, next) {
  */
 function studentRequired(req, res, next) {
   if (!req.user) return res.status(401).json({ status: 'Please log in' });
-  return ldb.one('SELECT isAdmin, isstudent FROM UserData WHERE Username = $1',
+  return ldb.one('SELECT isAdmin, isstudent FROM LearnSQL.UserData WHERE Username = $1',
     [req.user.username])
     .then((user) => {
       if (!user.isadmin && !user.isstudent) {

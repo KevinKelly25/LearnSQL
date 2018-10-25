@@ -94,7 +94,7 @@ CREATE TABLE IF NOT EXISTS LearnSQL.Class_t (
 --  a "ClassID" is a unique id that represents a class from Class table
 --  "isTeacher" defines whether user is a teacher for that specific class
 CREATE TABLE IF NOT EXISTS LearnSQL.Attends (
-  ClassID                 VARCHAR(256) NOT NULL REFERENCES Class_t,
+  ClassID                 VARCHAR(256) NOT NULL REFERENCES LearnSQL.Class_t,
   Username                VARCHAR(256) NOT NULL REFERENCES LearnSQL.UserData_t,
   isTeacher               BOOLEAN DEFAULT FALSE,
   PRIMARY KEY (ClassID, Username)
@@ -106,14 +106,14 @@ CREATE TABLE IF NOT EXISTS LearnSQL.Attends (
 --  This view has all attributes of Class_t with an added derived attribute
 --   "studentCount"
 --  A "studentCount" represents the number of students in a class
-CREATE OR REPLACE VIEW Class AS
+CREATE OR REPLACE VIEW LearnSQL.Class AS
 SELECT ClassID, ClassName, Section, Times, Days, StartDate, EndDate, Password,
   (
     SELECT COUNT(*)
-    FROM Attends
-    WHERE Attends.ClassID = Class_t.ClassID AND isTeacher = FALSE
+    FROM LearnSQL.Attends
+    WHERE LearnSQL.Attends.ClassID = LearnSQL.Class_t.ClassID AND isTeacher = FALSE
   ) AS studentCount
-FROM Class_t;
+FROM LearnSQL.Class_t;
 
 
 
@@ -121,14 +121,14 @@ FROM Class_t;
 -- This view has all attributes of UserData_t with an added derived attribute
 --  "isstudent"
 -- The attribute "isstudent" represents if a student is taking a class
-CREATE OR REPLACE VIEW UserData AS 
+CREATE OR REPLACE VIEW LearnSQL.UserData AS 
 SELECT Username, Fullname, Password, Email, Token, DateJoined, isTeacher,
        isAdmin, isVerified, ForgotPassword, TokenTimestamp,
 EXISTS 
   (
     SELECT *
-    FROM Attends 
-    WHERE Attends.Username = UserData_t.Username AND Attends.isTeacher = FALSE
+    FROM LearnSQL.Attends 
+    WHERE LearnSQL.Attends.Username = UserData_t.Username AND LearnSQL.Attends.isTeacher = FALSE
   ) AS isstudent
 FROM LearnSQL.UserData_t;
 

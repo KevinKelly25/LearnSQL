@@ -41,7 +41,7 @@ CREATE OR REPLACE FUNCTION
                   Days          LearnSQL.Class_t.Days%Type,
                   StartDate     LearnSQL.Class_t.StartDate%Type,
                   EndDate       LearnSQL.Class_t.EndDate%Type,
-                  StudentCount  Class.StudentCount%Type
+                  StudentCount  LearnSQL.Class.StudentCount%Type
                 ) 
     AS
 
@@ -54,8 +54,8 @@ BEGIN
 
                   SELECT ClassName, Section, Times, Days, StartDate,
                          EndDate, StudentCount 
-                  FROM LearnSQL.Attends INNER JOIN Class 
-                  ON LearnSQL.Attends.ClassID = Class.ClassID 
+                  FROM LearnSQL.Attends INNER JOIN LearnSQL.Class 
+                  ON LearnSQL.Attends.ClassID = LearnSQL.Class.ClassID 
                   WHERE LearnSQL.Attends.Username = studentName 
                   AND Attends.isTeacher = false
                 )
@@ -101,7 +101,7 @@ BEGIN
   
   SELECT password
   INTO storedPassword
-  FROM Class
+  FROM LearnSQL.Class
   WHERE Class.classID = $4;
 
   IF storedPassword = $5 THEN
