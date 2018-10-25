@@ -17,11 +17,12 @@ START TRANSACTION;
 DO
 $$
   BEGIN
-    IF NOT EXISTS (SELECT * FROM pg_catalog.pg_roles
-                   WHERE rolname = CURRENT_USER AND rolsuper = TRUE
+    IF NOT EXISTS (
+                    SELECT * FROM pg_catalog.pg_roles
+                    WHERE rolname = CURRENT_USER AND rolsuper = TRUE
                   ) 
-        THEN
-        RAISE EXCEPTION 'Insufficient privileges: script must be run as a user '
+    THEN
+      RAISE EXCEPTION 'Insufficient privileges: script must be run as a user '
                         'with superuser privileges';
     END IF;
   END
@@ -37,16 +38,18 @@ SET LOCAL client_min_messages TO WARNING;
 -- TODO: create more comments
 CREATE OR REPLACE FUNCTION 
   LearnSQL.createClass(
-                        userName  LearnSQL.UserData_t.UserName%Type,
-                        password  LearnSQL.Class_t.Password%Type,
-                        classID   LearnSQL.Class_t.ClassID%Type,
-                        className LearnSQL.Class_t.ClassName%Type,
-                        section   LearnSQL.Class_t.Section%Type,
-                        times     LearnSQL.Class_t.Times%Type,
-                        days      LearnSQL.Class_t.Days%Type,
-                        startDate LearnSQL.Class_t.StartDate%Type
+                        dbName         VARCHAR(60),
+                        dbPassword     VARCHAR(64),
+                        userName       LearnSQL.UserData_t.UserName%Type,
+                        classPassword  LearnSQL.Class_t.Password%Type,
+                        classID        LearnSQL.Class_t.ClassID%Type,
+                        className      LearnSQL.Class_t.ClassName%Type,
+                        section        LearnSQL.Class_t.Section%Type,
+                        times          LearnSQL.Class_t.Times%Type,
+                        days           LearnSQL.Class_t.Days%Type,
+                        startDate      LearnSQL.Class_t.StartDate%Type
                           DEFAULT CURRENT_DATE,
-                        endDate LearnSQL.Class_t.EndDate%Type DEFAULT NULL
+                        endDate        LearnSQL.Class_t.EndDate%Type DEFAULT NULL
                       )
   RETURNS VOID AS
 $$
@@ -57,21 +60,11 @@ BEGIN
   IF NOT EXISTS (
                   SELECT 1 
                   FROM LearnSQL.UserData_t
-                  WHERE UserData_t.userName = $1
+                  WHERE UserData_t.userName = $3
                   AND UserData_t.isTeacher = TRUE 
                 ) 
   THEN 
     RAISE EXCEPTION 'Class Creation Not Possible For Current User';
-  END IF;
-
-  -- Check if classID already exists
-  IF EXISTS (
-              SELECT * 
-              FROM LearnSQL.Class_t
-              WHERE Class_t.ClassID = $3
-            ) 
-  THEN 
-    RAISE EXCEPTION 'ClassID Already Exists';
   END IF;
 
   -- Check if class name and class section for user logged in already exists
@@ -79,19 +72,38 @@ BEGIN
               SELECT 1 
               FROM LearnSQL.Class_t INNER JOIN LearnSQL.Attends
               ON Attends.classID = Class_t.classID
-              WHERE Attends.userName = $1
-              AND Class_t.className = $4
-              AND Class_t.section = $5
+              WHERE Attends.userName = $3
+              AND Class_t.className = $6
+              AND Class_t.section = $7
             ) 
   THEN 
     RAISE EXCEPTION 'Section And Class Name Already Exists!';
+  END IF;
+
+  -- Check if the class database already exists
+  IF EXISTS (
+              SELECT 1
+              FROM pg_database 
+              WHERE datname = $3
+            )
+  THEN 
+    RAISE EXCEPTION 'This Class Database Already Exists!';
   END IF;
 
   -- Create "hashed" password using blowfish cipher
   encryptedPassword = crypt($2, gen_salt('bf'));
 
   --insert into class all class information
-  INSERT INTO LearnSQL.Class_t VALUES ($3, $4, $5, $6, $7, $8, $9, encryptedPassword);
+  INSERT INTO LearnSQL.Class_t VALUES ($5, $6, $7, $8, $9, $10, $11, encryptedPassword);
+
+  --insert into attends table
+  INSERT INTO learnsql.Attends VALUES ($5, $3, TRUE);
+
+  -- dblink 
+  SELECT *
+  FROM dblink('user='|| $1 ||' dbname=learnsql  password='|| $2, 
+              'CREATE DATABASE '|| $5)
+  AS throwAway(blank VARCHAR(30));--needed for dblink but unused
 
 END
 $$ LANGUAGE plpgsql;
