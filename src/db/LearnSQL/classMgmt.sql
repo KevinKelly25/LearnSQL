@@ -44,8 +44,9 @@ CREATE OR REPLACE FUNCTION
                         section   LearnSQL.Class_t.Section%Type,
                         times     LearnSQL.Class_t.Times%Type,
                         days      LearnSQL.Class_t.Days%Type,
-                        startDate LearnSQL.Class_t.StartDate%Type,
-                        endDate   LearnSQL.Class_t.EndDate%Type 
+                        startDate LearnSQL.Class_t.StartDate%Type
+                          DEFAULT CURRENT_DATE,
+                        endDate LearnSQL.Class_t.EndDate%Type DEFAULT NULL
                       )
   RETURNS VOID AS
 $$
@@ -92,8 +93,37 @@ BEGIN
   --insert into class all class information
   INSERT INTO LearnSQL.Class_t VALUES ($3, $4, $5, $6, $7, $8, $9, encryptedPassword);
 
-  -- Create database class
-  EXECUTE FORMAT('CREATE CLASS %s WITH ENCRYPTED PASSWORD %L', LOWER($4), $2);
-
 END
 $$ LANGUAGE plpgsql;
+
+
+
+CREATE OR REPLACE FUNCTION
+  LearnSQL.dropClass(className           LearnSQL.Class_t.ClassName%Type
+                     databaseClassname   VARCHAR DEFAULT NULL,
+                     databasePassword    VARCHAR DEFAULT NULL)
+  RETURNS VOID AS
+$$
+DECLARE 
+  rec RECORD;
+BEGIN 
+  -- Check if classname exists in LearnSQL tables
+  IF NOT EXISTS (
+                  SELECT 1
+                  FROM LearnSQL.Class_t
+                  WHERE Class_t.ClassName = $1;
+                )
+  THEN 
+    RAISE EXCEPTION 'Class does not exist in tables';
+  END IF;
+
+  -- Check if class exists in database
+  IF ($2 IS NOT NULL AND $3 IS NOT NULL) THEN 
+    IF NOT EXISTS (
+                    SELECT 1 
+                    FROM pg_catalog.pg_roles
+                    WHERE rolname = $1 
+                  )
+    THEN 
+      RAISE EXCEPTION 'Class does not exists in database';
+  END IF;
