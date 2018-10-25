@@ -25,6 +25,9 @@ BEGIN
 END
 $$;
 
+-- Allow for cross-database queries using the `dblink` extension on the 'LearnSQL'
+--  schema
+--CREATE EXTENSION IF NOT EXISTS dblink SCHEMA LearnSQL;
 
 --Suppress NOTICEs for this script only, this will not apply to functions
 -- defined within. This hides unimportant, and possibly confusing messages
@@ -60,21 +63,20 @@ BEGIN
                   AND Attends.isTeacher = false
                 )
     THEN
-    RAISE EXCEPTION 'User is not enrolled in any classes';
+      RAISE EXCEPTION 'User is not enrolled in any classes';
   END IF;
 END;
 $$ LANGUAGE plpgsql;
 
 
 CREATE OR REPLACE FUNCTION
-  LearnSQL.addStudent(
-                        userName        LearnSQL.Attends.userName%Type, 
-                        userFullName    LearnSQL.UserData_t.fullName%Type,
-                        userPassword    LearnSQL.UserData_t.password%Type,
-                        classID         LearnSQL.Attends.classID%Type,
-                        classPassword   LearnSQL.Class_t.password%Type
-                                 
-                     )
+  LearnSQL.addStudent(userName          LearnSQL.Attends.userName%Type, 
+                      userFullName      LearnSQL.UserData_t.fullName%Type,
+                      userPassword      LearnSQL.UserData_t.password%Type,
+                      classID           LearnSQL.Attends.classID%Type,
+                      classPassword     LearnSQL.Class_t.password%Type,
+                      databaseUsername  VARCHAR(63),
+                      databasePassword  VARCHAR(64))
   RETURNS VOID AS
 
 $$
@@ -92,7 +94,7 @@ BEGIN
               AND LearnSQL.Attends.classID = $4
             ) 
     THEN
-    RAISE EXCEPTION 'Student is already a member of the specified class';
+      RAISE EXCEPTION 'Student is already a member of the specified class';
 
   END IF;
 
@@ -112,12 +114,13 @@ BEGIN
     -- Create the user under the ClassDB student role using a cross-
     -- database query
     SELECT *
-    FROM dblink('user=' || $1 || 'password=' || $3 || 'dbname=classdb_template', 
-                'SELECT ClassDB.createStudent(' || $1 || ',' || $2 || ')' )
+    FROM LearnSQL.dblink('user='     || $6 || 
+                         'password=' || $7 || 
+                         'dbname='   || $4, 
+                         'SELECT ClassDB.createStudent(' || $1 || ',' || $2 || ')')
     AS throwAway(blank VARCHAR(30)); -- Unused return variable for `dblink`
 
   ELSE
-
     RAISE EXCEPTION 'Password incorrect for the desired class';
 
   END IF;
