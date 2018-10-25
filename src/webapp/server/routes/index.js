@@ -108,7 +108,7 @@ router.post('/sendContact', (req, res) => {
     secure: false, // True for 465, false for other ports
     auth: {
       user: 'learnsqltesting@gmail.com', // Email used for sending the message (will need to be changed)
-      pass: 'testing123!',
+      pass: process.env.EMAIL_PASSWORD,
     },
     tls: {
       // RejectUnauthorized:false will probably need to be changed for production because
