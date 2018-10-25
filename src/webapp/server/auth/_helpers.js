@@ -73,7 +73,7 @@ function sendEmail(req, res) {
     // Secure: false, // true for 465, false for other ports
     auth: {
       user: 'learnsqltesting@gmail.com', // email used for sending the message (will need to be changed)
-      pass: 'testing123!',
+      pass: process.env.EMAIL_PASSWORD,
     },
     tls: {
       // RejectUnauthorized:false will probably need to be changed for production because
