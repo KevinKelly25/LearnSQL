@@ -113,11 +113,11 @@ BEGIN
 
     -- Create the user under the ClassDB student role using a cross-
     -- database query
-    SELECT *
+    PERFORM *
     FROM LearnSQL.dblink('user='     || $6 || 
-                         'password=' || $7 || 
-                         'dbname='   || $4, 
-                         'SELECT ClassDB.createStudent(' || $1 || ',' || $2 || ')')
+                         ' password=' || $7 || 
+                         ' dbname='   || $4, 
+                         'SELECT ClassDB.createStudent('$1', '$2')')
     AS throwAway(blank VARCHAR(30)); -- Unused return variable for `dblink`
 
   ELSE
