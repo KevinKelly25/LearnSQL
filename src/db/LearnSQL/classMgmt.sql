@@ -94,6 +94,9 @@ BEGIN
     RAISE EXCEPTION 'This Class Database Already Exists!';
   END IF;
 
+  -- TODO: Check to see if class times do not clash with other classes times
+
+
   -- Create "hashed" password using blowfish cipher
   encryptedPassword = crypt($2, gen_salt('bf'));
 
@@ -106,17 +109,21 @@ BEGIN
   RAISE NOTICE 'this is the class id GENERATED %', classid;
 
   -- dblink 
-  PERFORM *
-  FROM dblink('user='|| $1 ||' dbname=learnsql  password='|| $2, 
-              'CREATE DATABASE '|| LOWER(classID))
-  AS throwAway(blank VARCHAR(30));--needed for dblink but unused
+  --PERFORM *
+  --FROM dblink('user='|| $1 ||' dbname=learnsql  password='|| $2, 
+    --          'CREATE DATABASE '|| LOWER(classID))
+  --AS throwAway(blank VARCHAR(30));--needed for dblink but unused
 
-  -- create with classdb template
+  PERFORM * 
+  FROM dblink ('user=' || $1 || ' dbname=learnsql password='|| $2,
+               'CREATE DATABASE ' || LOWER(classID) || ' WITH TEMPLATE classdb_template OWNER classdb')
+    AS throwAway(blank VARCHAR(30));--needed for dblink but unused
 
 END
 $$ LANGUAGE plpgsql;
 
 
+select learnsql.createClass('postgres', 'password', 'chochev3', 'pass', 'cs305', '01', 'times', 'days');
 
 -- getClassID function returns classID
 CREATE OR REPLACE FUNCTION 
