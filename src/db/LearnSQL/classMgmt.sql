@@ -94,8 +94,19 @@ BEGIN
     RAISE EXCEPTION 'This Class Database Already Exists!';
   END IF;
 
-  -- TODO: Check to see if class times do not clash with other classes times
-
+  -- Check to see if class times do not clash with other classes times
+  --  for the same teacher
+  IF EXISTS (
+              SELECT *
+              FROM LearnSQL.Class_t INNER JOIN LearnSQL.Attends
+              ON Attends.classID = Class_t.classID
+              WHERE Attends.userName = $3
+              AND Class_t.times = $7 
+              AND Class_t.days = $8
+            )
+  THEN 
+    RAISE EXCEPTION 'Cannot Create Class For Same Times and Days';
+  END IF;
 
   -- Create "hashed" password using blowfish cipher
   encryptedPassword = crypt($2, gen_salt('bf'));
@@ -117,6 +128,11 @@ BEGIN
   PERFORM * 
   FROM dblink ('user=' || $1 || ' dbname=learnsql password='|| $2,
                'CREATE DATABASE ' || LOWER(classID) || ' WITH TEMPLATE classdb_template OWNER classdb')
+    AS throwAway(blank VARCHAR(30));--needed for dblink but unused
+  
+  PERFORM *
+  FROM dblink ('user=' || $1 || ' dbname= ' || LOWER(classID) || ' password=' || $2,
+               'SELECT reAddUserAccess()')
     AS throwAway(blank VARCHAR(30));--needed for dblink but unused
 
 END
@@ -199,7 +215,7 @@ BEGIN
                   AND Class_t.startDate = $6
                 ) 
   THEN 
-    RAISE EXCEPTION 'Dropped Failed - User Currently Not Attending This Class!';
+    RAISE EXCEPTION 'Drop Failed - User Currently Not Attending This Class!';
   END IF;
 
   IF NOT EXISTS (
