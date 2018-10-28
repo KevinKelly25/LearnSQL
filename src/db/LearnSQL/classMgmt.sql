@@ -118,10 +118,6 @@ $$ LANGUAGE plpgsql;
 
 
 
-select learnsql.createClass('postgres', 'password', 'chochev3', 'pass', 'cs305', '01', 'times', 'days');
-
-
-
 -- getClassID function returns classID
 CREATE OR REPLACE FUNCTION 
   LearnSQL.getClassID (
@@ -223,5 +219,3 @@ BEGIN
 
 END
 $$ LANGUAGE plpgsql;
-
-select learnsql.dropclass('postgres', 'password', 'chochev3', 'cs305', '01', '2018-10-27');
