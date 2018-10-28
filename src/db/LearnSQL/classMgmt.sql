@@ -34,15 +34,15 @@ $$;
 --  defined within. This hides unimportant, but possibly confusing messages
 SET LOCAL client_min_messages TO WARNING;
 
+-- CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 -- Define function to create a class. 
 -- TODO: create more comments
 CREATE OR REPLACE FUNCTION 
   LearnSQL.createClass(
-                        dbName         VARCHAR(60),
+                        dbUserName     VARCHAR(60),
                         dbPassword     VARCHAR(64),
                         userName       LearnSQL.UserData_t.UserName%Type,
                         classPassword  LearnSQL.Class_t.Password%Type,
-                        classID        LearnSQL.Class_t.ClassID%Type,
                         className      LearnSQL.Class_t.ClassName%Type,
                         section        LearnSQL.Class_t.Section%Type,
                         times          LearnSQL.Class_t.Times%Type,
@@ -54,8 +54,10 @@ CREATE OR REPLACE FUNCTION
   RETURNS VOID AS
 $$
 DECLARE
+  classid VARCHAR(63);
   encryptedPassword VARCHAR(60); -- hashed password to be stored in UserData_t
 BEGIN
+  classid := $5 || '_' || gen_random_uuid();
   -- Check if user creating class is a teacher
   IF NOT EXISTS (
                   SELECT 1 
@@ -73,18 +75,20 @@ BEGIN
               FROM LearnSQL.Class_t INNER JOIN LearnSQL.Attends
               ON Attends.classID = Class_t.classID
               WHERE Attends.userName = $3
-              AND Class_t.className = $6
-              AND Class_t.section = $7
+              AND Class_t.className = $5
+              AND Class_t.section = $6
             ) 
   THEN 
     RAISE EXCEPTION 'Section And Class Name Already Exists!';
   END IF;
 
+  classid := REPLACE (classid, '-', '');
+
   -- Check if the class database already exists
   IF EXISTS (
               SELECT 1
               FROM pg_database 
-              WHERE datname = $3
+              WHERE datname = classid
             )
   THEN 
     RAISE EXCEPTION 'This Class Database Already Exists!';
@@ -94,48 +98,130 @@ BEGIN
   encryptedPassword = crypt($2, gen_salt('bf'));
 
   --insert into class all class information
-  INSERT INTO LearnSQL.Class_t VALUES ($5, $6, $7, $8, $9, $10, $11, encryptedPassword);
+  INSERT INTO LearnSQL.Class_t VALUES (LOWER(classID), $5, $6, $7, $8, $9, $10, encryptedPassword);
 
   --insert into attends table
-  INSERT INTO learnsql.Attends VALUES ($5, $3, TRUE);
+  INSERT INTO learnsql.Attends VALUES (LOWER(classID), $3, TRUE);
+
+  RAISE NOTICE 'this is the class id GENERATED %', classid;
 
   -- dblink 
-  SELECT *
+  PERFORM *
   FROM dblink('user='|| $1 ||' dbname=learnsql  password='|| $2, 
-              'CREATE DATABASE '|| $5)
+              'CREATE DATABASE '|| LOWER(classID))
   AS throwAway(blank VARCHAR(30));--needed for dblink but unused
+
+  -- create with classdb template
 
 END
 $$ LANGUAGE plpgsql;
 
 
 
+select learnsql.createClass('postgres', 'password', 'chochev3', 'pass', 'cs305', '01', 'times', 'days');
+
+
+
+-- getClassID function returns classID
+CREATE OR REPLACE FUNCTION 
+  LearnSQL.getClassID (
+                       username     LearnSQL.Attends.UserName%Type,
+                       className    LearnSQL.Class_t.ClassName%Type,
+                       classSection LearnSQL.Class_t.Section%Type,
+                       startDate    LearnSQL.Class_t.StartDate%Type)
+  RETURNS VARCHAR AS 
+$$ 
+DECLARE 
+  theClassId LearnSQL.Class_t.classID%Type;
+BEGIN 
+
+  -- TODO: comment here
+  SELECT LearnSQL.Class_t.classID
+  INTO theClassId
+  FROM LearnSQL.Class_t INNER JOIN LearnSQL.Attends
+  ON Attends.classID = Class_t.classID
+  WHERE Attends.userName = $1
+  AND Class_t.className = $2
+  AND Class_t.section = $3
+  AND Class_t.startDate = $4;
+
+  RAISE NOTICE '%', theClassId;
+  RETURN LOWER(theClassId);
+END 
+$$ LANGUAGE plpgsql;
+                       
+
 CREATE OR REPLACE FUNCTION
-  LearnSQL.dropClass(className           LearnSQL.Class_t.ClassName%Type
-                     databaseClassname   VARCHAR DEFAULT NULL,
-                     databasePassword    VARCHAR DEFAULT NULL)
+  LearnSQL.dropClass(
+                     dbUserName          VARCHAR(60),
+                     dbPassword          VARCHAR(64),
+                     userName            LearnSQL.UserData_t.userName%Type,
+                     className           LearnSQL.Class_t.ClassName%Type,
+                     classSection        LearnSQL.Class_t.Section%Type,
+                     startDate           LearnSQL.Class_t.StartDate%Type)
   RETURNS VOID AS
 $$
 DECLARE 
-  rec RECORD;
+  theClassID VARCHAR := learnSQL.getClassID($3, $4, $5, $6);
 BEGIN 
+  
   -- Check if classname exists in LearnSQL tables
   IF NOT EXISTS (
                   SELECT 1
                   FROM LearnSQL.Class_t
-                  WHERE Class_t.ClassName = $1;
+                  WHERE Class_t.ClassName = $4
                 )
   THEN 
-    RAISE EXCEPTION 'Class does not exist in tables';
+    RAISE EXCEPTION 'Class Does Not Exists In Class_t Table';
   END IF;
 
-  -- Check if class exists in database
-  IF ($2 IS NOT NULL AND $3 IS NOT NULL) THEN 
-    IF NOT EXISTS (
-                    SELECT 1 
-                    FROM pg_catalog.pg_roles
-                    WHERE rolname = $1 
-                  )
-    THEN 
-      RAISE EXCEPTION 'Class does not exists in database';
+  -- Check if the class exists in the database
+  IF NOT EXISTS (
+                  SELECT 1 
+                  FROM pg_database
+                  WHERE datname = theClassID
+                )
+  THEN 
+    RAISE EXCEPTION 'Class Not Found In Database %', theClassID;
   END IF;
+
+  -- Check if class name and class section for user logged in already exists
+  IF NOT EXISTS (
+                  SELECT 1 
+                  FROM LearnSQL.Class_t INNER JOIN LearnSQL.Attends
+                  ON Attends.classID = Class_t.classID
+                  WHERE Attends.userName = $3
+                  AND Class_t.className = $4
+                  AND Class_t.section = $5
+                  AND Class_t.startDate = $6
+                ) 
+  THEN 
+    RAISE EXCEPTION 'Dropped Failed - User Currently Not Attending This Class!';
+  END IF;
+
+  IF NOT EXISTS (
+                  SELECT 1  
+                  FROM LearnSQL.UserData_t 
+                  WHERE UserData_t.userName = $3
+                  AND UserData_t.isTeacher = true
+                )
+  THEN 
+    RAISE EXCEPTION 'Only A Teacher Is Allowed To Drop A Class';
+  END IF;
+
+  -- dblink 
+  PERFORM *
+  FROM dblink('user='|| $1 ||' dbname=learnsql  password='|| $2, 
+              'DROP DATABASE '|| theClassID)
+  AS throwAway(blank VARCHAR(30));--needed for dblink but unused
+
+  DELETE FROM LearnSQL.Attends
+  WHERE Attends.classID = theClassID;
+
+  DELETE From LearnSQL.Class_t
+  WHERE Class_t.classID = theClassID;
+
+END
+$$ LANGUAGE plpgsql;
+
+select learnsql.dropclass('postgres', 'password', 'chochev3', 'cs305', '01', '2018-10-27');
