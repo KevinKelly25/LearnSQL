@@ -23,7 +23,7 @@ function getClasses(req, res) {
   return new Promise((resolve, reject) => {
     ldb.any('SELECT ClassName, Section, Times, Days, StartDate, '
             + 'EndDate, StudentCount '
-            + 'FROM Attends INNER JOIN Class ON Attends.ClassID = Class.ClassID '
+            + 'FROM LearnSQL.Attends INNER JOIN LearnSQL.Class ON Attends.ClassID = Class.ClassID '
             + 'WHERE Username = $1 AND isTeacher = false', [req.user.username])
       .then((result) => {
         resolve();
@@ -54,7 +54,7 @@ function getClasses(req, res) {
 function addStudent(req, res) {
   return new Promise((resolve, reject) => {
     ldb.task(t => t.oneOrNone('SELECT 1 '
-                              + 'FROM Attends '
+                              + 'FROM LearnSQL.Attends '
                               + 'WHERE Username = $1 AND ClassID = $2',
     [req.user.username, req.body.classID])
       .then((result) => {
@@ -63,7 +63,7 @@ function addStudent(req, res) {
         } else {
           // Get class join password
           return t.one('SELECT Password '
-                       + 'FROM Class '
+                       + 'FROM LearnSQL.Class '
                        + 'WHERE ClassID = $1',
           [req.body.classID])
             .then((result2) => {
@@ -74,7 +74,7 @@ function addStudent(req, res) {
             });
         }
       })
-      .then(() => t.none('INSERT INTO Attends VALUES($1, $2, false)',
+      .then(() => t.none('INSERT INTO LearnSQL.Attends VALUES($1, $2, false)',
         [req.body.classID, req.user.username]))
       .then(() => {
         // Create a db object on ClassDB database and add student
