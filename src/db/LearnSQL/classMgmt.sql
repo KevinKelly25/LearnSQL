@@ -107,10 +107,10 @@ BEGIN
   --insert into attends table
   INSERT INTO learnsql.Attends VALUES (LOWER(classID), $3, TRUE);
 
-  -- Cross database link query that creates the database classid with the owner as classdb
+  -- Cross database link query that creates the database classid with the owner as classdb_admin
   PERFORM * 
   FROM dblink ('user=' || $1 || ' dbname=learnsql password='|| $2,
-               'CREATE DATABASE ' || LOWER(classID) || ' WITH TEMPLATE classdb_template OWNER classdb')
+               'CREATE DATABASE ' || LOWER(classID) || ' WITH TEMPLATE classdb_template OWNER classdb_admin')
     AS throwAway(blank VARCHAR(30));--needed for dblink but unused
   
   -- Cross database link query that gives access privileges to the database classid
@@ -122,7 +122,6 @@ BEGIN
   RETURN classID;
 END;
 $$ LANGUAGE plpgsql;
-
 
 
 
