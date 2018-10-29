@@ -25,7 +25,7 @@ BEGIN
     RAISE EXCEPTION 'Insufficient privileges: script must be run as a user '
                       'with superuser privileges';
   END IF;
-END
+END;
 $$;
 
 
@@ -53,13 +53,17 @@ CREATE OR REPLACE FUNCTION
                         startDate      LearnSQL.Class_t.StartDate%Type
                           DEFAULT CURRENT_DATE,
                         endDate        LearnSQL.Class_t.EndDate%Type DEFAULT NULL)
-  RETURNS VOID AS
+  RETURNS VARCHAR AS
 $$
 DECLARE
   classid VARCHAR(63);
   encryptedPassword VARCHAR(60); -- hashed password to be stored in UserData_t
 BEGIN
   classid := $5 || '_' || gen_random_uuid();
+  -- Any instances of the character '-' is deleted from the classid or else this
+  --  will cause an error in dblink. 
+  classid := REPLACE (classid, '-', '');
+
   -- Check if user creating class is a teacher
   IF NOT EXISTS (
                   SELECT 1 
@@ -83,10 +87,6 @@ BEGIN
   THEN 
     RAISE EXCEPTION 'Section And Class Name Already Exists!';
   END IF;
-  
-  -- Any instances of the character '-' is deleted from the classid or else this
-  --  will cause an error in dblink. 
-  classid := REPLACE (classid, '-', '');
 
   -- Check if the class database already exists
   IF EXISTS (
@@ -96,20 +96,6 @@ BEGIN
             )
   THEN 
     RAISE EXCEPTION 'This Class Database Already Exists!';
-  END IF;
-
-  -- Check to see if class times do not clash with other classes times
-  --  for the same teacher
-  IF EXISTS (
-              SELECT *
-              FROM LearnSQL.Class_t INNER JOIN LearnSQL.Attends
-              ON Attends.classID = Class_t.classID
-              WHERE Attends.userName = $3
-              AND Class_t.times = $7 
-              AND Class_t.days = $8
-            )
-  THEN 
-    RAISE EXCEPTION 'Cannot Create Class For Same Times and Days';
   END IF;
 
   -- Create "hashed" password using blowfish cipher
@@ -133,8 +119,10 @@ BEGIN
                'SELECT reAddUserAccess()')
     AS throwAway(blank VARCHAR(30));--needed for dblink but unused
 
-END
+  RETURN classID;
+END;
 $$ LANGUAGE plpgsql;
+
 
 
 
@@ -163,13 +151,14 @@ BEGIN
   AND Class_t.startDate = $4;
 
   RETURN LOWER(theClassId);
-END 
+END;
 $$ LANGUAGE plpgsql;
                        
 
+
 CREATE OR REPLACE FUNCTION
   LearnSQL.dropClass(
-                     dbUserName          VARCHAR(60),
+                     dbUserName          VARCHAR(63),
                      dbPassword          VARCHAR(64),
                      userName            LearnSQL.UserData_t.userName%Type,
                      className           LearnSQL.Class_t.ClassName%Type,
@@ -239,6 +228,7 @@ BEGIN
   -- Delete classes from the LearnSQL Class_t table
   DELETE From LearnSQL.Class_t
   WHERE Class_t.classID = theClassID;
-
-END
+END;
 $$ LANGUAGE plpgsql;
+
+COMMIT;
