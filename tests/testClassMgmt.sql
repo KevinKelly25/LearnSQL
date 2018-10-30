@@ -224,7 +224,11 @@ DECLARE
   classID1 VARCHAR(63);
   classID2 VARCHAR(63);
   classID3 VARCHAR(63); 
-BEGIN
+BEGIN 
+
+  --PERFORM pg_temp.createAdminUser('adminuser', 'password');
+
+
   classID1 := LearnSQL.createClass('adminuser', 'password', 'testuser1', '123', 'class1', '1', 'time1', 'day1');
   classID2 := LearnSQL.createClass('adminuser', 'password', 'testuser2', 'pass2', 'class2', '2', 'time2', 'day2', 'start2');
   classID3 := LearnSQL.createClass('adminuser', 'password', 'testuser3', 'pass3', 'class3', '3', 'time3', 'day3', 'start3', 'end3');
@@ -279,10 +283,8 @@ $$  LANGUAGE plpgsql;
 SELECT pg_temp.classMgmtTest();
 
 
+ROLLBACK;
 
-/*  
-  -- drop all owned by 
-  -- drop role 
-
-  SELECT pg_temp.createAdminUser('adminuser', 'password');
-*/
+/*REVOKE classdb_admin FROM adminuser;
+REVOKE CONNECT ON DATABASE LearnSQL FROM adminuser;
+DROP ROLE adminuser;*/

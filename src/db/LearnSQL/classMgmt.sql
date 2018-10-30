@@ -179,7 +179,7 @@ BEGIN
     RAISE EXCEPTION 'Class Does Not Exist In Class_t Table';
   END IF;
 
-  -- Check if the class exists in the database
+  -- Check if the database class exists
   IF NOT EXISTS (
                   SELECT 1 
                   FROM pg_database
