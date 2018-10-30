@@ -53,7 +53,7 @@ $$;
 --  "isVerified" represents whether the user verified their email
 --  "forgotPassword" represents if the forgotPassword feature was used
 CREATE TABLE IF NOT EXISTS LearnSQL.UserData_t (
-  Username                VARCHAR(256) NOT NULL
+  Username                VARCHAR(63) NOT NULL
     CHECK(TRIM(Username) <> ''), 
   FullName                VARCHAR(256) NOT NULL
     CHECK(TRIM(FullName) <> ''),
