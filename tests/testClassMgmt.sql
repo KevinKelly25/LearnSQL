@@ -250,10 +250,16 @@ BEGIN
   PERFORM pg_temp.checkIfClassDaysExists('day3', classID3);
   PERFORM pg_temp.checkIfClassStartDateExists('start3', classID3);
 
+  -- Clean up test classes
   PERFORM LearnSQL.dropClass('adminuser', 'password', 'testuser1', 'class1', '1', '2018-10-30');
   PERFORM LearnSQL.dropClass('adminuser', 'password', 'testuser2', 'class2', '2', 'start2');
   PERFORM LearnSQL.dropClass('adminuser', 'password', 'testuser3', 'class3', '3', 'start3');
 
+  -- Check if the username was changed
+  IF (pg_temp.checkIfClassIdExists(classID1)) 
+  THEN
+    RETURN 'classID1 Failed To Drop';
+  END IF;
 
   RETURN 'passed';
 END;
@@ -264,16 +270,19 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION pg_temp.classMgmtTest() RETURNS VOID AS
 $$
 BEGIN
-   RAISE INFO '%   createAndDropClassTest()',  pg_temp.createAndDropUserTest();
+   RAISE INFO '%   createAndDropClassTest()',  pg_temp.createAndDropClassTest();
 END;
 $$  LANGUAGE plpgsql;
 
-/* 
-  -- drop class 
-  -- check if class not exists in database and learnsql tables
+
+
+SELECT pg_temp.classMgmtTest();
+
+
+
+/*  
   -- drop all owned by 
   -- drop role 
 
   SELECT pg_temp.createAdminUser('adminuser', 'password');
-  SELECT learnsql.createClass('adminuser', 'password', 'testinguser', 'testingpasswords', 'testingclass', 'testingsection', 'testingtimes', 'testingdays');
 */
