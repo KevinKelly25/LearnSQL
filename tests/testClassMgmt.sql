@@ -224,13 +224,10 @@ DECLARE
   classID1 VARCHAR(63);
   classID2 VARCHAR(63);
   classID3 VARCHAR(63); 
-  --classID4 VARCHAR(63);
 BEGIN
-
   classID1 := LearnSQL.createClass('adminuser', 'password', 'testuser1', '123', 'class1', '1', 'time1', 'day1');
   classID2 := LearnSQL.createClass('adminuser', 'password', 'testuser2', 'pass2', 'class2', '2', 'time2', 'day2', 'start2');
-  classID3 := LearnSQL.createClass('adminuser', 'password', 'testuser3', 'pass3', 'class3', '3', 'time3', 'day3', '', 'end3');
-  --classID4 := LearnSQL.createClass('adminuser', 'password', 'testuser4', 'pass4', 'class4', '4', 'time4', 'day4', 'start4', 'end4');
+  classID3 := LearnSQL.createClass('adminuser', 'password', 'testuser3', 'pass3', 'class3', '3', 'time3', 'day3', 'start3', 'end3');
   
   PERFORM pg_temp.checkIfClassIdExists(classID1);
   PERFORM pg_temp.checkIfClassNameExists('class1', classID1);
@@ -253,6 +250,9 @@ BEGIN
   PERFORM pg_temp.checkIfClassDaysExists('day3', classID3);
   PERFORM pg_temp.checkIfClassStartDateExists('start3', classID3);
 
+  PERFORM LearnSQL.dropClass('adminuser', 'password', 'testuser1', 'class1', '1', '2018-10-30');
+  PERFORM LearnSQL.dropClass('adminuser', 'password', 'testuser2', 'class2', '2', 'start2');
+  PERFORM LearnSQL.dropClass('adminuser', 'password', 'testuser3', 'class3', '3', 'start3');
 
 
   RETURN 'passed';
@@ -261,34 +261,19 @@ $$ LANGUAGE plpgsql;
 
 
 
-/*
-  PERFORM pg_temp.checkIfClassIdExists(classID1);
-  PERFORM pg_temp.checkIfClassIdExists(classID2);
-  PERFORM pg_temp.checkIfClassIdExists(classID3);
-  PERFORM pg_temp.checkIfClassIdExists(classID4);
-*/
-  
-/*
-  PERFORM pg_temp.checkIfClassNameExists('class1', classID1);
-  PERFORM pg_temp.checkIfClassNameExists('class2', classID2);
-  PERFORM pg_temp.checkIfClassNameExists('class3', classID3);
-  PERFORM pg_temp.checkIfClassNameExists('class4', classID4);
-*/
+CREATE OR REPLACE FUNCTION pg_temp.classMgmtTest() RETURNS VOID AS
+$$
+BEGIN
+   RAISE INFO '%   createAndDropClassTest()',  pg_temp.createAndDropUserTest();
+END;
+$$  LANGUAGE plpgsql;
 
-/*
-  PERFORM pg_temp.checkIfClassSectionExists('1', classID1);
-  PERFORM pg_temp.checkIfClassSectionExists('2', classID2);
-  PERFORM pg_temp.checkIfClassSectionExists('3', classID3);
-  PERFORM pg_temp.checkIfClassSectionExists('4', classID4);
-  -- 
-
+/* 
   -- drop class 
   -- check if class not exists in database and learnsql tables
   -- drop all owned by 
   -- drop role 
 
-  classID2 := -- createclass with classname 2
-  PERFORM LearnSQL.dropClass('adminuser', 'password', '')
   SELECT pg_temp.createAdminUser('adminuser', 'password');
   SELECT learnsql.createClass('adminuser', 'password', 'testinguser', 'testingpasswords', 'testingclass', 'testingsection', 'testingtimes', 'testingdays');
-  */
+*/
