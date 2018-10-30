@@ -120,8 +120,6 @@ BEGIN
                            ' dbname='   || $4, checkAdminQuery)
       AS throwAway(blank VARCHAR(30)); -- Unused return variable for `dblink`
 
-      RAISE NOTICE 'isAdmin: %', isAdmin;
-
       SELECT 1
       INTO checkAdminPassword
       FROM LearnSQL.UserData_t

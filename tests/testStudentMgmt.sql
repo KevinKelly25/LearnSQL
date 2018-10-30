@@ -219,7 +219,8 @@ BEGIN
   /*DELETE FROM learnsql.attends WHERE username LIKE 'test%';
   DELETE FROM learnsql.userdata_t WHERE username LIKE 'test%';
   DELETE FROM learnsql.class_t WHERE classid LIKE 'cs305%';*/
-  PERFORM LearnSQL.dropClass('test_dbuser', 'testPassword', 'testteacher', 'CS305', '71', '2018-8-28');
+  PERFORM LearnSQL.dropClass('test_dbuser', 'testPassword', 
+                             'testteacher', 'CS305', '71', '2018-8-28');
 
   PERFORM pg_temp.dropUser('testuser0');
   PERFORM pg_temp.dropUser('testuser1');
@@ -247,19 +248,22 @@ BEGIN
   SELECT INTO classID LearnSQL.getClassID('testteacher', 'CS305', '71', '2018-8-28');
                               
   -- Test if a student can join a class using a class password
-  PERFORM LearnSQL.joinClass('testuser0', 'Test User 0', pg_temp.getUserHashedPassword('testuser0'), classID, pg_temp.getClassHashedPassword(classID), $1, $2);
-
-  -- Test if a teacher can join a class using a class password
-  --PERFORM LearnSQL.joinClass('testteacher', 'Test Teacher', pg_temp.getUserHashedPassword('testteacher'), classID , pg_temp.getClassHashedPassword(classID), $1, $2);
+  PERFORM LearnSQL.joinClass('testuser0', 'Test User 0', 
+                              pg_temp.getUserHashedPassword('testuser0'), 
+                              classID, 
+                              pg_temp.getClassHashedPassword(classID), 
+                              $1, $2);
 
   -- Test if an administrator can force a student into a class
-  PERFORM LearnSQL.joinClass('testuser1', 'Test User 1', pg_temp.getUserHashedPassword('testuser1'), classID , NULL , $1, $2, 'testadmin');
+  PERFORM LearnSQL.joinClass('testuser1', 'Test User 1', 
+                              pg_temp.getUserHashedPassword('testuser1'), 
+                              classID , NULL , $1, $2, 'testadmin');
   
 END;
 $$ LANGUAGE plpgsql;
 
 /*
-*   Gives ClassDB level admin privileges to the test administrator 
+*   Gives ClassDB-level administrator privileges to the test administrator 
 */
 CREATE OR REPLACE FUNCTION
   pg_temp.grantAdministrator(userName  LearnSQL.UserData_t.UserName%Type,
@@ -290,41 +294,14 @@ END;
 $$ LANGUAGE plpgsql;
 
 COMMIT;
-/*
-CREATE OR REPLACE FUNCTION
-  pg_temp.studentMgmtTest()
-  RETURNS VOID AS
-$$
-DECLARE
-
-  classID LearnSQL.Class_t.classID%Type;
-
-BEGIN
-
-  EXECUTE (' SELECT pg_temp.createTempDBUser(''test_dbuser'', ''testPassword'')' );
-
-  EXECUTE ('SELECT pg_temp.addTestUsers()');
-
-  EXECUTE ('SELECT LearnSQL.createClass(''test_dbuser'', ''testPassword'', ''testteacher'', ''classPassword'', ''CS305'', ''71'', ''5:30 - 7:10'', ''TR'', ''2018-8-28'', ''2018-12-13'')');
-
-
-
-  EXECUTE ('SELECT pg_temp.joinClassTest(''test_dbuser'', ''testPassword'')');
-
-  EXECUTE ('SELECT pg_temp.dropTestUsers()');
-
-  EXECUTE ('SELECT pg_temp.dropTempDBUser(''test_dbuser'', ''testPassword'')');
-
-END;
-$$ LANGUAGE plpgsql;*/
-
---SELECT pg_temp.studentMgmtTest();
 
 SELECT pg_temp.createTempDBUser('test_dbuser', 'testPassword');
 
 SELECT pg_temp.addTestUsers();
 
-SELECT LearnSQL.createClass('test_dbuser', 'testPassword', 'testteacher', 'classPassword', 'CS305', '71', '5:30 - 7:10', 'TR', '2018-8-28', '2018-12-13');
+SELECT LearnSQL.createClass('test_dbuser', 'testPassword', 'testteacher', 
+                            'classPassword', 'CS305', '71', '5:30 - 7:10', 
+                            'TR', '2018-8-28', '2018-12-13');
 
 SELECT pg_temp.grantAdministrator('testadmin', 'test_dbuser', 'testPassword');
 
@@ -333,4 +310,3 @@ SELECT pg_temp.joinClassTest('test_dbuser', 'testPassword');
 SELECT pg_temp.dropTestUsers();
 
 SELECT pg_temp.dropTempDBUser('test_dbuser', 'testPassword');
-
