@@ -176,7 +176,7 @@ BEGIN
                   WHERE Class_t.ClassName = $4
                 )
   THEN 
-    RAISE EXCEPTION 'Class Does Not Exists In Class_t Table';
+    RAISE EXCEPTION 'Class Does Not Exist In Class_t Table';
   END IF;
 
   -- Check if the class exists in the database
