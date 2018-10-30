@@ -111,7 +111,7 @@ BEGIN
       SELECT ClassID FROM Attends WHERE Attends.UserName = $1
     LOOP
       SELECT *
-      FROM dblink('user='|| $2 ||' dbname='|| rec.ClassID || ' password=' || $3, 
+      FROM LearnSQL.dblink('user='|| $2 ||' dbname='|| rec.ClassID || ' password=' || $3, 
                   'DROP OWNED BY '|| $1)
       AS throwAway(blank VARCHAR(30));--needed for dblink but unused
     END LOOP;

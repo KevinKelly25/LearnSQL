@@ -59,7 +59,7 @@ IF NOT EXISTS (
                 WHERE LearnSQL.Attends.userName = $1
               )
   THEN  
-    RAISE EXCEPTION 'User is not enrolled in any classes';
+    RAISE EXCEPTION 'User is not enrolled in any classes';     
 
 END IF;
      
@@ -89,25 +89,29 @@ CREATE OR REPLACE FUNCTION
                       databaseUsername  VARCHAR(63),
                       databasePassword  VARCHAR(64),
                       adminUserName     LearnSQL.UserData_t.userName%Type 
+                                        DEFAULT NULL,
+                      adminPassword     LearnSQL.UserData_t.password%Type
                                         DEFAULT NULL)
   RETURNS VOID AS
 
 $$
 DECLARE
 
-  storedPassword LearnSQL.Class_t.password%Type;
-  checkAdminQuery   TEXT;
-  isAdmin       BOOLEAN;
-  addStudentQuery   TEXT;
+  storedClassPassword  LearnSQL.Class_t.password%Type;
+  checkAdminQuery      TEXT;
+  checkAdminPassword   BOOLEAN;
+  isAdmin              BOOLEAN;
+  addStudentQuery      TEXT;
 
 BEGIN
 
   isAdmin := FALSE;
   
-  -- If an administrator's username is supplied, check if the user holds that role 
+  -- If an administrator's username is supplied, check if the user holds that role
+  --  and if the password is correct
   IF $8 IS NOT NULL
     THEN
-      checkAdminQuery := ' SELECT ClassDB.isDBManager('''|| adminUserName ||''') ';
+      checkAdminQuery := ' SELECT ClassDB.isMember('''|| adminUserName ||''', ''classdb_admin'') ';
 
       SELECT *
       INTO isAdmin
@@ -116,7 +120,15 @@ BEGIN
                            ' dbname='   || $4, checkAdminQuery)
       AS throwAway(blank VARCHAR(30)); -- Unused return variable for `dblink`
 
-      IF isAdmin IS FALSE
+      RAISE NOTICE 'isAdmin: %', isAdmin;
+
+      SELECT 1
+      INTO checkAdminPassword
+      FROM LearnSQL.UserData_t
+      WHERE LearnSQL.UserData_t.password = $9
+      AND LearnSQL.UserData_t.userName = $8;
+
+      IF ((isAdmin IS FALSE) OR (checkAdminPassword IS FALSE))
         THEN
           RAISE EXCEPTION 'The user does not have the permissions necessary to enroll other students';
       END IF;
@@ -141,11 +153,11 @@ BEGIN
   IF $5 IS NOT NULL OR isAdmin IS TRUE
     THEN
       SELECT password
-      INTO storedPassword
+      INTO storedClassPassword
       FROM LearnSQL.Class
       WHERE Class.classID = $4;
 
-      IF storedPassword = $5  OR isAdmin IS TRUE 
+      IF storedClassPassword = $5  OR isAdmin IS TRUE 
         THEN
 
           -- Add the student to the class
