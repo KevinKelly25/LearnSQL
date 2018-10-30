@@ -42,17 +42,17 @@ SET LOCAL client_min_messages TO WARNING;
 --  will stop execution.
 CREATE OR REPLACE FUNCTION 
   LearnSQL.createClass(
-                        dbUserName     VARCHAR(60),
-                        dbPassword     VARCHAR(64),
-                        userName       LearnSQL.UserData_t.UserName%Type,
-                        classPassword  LearnSQL.Class_t.Password%Type,
-                        className      LearnSQL.Class_t.ClassName%Type,
-                        section        LearnSQL.Class_t.Section%Type,
-                        times          LearnSQL.Class_t.Times%Type,
-                        days           LearnSQL.Class_t.Days%Type,
-                        startDate      LearnSQL.Class_t.StartDate%Type
+                        dbUserName            VARCHAR(60),
+                        dbPassword            VARCHAR(64),
+                        teacherUserName       LearnSQL.UserData_t.UserName%Type,
+                        classPassword         LearnSQL.Class_t.Password%Type,
+                        className             LearnSQL.Class_t.ClassName%Type,
+                        section               LearnSQL.Class_t.Section%Type,
+                        times                 LearnSQL.Class_t.Times%Type,
+                        days                  LearnSQL.Class_t.Days%Type,
+                        startDate             LearnSQL.Class_t.StartDate%Type
                           DEFAULT CURRENT_DATE,
-                        endDate        LearnSQL.Class_t.EndDate%Type DEFAULT NULL)
+                        endDate               LearnSQL.Class_t.EndDate%Type DEFAULT NULL)
   RETURNS VARCHAR AS
 $$
 DECLARE
@@ -109,13 +109,13 @@ BEGIN
 
   -- Cross database link query that creates the database classid with the owner as classdb_admin
   PERFORM * 
-  FROM dblink ('user=' || $1 || ' dbname=learnsql password='|| $2,
+  FROM LearnSQL.dblink ('user=' || $1 || ' dbname=learnsql password='|| $2,
                'CREATE DATABASE ' || LOWER(classID) || ' WITH TEMPLATE classdb_template OWNER classdb_admin')
     AS throwAway(blank VARCHAR(30));--needed for dblink but unused
   
   -- Cross database link query that gives access privileges to the database classid
   PERFORM *
-  FROM dblink ('user=' || $1 || ' dbname= ' || LOWER(classID) || ' password=' || $2,
+  FROM LearnSQL.dblink ('user=' || $1 || ' dbname= ' || LOWER(classID) || ' password=' || $2,
                'SELECT reAddUserAccess()')
     AS throwAway(blank VARCHAR(30));--needed for dblink but unused
 
@@ -157,12 +157,12 @@ $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION
   LearnSQL.dropClass(
-                     dbUserName          VARCHAR(63),
-                     dbPassword          VARCHAR(64),
-                     userName            LearnSQL.UserData_t.userName%Type,
-                     className           LearnSQL.Class_t.ClassName%Type,
-                     classSection        LearnSQL.Class_t.Section%Type,
-                     startDate           LearnSQL.Class_t.StartDate%Type)
+                     dbUserName                 VARCHAR(63),
+                     dbPassword                 VARCHAR(64),
+                     teacherUserName            LearnSQL.UserData_t.userName%Type,
+                     className                  LearnSQL.Class_t.ClassName%Type,
+                     classSection               LearnSQL.Class_t.Section%Type,
+                     startDate                  LearnSQL.Class_t.StartDate%Type)
   RETURNS VOID AS
 $$
 DECLARE 
@@ -216,7 +216,7 @@ BEGIN
 
   -- Cross database link query to drop class from the database
   PERFORM *
-  FROM dblink('user='|| $1 ||' dbname=learnsql  password='|| $2, 
+  FROM LearnSQL.dblink('user='|| $1 ||' dbname=learnsql  password='|| $2, 
               'DROP DATABASE '|| theClassID)
   AS throwAway(blank VARCHAR(30));--needed for dblink but unused
 
