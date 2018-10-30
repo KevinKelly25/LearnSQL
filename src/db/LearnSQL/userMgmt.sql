@@ -38,7 +38,7 @@ SET LOCAL client_min_messages TO WARNING;
 --  Teacher.
 CREATE OR REPLACE VIEW LearnSQL.Student AS 
 SELECT Username, Fullname, Password, Email
-FROM LearnSQL.UserData_t
+FROM LearnSQL.UserData
 WHERE isStudent = TRUE;
 
 
@@ -305,7 +305,7 @@ BEGIN
   IF EXISTS (
               SELECT 1 FROM LearnSQL.UserData_t 
               WHERE UserData_t.UserName = $1 
-              AND UserData_t.isStudent = TRUE;
+              AND UserData_t.isStudent = TRUE
             )
   THEN
     RETURN TRUE;
@@ -324,7 +324,7 @@ BEGIN
   IF EXISTS (
               SELECT 1 FROM LearnSQL.UserData_t 
               WHERE UserData_t.UserName = $1 
-              AND UserData_t.isTeacher = TRUE;
+              AND UserData_t.isTeacher = TRUE
             )
   THEN
     RETURN TRUE;
@@ -345,7 +345,7 @@ BEGIN
   IF EXISTS (
               SELECT 1 FROM LearnSQL.UserData_t 
               WHERE UserData_t.UserName = $1 
-              AND UserData_t.isAdmin = TRUE;
+              AND UserData_t.isAdmin = TRUE
             )
   THEN
     RETURN TRUE;

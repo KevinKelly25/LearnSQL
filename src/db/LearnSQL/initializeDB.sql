@@ -73,10 +73,13 @@ CREATE TABLE IF NOT EXISTS LearnSQL.UserData_t (
 
 -- Define a unique index on the trimmed and lowercase values of the Username field
 -- so that it matches the username that will be stored in the server
-CREATE UNIQUE INDEX idx_Unique_Username ON LearnSQL.UserData_t(LOWER(TRIM(Username)));
+CREATE UNIQUE INDEX IF NOT EXISTS idx_Unique_Username 
+  ON LearnSQL.UserData_t(LOWER(TRIM(Username)));
+
 
 -- Define a unique index on the trimmed and lowercase values of the email field
-CREATE UNIQUE INDEX idx_Unique_Email ON LearnSQL.UserData_t(LOWER(TRIM(Email)));
+CREATE UNIQUE INDEX IF NOT EXISTS idx_Unique_Email 
+  ON LearnSQL.UserData_t(LOWER(TRIM(Email)));
 
 
 
@@ -104,7 +107,7 @@ CREATE TABLE IF NOT EXISTS Class_t (
 --  "isTeacher" defines whether user is a teacher for that specific class
 CREATE TABLE IF NOT EXISTS Attends (
   ClassID                 VARCHAR(256) NOT NULL REFERENCES Class_t,
-  Username                VARCHAR(256) NOT NULL REFERENCES LearnSQL.UserData_t,
+  Username                VARCHAR(256) NOT NULL,
   isTeacher               BOOLEAN DEFAULT FALSE,
   PRIMARY KEY (ClassID, Username)
 );
