@@ -69,7 +69,7 @@ CREATE TABLE IF NOT EXISTS LearnSQL.UserData_t (
     CHECK (DateJoined > '2018-01-01'),
   isVerified              BOOLEAN DEFAULT FALSE,
   ForgotPassword          BOOLEAN DEFAULT FALSE,
-  TokenTimestamp          DATE DEFAULT CURRENT_TIMESTAMP
+  TokenTimestamp          TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     CHECK (TokenTimestamp > '2018-01-01')
 );
 
