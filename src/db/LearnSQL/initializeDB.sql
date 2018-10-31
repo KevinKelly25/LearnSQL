@@ -65,10 +65,12 @@ CREATE TABLE IF NOT EXISTS LearnSQL.UserData_t (
     CHECK(LENGTH(Token) = 60),
   isTeacher               BOOLEAN DEFAULT FALSE,
   isAdmin                 BOOLEAN DEFAULT FALSE,
-  DateJoined              DATE DEFAULT CURRENT_DATE,
+  DateJoined              DATE DEFAULT CURRENT_DATE
+    CHECK (DateJoined > '2018-01-01'),
   isVerified              BOOLEAN DEFAULT FALSE,
   ForgotPassword          BOOLEAN DEFAULT FALSE,
   TokenTimestamp          DATE DEFAULT CURRENT_TIMESTAMP
+    CHECK (TokenTimestamp > '2018-01-01')
 );
 
 -- Define a unique index on the trimmed and lowercase values of the Username field
