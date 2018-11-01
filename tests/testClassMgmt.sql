@@ -6,9 +6,14 @@
 -- This file tests the functions involved with class management in the LearnSQL
 --  database
 
+CREATE USER testadminuser WITH PASSWORD 'password' CREATEDB;
+GRANT CONNECT ON DATABASE learnSQL TO testadminuser;
+GRANT classdb_admin TO testadminuser;
+
 
 
 START TRANSACTION;
+
 
 
 -- Make sure the current user has sufficient privilege to run this script
@@ -226,43 +231,45 @@ DECLARE
   classID3 VARCHAR(63); 
 BEGIN 
 
-  --PERFORM pg_temp.createAdminUser('adminuser', 'password');
-
-
-  classID1 := LearnSQL.createClass('adminuser', 'password', 'testuser1', '123', 'class1', '1', 'time1', 'day1');
-  classID2 := LearnSQL.createClass('adminuser', 'password', 'testuser2', 'pass2', 'class2', '2', 'time2', 'day2', 'start2');
-  classID3 := LearnSQL.createClass('adminuser', 'password', 'testuser3', 'pass3', 'class3', '3', 'time3', 'day3', 'start3', 'end3');
+  classID1 := LearnSQL.createClass('testadminuser', 'password', 'testuser1', '123', 'class1', '1', 'time1', 'day1', '2018-10-31', '2018-12-10');
+  classID2 := LearnSQL.createClass('testadminuser', 'password', 'testuser2', 'pass2', 'class2', '2', 'time2', 'day2', '2018-11-10', '2018-12-11');
+  classID3 := LearnSQL.createClass('testadminuser', 'password', 'testuser3', 'pass3', 'class3', '3', 'time3', 'day3', '2018-11-11', '2018-12-12');
   
   PERFORM pg_temp.checkIfClassIdExists(classID1);
-  PERFORM pg_temp.checkIfClassNameExists('class1', classID1);
-  PERFORM pg_temp.checkIfClassSectionExists('1', classID1);
-  PERFORM pg_temp.checkIfClassTimeExists('time1', classID1);
-  PERFORM pg_temp.checkIfClassDaysExists('day1', classID1);
-  PERFORM pg_temp.checkIfClassStartDateExists('2018-10-30', classID1);
-
   PERFORM pg_temp.checkIfClassIdExists(classID2);
-  PERFORM pg_temp.checkIfClassNameExists('class2', classID2);
-  PERFORM pg_temp.checkIfClassSectionExists('2', classID2);
-  PERFORM pg_temp.checkIfClassTimeExists('time2', classID2);
-  PERFORM pg_temp.checkIfClassDaysExists('day2', classID2);
-  PERFORM pg_temp.checkIfClassStartDateExists('start2', classID2);
-
   PERFORM pg_temp.checkIfClassIdExists(classID3);
+
+  PERFORM pg_temp.checkIfClassNameExists('class1', classID1);
+  PERFORM pg_temp.checkIfClassNameExists('class2', classID2);
   PERFORM pg_temp.checkIfClassNameExists('class3', classID3);
+
+  PERFORM pg_temp.checkIfClassSectionExists('1', classID1);
+  PERFORM pg_temp.checkIfClassSectionExists('2', classID2);
   PERFORM pg_temp.checkIfClassSectionExists('3', classID3);
+
+  PERFORM pg_temp.checkIfClassTimeExists('time1', classID1);
+  PERFORM pg_temp.checkIfClassTimeExists('time2', classID2);
   PERFORM pg_temp.checkIfClassTimeExists('time3', classID3);
+
+  PERFORM pg_temp.checkIfClassDaysExists('day1', classID1);
+  PERFORM pg_temp.checkIfClassDaysExists('day2', classID2);
   PERFORM pg_temp.checkIfClassDaysExists('day3', classID3);
-  PERFORM pg_temp.checkIfClassStartDateExists('start3', classID3);
+
+  PERFORM pg_temp.checkIfClassStartDateExists('2018-10-31', classID1); 
+  PERFORM pg_temp.checkIfClassStartDateExists('2018-11-10', classID2);  
+  PERFORM pg_temp.checkIfClassStartDateExists('2018-11-11', classID3);
 
   -- Clean up test classes
-  PERFORM LearnSQL.dropClass('adminuser', 'password', 'testuser1', 'class1', '1', '2018-10-30');
-  PERFORM LearnSQL.dropClass('adminuser', 'password', 'testuser2', 'class2', '2', 'start2');
-  PERFORM LearnSQL.dropClass('adminuser', 'password', 'testuser3', 'class3', '3', 'start3');
+  PERFORM LearnSQL.dropClass('testadminuser', 'password', 'testuser1', 'class1', '1', '2018-10-31');
+  PERFORM LearnSQL.dropClass('testadminuser', 'password', 'testuser2', 'class2', '2', '2018-11-10');
+  PERFORM LearnSQL.dropClass('testadminuser', 'password', 'testuser3', 'class3', '3', '2018-11-11');
 
-  -- Check if the username was changed
-  IF (pg_temp.checkIfClassIdExists(classID1)) 
+  -- Check if the 
+  IF (pg_temp.checkIfClassIdExists(classID1)
+    AND pg_temp.checkIfClassIdExists(classID2)
+    AND pg_temp.checkIfClassIdExists(classID3)) 
   THEN
-    RETURN 'classID1 Failed To Drop';
+    RETURN 'Fail Code 1';
   END IF;
 
   RETURN 'passed';
@@ -283,8 +290,11 @@ $$  LANGUAGE plpgsql;
 SELECT pg_temp.classMgmtTest();
 
 
+
 ROLLBACK;
 
-/*REVOKE classdb_admin FROM adminuser;
-REVOKE CONNECT ON DATABASE LearnSQL FROM adminuser;
-DROP ROLE adminuser;*/
+
+
+REVOKE classdb_admin FROM testadminuser;
+REVOKE CONNECT ON DATABASE LearnSQL FROM testadminuser;
+DROP ROLE testadminuser;

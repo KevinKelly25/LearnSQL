@@ -42,6 +42,7 @@ END
 $$;
 
 
+
 -- Define a table of user information for this DB
 --  A "Username" is a unique id that represents a human user
 --  A "Password" represents the hashed and salted password of a user
@@ -76,15 +77,23 @@ CREATE UNIQUE INDEX idx_Unique_Email ON LearnSQL.UserData_t(LOWER(TRIM(Email)));
 --  a "ClassName" is the classID without the random ID
 --  The "Password" field will be used for students to create their student
 --   account in the classdb database
+
+-- --   INSERT INTO LearnSQL.Class_t VALUES (LOWER(classID), $5, $6, $7, $8, $9, $10, encryptedPassword);
+--                                        from $5,           cn, s,  t,  d, sd,  ed,  should be $4
 CREATE TABLE IF NOT EXISTS LearnSQL.Class_t (
-  ClassID                 VARCHAR(256) NOT NULL PRIMARY KEY,
-  ClassName               VARCHAR(236) NOT NULL,
-  Section                 VARCHAR(256) NOT NULL,
-  Times                   VARCHAR(256) NOT NULL,
-  Days                    VARCHAR(256) NOT NULL,
-  StartDate               VARCHAR(256) NOT NULL,
-  EndDate                 VARCHAR(256)         ,
+  ClassID                 VARCHAR(63) NOT NULL PRIMARY KEY, 
+  ClassName               VARCHAR(27) NOT NULL
+                            CHECK(TRIM(ClassName) <> ''),  
+  Section                 VARCHAR(30) NOT NULL
+                            CHECK(TRIM(Section) <> ''), 
+  Times                   VARCHAR(15) NOT NULL
+                            CHECK(TRIM(Times) <> ''), 
+  Days                    VARCHAR(7) NOT NULL
+                            CHECK(TRIM(Days) <> ''), 
+  StartDate               DATE NOT NULL, 
+  EndDate                 DATE NOT NULL, 
   Password                VARCHAR(60)  NOT NULL
+                            CHECK(TRIM(Password) <> '')  
 );
 
 
@@ -94,8 +103,8 @@ CREATE TABLE IF NOT EXISTS LearnSQL.Class_t (
 --  a "ClassID" is a unique id that represents a class from Class table
 --  "isTeacher" defines whether user is a teacher for that specific class
 CREATE TABLE IF NOT EXISTS LearnSQL.Attends (
-  ClassID                 VARCHAR(256) NOT NULL REFERENCES learnsql.Class_t,
-  Username                VARCHAR(256) NOT NULL REFERENCES LearnSQL.UserData_t,
+  ClassID                 VARCHAR(63) NOT NULL REFERENCES learnsql.Class_t,
+  Username                VARCHAR(63) NOT NULL REFERENCES LearnSQL.UserData_t,
   isTeacher               BOOLEAN DEFAULT FALSE,
   PRIMARY KEY (ClassID, Username)
 );

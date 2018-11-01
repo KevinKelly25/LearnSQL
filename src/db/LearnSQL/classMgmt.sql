@@ -40,6 +40,9 @@ SET LOCAL client_min_messages TO WARNING;
 -- This function will create a class within the database and learnsql tables. 
 -- If any errors are encounterd an exception will be raised and the function
 --  will stop execution.
+
+--   INSERT INTO LearnSQL.Class_t VALUES (LOWER(classID), $5, $6, $7, $8, $9, $10, encryptedPassword);
+--                                        from $5,        cn, s,  t,  d, sd,  ed,  should be $4 
 CREATE OR REPLACE FUNCTION 
   LearnSQL.createClass(
                         dbUserName            VARCHAR(60),
@@ -50,9 +53,8 @@ CREATE OR REPLACE FUNCTION
                         section               LearnSQL.Class_t.Section%Type,
                         times                 LearnSQL.Class_t.Times%Type,
                         days                  LearnSQL.Class_t.Days%Type,
-                        startDate             LearnSQL.Class_t.StartDate%Type
-                          DEFAULT CURRENT_DATE,
-                        endDate               LearnSQL.Class_t.EndDate%Type DEFAULT NULL)
+                        startDate             LearnSQL.Class_t.StartDate%Type,
+                        endDate               LearnSQL.Class_t.EndDate%Type)
   RETURNS VARCHAR AS
 $$
 DECLARE
