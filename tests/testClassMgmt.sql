@@ -7,7 +7,7 @@
 --  database.
 
 -- Create a user with privilege for CREATE DB which will be used for testing.
-CREATE USER testadminuser WITH PASSWORD 'password' CREATEDB;
+CREATE USER testadminuser WITH PASSWORD 'password' CREATEDB CREATEROLE;
 GRANT CONNECT ON DATABASE LearnSQL TO testadminuser;
 GRANT classdb_admin TO testadminuser;
 

@@ -106,18 +106,18 @@ BEGIN
   -- Insert into LearnSQL.attends table class id, username, and set as is teacher.
   INSERT INTO LearnSQL.Attends VALUES (LOWER(classID), $3, TRUE);
 
-  -- Add teacher to the Classes database.
-  --PERFORM *
-  --FROM LearnSQL.dblink ('user=' || $1 || ' dbname=' || classID || 'password=' || $4,
-    --           'INSERT INTO ClassDB.rolebase VALUES ('''||$3||''', '''||'fullName'||''', '''||'t'||''', '''||'testingSchemaName'||''') ')
-    --AS throwAway(blank VARCHAR(30));-- Needed for dblink but unused.
-
   -- Cross database link query that creates the database classID with the owner as classdb_admin.
   PERFORM * 
   FROM LearnSQL.dblink ('user=' || $1 || ' dbname=learnsql password='|| $2,
                'CREATE DATABASE ' || LOWER(classID) || ' WITH TEMPLATE classdb_template OWNER classdb_admin')
     AS throwAway(blank VARCHAR(30));-- Needed for dblink but unused.
-  
+
+  -- Add teacher to the Classes database.
+  PERFORM *
+  FROM LearnSQL.dblink ('user=' || $1 || ' dbname=' || classID || ' password=' || $2,
+                        'SELECT ClassDB.CreateInstructor('''||$3||''', ''N/A'')')
+  AS throwAway(blank VARCHAR(30));-- Needed for dblink but unused.
+
   -- Cross database link query that gives access privileges to the database classID.
   PERFORM *
   FROM LearnSQL.dblink ('user=' || $1 || ' dbname= ' || LOWER(classID) || ' password=' || $2,
