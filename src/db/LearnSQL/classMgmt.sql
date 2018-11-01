@@ -101,10 +101,16 @@ BEGIN
   encryptedPassword = crypt($4, gen_salt('bf'));
 
   -- Insert into LearnSQL.Class_t all class information.
-  INSERT INTO LearnSQL.Class_t VALUES (LOWER(classID), $5, $6, $7, $8, $9, $10, encryptedPassword);
+  INSERT INTO LearnSQL.Class_t VALUES (LOWER(classID), LOWER($5), LOWER($6), $7, $8, $9, $10, encryptedPassword);
 
   -- Insert into LearnSQL.attends table class id, username, and set as is teacher.
   INSERT INTO LearnSQL.Attends VALUES (LOWER(classID), $3, TRUE);
+
+  -- Add teacher to the Classes database.
+  --PERFORM *
+  --FROM LearnSQL.dblink ('user=' || $1 || ' dbname=' || classID || 'password=' || $4,
+    --           'INSERT INTO ClassDB.rolebase VALUES ('''||$3||''', '''||'fullName'||''', '''||'t'||''', '''||'testingSchemaName'||''') ')
+    --AS throwAway(blank VARCHAR(30));-- Needed for dblink but unused.
 
   -- Cross database link query that creates the database classID with the owner as classdb_admin.
   PERFORM * 
@@ -118,7 +124,8 @@ BEGIN
                'SELECT reAddUserAccess()')
     AS throwAway(blank VARCHAR(30));-- Needed for dblink but unused.
 
-  RETURN classID; -- Returns class id for testing purposes in testClassMgmt.sql file.
+  -- Returns class id of the newly created class, which is also the name of the created class database.
+  RETURN classID;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -166,8 +173,10 @@ CREATE OR REPLACE FUNCTION
   RETURNS VOID AS
 $$
 DECLARE 
-  theClassID VARCHAR := learnSQL.getClassID($3, $4, $5, $6);
+  theClassID VARCHAR(63);
 BEGIN 
+  theClassID := learnSQL.getClassID($3, $4, $5, $6);
+
   -- Check if classname exists in LearnSQL tables.
   IF NOT EXISTS (
                   SELECT 1

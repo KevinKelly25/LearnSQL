@@ -143,7 +143,7 @@ BEGIN
     --  in. This may cause cascade issues until ClassDB has Multi-DB remove User
     --  support
     FOR rec IN
-      SELECT ClassID FROM Attends WHERE Attends.UserName = $1
+      SELECT ClassID FROM Attends WHERE LearnSQL.Attends.UserName = $1
     LOOP
       SELECT *
       FROM dblink('user='|| $2 ||' dbname='|| rec.ClassID || ' password=' || $3, 
@@ -157,8 +157,8 @@ BEGIN
 
 
   -- Delete user information to the LearnSQL UserData and Attends table
-  DELETE FROM Attends WHERE Attends.UserName = $1;
-  DELETE FROM LearnSQL.UserData_t WHERE UserData_t.UserName = $1;
+  DELETE FROM Attends WHERE LearnSQL.Attends.UserName = $1;
+  DELETE FROM LearnSQL.UserData_t WHERE LearnSQL.UserData_t.UserName = $1;
 
 END;
 $$ LANGUAGE plpgsql;

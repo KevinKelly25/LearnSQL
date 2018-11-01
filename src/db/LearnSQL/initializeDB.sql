@@ -89,6 +89,9 @@ CREATE UNIQUE INDEX IF NOT EXISTS idx_Unique_Email
 -- Define a table of classes for this DB
 --  a "ClassID" is a unique id that represents a classname plus a random ID
 --  a "ClassName" is the classID without the random ID
+--  a "Section" is used with other attributes to guarantee uniqueness of classes.
+--  a "StartDate" is used along with other attributes to guarantee uniqueness of
+--   classes and is currently used (for convenience) as a "Semester" attribute.
 --  The "Password" field will be used for students to create their student
 --   account in the classdb database
 CREATE TABLE IF NOT EXISTS LearnSQL.Class_t (

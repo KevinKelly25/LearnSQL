@@ -220,42 +220,65 @@ DECLARE
   classID2 VARCHAR(63);
   classID3 VARCHAR(63); 
 BEGIN 
+  -- Create user
+  PERFORM LearnSQL.createUser('testuser1', 'first last', '123', 'testUser1@testemail.com', '7a92db10c4cb11e8b5680800200c9a66', true);
+  PERFORM LearnSQL.createUser('testuser2', 'first last', '123', 'testUser2@testemail.com', '9f40a820c4cb11e8b5680800200c9a66', true);
+  PERFORM LearnSQL.createUser('testuser3', 'first last', '123', 'testUser3@testemail.com', 'b57810b0c4cb11e8b5680800200c9a66', true);
+
   -- Assign the classid to variables classID1, classID2, classID3 that is returned
   --  by the createClass function found in classMgmt.sql file.
   classID1 := LearnSQL.createClass('testadminuser', 'password', 'testuser1', '123', 'class1', '1', 'time1', 'day1', '2018-10-31', '2018-12-10');
   classID2 := LearnSQL.createClass('testadminuser', 'password', 'testuser2', 'pass2', 'class2', '2', 'time2', 'day2', '2018-11-10', '2018-12-11');
   classID3 := LearnSQL.createClass('testadminuser', 'password', 'testuser3', 'pass3', 'class3', '3', 'time3', 'day3', '2018-11-11', '2018-12-12');
   
-  -- Checks if test classes have the necessary id's associated to each one of them.
-  PERFORM pg_temp.checkIfClassIdExists(classID1);
-  PERFORM pg_temp.checkIfClassIdExists(classID2);
-  PERFORM pg_temp.checkIfClassIdExists(classID3);
+  -- Checks if test classes have the necessary id's associated to each one of them. 
+  IF NOT (pg_temp.checkIfClassIdExists(classID1)
+    AND pg_temp.checkIfClassIdExists(classID2)
+    AND pg_temp.checkIfClassIdExists(classID3))
+  THEN
+    RETURN 'Fail Code 1';
+  END IF;
  
   -- Checks if the class name exists for each test class.
-  PERFORM pg_temp.checkIfClassNameExists('class1', classID1);
-  PERFORM pg_temp.checkIfClassNameExists('class2', classID2);
-  PERFORM pg_temp.checkIfClassNameExists('class3', classID3);
+  IF NOT (pg_temp.checkIfClassNameExists('class1', classID1)
+    AND pg_temp.checkIfClassNameExists('class2', classID2)
+    AND pg_temp.checkIfClassNameExists('class3', classID3))
+  THEN
+    RETURN 'Fail Code 2';
+  END IF;
   
   -- Checks if class section exists for each test class.
-  PERFORM pg_temp.checkIfClassSectionExists('1', classID1);
-  PERFORM pg_temp.checkIfClassSectionExists('2', classID2);
-  PERFORM pg_temp.checkIfClassSectionExists('3', classID3);
+  IF NOT (pg_temp.checkIfClassSectionExists('1', classID1)
+    AND pg_temp.checkIfClassSectionExists('2', classID2)
+    AND pg_temp.checkIfClassSectionExists('3', classID3))
+  THEN 
+    RETURN 'Fail Code 3';
+  END IF;
 
   -- Checks if a class time exists for each test class.
-  PERFORM pg_temp.checkIfClassTimeExists('time1', classID1);
-  PERFORM pg_temp.checkIfClassTimeExists('time2', classID2);
-  PERFORM pg_temp.checkIfClassTimeExists('time3', classID3);
+  IF NOT (pg_temp.checkIfClassTimeExists('time1', classID1)
+    AND pg_temp.checkIfClassTimeExists('time2', classID2)
+    AND pg_temp.checkIfClassTimeExists('time3', classID3))
+  THEN 
+    RETURN 'Fail Code 4';
+  END IF;
 
   -- Checks if days exists for each test class.
-  PERFORM pg_temp.checkIfClassDaysExists('day1', classID1);
-  PERFORM pg_temp.checkIfClassDaysExists('day2', classID2);
-  PERFORM pg_temp.checkIfClassDaysExists('day3', classID3);
+  IF NOT (pg_temp.checkIfClassDaysExists('day1', classID1)
+    AND pg_temp.checkIfClassDaysExists('day2', classID2)
+    AND pg_temp.checkIfClassDaysExists('day3', classID3))
+  THEN 
+    RETURN 'Fail Code 5';
+  END IF;
 
   -- Checks if a start date is given to each class.
-  PERFORM pg_temp.checkIfClassStartDateExists('2018-10-31', classID1); 
-  PERFORM pg_temp.checkIfClassStartDateExists('2018-11-10', classID2);  
-  PERFORM pg_temp.checkIfClassStartDateExists('2018-11-11', classID3);
-
+  IF NOT (pg_temp.checkIfClassStartDateExists('2018-10-31', classID1)
+    AND pg_temp.checkIfClassStartDateExists('2018-11-10', classID2)  
+    AND pg_temp.checkIfClassStartDateExists('2018-11-11', classID3))
+  THEN 
+    RETURN 'Fail Code 6';
+  END IF;
+  
   -- Clean up test classes
   PERFORM LearnSQL.dropClass('testadminuser', 'password', 'testuser1', 'class1', '1', '2018-10-31');
   PERFORM LearnSQL.dropClass('testadminuser', 'password', 'testuser2', 'class2', '2', '2018-11-10');
@@ -267,10 +290,15 @@ BEGIN
     AND pg_temp.checkIfClassIdExists(classID2)
     AND pg_temp.checkIfClassIdExists(classID3)) 
   THEN
-    RETURN 'Fail Code 1';
+    RETURN 'Fail Code 7';
   END IF;
 
-  RETURN 'passed'; -- All test passed.
+  -- Clean up test users
+  -- PERFORM LearnSQL.dropUser('testuser1');
+  -- PERFORM LearnSQL.dropUser('testuser2');
+  -- PERFORM LearnSQL.dropUser('testuser3');
+
+  RETURN 'Passed'; -- All test passed.
 END;
 $$ LANGUAGE plpgsql;
 
