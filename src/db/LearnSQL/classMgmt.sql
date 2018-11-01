@@ -36,8 +36,8 @@ SET LOCAL client_min_messages TO WARNING;
 
 
 
--- Define function is used to create a class. 
--- This function will create a class within the database and learnsql tables. 
+-- This function is used to create a class. 
+-- This function will create a class database and a class in the LearnSQL tables. 
 -- If any errors are encounterd an exception will be raised and the function
 --  will stop execution.
 CREATE OR REPLACE FUNCTION 
@@ -55,13 +55,13 @@ CREATE OR REPLACE FUNCTION
   RETURNS VARCHAR AS
 $$
 DECLARE
-  classid VARCHAR(63);
+  classID VARCHAR(63);
   encryptedPassword VARCHAR(60); -- Hashed password to be stored in LearnSQL.UserData_t.
 BEGIN
-  classid := $5 || '_' || gen_random_uuid();
-  -- Any instances of the character '-' is deleted from the classid or else this
+  classID := $5 || '_' || gen_random_uuid();
+  -- Any instances of the character '-' is deleted from the classID or else this
   --  will cause an error in dblink. 
-  classid := REPLACE (classid, '-', '');
+  classID := REPLACE (classID, '-', '');
 
   -- Check if user creating class is a teacher.
   IF NOT EXISTS (
@@ -91,7 +91,7 @@ BEGIN
   IF EXISTS (
               SELECT 1
               FROM pg_database 
-              WHERE datname = classid
+              WHERE datname = classID
             )
   THEN 
     RAISE EXCEPTION 'This Class Database Already Exists!';
@@ -104,15 +104,15 @@ BEGIN
   INSERT INTO LearnSQL.Class_t VALUES (LOWER(classID), $5, $6, $7, $8, $9, $10, encryptedPassword);
 
   -- Insert into LearnSQL.attends table class id, username, and set as is teacher.
-  INSERT INTO learnsql.Attends VALUES (LOWER(classID), $3, TRUE);
+  INSERT INTO LearnSQL.Attends VALUES (LOWER(classID), $3, TRUE);
 
-  -- Cross database link query that creates the database classid with the owner as classdb_admin.
+  -- Cross database link query that creates the database classID with the owner as classdb_admin.
   PERFORM * 
   FROM LearnSQL.dblink ('user=' || $1 || ' dbname=learnsql password='|| $2,
                'CREATE DATABASE ' || LOWER(classID) || ' WITH TEMPLATE classdb_template OWNER classdb_admin')
     AS throwAway(blank VARCHAR(30));-- Needed for dblink but unused.
   
-  -- Cross database link query that gives access privileges to the database classid.
+  -- Cross database link query that gives access privileges to the database classID.
   PERFORM *
   FROM LearnSQL.dblink ('user=' || $1 || ' dbname= ' || LOWER(classID) || ' password=' || $2,
                'SELECT reAddUserAccess()')
@@ -137,7 +137,7 @@ $$
 DECLARE 
   theClassId LearnSQL.Class_t.classID%Type;
 BEGIN 
-  -- Returns the classid and assigns it to theClassID.  
+  -- Returns the classID and assigns it to theClassID.  
   SELECT LearnSQL.Class_t.classID
   INTO theClassId
   FROM LearnSQL.Class_t INNER JOIN LearnSQL.Attends
@@ -153,7 +153,8 @@ $$ LANGUAGE plpgsql;
                        
 
 
--- This function drops the class if it exists in the LearnSQL tables or database.
+-- This function drops the class if it exists in the LearnSQL tables and if the 
+--  class database exists.
 CREATE OR REPLACE FUNCTION
   LearnSQL.dropClass(
                      dbUserName                 VARCHAR(63),
@@ -177,7 +178,7 @@ BEGIN
     RAISE EXCEPTION 'Class Does Not Exist In Class_t Table';
   END IF;
 
-  -- Check if the database class exists.
+  -- Check if the class database exists.
   IF NOT EXISTS (
                   SELECT 1 
                   FROM pg_database
@@ -212,13 +213,13 @@ BEGIN
     RAISE EXCEPTION 'Only A Teacher Is Allowed To Drop A Class';
   END IF;
 
-  -- Cross database link query to drop class from the database.
+  -- Cross database link query to drop the class database.
   PERFORM *
   FROM LearnSQL.dblink('user='|| $1 ||' dbname=learnsql  password='|| $2, 
               'DROP DATABASE '|| theClassID)
   AS throwAway(blank VARCHAR(30));-- Needed for dblink but unused.
 
-  -- Delete classes from the learnSQL.Attends table.
+  -- Delete classes from the LearnSQL.Attends table.
   DELETE FROM LearnSQL.Attends
   WHERE Attends.classID = theClassID;
   

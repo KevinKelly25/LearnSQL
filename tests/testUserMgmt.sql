@@ -43,7 +43,7 @@ CREATE OR REPLACE FUNCTION
   RETURNS BOOLEAN AS
 $$
 BEGIN
-   -- Check if username is a postgres rolename
+   -- Check if username is a PostgreSQL rolename
   IF NOT EXISTS (
                   SELECT *
                   FROM pg_catalog.pg_roles
@@ -186,7 +186,7 @@ CREATE OR REPLACE FUNCTION
    RETURNS BOOLEAN AS
 $$
 BEGIN
-   -- Check if username is a postgres rolename
+   -- Check if username is a PostgreSQL rolename
   IF EXISTS (
               SELECT *
               FROM pg_catalog.pg_roles
@@ -222,7 +222,7 @@ BEGIN
   -- Delete user from LearnSQL tables
   DELETE FROM LearnSQL.UserData_t WHERE UserData_t.Username = $1;
 
-  -- Check if username is a postgres rolename and if so delete
+  -- Check if username is a PostgreSQ rolename and if so delete
   IF EXISTS (
               SELECT *
               FROM pg_catalog.pg_roles

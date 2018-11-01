@@ -8,13 +8,6 @@
 
 
 
--- Create a user with privilege for CREATE DB which will be used for testing.
-CREATE USER testadminuser WITH PASSWORD 'password' CREATEDB;
-GRANT CONNECT ON DATABASE learnSQL TO testadminuser;
-GRANT classdb_admin TO testadminuser;
-
-
-
 START TRANSACTION;
 
 
@@ -35,6 +28,19 @@ BEGIN
 END;
 $$;
 
+COMMIT;
+
+
+
+-- Create a user with privilege for CREATE DB which will be used for testing.
+CREATE USER testadminuser WITH PASSWORD 'password' CREATEDB;
+GRANT CONNECT ON DATABASE LearnSQL TO testadminuser;
+GRANT classdb_admin TO testadminuser;
+
+
+
+START TRANSACTION;
+
 
 
 /*------------------------------------------------------------------------------
@@ -43,14 +49,14 @@ $$;
 
 
 
--- This function checks if the class exists in the database and in the learnsql 
---  tables.
+-- This function checks if the class's database exists and if the class exists
+--  LearnSQL tables.
 CREATE OR REPLACE FUNCTION
   pg_temp.checkIfClassIdExists(classid LearnSQL.Class_t.ClassID%Type)
   RETURNS BOOLEAN AS 
 $$
 BEGIN 
-  -- Check if the class exists in the postgres database.
+  -- Check if the class exists in the PostgreSQL database.
   IF NOT EXISTS (
                   SELECT 1 
                   FROM pg_database
@@ -60,7 +66,7 @@ BEGIN
     RETURN FALSE;
   END IF;
 
-  -- Check if the class exists in the learnSQL Attends table.
+  -- Check if the class exists in the LearnSQL Attends table.
   IF NOT EXISTS (
                   SELECT 1 
                   FROM LearnSQL.Attends
@@ -70,7 +76,7 @@ BEGIN
     RETURN FALSE;
   END IF;
 
-  -- Check if the class exists in the learnSQL Class_t table.
+  -- Check if the class exists in the LearnSQL Class_t table.
   IF EXISTS (
               SELECT 1 
               FROM LearnSQL.Class_t
@@ -86,7 +92,7 @@ $$ LANGUAGE plpgsql;
 
 
 
--- This fucntion checks if the class name exists.
+-- This function checks if the class name exists.
 CREATE OR REPLACE FUNCTION
   pg_temp.checkIfClassNameExists(className LearnSQL.Class_t.ClassName%Type,
                                  classid   LearnSQL.Class_t.ClassID%Type)
@@ -206,8 +212,8 @@ $$ LANGUAGE plpgsql;
 
 
 -- This function creates test classes and drops test classes. After the classes
---  are successfully created, it then checks to see if the classes were drop from
---  the LearnSQL tables and the database classes as well. 
+--  are successfully created, it then checks to see if the classes were dropped 
+--  from the LearnSQL tables and if the class database was dropped. 
 CREATE OR REPLACE FUNCTION
   pg_temp.createAndDropClassTest()
   RETURNS TEXT AS
@@ -283,8 +289,6 @@ $$  LANGUAGE plpgsql;
 
 
 SELECT pg_temp.classMgmtTest();
-
-
 
 ROLLBACK; -- Ignore all test data
 
