@@ -32,6 +32,35 @@ $$;
 SET LOCAL client_min_messages TO WARNING;
 
 
+-- Define a view to return all users who are students.
+--  A user is determined to be a student if the isStudent flag in Userdata is 
+--  true. This flag is true when a student attends any class and is not the
+--  Teacher.
+CREATE OR REPLACE VIEW LearnSQL.Student AS 
+SELECT Username, Fullname, Password, Email
+FROM LearnSQL.UserData
+WHERE isStudent = TRUE;
+
+
+
+-- Define a view to return all users who are Teacher.
+--  A user is determined to be a Teacher if the isTeacher flag in Userdata 
+--  is true. 
+CREATE OR REPLACE VIEW LearnSQL.Teacher AS 
+SELECT Username, Fullname, Password, Email
+FROM LearnSQL.UserData_t
+WHERE isTeacher = TRUE;
+
+
+
+-- Define a view to return all users who are admins.
+--  A user is determined to be an admin if the isAdmin flag in userdata is true.
+CREATE OR REPLACE VIEW LearnSQL.Admin AS 
+SELECT Username, Fullname, Password, Email
+FROM LearnSQL.UserData_t
+WHERE isAdmin = TRUE;
+
+
 -- Enable the pgcrypto extension for PostgreSQL for hashing and generating salts
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
@@ -262,6 +291,66 @@ BEGIN
   
   ELSE
     RAISE EXCEPTION 'Token is incorrect';
+  END IF;
+END;
+$$ LANGUAGE plpgsql;
+
+
+-- Define a function returns a boolean value on whether user is a student
+CREATE OR REPLACE FUNCTION
+  LearnSQL.isStudent(userName LearnSQL.UserData_t.UserName%Type)
+  RETURNS BOOLEAN AS
+$$
+BEGIN
+  IF EXISTS (
+              SELECT 1 FROM LearnSQL.UserData_t 
+              WHERE UserData_t.UserName = $1 
+              AND UserData_t.isStudent = TRUE
+            )
+  THEN
+    RETURN TRUE;
+  ELSE
+    RETURN FALSE;
+  END IF;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Define a function returns a boolean value on whether user is a teacher
+CREATE OR REPLACE FUNCTION
+  LearnSQL.isTeacher(userName LearnSQL.UserData_t.UserName%Type)
+  RETURNS BOOLEAN AS
+$$
+BEGIN
+  IF EXISTS (
+              SELECT 1 FROM LearnSQL.UserData_t 
+              WHERE UserData_t.UserName = $1 
+              AND UserData_t.isTeacher = TRUE
+            )
+  THEN
+    RETURN TRUE;
+  ELSE
+    RETURN FALSE;
+  END IF;
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+-- Define a function returns a boolean value on whether user is an admin
+CREATE OR REPLACE FUNCTION
+  LearnSQL.isAdmin(userName LearnSQL.UserData_t.UserName%Type)
+  RETURNS BOOLEAN AS
+$$
+BEGIN
+  IF EXISTS (
+              SELECT 1 FROM LearnSQL.UserData_t 
+              WHERE UserData_t.UserName = $1 
+              AND UserData_t.isAdmin = TRUE
+            )
+  THEN
+    RETURN TRUE;
+  ELSE
+    RETURN FALSE;
   END IF;
 END;
 $$ LANGUAGE plpgsql;

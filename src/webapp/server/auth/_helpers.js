@@ -143,7 +143,7 @@ function createUser(req, res) {
           if (error.constraint === 'idx_unique_email') {
             return res.status(400).json('Email Already Exists');
           }
-          if (error.constraint === 'userdata_t_pkey') {
+          if (error.constraint === 'idx_unique_username') {
             return res.status(400).json('Username Already Exists');
           }
           logger.error(`createUser: \n${error}`);
@@ -166,7 +166,7 @@ function createUser(req, res) {
 // TODO: add timeout for verification token
 function forgotPassword(req, res) {
   return new Promise((resolve, reject) => ldb.task(
-    t => t.oneOrNone('SELECT Email FROM UserData WHERE Email = $1 ',
+    t => t.oneOrNone('SELECT Email FROM LearnSQL.UserData WHERE Email = $1 ',
       [req.body.email])
       .then((result) => {
         if (result) {
@@ -174,7 +174,7 @@ function forgotPassword(req, res) {
           const { salt } = bcrypt.genSaltSync();
           const hashedToken = bcrypt.hashSync(token, salt);
           const { email } = result;
-          return t.none('UPDATE USERDATA SET Token = $1, forgotPassword '
+          return t.none('UPDATE LearnSQL.USERDATA SET Token = $1, forgotPassword '
                           + '= true WHERE Email = $2 ', [hashedToken, email])
             .then(() => {
               req.body = {
@@ -225,10 +225,10 @@ function loginRequired(req, res, next) {
  */
 function adminRequired(req, res, next) {
   if (!req.user) return res.status(401).json({ status: 'Please log in' });
-  return ldb.one('SELECT isAdmin FROM UserData WHERE Username = $1',
+  return ldb.func('LearnSQL.isAdmin',
     [req.user.username])
-    .then((user) => {
-      if (!user.isadmin) {
+    .then((isAdmin) => {
+      if (!isAdmin) {
         return res.status(401).json({ status: 'You are not authorized' });
       }
       return next();
@@ -245,8 +245,11 @@ function adminRequired(req, res, next) {
  */
 function teacherRequired(req, res, next) {
   if (!req.user) return res.status(401).json({ status: 'Please log in' });
-  return ldb.one('SELECT isAdmin, isTeacher FROM UserData WHERE Username = $1',
-    [req.user.username])
+  return ldb.one(
+    'SELECT isAdmin, isTeacher FROM LearnSQL.UserData '
+  + ' WHERE Username = $1',
+    [req.user.username],
+  )
     .then((user) => {
       if (!user.isadmin && !user.isteacher) {
         return res.status(401).json({ status: 'You are not authorized' });
@@ -265,8 +268,11 @@ function teacherRequired(req, res, next) {
  */
 function studentRequired(req, res, next) {
   if (!req.user) return res.status(401).json({ status: 'Please log in' });
-  return ldb.one('SELECT isAdmin, isstudent FROM UserData WHERE Username = $1',
-    [req.user.username])
+  return ldb.one(
+    'SELECT isAdmin, isStudent '
+  + 'FROM LearnSQL.UserData WHERE Username = $1',
+    [req.user.username],
+  )
     .then((user) => {
       if (!user.isadmin && !user.isstudent) {
         return res.status(401).json({ status: 'You are not authorized' });

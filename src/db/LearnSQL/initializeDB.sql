@@ -53,23 +53,35 @@ $$;
 --  "isVerified" represents whether the user verified their email
 --  "forgotPassword" represents if the forgotPassword feature was used
 CREATE TABLE IF NOT EXISTS LearnSQL.UserData_t (
-  Username                VARCHAR(256) NOT NULL PRIMARY KEY,
-  FullName                VARCHAR(256) NOT NULL,
-  Password                VARCHAR(60) NOT NULL,
-  Email                   VARCHAR(319) NOT NULL CHECK(TRIM(Email) like '_%@_%._%'),
+  Username                VARCHAR(63) NOT NULL
+    CHECK(TRIM(Username) <> ''), 
+  FullName                VARCHAR(256) NOT NULL
+    CHECK(TRIM(FullName) <> ''),
+  Password                VARCHAR(60) NOT NULL
+    CHECK(LENGTH(Password) = 60),
+  Email                   VARCHAR(319) NOT NULL 
+    CHECK(TRIM(Email) like '_%@_%._%'),
   Token                   VARCHAR(60) NOT NULL,
+    CHECK(LENGTH(Token) = 60),
   isTeacher               BOOLEAN DEFAULT FALSE,
   isAdmin                 BOOLEAN DEFAULT FALSE,
-  DateJoined              DATE DEFAULT CURRENT_DATE,
+  DateJoined              DATE DEFAULT CURRENT_DATE
+    CHECK (DateJoined > '2018-01-01'),
   isVerified              BOOLEAN DEFAULT FALSE,
   ForgotPassword          BOOLEAN DEFAULT FALSE,
-  TokenTimestamp          DATE DEFAULT CURRENT_TIMESTAMP
+  TokenTimestamp          TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    CHECK (TokenTimestamp > '2018-01-01')
 );
 
+-- Define a unique index on the trimmed and lowercase values of the Username field
+-- so that it matches the username that will be stored in the server
+CREATE UNIQUE INDEX IF NOT EXISTS idx_Unique_Username 
+  ON LearnSQL.UserData_t(LOWER(TRIM(Username)));
 
 
 -- Define a unique index on the trimmed and lowercase values of the email field
-CREATE UNIQUE INDEX idx_Unique_Email ON LearnSQL.UserData_t(LOWER(TRIM(Email)));
+CREATE UNIQUE INDEX IF NOT EXISTS idx_Unique_Email 
+  ON LearnSQL.UserData_t(LOWER(TRIM(Email)));
 
 
 
@@ -97,7 +109,7 @@ CREATE TABLE IF NOT EXISTS Class_t (
 --  "isTeacher" defines whether user is a teacher for that specific class
 CREATE TABLE IF NOT EXISTS Attends (
   ClassID                 VARCHAR(256) NOT NULL REFERENCES Class_t,
-  Username                VARCHAR(256) NOT NULL REFERENCES LearnSQL.UserData_t,
+  Username                VARCHAR(256) NOT NULL,
   isTeacher               BOOLEAN DEFAULT FALSE,
   PRIMARY KEY (ClassID, Username)
 );
@@ -123,7 +135,7 @@ FROM Class_t;
 -- This view has all attributes of UserData_t with an added derived attribute
 --  "isstudent"
 -- The attribute "isstudent" represents if a student is taking a class
-CREATE OR REPLACE VIEW UserData AS 
+CREATE OR REPLACE VIEW LearnSQL.UserData AS 
 SELECT Username, Fullname, Password, Email, Token, DateJoined, isTeacher,
        isAdmin, isVerified, ForgotPassword, TokenTimestamp,
 EXISTS 
