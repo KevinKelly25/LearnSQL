@@ -28,7 +28,7 @@ $$;
 -- Allow for cross-database queries using the `dblink` extension on the 'LearnSQL'
 --  schema
 
---CREATE EXTENSION IF NOT EXISTS dblink SCHEMA LearnSQL;
+CREATE EXTENSION IF NOT EXISTS dblink SCHEMA LearnSQL;
 
 --Suppress NOTICEs for this script only, this will not apply to functions
 -- defined within. This hides unimportant, and possibly confusing messages

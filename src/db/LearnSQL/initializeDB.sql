@@ -109,7 +109,7 @@ CREATE TABLE IF NOT EXISTS LearnSQL.Class_t (
 --  "isTeacher" defines whether user is a teacher for that specific class
 CREATE TABLE IF NOT EXISTS LearnSQL.Attends (
   ClassID                 VARCHAR(256) NOT NULL REFERENCES LearnSQL.Class_t,
-  Username                VARCHAR(256) NOT NULL REFERENCES LearnSQL.UserData_t,
+  Username                VARCHAR(256) NOT NULL,
   isTeacher               BOOLEAN DEFAULT FALSE,
   PRIMARY KEY (ClassID, Username)
 );
