@@ -4,7 +4,9 @@ const pgp = require('pg-promise')({
 });
 
 // Preparing the connection details:
-const connectionString = 'postgresql://postgres:password@localhost:5432/learnsql';
+const connectionString = `postgresql://${process.env.DB_USER}:`
+                       + `${process.env.DB_PASSWORD}`
+                       + '@localhost:5432/learnsql';
 
 // Creating a new database instance from the connection details:
 const db = pgp(connectionString);

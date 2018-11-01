@@ -12,12 +12,14 @@ START TRANSACTION;
 DO
 $$
 BEGIN
-   IF NOT EXISTS (SELECT * FROM pg_catalog.pg_roles
+  IF NOT EXISTS (
+                  SELECT * FROM pg_catalog.pg_roles
                   WHERE rolname = CURRENT_USER AND rolsuper = TRUE
-                 ) THEN
-      RAISE EXCEPTION 'Insufficient privileges: script must be run as a user '
-                      'with superuser privileges';
-   END IF;
+                ) 
+  THEN
+    RAISE EXCEPTION 'Insufficient privileges: script must be run as a user '
+                    'with superuser privileges';
+  END IF;
 END
 $$;
 
@@ -52,23 +54,35 @@ $$;
 --  "isVerified" represents whether the user verified their email
 --  "forgotPassword" represents if the forgotPassword feature was used
 CREATE TABLE IF NOT EXISTS LearnSQL.UserData_t (
-  Username                VARCHAR(256) NOT NULL PRIMARY KEY,
-  FullName                VARCHAR(256) NOT NULL,
-  Password                VARCHAR(60) NOT NULL,
-  Email                   VARCHAR(319) NOT NULL CHECK(TRIM(Email) like '_%@_%._%'),
+  Username                VARCHAR(63) NOT NULL
+    CHECK(TRIM(Username) <> ''), 
+  FullName                VARCHAR(256) NOT NULL
+    CHECK(TRIM(FullName) <> ''),
+  Password                VARCHAR(60) NOT NULL
+    CHECK(LENGTH(Password) = 60),
+  Email                   VARCHAR(319) NOT NULL 
+    CHECK(TRIM(Email) like '_%@_%._%'),
   Token                   VARCHAR(60) NOT NULL,
+    CHECK(LENGTH(Token) = 60),
   isTeacher               BOOLEAN DEFAULT FALSE,
   isAdmin                 BOOLEAN DEFAULT FALSE,
-  DateJoined              DATE DEFAULT CURRENT_DATE,
+  DateJoined              DATE DEFAULT CURRENT_DATE
+    CHECK (DateJoined > '2018-01-01'),
   isVerified              BOOLEAN DEFAULT FALSE,
   ForgotPassword          BOOLEAN DEFAULT FALSE,
-  TokenTimestamp          DATE DEFAULT CURRENT_TIMESTAMP
+  TokenTimestamp          TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    CHECK (TokenTimestamp > '2018-01-01')
 );
 
+-- Define a unique index on the trimmed and lowercase values of the Username field
+-- so that it matches the username that will be stored in the server
+CREATE UNIQUE INDEX IF NOT EXISTS idx_Unique_Username 
+  ON LearnSQL.UserData_t(LOWER(TRIM(Username)));
 
 
 -- Define a unique index on the trimmed and lowercase values of the email field
-CREATE UNIQUE INDEX idx_Unique_Email ON LearnSQL.UserData_t(LOWER(TRIM(Email)));
+CREATE UNIQUE INDEX IF NOT EXISTS idx_Unique_Email 
+  ON LearnSQL.UserData_t(LOWER(TRIM(Email)));
 
 
 
@@ -99,9 +113,9 @@ CREATE TABLE IF NOT EXISTS LearnSQL.Class_t (
 --  a "Username" is a unique id that represents a human user from UserData table
 --  a "ClassID" is a unique id that represents a class from Class table
 --  "isTeacher" defines whether user is a teacher for that specific class
-CREATE TABLE IF NOT EXISTS LearnSQL.Attends (
-  ClassID                 VARCHAR(63) NOT NULL REFERENCES learnsql.Class_t,
-  Username                VARCHAR(63) NOT NULL REFERENCES LearnSQL.UserData_t,
+CREATE TABLE IF NOT EXISTS Attends (
+  ClassID                 VARCHAR(256) NOT NULL REFERENCES Class_t,
+  Username                VARCHAR(256) NOT NULL,
   isTeacher               BOOLEAN DEFAULT FALSE,
   PRIMARY KEY (ClassID, Username)
 );

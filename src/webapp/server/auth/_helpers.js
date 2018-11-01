@@ -73,7 +73,7 @@ function sendEmail(req, res) {
     // Secure: false, // true for 465, false for other ports
     auth: {
       user: 'learnsqltesting@gmail.com', // email used for sending the message (will need to be changed)
-      pass: 'testing123!',
+      pass: process.env.EMAIL_PASSWORD,
     },
     tls: {
       // RejectUnauthorized:false will probably need to be changed for production because
@@ -143,7 +143,7 @@ function createUser(req, res) {
           if (error.constraint === 'idx_unique_email') {
             return res.status(400).json('Email Already Exists');
           }
-          if (error.constraint === 'userdata_t_pkey') {
+          if (error.constraint === 'idx_unique_username') {
             return res.status(400).json('Username Already Exists');
           }
           logger.error(`createUser: \n${error}`);
@@ -225,10 +225,10 @@ function loginRequired(req, res, next) {
  */
 function adminRequired(req, res, next) {
   if (!req.user) return res.status(401).json({ status: 'Please log in' });
-  return ldb.one('SELECT isAdmin FROM LearnSQL.UserData WHERE Username = $1',
+  return ldb.func('LearnSQL.isAdmin',
     [req.user.username])
-    .then((user) => {
-      if (!user.isadmin) {
+    .then((isAdmin) => {
+      if (!isAdmin) {
         return res.status(401).json({ status: 'You are not authorized' });
       }
       return next();
@@ -245,8 +245,11 @@ function adminRequired(req, res, next) {
  */
 function teacherRequired(req, res, next) {
   if (!req.user) return res.status(401).json({ status: 'Please log in' });
-  return ldb.one('SELECT isAdmin, isTeacher FROM LearnSQL.UserData WHERE Username = $1',
-    [req.user.username])
+  return ldb.one(
+    'SELECT isAdmin, isTeacher FROM LearnSQL.UserData '
+  + ' WHERE Username = $1',
+    [req.user.username],
+  )
     .then((user) => {
       if (!user.isadmin && !user.isteacher) {
         return res.status(401).json({ status: 'You are not authorized' });
@@ -265,8 +268,11 @@ function teacherRequired(req, res, next) {
  */
 function studentRequired(req, res, next) {
   if (!req.user) return res.status(401).json({ status: 'Please log in' });
-  return ldb.one('SELECT isAdmin, isstudent FROM LearnSQL.UserData WHERE Username = $1',
-    [req.user.username])
+  return ldb.one(
+    'SELECT isAdmin, isStudent '
+  + 'FROM LearnSQL.UserData WHERE Username = $1',
+    [req.user.username],
+  )
     .then((user) => {
       if (!user.isadmin && !user.isstudent) {
         return res.status(401).json({ status: 'You are not authorized' });

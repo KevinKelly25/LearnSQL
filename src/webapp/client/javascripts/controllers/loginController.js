@@ -80,7 +80,7 @@ app.controller('LoginCtrl', ($scope, $http, $location, $window) => {
       $scope.message = 'Please Fill Out All Fields';
       return;
     }
-    this.user.username = $scope.username;
+    this.user.username = angular.lowercase($scope.username);
     this.user.password = $scope.password;
     $http.post('/auth/login', this.user)
       .success(() => {

@@ -15,12 +15,14 @@ START TRANSACTION;
 DO
 $$
 BEGIN
-  IF NOT EXISTS (SELECT * FROM pg_catalog.pg_roles
-                 WHERE rolname = CURRENT_USER AND rolsuper = TRUE
-                ) THEN
-      RAISE EXCEPTION 'Insufficient privileges: script must be run as a user '
+  IF NOT EXISTS ( 
+                  SELECT * FROM pg_catalog.pg_roles
+                  WHERE rolname = CURRENT_USER AND rolsuper = TRUE
+                ) 
+  THEN
+    RAISE EXCEPTION 'Insufficient privileges: script must be run as a user '
                       'with superuser privileges';
-   END IF;
+  END IF;
 END
 $$;
 
@@ -28,6 +30,35 @@ $$;
 -- Suppress NOTICEs for this script only, this will not apply to functions
 --  defined within. This hides unimportant, but possibly confusing messages
 SET LOCAL client_min_messages TO WARNING;
+
+
+-- Define a view to return all users who are students.
+--  A user is determined to be a student if the isStudent flag in Userdata is 
+--  true. This flag is true when a student attends any class and is not the
+--  Teacher.
+CREATE OR REPLACE VIEW LearnSQL.Student AS 
+SELECT Username, Fullname, Password, Email
+FROM LearnSQL.UserData
+WHERE isStudent = TRUE;
+
+
+
+-- Define a view to return all users who are Teacher.
+--  A user is determined to be a Teacher if the isTeacher flag in Userdata 
+--  is true. 
+CREATE OR REPLACE VIEW LearnSQL.Teacher AS 
+SELECT Username, Fullname, Password, Email
+FROM LearnSQL.UserData_t
+WHERE isTeacher = TRUE;
+
+
+
+-- Define a view to return all users who are admins.
+--  A user is determined to be an admin if the isAdmin flag in userdata is true.
+CREATE OR REPLACE VIEW LearnSQL.Admin AS 
+SELECT Username, Fullname, Password, Email
+FROM LearnSQL.UserData_t
+WHERE isAdmin = TRUE;
 
 
 -- Enable the pgcrypto extension for PostgreSQL for hashing and generating salts
@@ -88,20 +119,24 @@ DECLARE
     rec RECORD;
 BEGIN
   -- Check if username exists in LearnSQL tables
-  IF NOT EXISTS (SELECT *
-                 FROM LearnSQL.UserData_t
-                 WHERE UserData_t.UserName = $1
-                ) THEN
-      RAISE EXCEPTION 'User does not exist in tables';
+  IF NOT EXISTS (
+                  SELECT *
+                  FROM LearnSQL.UserData_t
+                  WHERE UserData_t.UserName = $1
+                ) 
+  THEN
+    RAISE EXCEPTION 'User does not exist in tables';
   END IF;
 
   -- Check if user exists in database
   IF ($2 IS NOT NULL AND $3 IS NOT NULL) THEN
-    IF NOT EXISTS (SELECT * FROM pg_catalog.pg_roles
+    IF NOT EXISTS (
+                    SELECT * FROM pg_catalog.pg_roles
                     WHERE rolname = $1
-                  ) THEN
+                  ) 
+    THEN
       RAISE EXCEPTION 'User does not exist in database';
-  END IF;
+    END IF;
 
     -- TODO: add Schema qualifier once it is added to the attends table
     -- This will drop all objects owned by that user in each ClassDB database it is
@@ -226,9 +261,11 @@ DECLARE
   hashedToken VARCHAR(60); -- Hashed token that was stored in UserData_t
 BEGIN
   -- Check to make sure the user token has not expired
-  IF EXISTS(SELECT 1 FROM LearnSQL.UserData_t 
-            WHERE UserData_t.UserName = $1 
-            AND UserData_t.TokenTimestamp > now() - '30 minutes'::interval)
+  IF EXISTS (
+              SELECT 1 FROM LearnSQL.UserData_t 
+              WHERE UserData_t.UserName = $1 
+              AND UserData_t.TokenTimestamp > now() - '30 minutes'::interval
+            )
   THEN
     RAISE EXCEPTION 'Token has expired';
   END IF;
@@ -254,6 +291,66 @@ BEGIN
   
   ELSE
     RAISE EXCEPTION 'Token is incorrect';
+  END IF;
+END;
+$$ LANGUAGE plpgsql;
+
+
+-- Define a function returns a boolean value on whether user is a student
+CREATE OR REPLACE FUNCTION
+  LearnSQL.isStudent(userName LearnSQL.UserData_t.UserName%Type)
+  RETURNS BOOLEAN AS
+$$
+BEGIN
+  IF EXISTS (
+              SELECT 1 FROM LearnSQL.UserData_t 
+              WHERE UserData_t.UserName = $1 
+              AND UserData_t.isStudent = TRUE
+            )
+  THEN
+    RETURN TRUE;
+  ELSE
+    RETURN FALSE;
+  END IF;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Define a function returns a boolean value on whether user is a teacher
+CREATE OR REPLACE FUNCTION
+  LearnSQL.isTeacher(userName LearnSQL.UserData_t.UserName%Type)
+  RETURNS BOOLEAN AS
+$$
+BEGIN
+  IF EXISTS (
+              SELECT 1 FROM LearnSQL.UserData_t 
+              WHERE UserData_t.UserName = $1 
+              AND UserData_t.isTeacher = TRUE
+            )
+  THEN
+    RETURN TRUE;
+  ELSE
+    RETURN FALSE;
+  END IF;
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+-- Define a function returns a boolean value on whether user is an admin
+CREATE OR REPLACE FUNCTION
+  LearnSQL.isAdmin(userName LearnSQL.UserData_t.UserName%Type)
+  RETURNS BOOLEAN AS
+$$
+BEGIN
+  IF EXISTS (
+              SELECT 1 FROM LearnSQL.UserData_t 
+              WHERE UserData_t.UserName = $1 
+              AND UserData_t.isAdmin = TRUE
+            )
+  THEN
+    RETURN TRUE;
+  ELSE
+    RETURN FALSE;
   END IF;
 END;
 $$ LANGUAGE plpgsql;
