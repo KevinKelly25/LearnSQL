@@ -77,9 +77,6 @@ CREATE UNIQUE INDEX idx_Unique_Email ON LearnSQL.UserData_t(LOWER(TRIM(Email)));
 --  a "ClassName" is the classID without the random ID
 --  The "Password" field will be used for students to create their student
 --   account in the classdb database
-
--- --   INSERT INTO LearnSQL.Class_t VALUES (LOWER(classID), $5, $6, $7, $8, $9, $10, encryptedPassword);
---                                        from $5,           cn, s,  t,  d, sd,  ed,  should be $4
 CREATE TABLE IF NOT EXISTS LearnSQL.Class_t (
   ClassID                 VARCHAR(63) NOT NULL PRIMARY KEY, 
   ClassName               VARCHAR(27) NOT NULL
