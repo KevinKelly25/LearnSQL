@@ -112,14 +112,14 @@ CREATE TABLE IF NOT EXISTS LearnSQL.Attends (
 --  This view has all attributes of Class_t with an added derived attribute
 --   "studentCount"
 --  A "studentCount" represents the number of students in a class
-CREATE OR REPLACE VIEW Class AS
+CREATE OR REPLACE VIEW LearnSQL.Class AS
 SELECT ClassID, ClassName, Section, Times, Days, StartDate, EndDate, Password,
   (
     SELECT COUNT(*)
-    FROM Attends
+    FROM LearnSQL.Attends
     WHERE Attends.ClassID = Class_t.ClassID AND isTeacher = FALSE
   ) AS studentCount
-FROM Class_t;
+FROM LearnSQl.Class_t;
 
 
 
@@ -127,13 +127,13 @@ FROM Class_t;
 -- This view has all attributes of UserData_t with an added derived attribute
 --  "isstudent"
 -- The attribute "isstudent" represents if a student is taking a class
-CREATE OR REPLACE VIEW UserData AS 
+CREATE OR REPLACE VIEW LearnSQL.UserData AS 
 SELECT Username, Fullname, Password, Email, Token, DateJoined, isTeacher,
        isAdmin, isVerified, ForgotPassword, TokenTimestamp,
 EXISTS 
   (
     SELECT *
-    FROM Attends 
+    FROM LearnSQL.Attends 
     WHERE Attends.Username = UserData_t.Username AND Attends.isTeacher = FALSE
   ) AS isstudent
 FROM LearnSQL.UserData_t;
