@@ -6,7 +6,10 @@
 -- This file tests the functions involved with class management in the LearnSQL
 --  database.
 
-
+-- Create a user with privilege for CREATE DB which will be used for testing.
+CREATE USER testadminuser WITH PASSWORD 'password' CREATEDB;
+GRANT CONNECT ON DATABASE LearnSQL TO testadminuser;
+GRANT classdb_admin TO testadminuser;
 
 START TRANSACTION;
 
@@ -30,12 +33,6 @@ $$;
 
 COMMIT;
 
-
-
--- Create a user with privilege for CREATE DB which will be used for testing.
-CREATE USER testadminuser WITH PASSWORD 'password' CREATEDB;
-GRANT CONNECT ON DATABASE LearnSQL TO testadminuser;
-GRANT classdb_admin TO testadminuser;
 
 
 
