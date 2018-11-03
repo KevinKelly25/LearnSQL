@@ -35,6 +35,12 @@ CREATE EXTENSION IF NOT EXISTS dblink SCHEMA LearnSQL;
 SET LOCAL client_min_messages TO WARNING;
 
 
+
+/*
+*   Function returns a table listing the user's currently
+*    enrolled classes. Returns an error if the user is not
+*    a member of any class.
+*/
 CREATE OR REPLACE FUNCTION
   LearnSQL.getClasses(studentName  LearnSQL.UserData_t.UserName%Type)
 
@@ -80,6 +86,12 @@ END;
 $$ LANGUAGE plpgsql;
 
 
+/*
+*   Function which enrolls the desired user to a class using a class password.
+*    When supplied with the optional parameter `adminUserName` and `adminPassword,
+*    the desired student is added to the class directly with the administrator user.
+*    A class password is not required when using these optional parameters.
+*/
 CREATE OR REPLACE FUNCTION
   LearnSQL.joinClass( userName          LearnSQL.Attends.userName%Type, 
                       userFullName      LearnSQL.UserData_t.fullName%Type,
