@@ -121,7 +121,7 @@ BEGIN
   -- Cross database link query that gives access privileges to the database classID.
   PERFORM *
   FROM LearnSQL.dblink ('user=' || $1 || ' dbname= ' || LOWER(classID) || ' password=' || $2,
-               'SELECT reAddUserAccess()')
+               'SELECT ClassDB.AddUserAccess()')
     AS throwAway(blank VARCHAR(30));-- Needed for dblink but unused.
 
   -- Returns class id of the newly created class, which is also the name of the created class database.

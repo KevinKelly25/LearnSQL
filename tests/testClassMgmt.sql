@@ -6,13 +6,17 @@
 -- This file tests the functions involved with class management in the LearnSQL
 --  database.
 
+START TRANSACTION;
+
 -- Create a user with privilege for CREATE DB which will be used for testing.
 CREATE USER testadminuser WITH PASSWORD 'password' CREATEDB CREATEROLE;
 GRANT CONNECT ON DATABASE LearnSQL TO testadminuser;
 GRANT classdb_admin TO testadminuser;
 
-START TRANSACTION;
-
+--comment here
+SELECT LearnSQL.createUser('testuser1', 'first last', '123', 'testUser1@testemail.com', '7a92db10c4cb11e8b5680800200c9a66', true);
+SELECT LearnSQL.createUser('testuser2', 'first last', '123', 'testUser2@testemail.com', '9f40a820c4cb11e8b5680800200c9a66', true);
+SELECT LearnSQL.createUser('testuser3', 'first last', '123', 'testUser3@testemail.com', 'b57810b0c4cb11e8b5680800200c9a66', true);
 
 
 -- Make sure the current user has sufficient privilege to run this script
@@ -220,11 +224,6 @@ DECLARE
   classID2 VARCHAR(63);
   classID3 VARCHAR(63); 
 BEGIN 
-  -- Create user
-  PERFORM LearnSQL.createUser('testuser1', 'first last', '123', 'testUser1@testemail.com', '7a92db10c4cb11e8b5680800200c9a66', true);
-  PERFORM LearnSQL.createUser('testuser2', 'first last', '123', 'testUser2@testemail.com', '9f40a820c4cb11e8b5680800200c9a66', true);
-  PERFORM LearnSQL.createUser('testuser3', 'first last', '123', 'testUser3@testemail.com', 'b57810b0c4cb11e8b5680800200c9a66', true);
-
   -- Assign the classid to variables classID1, classID2, classID3 that is returned
   --  by the createClass function found in classMgmt.sql file.
   classID1 := LearnSQL.createClass('testadminuser', 'password', 'testuser1', '123', 'class1', '1', 'time1', 'day1', '2018-10-31', '2018-12-10');
@@ -293,11 +292,6 @@ BEGIN
     RETURN 'Fail Code 7';
   END IF;
 
-  -- Clean up test users
-  -- PERFORM LearnSQL.dropUser('testuser1');
-  -- PERFORM LearnSQL.dropUser('testuser2');
-  -- PERFORM LearnSQL.dropUser('testuser3');
-
   RETURN 'Passed'; -- All test passed.
 END;
 $$ LANGUAGE plpgsql;
@@ -317,9 +311,12 @@ SELECT pg_temp.classMgmtTest();
 
 ROLLBACK; -- Ignore all test data
 
-
-
 -- Drop the test user.
 REVOKE classdb_admin FROM testadminuser;
 REVOKE CONNECT ON DATABASE LearnSQL FROM testadminuser;
 DROP ROLE testadminuser;
+DROP USER testuser1;
+DROP USER testuser2;
+DROP USER testuser3;
+DELETE FROM LearnSQL.Userdata_t 
+WHERE Username IN ('testuser1','testuser2', 'testuser3');
