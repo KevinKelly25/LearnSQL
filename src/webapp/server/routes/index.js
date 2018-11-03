@@ -146,7 +146,7 @@ router.post('/sendContact', (req, res) => {
  *  of this is:
  *  http://localhost:3000/table/#?username=teststu1&classID=testing1_1lvc01hojllf1r02
  */
-router.get('/table/', authHelpers.loginRequired, (res) => {
+router.get('/table/', authHelpers.loginRequired, (req, res) => {
   res.sendFile(path.join(
     __dirname, '..', '..', 'client', 'views', 'controlPanels', 'tables.html',
   ));
