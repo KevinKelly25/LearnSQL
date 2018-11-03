@@ -56,9 +56,10 @@ CREATE OR REPLACE FUNCTION
 $$
 DECLARE
   classID VARCHAR(63);
-  encryptedPassword VARCHAR(60); -- Hashed password to be stored in LearnSQL.UserData_t.
+  -- Hashed password to be stored in LearnSQL.UserData_t.
+  encryptedPassword VARCHAR(60);
 BEGIN
-  classID := $5 || '_' || gen_random_uuid();
+  classID := $5 || '_' || LearnSQL.gen_random_uuid();
   -- Any instances of the character '-' is deleted from the classID or else this
   --  will cause an error in dblink. 
   classID := REPLACE (classID, '-', '');
@@ -98,41 +99,49 @@ BEGIN
   END IF;
 
   -- Create "hashed" password using blowfish cipher.
-  encryptedPassword = crypt($4, gen_salt('bf'));
+  encryptedPassword = LearnSQL.crypt($4, LearnSQL.gen_salt('bf'));
 
   -- Insert into LearnSQL.Class_t all class information.
-  INSERT INTO LearnSQL.Class_t VALUES (LOWER(classID), LOWER($5), LOWER($6), $7, $8, $9, $10, encryptedPassword);
+  INSERT INTO LearnSQL.Class_t VALUES (LOWER(classID), LOWER($5), 
+                                       LOWER($6), $7, $8, $9, $10, 
+                                       encryptedPassword);
 
-  -- Insert into LearnSQL.attends table class id, username, and set as is teacher.
+  -- Insert into LearnSQL.attends table class id, username, and set as is 
+  --  teacher.
   INSERT INTO LearnSQL.Attends VALUES (LOWER(classID), $3, TRUE);
 
-  -- Cross database link query that creates the database classID with the owner as classdb_admin.
+  -- Cross database link query that creates the database classID with the owner 
+  --  as classdb_admin.
   PERFORM * 
   FROM LearnSQL.dblink ('user=' || $1 || ' dbname=learnsql password='|| $2,
-               'CREATE DATABASE ' || LOWER(classID) || ' WITH TEMPLATE classdb_template OWNER classdb_admin')
+               'CREATE DATABASE ' || LOWER(classID) || 
+               ' WITH TEMPLATE classdb_template OWNER classdb_admin')
     AS throwAway(blank VARCHAR(30));-- Needed for dblink but unused.
 
   -- Add teacher to the Classes database.
   PERFORM *
-  FROM LearnSQL.dblink ('user=' || $1 || ' dbname=' || classID || ' password=' || $2,
+  FROM LearnSQL.dblink ('user=' || $1 || ' dbname=' || classID || 
+                        ' password=' || $2, 
                         'SELECT ClassDB.CreateInstructor('''||$3||''', ''N/A'')')
   AS throwAway(blank VARCHAR(30));-- Needed for dblink but unused.
 
-  -- Cross database link query that gives access privileges to the database classID.
+  -- Cross database link query that gives access privileges to the database 
+  --  classID.
   PERFORM *
-  FROM LearnSQL.dblink ('user=' || $1 || ' dbname= ' || LOWER(classID) || ' password=' || $2,
-               'SELECT ClassDB.AddUserAccess()')
+  FROM LearnSQL.dblink ('user=' || $1 || ' dbname= ' || LOWER(classID) || 
+                        ' password=' || $2, 'SELECT ClassDB.AddUserAccess()')
     AS throwAway(blank VARCHAR(30));-- Needed for dblink but unused.
 
-  -- Returns class id of the newly created class, which is also the name of the created class database.
+  -- Returns class id of the newly created class, which is also the name of the 
+  --  created class database.
   RETURN classID;
 END;
 $$ LANGUAGE plpgsql;
 
 
 
--- This function returns theClassID to be used in LearnSQL.dropClass function so that 
---  the class id does not have to be supplied as a parameter.
+-- This function returns theClassID to be used in LearnSQL.dropClass function so 
+--  that the class id does not have to be supplied as a parameter.
 CREATE OR REPLACE FUNCTION 
   LearnSQL.getClassID (
                        username     LearnSQL.Attends.UserName%Type,

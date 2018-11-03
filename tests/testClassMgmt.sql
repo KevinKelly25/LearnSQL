@@ -6,17 +6,29 @@
 -- This file tests the functions involved with class management in the LearnSQL
 --  database.
 
+
+
 START TRANSACTION;
 
--- Create a user with privilege for CREATE DB which will be used for testing.
+-- Create a user with privilege for CREATEDB which will be used for testing.
 CREATE USER testadminuser WITH PASSWORD 'password' CREATEDB CREATEROLE;
 GRANT CONNECT ON DATABASE LearnSQL TO testadminuser;
 GRANT classdb_admin TO testadminuser;
 
---comment here
-SELECT LearnSQL.createUser('testuser1', 'first last', '123', 'testUser1@testemail.com', '7a92db10c4cb11e8b5680800200c9a66', true);
-SELECT LearnSQL.createUser('testuser2', 'first last', '123', 'testUser2@testemail.com', '9f40a820c4cb11e8b5680800200c9a66', true);
-SELECT LearnSQL.createUser('testuser3', 'first last', '123', 'testUser3@testemail.com', 'b57810b0c4cb11e8b5680800200c9a66', true);
+
+
+-- Users are created here separate from the transaction below to not cause 
+--  errors with dblink.
+SELECT LearnSQL.createUser('testuser1', 'first last', '123', 
+                           'testUser1@testemail.com', 
+                           '7a92db10c4cb11e8b5680800200c9a66', true);
+SELECT LearnSQL.createUser('testuser2', 'first last', '123', 
+                           'testUser2@testemail.com', 
+                           '9f40a820c4cb11e8b5680800200c9a66', true);
+SELECT LearnSQL.createUser('testuser3', 'first last', '123', 
+                           'testUser3@testemail.com', 
+                           'b57810b0c4cb11e8b5680800200c9a66', true);
+
 
 
 -- Make sure the current user has sufficient privilege to run this script
@@ -42,13 +54,9 @@ COMMIT;
 
 START TRANSACTION;
 
-
-
 /*------------------------------------------------------------------------------
     Define Temporary helper functions for assisting testClassMgmt functions
 ------------------------------------------------------------------------------*/
-
-
 
 -- This function checks if the class's database exists and if the class exists
 --  LearnSQL tables.
@@ -226,9 +234,15 @@ DECLARE
 BEGIN 
   -- Assign the classid to variables classID1, classID2, classID3 that is returned
   --  by the createClass function found in classMgmt.sql file.
-  classID1 := LearnSQL.createClass('testadminuser', 'password', 'testuser1', '123', 'class1', '1', 'time1', 'day1', '2018-10-31', '2018-12-10');
-  classID2 := LearnSQL.createClass('testadminuser', 'password', 'testuser2', 'pass2', 'class2', '2', 'time2', 'day2', '2018-11-10', '2018-12-11');
-  classID3 := LearnSQL.createClass('testadminuser', 'password', 'testuser3', 'pass3', 'class3', '3', 'time3', 'day3', '2018-11-11', '2018-12-12');
+  classID1 := LearnSQL.createClass('testadminuser', 'password', 'testuser1', 
+                                   '123', 'class1', '1', 'time1', 'day1', 
+                                   '2018-10-31', '2018-12-10');
+  classID2 := LearnSQL.createClass('testadminuser', 'password', 'testuser2', 
+                                   'pass2', 'class2', '2', 'time2', 'day2', 
+                                   '2018-11-10', '2018-12-11');
+  classID3 := LearnSQL.createClass('testadminuser', 'password', 'testuser3', 
+                                   'pass3', 'class3', '3', 'time3', 'day3', 
+                                   '2018-11-11', '2018-12-12');
   
   -- Checks if test classes have the necessary id's associated to each one of them. 
   IF NOT (pg_temp.checkIfClassIdExists(classID1)
@@ -279,9 +293,12 @@ BEGIN
   END IF;
   
   -- Clean up test classes
-  PERFORM LearnSQL.dropClass('testadminuser', 'password', 'testuser1', 'class1', '1', '2018-10-31');
-  PERFORM LearnSQL.dropClass('testadminuser', 'password', 'testuser2', 'class2', '2', '2018-11-10');
-  PERFORM LearnSQL.dropClass('testadminuser', 'password', 'testuser3', 'class3', '3', '2018-11-11');
+  PERFORM LearnSQL.dropClass('testadminuser', 'password', 'testuser1', 'class1', 
+                             '1', '2018-10-31');
+  PERFORM LearnSQL.dropClass('testadminuser', 'password', 'testuser2', 'class2', 
+                             '2', '2018-11-10');
+  PERFORM LearnSQL.dropClass('testadminuser', 'password', 'testuser3', 'class3', 
+                             '3', '2018-11-11');
 
   -- Check if the class id exists for any of the test classes and returns fail 
   --  code if it does exist.
@@ -309,14 +326,24 @@ $$  LANGUAGE plpgsql;
 
 SELECT pg_temp.classMgmtTest();
 
-ROLLBACK; -- Ignore all test data
+ROLLBACK; -- Ignore all test data.
 
--- Drop the test user.
+
+
+-- Revoke privileges to CREATEDB given to the temporary admin user.
 REVOKE classdb_admin FROM testadminuser;
 REVOKE CONNECT ON DATABASE LearnSQL FROM testadminuser;
-DROP ROLE testadminuser;
+DROP ROLE testadminuser; -- Drop the temporary admin user.
+
+
+
+-- Drop all test users.
 DROP USER testuser1;
 DROP USER testuser2;
 DROP USER testuser3;
+
+
+
+-- Delete test users from the LearnSQL userdata_t table.
 DELETE FROM LearnSQL.Userdata_t 
 WHERE Username IN ('testuser1','testuser2', 'testuser3');

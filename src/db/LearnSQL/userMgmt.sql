@@ -6,6 +6,8 @@
 -- This file creates the functions involved with user management in the LearnSQL
 --  database.This file should be run after createLearnSQLTables.sql
 
+
+
 START TRANSACTION;
 
 
@@ -27,9 +29,11 @@ END
 $$;
 
 
+
 -- Suppress NOTICEs for this script only, this will not apply to functions
 --  defined within. This hides unimportant, but possibly confusing messages
 SET LOCAL client_min_messages TO WARNING;
+
 
 
 -- Define a view to return all users who are students.
@@ -61,9 +65,11 @@ FROM LearnSQL.UserData_t
 WHERE isAdmin = TRUE;
 
 
+
 -- Enable the pgcrypto extension for PostgreSQL for hashing and generating salts
 CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA LearnSQL;
 CREATE EXTENSION IF NOT EXISTS dblink WITH SCHEMA LearnSQL;
+
 
 
 -- Define function to register a user. This function will create a role within
@@ -85,10 +91,10 @@ DECLARE
   encryptedToken VARCHAR(60); -- hashed password to be stored in UserData_t
 BEGIN
   -- Create "hashed" password using blowfish cipher
-  encryptedPassword = crypt($3, gen_salt('bf'));
+  encryptedPassword = LearnSQL.crypt($3, LearnSQL.gen_salt('bf'));
 
   -- Create "hashed" token using blowfish cipher
-  encryptedToken = crypt($5, gen_salt('bf'));
+  encryptedToken = LearnSQL.crypt($5, LearnSQL.gen_salt('bf'));
 
   -- Add user information to the LearnSQL UserData table
   INSERT INTO LearnSQL.UserData_t VALUES (LOWER($1),$2,encryptedPassword,$4,
@@ -164,6 +170,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 
+
 -- This function is given a old username and a new username. It updates the role
 --  and tables associated with the old username with the new username as long as
 --  the new username is not already taken  
@@ -202,14 +209,14 @@ BEGIN
   FROM LearnSQL.UserData_t 
   WHERE UserData_t.UserName = $1;  
 
-  IF (encryptedPassword = crypt($2, encryptedPassword)) 
+  IF (encryptedPassword = LearnSQL.crypt($2, encryptedPassword)) 
     THEN
       -- Update database rolename to the new value
       EXECUTE FORMAT('ALTER USER %s WITH PASSWORD %L',$1,$3);
 
       -- Update LearnSQL database password
       UPDATE LearnSQL.UserData_t 
-      SET Password = crypt($3, gen_salt('bf'))
+      SET Password = LearnSQL.crypt($3, LearnSQL.gen_salt('bf'))
       WHERE UserData_t.Username = $1;
     ELSE
       RAISE EXCEPTION 'Old Password Does Not Match';
@@ -276,10 +283,10 @@ BEGIN
   WHERE UserData_t.UserName = $1; 
 
   -- Check if the given token and the username is correct
-  IF (hashedToken = crypt($2, hashedToken))
+  IF (hashedToken = LearnSQL.crypt($2, hashedToken))
   THEN
     -- Create "hashed" password using blowfish cipher
-    encryptedPassword = crypt($3, gen_salt('bf'));
+    encryptedPassword = LearnSQL.crypt($3, LearnSQL.gen_salt('bf'));
 
     -- Update UserData_t with the new password
     UPDATE LearnSQL.UserData_t 
@@ -294,6 +301,7 @@ BEGIN
   END IF;
 END;
 $$ LANGUAGE plpgsql;
+
 
 
 -- Define a function returns a boolean value on whether user is a student
@@ -314,6 +322,8 @@ BEGIN
   END IF;
 END;
 $$ LANGUAGE plpgsql;
+
+
 
 -- Define a function returns a boolean value on whether user is a teacher
 CREATE OR REPLACE FUNCTION
@@ -354,6 +364,7 @@ BEGIN
   END IF;
 END;
 $$ LANGUAGE plpgsql;
+
 
 
 COMMIT;

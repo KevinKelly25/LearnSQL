@@ -109,7 +109,7 @@ BEGIN
   WHERE UserData_t.UserName = $1;
 
   -- If password is matches after hashing then this is true
-  IF (encryptedPassword = crypt($2, encryptedPassword))
+  IF (encryptedPassword = LearnSQL.crypt($2, encryptedPassword))
   THEN
     RETURN TRUE;
   ELSE
@@ -555,9 +555,10 @@ $$ LANGUAGE plpgsql;
 
 
 
--- This function tests the forgotPasswordReset function. This function creates 3 test
---  accounts and then resets thier password with forgotPasswordReset Function.
---  It then checks to make sure that the Email exists in the Userdata_t table for that user.
+-- This function tests the forgotPasswordReset function. This function creates 3 
+--  test accounts and then resets thier password with forgotPasswordReset 
+--  Function. It then checks to make sure that the Email exists in the 
+--  Userdata_t table for that user.
 CREATE OR REPLACE FUNCTION pg_temp.forgotPasswordResetTest() RETURNS TEXT AS
 $$
 BEGIN
@@ -623,6 +624,7 @@ BEGIN
    RAISE INFO '%   forgotPasswordResetTest()',pg_temp.forgotPasswordResetTest();
 END;
 $$  LANGUAGE plpgsql;
+
 
 
 SELECT pg_temp.userMgmtTest();
