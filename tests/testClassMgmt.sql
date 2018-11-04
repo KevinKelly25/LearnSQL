@@ -115,7 +115,7 @@ BEGIN
   IF EXISTS (
               SELECT 1
               FROM LearnSQL.Class_t
-              WHERE Class_t.className = $1
+              WHERE Class_t.className = LOWER($1)
               AND Class_t.classid = $2
             )
   THEN
@@ -238,7 +238,7 @@ BEGIN
   -- Assign the classid to variables classID1, classID2, classID3 that is returned
   --  by the createClass function found in classMgmt.sql file.
   classID1 := LearnSQL.createClass('testadminuser', 'password', 'testuser1', 
-                                   '123', 'class1', '1', 'time1', 'day1', 
+                                   '123', 'CS305', '1', 'time1', 'day1', 
                                    '2018-10-31', '2018-12-10');
   classID2 := LearnSQL.createClass('testadminuser', 'password', 'testuser2', 
                                    'pass2', 'class2', '2', 'time2', 'day2', 
@@ -256,7 +256,7 @@ BEGIN
   END IF;
  
   -- Checks if the class name exists for each test class.
-  IF NOT (pg_temp.checkIfClassNameExists('class1', classID1)
+  IF NOT (pg_temp.checkIfClassNameExists('CS305', classID1)
     AND pg_temp.checkIfClassNameExists('class2', classID2)
     AND pg_temp.checkIfClassNameExists('class3', classID3))
   THEN
@@ -296,7 +296,7 @@ BEGIN
   END IF;
   
   -- Clean up test classes
-  PERFORM LearnSQL.dropClass('testadminuser', 'password', 'testuser1', 'class1', 
+  PERFORM LearnSQL.dropClass('testadminuser', 'password', 'testuser1', 'CS305', 
                              '1', '2018-10-31');
   PERFORM LearnSQL.dropClass('testadminuser', 'password', 'testuser2', 'class2', 
                              '2', '2018-11-10');

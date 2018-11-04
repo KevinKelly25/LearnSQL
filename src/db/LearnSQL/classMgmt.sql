@@ -58,11 +58,17 @@ DECLARE
   classID VARCHAR(63);
   -- Hashed password to be stored in LearnSQL.UserData_t.
   encryptedPassword VARCHAR(60);
+  fullName VARCHAR(256); -- Used to get the full name of the teacher
 BEGIN
-  classID := $5 || '_' || LearnSQL.gen_random_uuid();
+  classID := LOWER($5) || '_' || LearnSQL.gen_random_uuid();
   -- Any instances of the character '-' is deleted from the classID or else this
   --  will cause an error in dblink. 
   classID := REPLACE (classID, '-', '');
+
+  SELECT LearnSQL.UserData_t.fullName
+  INTO fullName
+  FROM LearnSQL.UserData_t
+  WHERE UserData_t.userName = $3;
 
   -- Check if user creating class is a teacher.
   IF NOT EXISTS (
@@ -120,9 +126,10 @@ BEGIN
 
   -- Add teacher to the Classes database.
   PERFORM *
-  FROM LearnSQL.dblink ('user=' || $1 || ' dbname=' || classID || 
+  FROM LearnSQL.dblink ('user=' || $1 || ' dbname=' || LOWER(classID) || 
                         ' password=' || $2, 
-                        'SELECT ClassDB.CreateInstructor('''||$3||''', ''N/A'')')
+                        'SELECT ClassDB.CreateInstructor('''||$3||''', 
+                        '''||fullName||''')')
   AS throwAway(blank VARCHAR(30));-- Needed for dblink but unused.
 
   -- Cross database link query that gives access privileges to the database 
@@ -184,13 +191,13 @@ $$
 DECLARE 
   theClassID VARCHAR(63);
 BEGIN 
-  theClassID := learnSQL.getClassID($3, $4, $5, $6);
+  theClassID := learnSQL.getClassID($3, LOWER($4), $5, $6);
 
   -- Check if classname exists in LearnSQL tables.
   IF NOT EXISTS (
                   SELECT 1
                   FROM LearnSQL.Class_t
-                  WHERE Class_t.ClassName = $4
+                  WHERE Class_t.ClassName = LOWER($4)
                 )
   THEN 
     RAISE EXCEPTION 'Class Does Not Exist In Class_t Table';
@@ -200,7 +207,7 @@ BEGIN
   IF NOT EXISTS (
                   SELECT 1 
                   FROM pg_database
-                  WHERE datname = theClassID
+                  WHERE datname = LOWER(theClassID)
                 )
   THEN 
     RAISE EXCEPTION 'Class Not Found In Database %', theClassID;
@@ -212,7 +219,7 @@ BEGIN
                   FROM LearnSQL.Class_t INNER JOIN LearnSQL.Attends
                   ON Attends.classID = Class_t.classID
                   WHERE Attends.userName = $3
-                  AND Class_t.className = $4
+                  AND Class_t.className = LOWER($4)
                   AND Class_t.section = $5
                   AND Class_t.startDate = $6
                 ) 
