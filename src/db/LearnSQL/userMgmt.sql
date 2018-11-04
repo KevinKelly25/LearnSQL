@@ -144,7 +144,6 @@ BEGIN
       RAISE EXCEPTION 'User does not exist in database';
     END IF;
 
-    -- TODO: add Schema qualifier once it is added to the attends table
     -- This will drop all objects owned by that user in each ClassDB database it is
     --  in. This may cause cascade issues until ClassDB has Multi-DB remove User
     --  support

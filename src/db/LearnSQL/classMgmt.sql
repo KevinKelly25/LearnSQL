@@ -38,7 +38,7 @@ SET LOCAL client_min_messages TO WARNING;
 
 -- This function is used to create a class. 
 -- This function will create a class database and a class in the LearnSQL tables. 
--- If any errors are encounterd an exception will be raised and the function
+-- If any errors are encountered an exception will be raised and the function
 --  will stop execution.
 CREATE OR REPLACE FUNCTION 
   LearnSQL.createClass(
@@ -114,8 +114,8 @@ BEGIN
   --  as classdb_admin.
   PERFORM * 
   FROM LearnSQL.dblink ('user=' || $1 || ' dbname=learnsql password='|| $2,
-               'CREATE DATABASE ' || LOWER(classID) || 
-               ' WITH TEMPLATE classdb_template OWNER classdb_admin')
+                        'CREATE DATABASE ' || LOWER(classID) || 
+                        ' WITH TEMPLATE classdb_template OWNER classdb_admin')
     AS throwAway(blank VARCHAR(30));-- Needed for dblink but unused.
 
   -- Add teacher to the Classes database.

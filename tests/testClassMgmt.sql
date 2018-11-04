@@ -10,6 +10,24 @@
 
 START TRANSACTION;
 
+-- Make sure the current user has sufficient privilege to run this script
+--  privilege required: superuser
+DO
+$$
+BEGIN
+   IF NOT EXISTS (
+                   SELECT * FROM pg_catalog.pg_roles
+                   WHERE rolname = CURRENT_USER AND rolsuper = TRUE
+                 ) 
+   THEN
+     RAISE EXCEPTION 'Insufficient privileges: script must be run as a user '
+                      'with superuser privileges';
+   END IF;
+END;
+$$;
+
+
+
 -- Create a user with privilege for CREATEDB which will be used for testing.
 CREATE USER testadminuser WITH PASSWORD 'password' CREATEDB CREATEROLE;
 GRANT CONNECT ON DATABASE LearnSQL TO testadminuser;
@@ -29,30 +47,17 @@ SELECT LearnSQL.createUser('testuser3', 'first last', '123',
                            'testUser3@testemail.com', 
                            'b57810b0c4cb11e8b5680800200c9a66', true);
 
-
-
--- Make sure the current user has sufficient privilege to run this script
---  privilege required: superuser
-DO
-$$
-BEGIN
-   IF NOT EXISTS (
-                   SELECT * FROM pg_catalog.pg_roles
-                   WHERE rolname = CURRENT_USER AND rolsuper = TRUE
-                 ) 
-   THEN
-     RAISE EXCEPTION 'Insufficient privileges: script must be run as a user '
-                      'with superuser privileges';
-   END IF;
-END;
-$$;
-
 COMMIT;
 
 
 
-
 START TRANSACTION;
+
+
+
+SET LOCAL client_min_messages TO WARNING;
+
+
 
 /*------------------------------------------------------------------------------
     Define Temporary helper functions for assisting testClassMgmt functions
