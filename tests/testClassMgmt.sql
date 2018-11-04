@@ -57,10 +57,6 @@ COMMIT;
 
 START TRANSACTION;
 
--- Suppress NOTICES for this script only, this will not apply to functions
---  defined within. This hides unimportant, but possibly confusing messages.
-SET LOCAL client_min_messages TO WARNING;
-
 /*------------------------------------------------------------------------------
     Define Temporary helper functions for assisting testClassMgmt functions
 ------------------------------------------------------------------------------*/
