@@ -150,7 +150,7 @@ router.post('/forgotPasswordEmail', (req, res) => authHelpers.forgotPassword(req
  *  to be appended to the end of the link after #?token=. For example
  *  http://localhost:3000/auth/resetPassword/#?token=59ff4734c92f789058b2
  */
-router.get('/resetPassword/', (res) => {
+router.get('/resetPassword/', (req, res) => {
   res.sendFile(path.join(
     __dirname, '..', '..', 'client', 'views', 'account', 'resetPassword.html',
   ));

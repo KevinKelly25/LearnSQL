@@ -50,7 +50,7 @@ function handleErrors(req) {
 function getStudents(req, res) {
   return new Promise((resolve, reject) => {
     ldb.one('SELECT C.ClassID '
-            + 'FROM Attends AS A INNER JOIN Class AS C ON A.ClassID = C.ClassID '
+            + 'FROM LearnSQL.Attends AS A INNER JOIN Class AS C ON A.ClassID = C.ClassID '
             + 'WHERE Username = $1 AND ClassName = $2',
     [req.user.username, req.body.className])
       .then((result) => {
@@ -95,7 +95,7 @@ function createClass(req, res) {
       const classid = `${req.body.name}_${uniqid()}`; // Guarantee uniqueness
       // Check to make sure that there is none conflicting ClassName for that user
       ldb.task(t => t.oneOrNone('SELECT Username, C.ClassID '
-                         + 'FROM LearnSQL.Attends AS A INNER JOIN LearnSQL.Class AS C '
+                         + 'FROM LearnSQL.Attends AS A INNER JOIN Class AS C '
                          + 'ON A.ClassID = C.ClassID '
                          + 'WHERE Username = $1 AND ClassName = $2 AND '
                          + 'isTeacher = true',
@@ -118,7 +118,7 @@ function createClass(req, res) {
           ],
         ))
         .then(() => t.none(
-          'INSERT INTO LearnSQL.attends(username, classid, isteacher) '
+          'INSERT INTO LearnSQL.Attends(username, classid, isteacher) '
           + 'VALUES($1, $2, $3)',
           [req.user.username, classid, true],
         )))
@@ -158,7 +158,7 @@ function dropClass(req, res) {
   return new Promise((resolve, reject) => {
     ldb.task(t => t.one(
       'SELECT C.ClassID '
-      + 'FROM LearnSQL.Attends AS A INNER JOIN LearnSQL.Class AS C '
+      + 'FROM LearnSQL.Attends AS A INNER JOIN Class AS C '
       + 'ON A.ClassID = C.ClassID '
       + 'WHERE Username = $1 AND ClassName = $2 AND isTeacher = True',
       [req.user.username, req.body.name],
@@ -167,8 +167,8 @@ function dropClass(req, res) {
         req.body.classid = result.classid;
         return t.none('DROP DATABASE $1~ ', result.classid);
       })
-      .then(() => t.none('DELETE FROM LearnSQL.attends WHERE classid = $1', req.body.classid))
-      .then(() => t.none('DELETE FROM LearnSQL.class WHERE classid = $1', req.body.classid))
+      .then(() => t.none('DELETE FROM LearnSQl.Attends WHERE classid = $1', req.body.classid))
+      .then(() => t.none('DELETE FROM class WHERE classid = $1', req.body.classid))
       .then(() => {
         resolve();
         return res.status(200).json('Class Database Dropped Successfully');
@@ -216,7 +216,7 @@ function getClasses(req, res) {
 function getClassInfo(req, res) {
   return new Promise((resolve, reject) => {
     ldb.any(
-      'SELECT Attends.ClassID, ClassName, Section, Times, Days, '
+      'SELECT LearnSQL.Attends.ClassID, ClassName, Section, Times, Days, '
       + 'StartDate, EndDate, StudentCount '
       + 'FROM LearnSQL.Attends INNER JOIN LearnSQL.Class ON Attends.ClassID = Class.ClassID '
       + 'WHERE ClassName = $1 AND Username = $2 AND isTeacher = true',

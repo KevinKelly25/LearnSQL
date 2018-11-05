@@ -30,7 +30,7 @@ function getTables(req, res) {
     // teacher of class
     if (!req.body.username === req.user.username) {
       ldb.any('SELECT Username '
-              + 'FROM Attends '
+              + 'FROM LearnSQL.Attends '
               + 'WHERE ClassID = $1 AND isTeacher = true',
       [req.body.class])
         .then((result) => {
