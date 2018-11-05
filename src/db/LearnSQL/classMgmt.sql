@@ -34,12 +34,9 @@ SET LOCAL client_min_messages TO WARNING;
 
 
 
--- This function defines which users are able to create classes, but certain 
---  restrictions apply such as the user must be a teacher, restricting them 
---  from creating a class if the user tries to add the same class again during 
---  the same year, etc. 
--- This function also returns the class id of the class being created which 
---  could be used for testing purposes.
+-- This allows users to create classes, but certain restrictions apply such as 
+--  the user must be a teacher, restricting them from creating a class if the 
+--  user tries to add the same class again during the same year, etc. 
 CREATE OR REPLACE FUNCTION LearnSQL.createClass(
   dbUserName        VARCHAR(60),
   dbPassword        VARCHAR(64),
@@ -120,7 +117,7 @@ BEGIN
                              'CREATE DATABASE ' || LOWER(classID) || 
                              ' WITH TEMPLATE classdb_template OWNER classdb_admin');
 
-  -- Add teacher to the Classes database.
+  -- Add teacher to the Class's database.
   PERFORM *
   FROM LearnSQL.dblink ('user=' || $1 || ' dbname=' || LOWER(classID) || 
                         ' password=' || $2, 
@@ -135,8 +132,8 @@ BEGIN
                         ' password=' || $2, 'SELECT ClassDB.AddUserAccess()')
   AS throwAway(blank VARCHAR(30));-- Needed for dblink but unused.
 
-  -- Returns class id of the newly created class, which is also the name of the 
-  --  created class database.
+  -- Returns class id of the newly created class, which is also the identifier 
+  --  of the created class database.
   RETURN classID;
 END;
 $$ LANGUAGE plpgsql;
@@ -237,13 +234,11 @@ BEGIN
   -- Cross database link query to drop the class database.
   PERFORM *
   FROM LearnSQL.dblink_exec('user='|| $1 ||' dbname=learnsql  password='|| $2, 
-                       'DROP DATABASE '|| theClassID);
+                            'DROP DATABASE '|| theClassID);
 
-  -- Delete classes from the LearnSQL.Attends table.
   DELETE FROM LearnSQL.Attends
   WHERE Attends.classID = theClassID;
   
-  -- Delete classes from the LearnSQL.Class_t table.
   DELETE From LearnSQL.Class_t
   WHERE Class_t.classID = theClassID;
 END;

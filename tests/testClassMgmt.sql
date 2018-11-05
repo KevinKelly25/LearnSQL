@@ -253,7 +253,7 @@ DECLARE
   classID2 VARCHAR(63);
   classID3 VARCHAR(63); 
 BEGIN 
-  -- Assign the classid to variables classID1, classID2, classID3 that is returned
+  -- Assign the classID to variables classID1, classID2, classID3 that is returned
   --  by the createClass function found in classMgmt.sql file.
   classID1 = LearnSQL.createClass('testadminuser', 'password', 'testuser1', 
                                   '123', 'CS305', '1', 'time1', 'day1', 
