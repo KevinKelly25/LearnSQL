@@ -76,15 +76,16 @@ CREATE EXTENSION IF NOT EXISTS dblink WITH SCHEMA LearnSQL;
 --  the database and also a user within the tables of the LearnSQL database
 -- If any errors are encountered an exception will be raised and the function
 --  will stop execution
-CREATE OR REPLACE FUNCTION
-  LearnSQL.createUser(userName  LearnSQL.UserData_t.UserName%Type,
-                      fullName  LearnSQL.UserData_t.FullName%Type,
-                      password  LearnSQL.UserData_t.Password%Type,
-                      email     LearnSQL.UserData_t.Email%Type,
-                      token     LearnSQL.UserData_t.Token%Type,
-                      isTeacher LearnSQL.UserData_t.isTeacher%Type DEFAULT FALSE,
-                      isAdmin   LearnSQL.UserData_t.isAdmin%Type DEFAULT FALSE)
-  RETURNS VOID AS
+CREATE OR REPLACE FUNCTION LearnSQL.createUser(
+  userName    LearnSQL.UserData_t.UserName%Type,
+  fullName    LearnSQL.UserData_t.FullName%Type,
+  password    LearnSQL.UserData_t.Password%Type,
+  email       LearnSQL.UserData_t.Email%Type,
+  token       LearnSQL.UserData_t.Token%Type,
+  isTeacher   LearnSQL.UserData_t.isTeacher%Type DEFAULT FALSE,
+  isAdmin     LearnSQL.UserData_t.isAdmin%Type DEFAULT FALSE)
+
+RETURNS VOID AS
 $$
 DECLARE
   encryptedPassword VARCHAR(60); -- hashed password to be stored in UserData_t
@@ -115,11 +116,12 @@ $$ LANGUAGE plpgsql;
 --  objects in non-ClassDB databases the drop will fail
 -- If any errors are encountered an exception will be raised and the function
 --  will stop execution
-CREATE OR REPLACE FUNCTION
-  LearnSQL.dropUser(username           LearnSQL.UserData_t.UserName%Type,
-                    databaseUsername   VARCHAR DEFAULT NULL,
-                    databasePassword   VARCHAR DEFAULT NULL)
-  RETURNS VOID AS
+CREATE OR REPLACE FUNCTION LearnSQL.dropUser(
+  username           LearnSQL.UserData_t.UserName%Type,
+  databaseUsername   VARCHAR DEFAULT NULL,
+  databasePassword   VARCHAR DEFAULT NULL)
+
+RETURNS VOID AS
 $$
 DECLARE
     rec RECORD;
@@ -151,9 +153,8 @@ BEGIN
       SELECT ClassID FROM LearnSQL.Attends WHERE Attends.UserName = $1
     LOOP
       SELECT *
-      FROM dblink('user='|| $2 ||' dbname='|| rec.ClassID || ' password=' || $3, 
-                  'DROP OWNED BY '|| $1)
-      AS throwAway(blank VARCHAR(30));--needed for dblink but unused
+      FROM dblink_exec('user='|| $2 ||' dbname='|| rec.ClassID || ' password=' || $3, 
+                       'DROP OWNED BY '|| $1);
     END LOOP;
 
     -- Delete user from the database
@@ -173,10 +174,11 @@ $$ LANGUAGE plpgsql;
 -- This function is given a old username and a new username. It updates the role
 --  and tables associated with the old username with the new username as long as
 --  the new username is not already taken  
-CREATE OR REPLACE FUNCTION
-  LearnSQL.changeUsername(oldUserName LearnSQL.UserData_t.UserName%Type,
-                          newUserName LearnSQL.UserData_t.UserName%Type)
-  RETURNS VOID AS
+CREATE OR REPLACE FUNCTION LearnSQL.changeUsername(
+  oldUserName   LearnSQL.UserData_t.UserName%Type,
+  newUserName   LearnSQL.UserData_t.UserName%Type)
+
+RETURNS VOID AS
 $$
 BEGIN
   -- Update database rolename to the new value
@@ -195,11 +197,12 @@ $$ LANGUAGE plpgsql;
 -- This function updates the given user's password with a new password. Before
 --  it applies the new password it checks to make sure the given old password 
 --  matches the password stored in the database 
-CREATE OR REPLACE FUNCTION
-  LearnSQL.changePassword(userName     LearnSQL.UserData_t.Password%Type,
-                          oldPassword  LearnSQL.UserData_t.Password%Type,
-                          newPassword  LearnSQL.UserData_t.Password%Type)
-  RETURNS VOID AS
+CREATE OR REPLACE FUNCTION LearnSQL.changePassword(
+  userName      LearnSQL.UserData_t.Password%Type,
+  oldPassword   LearnSQL.UserData_t.Password%Type,
+  newPassword   LearnSQL.UserData_t.Password%Type)
+
+RETURNS VOID AS
 $$
 DECLARE
   encryptedPassword VARCHAR(60); -- Hashed password from UserData_t
@@ -226,10 +229,11 @@ $$ LANGUAGE plpgsql;
 
 
 -- This function updates the given username with the given Full Name
-CREATE OR REPLACE FUNCTION
-  LearnSQL.changeFullName(userName LearnSQL.UserData_t.UserName%Type,
-                          newFullName LearnSQL.UserData_t.FullName%Type)
-  RETURNS VOID AS
+CREATE OR REPLACE FUNCTION LearnSQL.changeFullName(
+  userName      LearnSQL.UserData_t.UserName%Type,
+  newFullName   LearnSQL.UserData_t.FullName%Type)
+
+RETURNS VOID AS
 $$
 BEGIN
   UPDATE LearnSQL.UserData_t SET FullName = $2 WHERE UserData_t.UserName = $1;
@@ -239,10 +243,11 @@ $$ LANGUAGE plpgsql;
 
 
 -- This function updates the given username with the given Email
-CREATE OR REPLACE FUNCTION
-  LearnSQL.changeEmail(userName LearnSQL.UserData_t.UserName%Type,
-                       email LearnSQL.UserData_t.Email%Type)
-  RETURNS VOID AS
+CREATE OR REPLACE FUNCTION LearnSQL.changeEmail(
+  userName   LearnSQL.UserData_t.UserName%Type,
+  email      LearnSQL.UserData_t.Email%Type)
+
+RETURNS VOID AS
 $$
 BEGIN
   UPDATE LearnSQL.UserData_t SET email = $2 WHERE UserData_t.UserName = $1;
@@ -256,11 +261,12 @@ $$ LANGUAGE plpgsql;
 --  what is supposed to be the correct hashed token and compares the given token
 --  to the hashed token. If matched and forgotPassword is true the password is
 --  updated to the given new password
-CREATE OR REPLACE FUNCTION
-  LearnSQL.forgotPasswordReset(userName     LearnSQL.UserData_t.UserName%Type,
-                               token        LearnSQL.UserData_t.Token%Type,
-                               newPassword  LearnSQL.UserData_t.Token%Type)
-  RETURNS VOID AS
+CREATE OR REPLACE FUNCTION LearnSQL.forgotPasswordReset(
+  userName      LearnSQL.UserData_t.UserName%Type,
+  token         LearnSQL.UserData_t.Token%Type,
+  newPassword   LearnSQL.UserData_t.Token%Type)
+
+RETURNS VOID AS
 $$
 DECLARE
   encryptedPassword VARCHAR(60); -- Hashed password to be stored in UserData_t
@@ -304,9 +310,10 @@ $$ LANGUAGE plpgsql;
 
 
 -- Define a function returns a boolean value on whether user is a student
-CREATE OR REPLACE FUNCTION
-  LearnSQL.isStudent(userName LearnSQL.UserData_t.UserName%Type)
-  RETURNS BOOLEAN AS
+CREATE OR REPLACE FUNCTION LearnSQL.isStudent(
+  userName   LearnSQL.UserData_t.UserName%Type)
+
+RETURNS BOOLEAN AS
 $$
 BEGIN
   IF EXISTS (
@@ -325,9 +332,10 @@ $$ LANGUAGE plpgsql;
 
 
 -- Define a function returns a boolean value on whether user is a teacher
-CREATE OR REPLACE FUNCTION
-  LearnSQL.isTeacher(userName LearnSQL.UserData_t.UserName%Type)
-  RETURNS BOOLEAN AS
+CREATE OR REPLACE FUNCTION LearnSQL.isTeacher(
+  userName   LearnSQL.UserData_t.UserName%Type)
+
+RETURNS BOOLEAN AS
 $$
 BEGIN
   IF EXISTS (
@@ -346,9 +354,10 @@ $$ LANGUAGE plpgsql;
 
 
 -- Define a function returns a boolean value on whether user is an admin
-CREATE OR REPLACE FUNCTION
-  LearnSQL.isAdmin(userName LearnSQL.UserData_t.UserName%Type)
-  RETURNS BOOLEAN AS
+CREATE OR REPLACE FUNCTION LearnSQL.isAdmin(
+  userName   LearnSQL.UserData_t.UserName%Type)
+  
+RETURNS BOOLEAN AS
 $$
 BEGIN
   IF EXISTS (

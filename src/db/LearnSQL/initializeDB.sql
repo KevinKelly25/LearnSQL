@@ -38,7 +38,7 @@ BEGIN
 
    -- Disallow DB connection to all users
    --  Postgres grants CONNECT to all by default
-   EXECUTE format('REVOKE CONNECT ON DATABASE %I FROM PUBLIC', currentDB);
+   EXECUTE format('REVOKE CONNECT ON DATABASE %I FROM public', currentDB);
 
 END
 $$;
@@ -46,7 +46,8 @@ $$;
 
 
 -- Define a table of user information for this DB
---  A "Username" is a unique id that represents a human user
+--  A "Username" is a unique id that represents a user. Usernames are used as 
+--   the primary key.
 --  A "Password" represents the hashed and salted password of a user
 --  The "Email" field characters are check to make sure they follow the scheme
 --   of a valid email

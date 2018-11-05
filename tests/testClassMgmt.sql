@@ -10,9 +10,7 @@
 
 START TRANSACTION;
 
--- Suppress NOTICES for this script only, this will not apply to functions
---  defined within. This hides unimportant, but possibly confusing messages.
-SET LOCAL client_min_messages TO WARNING;
+
 
 -- Make sure the current user has sufficient privilege to run this script
 --  privilege required: superuser
@@ -29,6 +27,12 @@ BEGIN
    END IF;
 END;
 $$;
+
+
+
+-- Suppress NOTICES for this script only, this will not apply to functions
+--  defined within. This hides unimportant, but possibly confusing messages.
+SET LOCAL client_min_messages TO WARNING;
 
 
 
@@ -57,15 +61,24 @@ COMMIT;
 
 START TRANSACTION;
 
+
+
+-- Suppress NOTICES for this script only, this will not apply to functions
+--  defined within. This hides unimportant, but possibly confusing messages.
+SET LOCAL client_min_messages TO WARNING;
+
+
+
 /*------------------------------------------------------------------------------
     Define Temporary helper functions for assisting testClassMgmt functions
 ------------------------------------------------------------------------------*/
 
 -- This function checks if the class's database exists and if the class exists
 --  LearnSQL tables.
-CREATE OR REPLACE FUNCTION
-  pg_temp.checkIfClassIdExists(classid LearnSQL.Class_t.ClassID%Type)
-  RETURNS BOOLEAN AS 
+CREATE OR REPLACE FUNCTION pg_temp.checkIfClassIdExists(
+  classid   LearnSQL.Class_t.ClassID%Type)
+
+RETURNS BOOLEAN AS 
 $$
 BEGIN 
   -- Check if the class exists in the PostgreSQL database.
@@ -105,10 +118,11 @@ $$ LANGUAGE plpgsql;
 
 
 -- This function checks if the class name exists.
-CREATE OR REPLACE FUNCTION
-  pg_temp.checkIfClassNameExists(className LearnSQL.Class_t.ClassName%Type,
-                                 classid   LearnSQL.Class_t.ClassID%Type)
-  RETURNS BOOLEAN AS 
+CREATE OR REPLACE FUNCTION pg_temp.checkIfClassNameExists(
+  className   LearnSQL.Class_t.ClassName%Type,
+  classid     LearnSQL.Class_t.ClassID%Type)
+
+RETURNS BOOLEAN AS 
 $$
 BEGIN
   -- Check if the class name exists given the class id.
@@ -129,10 +143,11 @@ $$ LANGUAGE plpgsql;
 
 
 -- This function defines whether the class has a corresponding section.
-CREATE OR REPLACE FUNCTION 
-  pg_temp.checkIfClassSectionExists(classSection LearnSQL.Class_t.Section%Type,
-                                    classid      LearnSQL.Class_t.ClassID%Type)
-  RETURNS BOOLEAN AS 
+CREATE OR REPLACE FUNCTION pg_temp.checkIfClassSectionExists(
+  classSection   LearnSQL.Class_t.Section%Type,
+  classid        LearnSQL.Class_t.ClassID%Type)
+
+RETURNS BOOLEAN AS 
 $$ 
 BEGIN 
   -- Check if section exists given the class id for the class.
@@ -153,10 +168,11 @@ $$ LANGUAGE plpgsql;
 
 
 -- This function defines whether the class has a time to it.
-CREATE OR REPLACE FUNCTION
-  pg_temp.checkIfClassTimeExists(classTimes LearnSQL.Class_t.Times%Type,
-                                 classid    LearnSQL.Class_t.ClassID%Type)
-  RETURNS BOOLEAN AS 
+CREATE OR REPLACE FUNCTION pg_temp.checkIfClassTimeExists(
+  classTimes   LearnSQL.Class_t.Times%Type,
+  classid      LearnSQL.Class_t.ClassID%Type)
+
+RETURNS BOOLEAN AS 
 $$ 
 BEGIN 
   -- Check if a time exists given the class id for the class.
@@ -177,10 +193,11 @@ $$ LANGUAGE plpgsql;
 
 
 -- This function defines whether the class has the days in which it runs.
-CREATE OR REPLACE FUNCTION
-  pg_temp.checkIfClassDaysExists(classDays LearnSQL.Class_t.Days%Type,
-                                 classid   LearnSQL.Class_t.ClassID%Type)
-  RETURNS BOOLEAN AS 
+CREATE OR REPLACE FUNCTION pg_temp.checkIfClassDaysExists(
+  classDays   LearnSQL.Class_t.Days%Type,
+  classid     LearnSQL.Class_t.ClassID%Type)
+
+RETURNS BOOLEAN AS 
 $$
 BEGIN 
   -- Check if days exists given the class id for the class.
@@ -201,10 +218,11 @@ $$ LANGUAGE plpgsql;
 
 
 -- This function defines whether the class has a start date associated with it.
-CREATE OR REPLACE FUNCTION
-  pg_temp.checkIfClassStartDateExists(startDate LearnSQL.Class_t.StartDate%Type,
-                                      classid   LearnSQL.Class_t.ClassID%Type)
-  RETURNS BOOLEAN AS 
+CREATE OR REPLACE FUNCTION pg_temp.checkIfClassStartDateExists(
+  startDate   LearnSQL.Class_t.StartDate%Type,
+  classid     LearnSQL.Class_t.ClassID%Type)
+
+RETURNS BOOLEAN AS 
 $$ 
 BEGIN 
   -- Check if the start date exists given the class id for the class.
@@ -226,9 +244,9 @@ $$ LANGUAGE plpgsql;
 -- This function creates test classes and drops test classes. After the classes
 --  are successfully created, it then checks to see if the classes were dropped 
 --  from the LearnSQL tables and if the class database was dropped. 
-CREATE OR REPLACE FUNCTION
-  pg_temp.createAndDropClassTest()
-  RETURNS TEXT AS
+CREATE OR REPLACE FUNCTION pg_temp.createAndDropClassTest()
+
+RETURNS TEXT AS
 $$
 DECLARE 
   classID1 VARCHAR(63);
@@ -237,15 +255,15 @@ DECLARE
 BEGIN 
   -- Assign the classid to variables classID1, classID2, classID3 that is returned
   --  by the createClass function found in classMgmt.sql file.
-  classID1 := LearnSQL.createClass('testadminuser', 'password', 'testuser1', 
-                                   '123', 'CS305', '1', 'time1', 'day1', 
-                                   '2018-10-31', '2018-12-10');
-  classID2 := LearnSQL.createClass('testadminuser', 'password', 'testuser2', 
-                                   'pass2', 'class2', '2', 'time2', 'day2', 
-                                   '2018-11-10', '2018-12-11');
-  classID3 := LearnSQL.createClass('testadminuser', 'password', 'testuser3', 
-                                   'pass3', 'class3', '3', 'time3', 'day3', 
-                                   '2018-11-11', '2018-12-12');
+  classID1 = LearnSQL.createClass('testadminuser', 'password', 'testuser1', 
+                                  '123', 'CS305', '1', 'time1', 'day1', 
+                                  '2018-10-31', '2018-12-10');
+  classID2 = LearnSQL.createClass('testadminuser', 'password', 'testuser2', 
+                                  'pass2', 'class2', '2', 'time2', 'day2', 
+                                  '2018-11-10', '2018-12-11');
+  classID3 = LearnSQL.createClass('testadminuser', 'password', 'testuser3', 
+                                  'pass3', 'class3', '3', 'time3', 'day3', 
+                                  '2018-11-11', '2018-12-12');
   
   -- Checks if test classes have the necessary id's associated to each one of them. 
   IF NOT (pg_temp.checkIfClassIdExists(classID1)
@@ -318,7 +336,9 @@ $$ LANGUAGE plpgsql;
 
 
 
-CREATE OR REPLACE FUNCTION pg_temp.classMgmtTest() RETURNS VOID AS
+CREATE OR REPLACE FUNCTION pg_temp.classMgmtTest() 
+
+RETURNS VOID AS
 $$
 BEGIN
    RAISE INFO '%   createAndDropClassTest()',  pg_temp.createAndDropClassTest();

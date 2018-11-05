@@ -10,8 +10,6 @@
 
 START TRANSACTION;
 
-
-
 -- Make sure the current user has sufficient privilege to run this script
 --  privilege required: superuser
 DO
@@ -36,34 +34,36 @@ SET LOCAL client_min_messages TO WARNING;
 
 
 
--- This function is used to create a class. 
--- This function will create a class database and a class in the LearnSQL tables. 
--- If any errors are encountered an exception will be raised and the function
---  will stop execution.
-CREATE OR REPLACE FUNCTION 
-  LearnSQL.createClass(
-                        dbUserName            VARCHAR(60),
-                        dbPassword            VARCHAR(64),
-                        teacherUserName       LearnSQL.UserData_t.UserName%Type,
-                        classPassword         LearnSQL.Class_t.Password%Type,
-                        className             LearnSQL.Class_t.ClassName%Type,
-                        section               LearnSQL.Class_t.Section%Type,
-                        times                 LearnSQL.Class_t.Times%Type,
-                        days                  LearnSQL.Class_t.Days%Type,
-                        startDate             LearnSQL.Class_t.StartDate%Type,
-                        endDate               LearnSQL.Class_t.EndDate%Type)
-  RETURNS VARCHAR AS
+-- This function defines which users are able to create classes, but certain 
+--  restrictions apply such as the user must be a teacher, restricting them 
+--  from creating a class if the user tries to add the same class again during 
+--  the same year, etc. 
+-- This function also returns the class id of the class being created which 
+--  could be used for testing purposes.
+CREATE OR REPLACE FUNCTION LearnSQL.createClass(
+  dbUserName        VARCHAR(60),
+  dbPassword        VARCHAR(64),
+  teacherUserName   LearnSQL.UserData_t.UserName%Type,
+  classPassword     LearnSQL.Class_t.Password%Type,
+  className         LearnSQL.Class_t.ClassName%Type,
+  section           LearnSQL.Class_t.Section%Type,
+  times             LearnSQL.Class_t.Times%Type,
+  days              LearnSQL.Class_t.Days%Type,
+  startDate         LearnSQL.Class_t.StartDate%Type,
+  endDate           LearnSQL.Class_t.EndDate%Type)
+
+RETURNS VARCHAR AS
 $$
 DECLARE
   classID VARCHAR(63);
   -- Hashed password to be stored in LearnSQL.UserData_t.
   encryptedPassword VARCHAR(60);
-  fullName VARCHAR(256); -- Used to get the full name of the teacher
+  fullName VARCHAR(256); -- Used to get the full name of the teacher.
 BEGIN
-  classID := LOWER($5) || '_' || LearnSQL.gen_random_uuid();
+  classID = LOWER($5) || '_' || LearnSQL.gen_random_uuid();
   -- Any instances of the character '-' is deleted from the classID or else this
   --  will cause an error in dblink. 
-  classID := REPLACE (classID, '-', '');
+  classID = REPLACE (classID, '-', '');
 
   SELECT LearnSQL.UserData_t.fullName
   INTO fullName
@@ -106,23 +106,19 @@ BEGIN
 
   -- Create "hashed" password using blowfish cipher.
   encryptedPassword = LearnSQL.crypt($4, LearnSQL.gen_salt('bf'));
-
-  -- Insert into LearnSQL.Class_t all class information.
+  
   INSERT INTO LearnSQL.Class_t VALUES (LOWER(classID), LOWER($5), 
                                        LOWER($6), $7, $8, $9, $10, 
                                        encryptedPassword);
 
-  -- Insert into LearnSQL.attends table class id, username, and set as is 
-  --  teacher.
   INSERT INTO LearnSQL.Attends VALUES (LOWER(classID), $3, TRUE);
 
   -- Cross database link query that creates the database classID with the owner 
   --  as classdb_admin.
   PERFORM * 
-  FROM LearnSQL.dblink ('user=' || $1 || ' dbname=learnsql password='|| $2,
-                        'CREATE DATABASE ' || LOWER(classID) || 
-                        ' WITH TEMPLATE classdb_template OWNER classdb_admin')
-    AS throwAway(blank VARCHAR(30));-- Needed for dblink but unused.
+  FROM LearnSQL.dblink_exec ('user=' || $1 || ' dbname=learnsql password='|| $2,
+                             'CREATE DATABASE ' || LOWER(classID) || 
+                             ' WITH TEMPLATE classdb_template OWNER classdb_admin');
 
   -- Add teacher to the Classes database.
   PERFORM *
@@ -137,7 +133,7 @@ BEGIN
   PERFORM *
   FROM LearnSQL.dblink ('user=' || $1 || ' dbname= ' || LOWER(classID) || 
                         ' password=' || $2, 'SELECT ClassDB.AddUserAccess()')
-    AS throwAway(blank VARCHAR(30));-- Needed for dblink but unused.
+  AS throwAway(blank VARCHAR(30));-- Needed for dblink but unused.
 
   -- Returns class id of the newly created class, which is also the name of the 
   --  created class database.
@@ -149,13 +145,13 @@ $$ LANGUAGE plpgsql;
 
 -- This function returns theClassID to be used in LearnSQL.dropClass function so 
 --  that the class id does not have to be supplied as a parameter.
-CREATE OR REPLACE FUNCTION 
-  LearnSQL.getClassID (
-                       username     LearnSQL.Attends.UserName%Type,
-                       className    LearnSQL.Class_t.ClassName%Type,
-                       classSection LearnSQL.Class_t.Section%Type,
-                       startDate    LearnSQL.Class_t.StartDate%Type)
-  RETURNS VARCHAR AS 
+CREATE OR REPLACE FUNCTION LearnSQL.getClassID (
+  username       LearnSQL.Attends.UserName%Type,
+  className      LearnSQL.Class_t.ClassName%Type,
+  classSection   LearnSQL.Class_t.Section%Type,
+  startDate      LearnSQL.Class_t.StartDate%Type)
+
+RETURNS VARCHAR AS 
 $$ 
 DECLARE 
   theClassId LearnSQL.Class_t.classID%Type;
@@ -178,20 +174,20 @@ $$ LANGUAGE plpgsql;
 
 -- This function drops the class if it exists in the LearnSQL tables and if the 
 --  class database exists.
-CREATE OR REPLACE FUNCTION
-  LearnSQL.dropClass(
-                     dbUserName                 VARCHAR(63),
-                     dbPassword                 VARCHAR(64),
-                     teacherUserName            LearnSQL.UserData_t.userName%Type,
-                     className                  LearnSQL.Class_t.ClassName%Type,
-                     classSection               LearnSQL.Class_t.Section%Type,
-                     startDate                  LearnSQL.Class_t.StartDate%Type)
-  RETURNS VOID AS
+CREATE OR REPLACE FUNCTION LearnSQL.dropClass(
+  dbUserName        VARCHAR(63),
+  dbPassword        VARCHAR(64),
+  teacherUserName   LearnSQL.UserData_t.userName%Type,
+  className         LearnSQL.Class_t.ClassName%Type,
+  classSection      LearnSQL.Class_t.Section%Type,
+  startDate         LearnSQL.Class_t.StartDate%Type)
+
+RETURNS VOID AS
 $$
 DECLARE 
   theClassID VARCHAR(63);
 BEGIN 
-  theClassID := learnSQL.getClassID($3, LOWER($4), $5, $6);
+  theClassID = learnSQL.getClassID($3, LOWER($4), $5, $6);
 
   -- Check if classname exists in LearnSQL tables.
   IF NOT EXISTS (
@@ -240,9 +236,8 @@ BEGIN
 
   -- Cross database link query to drop the class database.
   PERFORM *
-  FROM LearnSQL.dblink('user='|| $1 ||' dbname=learnsql  password='|| $2, 
-              'DROP DATABASE '|| theClassID)
-  AS throwAway(blank VARCHAR(30));-- Needed for dblink but unused.
+  FROM LearnSQL.dblink_exec('user='|| $1 ||' dbname=learnsql  password='|| $2, 
+                       'DROP DATABASE '|| theClassID);
 
   -- Delete classes from the LearnSQL.Attends table.
   DELETE FROM LearnSQL.Attends
