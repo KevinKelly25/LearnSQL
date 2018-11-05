@@ -3,8 +3,7 @@
 -- Christopher Innaco
 -- Web Applications and Databases for Education (WADE)
 
--- This file creates the functions involved with student enrollment in the LearnSQL
---  database.
+-- This file creates the functions involved with student enrollment in classes
 
 START TRANSACTION;
 
@@ -34,15 +33,13 @@ CREATE EXTENSION IF NOT EXISTS dblink SCHEMA LearnSQL;
 -- defined within. This hides unimportant, and possibly confusing messages
 SET LOCAL client_min_messages TO WARNING;
 
-
-
 /*
 *   Function returns a table listing the user's currently
 *    enrolled classes. Returns an error if the user is not
 *    a member of any class.
 */
-CREATE OR REPLACE FUNCTION
-  LearnSQL.getClasses(studentName  LearnSQL.UserData_t.UserName%Type)
+CREATE OR REPLACE FUNCTION LearnSQL.getClasses(
+    studentName  LearnSQL.UserData_t.UserName%Type)
 
   RETURNS TABLE (
                   ClassName     LearnSQL.Class_t.ClassName%Type,
@@ -92,18 +89,18 @@ $$ LANGUAGE plpgsql;
 *    the desired student is added to the class directly with the administrator user.
 *    A class password is not required when using these optional parameters.
 */
-CREATE OR REPLACE FUNCTION
-  LearnSQL.joinClass( userName          LearnSQL.Attends.userName%Type, 
-                      userFullName      LearnSQL.UserData_t.fullName%Type,
-                      userPassword      LearnSQL.UserData_t.password%Type,
-                      classID           LearnSQL.Attends.classID%Type,
-                      classPassword     LearnSQL.Class_t.password%Type,
-                      databaseUsername  VARCHAR(63),
-                      databasePassword  VARCHAR(64),
-                      adminUserName     LearnSQL.UserData_t.userName%Type 
-                                        DEFAULT NULL,
-                      adminPassword     LearnSQL.UserData_t.password%Type
-                                        DEFAULT NULL)
+CREATE OR REPLACE FUNCTION LearnSQL.joinClass( 
+    userName          LearnSQL.Attends.userName%Type, 
+    userFullName      LearnSQL.UserData_t.fullName%Type,
+    userPassword      LearnSQL.UserData_t.password%Type,
+    classID           LearnSQL.Attends.classID%Type,
+    classPassword     LearnSQL.Class_t.password%Type,
+    databaseUsername  VARCHAR(63),
+    databasePassword  VARCHAR(64),
+    adminUserName     LearnSQL.UserData_t.userName%Type 
+                      DEFAULT NULL,
+    adminPassword     LearnSQL.UserData_t.password%Type
+                      DEFAULT NULL)
   RETURNS VOID AS
 
 $$
@@ -127,9 +124,9 @@ BEGIN
 
       SELECT *
       INTO isAdmin
-      FROM LearnSQL.dblink('user='      || $6 || 
-                           ' password=' || $7 || 
-                           ' dbname='   || $4, checkAdminQuery)
+      FROM LearnSQL.dblink('user='     || $6 || 
+                          ' password=' || $7 || 
+                          ' dbname='   || $4, checkAdminQuery)
       AS throwAway(blank VARCHAR(30)); -- Unused return variable for `dblink`
 
       SELECT 1
@@ -179,10 +176,9 @@ BEGIN
           addStudentQuery := ' SELECT ClassDB.createStudent('''|| userName ||''','''|| userFullName ||''') ';
 
           PERFORM *
-          FROM LearnSQL.dblink('user='      || $6 || 
-                              ' password=' || $7 || 
-                              ' dbname='   || $4, addStudentQuery)
-          AS throwAway(blank VARCHAR(30)); -- Unused return variable for `dblink`
+          FROM LearnSQL.dblink_exec('user='      || $6 || 
+                                   ' password=' || $7 || 
+                                   ' dbname='   || $4, addStudentQuery);
 
       ELSE
         RAISE EXCEPTION 'Password incorrect for the desired class';

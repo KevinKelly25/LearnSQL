@@ -53,10 +53,11 @@ CREATE TABLE IF NOT EXISTS pg_temp.ErrorLog (
 *    a database user will use the username and password
 *    provided as a parameter.
 */
-CREATE OR REPLACE FUNCTION
-  pg_temp.createTempDBUser(userName  LearnSQL.UserData_t.userName%Type,
-                            password  LearnSQL.UserData_t.password%Type)
+CREATE OR REPLACE FUNCTION pg_temp.createTempDBUser(
+    userName  LearnSQL.UserData_t.userName%Type,
+    password  LearnSQL.UserData_t.password%Type)
   RETURNS VOID AS
+
 $$
 BEGIN
 
@@ -77,10 +78,11 @@ $$ LANGUAGE plpgsql;
 *   Drops the database user and dependent database owned by the user
 *    Reassigns owner of the template database back to `classdb`
 */
-CREATE OR REPLACE FUNCTION
-  pg_temp.dropTempDBUser(userName  LearnSQL.UserData_t.userName%Type,
-                          password  LearnSQL.UserData_t.password%Type)
+CREATE OR REPLACE FUNCTION pg_temp.dropTempDBUser(
+    userName  LearnSQL.UserData_t.userName%Type,
+    password  LearnSQL.UserData_t.password%Type)
   RETURNS VOID AS
+
 $$
 DECLARE
 
@@ -97,10 +99,9 @@ BEGIN
   dropDBQuery := 'DROP DATABASE ' || dbName; 
 
   PERFORM *
-  FROM LearnSQL.dblink('user='      || $1 || 
-                       ' password=' || $2 || 
-                       ' dbname=learnsql', dropDBQuery)
-  AS throwAway(blank VARCHAR(30));
+  FROM LearnSQL.dblink_exec('user='      || $1 || 
+                           ' password=' || $2 || 
+                           ' dbname=learnsql', dropDBQuery);
 
   EXECUTE FORMAT('REVOKE classdb_admin FROM %s', $1);
 
@@ -116,9 +117,10 @@ $$ LANGUAGE plpgsql;
 /*
 *   Returns the hashed password of a user
 */
-CREATE OR REPLACE FUNCTION
-  pg_temp.getUserHashedPassword(userName LearnSQL.Userdata_t.userName%Type)
+CREATE OR REPLACE FUNCTION pg_temp.getUserHashedPassword(
+    userName LearnSQL.Userdata_t.userName%Type)
   RETURNS VARCHAR AS
+
 $$
 DECLARE
 
@@ -141,9 +143,10 @@ $$ LANGUAGE plpgsql;
 /*
 *   Returns the hashed password of a class
 */
-CREATE OR REPLACE FUNCTION
-  pg_temp.getClassHashedPassword(classID LearnSQL.Class_t.classID%Type)
+CREATE OR REPLACE FUNCTION pg_temp.getClassHashedPassword(
+    classID LearnSQL.Class_t.classID%Type)
   RETURNS VARCHAR AS
+
 $$
 DECLARE
 
@@ -166,9 +169,9 @@ $$ LANGUAGE plpgsql;
 /*
 *   Function creates test users of varying privilege levels
 */
-CREATE OR REPLACE FUNCTION
-  pg_temp.addTestUsers()
+CREATE OR REPLACE FUNCTION pg_temp.addTestUsers()
   RETURNS VOID AS
+
 $$
 BEGIN
 
@@ -203,9 +206,10 @@ $$ LANGUAGE plpgsql;
 *   database role without the need of a database password.
 *   Should only be used to clean up at the end of test functions.
 */ 
-CREATE OR REPLACE FUNCTION
-  pg_temp.dropUser(userName  LearnSQL.UserData_t.UserName%Type)
+CREATE OR REPLACE FUNCTION pg_temp.dropUser(
+    userName  LearnSQL.UserData_t.UserName%Type)
   RETURNS VOID AS
+
 $$
 BEGIN
   -- Delete user from LearnSQL tables
@@ -229,15 +233,12 @@ $$ LANGUAGE plpgsql;
 /*
 *   Removes test users after 
 */
-CREATE OR REPLACE FUNCTION
-  pg_temp.dropTestUsers()
+CREATE OR REPLACE FUNCTION pg_temp.dropTestUsers()
   RETURNS VOID AS
+
 $$
 BEGIN
 
-  /*DELETE FROM learnsql.attends WHERE username LIKE 'test%';
-  DELETE FROM learnsql.userdata_t WHERE username LIKE 'test%';
-  DELETE FROM learnsql.class_t WHERE classid LIKE 'cs305%';*/
   PERFORM LearnSQL.dropClass('test_dbuser', 'testPassword', 
                              'testteacher', 'CS305', '71', '2018-8-28');
 
@@ -255,10 +256,11 @@ $$ LANGUAGE plpgsql;
 *   Function which calls the joinClass function
 *    to add students to a class
 */
-CREATE OR REPLACE FUNCTION
-  pg_temp.joinClassTest(databaseUsername  VARCHAR(63),
-                        databasePassword  VARCHAR(64))
+CREATE OR REPLACE FUNCTION pg_temp.joinClassTest(
+    databaseUsername  VARCHAR(63),
+    databasePassword  VARCHAR(64))
   RETURNS VOID AS
+
 $$
 DECLARE
 
@@ -288,11 +290,12 @@ $$ LANGUAGE plpgsql;
 /*
 *   Gives ClassDB-level administrator privileges to the test administrator 
 */
-CREATE OR REPLACE FUNCTION
-  pg_temp.grantAdministrator(userName  LearnSQL.UserData_t.UserName%Type,
-                             databaseUsername  VARCHAR(63),
-                             databasePassword  VARCHAR(64))
+CREATE OR REPLACE FUNCTION pg_temp.grantAdministrator(
+    userName  LearnSQL.UserData_t.UserName%Type,
+    databaseUsername  VARCHAR(63),
+    databasePassword  VARCHAR(64))
   RETURNS VOID AS
+
 $$
 DECLARE
 
@@ -307,12 +310,10 @@ BEGIN
   grantAdminQuery := ' SELECT ClassDB.grantRole(''classdb_admin'','''|| $1 ||''') '; 
 
   PERFORM *
-  FROM LearnSQL.dblink('user='      || $2 || 
-                       ' password=' || $3 || 
-                       ' dbname=  ' || classID, grantAdminQuery)
-  AS throwAway(blank VARCHAR(30));
+  FROM LearnSQL.dblink_exec('user='      || $2 || 
+                           ' password=' || $3 || 
+                           ' dbname=  ' || classID, grantAdminQuery);
   
-
 END;
 $$ LANGUAGE plpgsql;
 
@@ -327,13 +328,14 @@ $$ LANGUAGE plpgsql;
 /*
 *   Records the details of a test function event
 */
-CREATE OR REPLACE FUNCTION
-  pg_temp.recordTestEvent(eventTime         pg_temp.ErrorLog.EventTime%Type,
-                          functionName      pg_temp.ErrorLog.FunctionName%Type,
-                          isTestSuccessful  pg_temp.ErrorLog.isTestSuccessful%Type,
-                          errorDescription  pg_temp.ErrorLog.errorDescription%Type
-                                            DEFAULT NULL)
+CREATE OR REPLACE FUNCTION pg_temp.recordTestEvent(
+    eventTime         pg_temp.ErrorLog.EventTime%Type,
+    functionName      pg_temp.ErrorLog.FunctionName%Type,
+    isTestSuccessful  pg_temp.ErrorLog.isTestSuccessful%Type,
+    errorDescription  pg_temp.ErrorLog.errorDescription%Type
+                      DEFAULT NULL)
   RETURNS VOID AS
+
 $$
 BEGIN
       INSERT INTO pg_temp.ErrorLog VALUES($1, $2, $3, $4);
@@ -374,9 +376,9 @@ $$ LANGUAGE plpgsql;
 /*
 *   Checks if the four expected test users exist in the table
 */
-CREATE OR REPLACE FUNCTION
-  pg_temp.checkTestUsers()
+CREATE OR REPLACE FUNCTION pg_temp.checkTestUsers()
   RETURNS VOID AS
+
 $$
 DECLARE
   testUserCount INTEGER;
@@ -405,12 +407,13 @@ $$ LANGUAGE plpgsql;
 /*
 *   Checks if the LearnSQL class table and database exist
 */
-CREATE OR REPLACE FUNCTION
-  pg_temp.checkClassCreation(teacherName  LearnSQL.Attends.UserName%Type,
-                             className    LearnSQL.Class_t.ClassName%Type,
-                             classSection LearnSQL.Class_t.Section%Type,
-                             startDate    LearnSQL.Class_t.StartDate%Type)
+CREATE OR REPLACE FUNCTION pg_temp.checkClassCreation(
+    teacherName  LearnSQL.Attends.UserName%Type,
+    className    LearnSQL.Class_t.ClassName%Type,
+    classSection LearnSQL.Class_t.Section%Type,
+    startDate    LearnSQL.Class_t.StartDate%Type)
   RETURNS VOID AS
+
 $$
 DECLARE
   existsClassDatabase BOOLEAN;
@@ -449,15 +452,16 @@ $$ LANGUAGE plpgsql;
 /*
 *   Checks if the administrator test user was granted the correct rights
 */
-CREATE OR REPLACE FUNCTION
-  pg_temp.checkAdministrator(adminUserName  LearnSQL.Attends.UserName%Type,
-                             databaseUsername  VARCHAR(63),
-                             databasePassword  VARCHAR(64),
-                             teacherName  LearnSQL.Attends.UserName%Type,
-                             className    LearnSQL.Class_t.ClassName%Type,
-                             classSection LearnSQL.Class_t.Section%Type,
-                             startDate    LearnSQL.Class_t.StartDate%Type)
+CREATE OR REPLACE FUNCTION pg_temp.checkAdministrator(
+    adminUserName  LearnSQL.Attends.UserName%Type,
+    databaseUsername  VARCHAR(63),
+    databasePassword  VARCHAR(64),
+    teacherName  LearnSQL.Attends.UserName%Type,
+    className    LearnSQL.Class_t.ClassName%Type,
+    classSection LearnSQL.Class_t.Section%Type,
+    startDate    LearnSQL.Class_t.StartDate%Type)
   RETURNS VOID AS
+
 $$
 DECLARE
   checkAdminQuery   TEXT;
@@ -497,13 +501,14 @@ $$ LANGUAGE plpgsql;
 /*
 *   Checks if the users given in the parameters are members of a given class
 */
-CREATE OR REPLACE FUNCTION
-  pg_temp.checkClassEnrollment(studentName  LearnSQL.Attends.UserName%Type,
-                               teacherName  LearnSQL.Attends.UserName%Type,
-                               className    LearnSQL.Class_t.ClassName%Type,
-                               classSection LearnSQL.Class_t.Section%Type,
-                               startDate    LearnSQL.Class_t.StartDate%Type)
+CREATE OR REPLACE FUNCTION pg_temp.checkClassEnrollment(
+    studentName  LearnSQL.Attends.UserName%Type,
+    teacherName  LearnSQL.Attends.UserName%Type,
+    className    LearnSQL.Class_t.ClassName%Type,
+    classSection LearnSQL.Class_t.Section%Type,
+    startDate    LearnSQL.Class_t.StartDate%Type)
   RETURNS VOID AS
+
 $$
 DECLARE
 
@@ -540,9 +545,9 @@ $$ LANGUAGE plpgsql;
 /*
 *   Checks if the four expected test users are dropped from the database
 */
-CREATE OR REPLACE FUNCTION
-  pg_temp.checkDropUsers()
+CREATE OR REPLACE FUNCTION pg_temp.checkDropUsers()
   RETURNS VOID AS
+
 $$
 DECLARE
   testUserCount INTEGER;
@@ -574,9 +579,10 @@ $$ LANGUAGE plpgsql;
 /*
 *   Checks if a temporary database user was dropped
 */
-CREATE OR REPLACE FUNCTION
-  pg_temp.checkTempDBUser(userName  LearnSQL.UserData_t.UserName%Type)
+CREATE OR REPLACE FUNCTION pg_temp.checkTempDBUser(
+    userName  LearnSQL.UserData_t.UserName%Type)
   RETURNS VOID AS
+
 $$
 DECLARE
   existsDBUser     BOOLEAN;
