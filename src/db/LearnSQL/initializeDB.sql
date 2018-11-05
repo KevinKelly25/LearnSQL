@@ -38,14 +38,16 @@ BEGIN
 
    -- Disallow DB connection to all users
    --  Postgres grants CONNECT to all by default
-   EXECUTE format('REVOKE CONNECT ON DATABASE %I FROM PUBLIC', currentDB);
+   EXECUTE format('REVOKE CONNECT ON DATABASE %I FROM public', currentDB);
 
 END
 $$;
 
 
+
 -- Define a table of user information for this DB
---  A "Username" is a unique id that represents a human user
+--  A "Username" is a unique id that represents a user. Usernames are used as 
+--   the primary key.
 --  A "Password" represents the hashed and salted password of a user
 --  The "Email" field characters are check to make sure they follow the scheme
 --   of a valid email
@@ -88,17 +90,25 @@ CREATE UNIQUE INDEX IF NOT EXISTS idx_Unique_Email
 -- Define a table of classes for this DB
 --  a "ClassID" is a unique id that represents a classname plus a random ID
 --  a "ClassName" is the classID without the random ID
+--  a "Section" is used with other attributes to guarantee uniqueness of classes.
+--  a "StartDate" is used along with other attributes to guarantee uniqueness of
+--   classes and is currently used (for convenience) as a "Semester" attribute.
 --  The "Password" field will be used for students to create their student
 --   account in the classdb database
-CREATE TABLE IF NOT EXISTS Class_t (
-  ClassID                 VARCHAR(256) NOT NULL PRIMARY KEY,
-  ClassName               VARCHAR(236) NOT NULL,
-  Section                 VARCHAR(256) NOT NULL,
-  Times                   VARCHAR(256) NOT NULL,
-  Days                    VARCHAR(256) NOT NULL,
-  StartDate               VARCHAR(256) NOT NULL,
-  EndDate                 VARCHAR(256) NOT NULL,
+CREATE TABLE IF NOT EXISTS LearnSQL.Class_t (
+  ClassID                 VARCHAR(63) NOT NULL PRIMARY KEY, 
+  ClassName               VARCHAR(27) NOT NULL
+                            CHECK(TRIM(ClassName) <> ''),  
+  Section                 VARCHAR(30) NOT NULL
+                            CHECK(TRIM(Section) <> ''), 
+  Times                   VARCHAR(15) NOT NULL
+                            CHECK(TRIM(Times) <> ''), 
+  Days                    VARCHAR(7) NOT NULL
+                            CHECK(TRIM(Days) <> ''), 
+  StartDate               DATE NOT NULL, 
+  EndDate                 DATE NOT NULL, 
   Password                VARCHAR(60)  NOT NULL
+                            CHECK(TRIM(Password) <> '')  
 );
 
 
@@ -107,9 +117,9 @@ CREATE TABLE IF NOT EXISTS Class_t (
 --  a "Username" is a unique id that represents a human user from UserData table
 --  a "ClassID" is a unique id that represents a class from Class table
 --  "isTeacher" defines whether user is a teacher for that specific class
-CREATE TABLE IF NOT EXISTS Attends (
-  ClassID                 VARCHAR(256) NOT NULL REFERENCES Class_t,
-  Username                VARCHAR(256) NOT NULL,
+CREATE TABLE IF NOT EXISTS LearnSQL.Attends (
+  ClassID                 VARCHAR(63) NOT NULL REFERENCES LearnSQL.Class_t,
+  Username                VARCHAR(63) NOT NULL,
   isTeacher               BOOLEAN DEFAULT FALSE,
   PRIMARY KEY (ClassID, Username)
 );
@@ -117,22 +127,22 @@ CREATE TABLE IF NOT EXISTS Attends (
 
 
 -- Define a view to return Class data
---  This view has all attributes of Class_t with an added derived attribute
+--  This view has all attributes of LearnSQL.Class_t with an added derived attribute
 --   "studentCount"
 --  A "studentCount" represents the number of students in a class
-CREATE OR REPLACE VIEW Class AS
+CREATE OR REPLACE VIEW LearnSQL.Class AS
 SELECT ClassID, ClassName, Section, Times, Days, StartDate, EndDate, Password,
   (
     SELECT COUNT(*)
-    FROM Attends
-    WHERE Attends.ClassID = Class_t.ClassID AND isTeacher = FALSE
+    FROM LearnSQL.Attends
+    WHERE Attends.ClassID = LearnSQL.Class_t.ClassID AND isTeacher = FALSE
   ) AS studentCount
-FROM Class_t;
+FROM LearnSQl.Class_t;
 
 
 
 -- Define a view to return UserData data
--- This view has all attributes of UserData_t with an added derived attribute
+-- This view has all attributes of LearnSQL.UserData_t with an added derived attribute
 --  "isstudent"
 -- The attribute "isstudent" represents if a student is taking a class
 CREATE OR REPLACE VIEW LearnSQL.UserData AS 
@@ -141,8 +151,8 @@ SELECT Username, Fullname, Password, Email, Token, DateJoined, isTeacher,
 EXISTS 
   (
     SELECT *
-    FROM Attends 
-    WHERE Attends.Username = UserData_t.Username AND Attends.isTeacher = FALSE
+    FROM LearnSQL.Attends 
+    WHERE Attends.Username = LearnSQL.UserData_t.Username AND Attends.isTeacher = FALSE
   ) AS isstudent
 FROM LearnSQL.UserData_t;
 
