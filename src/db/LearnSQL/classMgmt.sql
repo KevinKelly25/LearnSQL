@@ -132,7 +132,7 @@ BEGIN
                         ' password=' || $2, 'SELECT ClassDB.AddUserAccess()')
   AS throwAway(blank VARCHAR(30));-- Needed for dblink but unused.
 
-  -- Returns class id of the newly created class, which is also the identifier 
+  -- Returns classID of the newly created class, which is also the identifier 
   --  of the created class database.
   RETURN classID;
 END;
@@ -141,7 +141,7 @@ $$ LANGUAGE plpgsql;
 
 
 -- This function returns theClassID to be used in LearnSQL.dropClass function so 
---  that the class id does not have to be supplied as a parameter.
+--  that the classID does not have to be supplied as a parameter.
 CREATE OR REPLACE FUNCTION LearnSQL.getClassID (
   username       LearnSQL.Attends.UserName%Type,
   className      LearnSQL.Class_t.ClassName%Type,
