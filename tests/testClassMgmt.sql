@@ -125,7 +125,7 @@ CREATE OR REPLACE FUNCTION pg_temp.checkIfClassNameExists(
 RETURNS BOOLEAN AS 
 $$
 BEGIN
-  -- Check if the class name exists given the class id.
+  -- Check if the class name exists given the classID.
   IF EXISTS (
               SELECT 1
               FROM LearnSQL.Class_t
@@ -150,7 +150,7 @@ CREATE OR REPLACE FUNCTION pg_temp.checkIfClassSectionExists(
 RETURNS BOOLEAN AS 
 $$ 
 BEGIN 
-  -- Check if section exists given the class id for the class.
+  -- Check if section exists given the classID for the class.
   IF EXISTS (
               SELECT 1 
               FROM LearnSQL.Class_t
@@ -175,7 +175,7 @@ CREATE OR REPLACE FUNCTION pg_temp.checkIfClassTimeExists(
 RETURNS BOOLEAN AS 
 $$ 
 BEGIN 
-  -- Check if a time exists given the class id for the class.
+  -- Check if a time exists given the classID for the class.
   IF EXISTS (
               SELECT 1 
               FROM LearnSQL.Class_t
@@ -200,7 +200,7 @@ CREATE OR REPLACE FUNCTION pg_temp.checkIfClassDaysExists(
 RETURNS BOOLEAN AS 
 $$
 BEGIN 
-  -- Check if days exists given the class id for the class.
+  -- Check if days exists given the classID for the class.
   IF EXISTS (
               SELECT 1 
               FROM LearnSQL.Class_t
@@ -225,7 +225,7 @@ CREATE OR REPLACE FUNCTION pg_temp.checkIfClassStartDateExists(
 RETURNS BOOLEAN AS 
 $$ 
 BEGIN 
-  -- Check if the start date exists given the class id for the class.
+  -- Check if the start date exists given the classID for the class.
   IF EXISTS (
               SELECT 1 
               FROM LearnSQL.Class_t
@@ -321,7 +321,7 @@ BEGIN
   PERFORM LearnSQL.dropClass('testadminuser', 'password', 'testuser3', 'class3', 
                              '3', '2018-11-11');
 
-  -- Check if the class id exists for any of the test classes and returns fail 
+  -- Check if the classID exists for any of the test classes and returns fail 
   --  code if it does exist.
   IF (pg_temp.checkIfClassIdExists(classID1)
     AND pg_temp.checkIfClassIdExists(classID2)
