@@ -3,17 +3,16 @@
 -- Christopher Innaco
 -- Web Applications and Databases for Education (WADE)
 
--- This file tests the functions involved with student management in the LearnSQL
---  database
+-- This file tests the functions involved with student enrollment in classes
 
 START TRANSACTION;
 
---Suppress NOTICEs for this script only, this will not apply to functions
--- defined within. This hides unimportant, and possibly confusing messages
+-- Suppress NOTICEs for this script only, this will not apply to functions
+--  defined within. This hides unimportant, and possibly confusing messages
 SET LOCAL client_min_messages TO WARNING;
 
---Make sure the current user has sufficient privilege to run this script
--- Privilege required: SUPERUSER
+-- Make sure the current user has sufficient privilege to run this script
+--  Privilege required: SUPERUSER
 
 DO
 $$

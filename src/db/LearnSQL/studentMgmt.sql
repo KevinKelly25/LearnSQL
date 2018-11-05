@@ -7,8 +7,8 @@
 
 START TRANSACTION;
 
---Make sure the current user has sufficient privilege to run this script
--- Privilege required: superuser
+-- Make sure the current user has sufficient privilege to run this script
+--  Privilege required: SUPERUSER
 
 DO
 $$
