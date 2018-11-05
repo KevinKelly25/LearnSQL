@@ -39,7 +39,7 @@ SET LOCAL client_min_messages TO WARNING;
 *    a member of any class.
 */
 CREATE OR REPLACE FUNCTION LearnSQL.getClasses(
-    studentName  LearnSQL.UserData_t.UserName%Type)
+    userName  LearnSQL.UserData_t.UserName%Type)
 
   RETURNS TABLE (
                   ClassName     LearnSQL.Class_t.ClassName%Type,
@@ -51,7 +51,7 @@ CREATE OR REPLACE FUNCTION LearnSQL.getClasses(
                   StudentCount  LearnSQL.Class.StudentCount%Type,
                   isTeacher     LearnSQL.Attends.isTeacher%Type
                 ) 
-    AS
+  AS
 
 $$
 BEGIN
@@ -176,9 +176,10 @@ BEGIN
           addStudentQuery := ' SELECT ClassDB.createStudent('''|| userName ||''','''|| userFullName ||''') ';
 
           PERFORM *
-          FROM LearnSQL.dblink_exec('user='      || $6 || 
-                                   ' password=' || $7 || 
-                                   ' dbname='   || $4, addStudentQuery);
+          FROM LearnSQL.dblink('user='     || $6 || 
+                              ' password=' || $7 || 
+                              ' dbname='   || $4, addStudentQuery)
+          AS throwAway(blank VARCHAR(30)); -- Needed for dblink and the unused return value of this query
 
       ELSE
         RAISE EXCEPTION 'Password incorrect for the desired class';

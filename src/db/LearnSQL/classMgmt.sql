@@ -159,7 +159,7 @@ BEGIN
   FROM LearnSQL.Class_t INNER JOIN LearnSQL.Attends
   ON Attends.classID = Class_t.classID
   WHERE Attends.userName = $1
-  AND Class_t.className = $2
+  AND Class_t.className = LOWER($2)
   AND Class_t.section = $3
   AND Class_t.startDate = $4;
 
