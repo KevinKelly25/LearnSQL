@@ -34,7 +34,6 @@ SET LOCAL client_min_messages TO WARNING;
 --  Function returns a table listing the user's currently
 --   enrolled classes. Returns an error if the user is not
 --   a member of any class.
-
 CREATE OR REPLACE FUNCTION LearnSQL.getClasses(
   userName  LearnSQL.UserData_t.UserName%Type,
   isTeacher BOOLEAN DEFAULT FALSE)
@@ -49,23 +48,19 @@ RETURNS TABLE (
                 StudentCount  LearnSQL.Class.StudentCount%Type
               ) 
 AS
-
 $$
 BEGIN
-
-IF NOT EXISTS (
-                SELECT 1
-                FROM LearnSQL.Attends
-                WHERE Attends.userName = $1
-              )
-THEN  
-  RAISE EXCEPTION 'User is not enrolled or teaching any classes';     
-
-END IF;
+  IF NOT EXISTS (
+                  SELECT 1
+                  FROM LearnSQL.Attends
+                  WHERE Attends.userName = $1
+                )
+  THEN  
+    RAISE EXCEPTION 'User is not enrolled or teaching any classes';     
+  END IF;
 
   IF $2 IS TRUE
   THEN
-
     -- Check if the user is a teacher
     IF NOT EXISTS (
                     SELECT 1
@@ -74,8 +69,7 @@ END IF;
                     AND UserData_t.isTeacher = TRUE
                   )
     THEN
-      RAISE EXCEPTION 'User is not a teacher';     
-
+      RAISE EXCEPTION 'User is not a teacher';
     END IF;
 
     -- Return enrolled classes where the user is a teacher
@@ -94,7 +88,6 @@ END IF;
     AND Attends.isTeacher = TRUE;
 
   ELSE
-
   -- Check if the user is a student
     IF NOT EXISTS (
                     SELECT 1
@@ -104,7 +97,6 @@ END IF;
                   )
     THEN
       RAISE EXCEPTION 'User is not a student';     
-
     END IF;
   
   -- Return enrolled classes where the user is a student
@@ -123,7 +115,6 @@ END IF;
     AND Attends.isTeacher = FALSE;
 
   END IF;
-
 END;
 $$ LANGUAGE plpgsql STABLE;
 
@@ -134,7 +125,6 @@ $$ LANGUAGE plpgsql STABLE;
 --  `adminPassword, the desired student is added to the class directly with the 
 --   administrator user. A class password is not required when using these 
 --   optional parameters.
-
 CREATE OR REPLACE FUNCTION LearnSQL.joinClass( 
   userName          LearnSQL.Attends.userName%Type, 
   userFullName      LearnSQL.UserData_t.fullName%Type,
@@ -145,7 +135,6 @@ CREATE OR REPLACE FUNCTION LearnSQL.joinClass(
   adminUserName     LearnSQL.UserData_t.userName%Type 
                     DEFAULT NULL)
 RETURNS VOID AS
-
 $$
 DECLARE
   storedClassPassword  LearnSQL.Class_t.password%Type;
@@ -153,14 +142,12 @@ DECLARE
   isAdmin              BOOLEAN;
   addStudentQuery      TEXT;
 BEGIN
-
   isAdmin := FALSE;
-  
+
   -- If an administrator's username is supplied, check if the user holds that 
   --  role
   IF $7 IS NOT NULL
   THEN
-
     -- This query borrows its implementation from ClassDB.isMember() to check
     --  if the administrator has the classdb_admin role
     SELECT
@@ -176,7 +163,6 @@ BEGIN
       RAISE EXCEPTION 'The user does not have the permissions necessary to 
                         enroll other students';
     END IF;
-
   END IF;
 
   -- Check if the student is already a member of the class
@@ -188,7 +174,6 @@ BEGIN
             ) 
   THEN
     RAISE EXCEPTION 'Student is already a member of the specified class';
-
   END IF;
 
   SELECT password
@@ -202,17 +187,14 @@ BEGIN
   IF storedClassPassword = LearnSQL.crypt($4, storedClassPassword)  
   OR isAdmin IS TRUE 
   THEN
-
     -- Add the student to the class
     INSERT INTO LearnSQL.Attends VALUES($3, $1, 'FALSE');
 
     -- Create the user under the ClassDB student role using a cross-
     -- database query
-
     addStudentQuery := 'SELECT ClassDB.createStudent(
                                                 '''|| userName ||''', 
                                                 '''|| userFullName ||''')';
-
     PERFORM *
     FROM LearnSQL.dblink('user='     || $5 || 
                         ' password=' || $6 || 
@@ -222,9 +204,7 @@ BEGIN
 
   ELSE
     RAISE EXCEPTION 'Password incorrect for the desired class';
-
   END IF;
-
 END;
 $$ LANGUAGE plpgsql;
 
