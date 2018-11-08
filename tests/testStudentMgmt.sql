@@ -635,7 +635,8 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-
+-- Commit these functions and ErrorLog table to the database in order 
+--  to perform the test operations below
 COMMIT;
 
 -- Erase the error log upon every call of this script
