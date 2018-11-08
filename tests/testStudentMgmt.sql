@@ -185,13 +185,13 @@ BEGIN
                                           '2018-8-28');
                               
   -- Test if a student can join a class using a class password
-  PERFORM LearnSQL.joinClass('testuser0', 'Test User 0',  
+  PERFORM LearnSQL.joinClass('testuser0',  
                               classID, 
                               'classPassword',
                               $1, $2);
 
   -- Test if an administrator can force a student into a class
-  PERFORM LearnSQL.joinClass('testuser1', 'Test User 1',  
+  PERFORM LearnSQL.joinClass('testuser1',  
                               classID , NULL , $1, $2, 'testadmin');
  
 END;
