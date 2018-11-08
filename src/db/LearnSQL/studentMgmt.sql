@@ -36,7 +36,8 @@ SET LOCAL client_min_messages TO WARNING;
 --   a member of any class.
 
 CREATE OR REPLACE FUNCTION LearnSQL.getClasses(
-  userName  LearnSQL.UserData_t.UserName%Type)
+  userName  LearnSQL.UserData_t.UserName%Type,
+  isTeacher BOOLEAN DEFAULT FALSE)
 RETURNS TABLE (
                 ClassName     LearnSQL.Class_t.ClassName%Type,
                 Section       LearnSQL.Class_t.Section%Type,
@@ -45,8 +46,7 @@ RETURNS TABLE (
                 StartDate     LearnSQL.Class_t.StartDate%Type,
                 EndDate       LearnSQL.Class_t.EndDate%Type,
                 classID       LearnSQL.Class_t.classID%Type,
-                StudentCount  LearnSQL.Class.StudentCount%Type,
-                isTeacher     LearnSQL.Attends.isTeacher%Type
+                StudentCount  LearnSQL.Class.StudentCount%Type
               ) 
 AS
 
@@ -59,26 +59,73 @@ IF NOT EXISTS (
                 WHERE Attends.userName = $1
               )
 THEN  
-  RAISE EXCEPTION 'User is not enrolled in any classes';     
+  RAISE EXCEPTION 'User is not enrolled or teaching any classes';     
 
 END IF;
-     
-  RETURN QUERY    
-  SELECT LearnSQL.Class.ClassName, 
-         LearnSQL.Class.Section, 
-         LearnSQL.Class.Times, 
-         LearnSQL.Class.Days, 
-         LearnSQL.Class.StartDate,
-         LearnSQL.Class.EndDate,
-         LearnSQL.Class.classID, 
-         LearnSQL.Class.StudentCount, 
-         LearnSQL.Attends.isTeacher 
-  FROM LearnSQL.Attends INNER JOIN LearnSQL.Class 
-  ON Attends.ClassID = Class.ClassID 
-  WHERE Attends.Username = $1;
+
+  IF $2 IS TRUE
+  THEN
+
+    -- Check if the user is a teacher
+    IF NOT EXISTS (
+                    SELECT 1
+                    FROM LearnSQL.UserData_t
+                    WHERE UserData_t.userName = $1
+                    AND UserData_t.isTeacher = TRUE
+                  )
+    THEN
+      RAISE EXCEPTION 'User is not a teacher';     
+
+    END IF;
+
+    -- Return enrolled classes where the user is a teacher
+    RETURN QUERY    
+    SELECT Class.ClassName, 
+           Class.Section, 
+           Class.Times, 
+           Class.Days, 
+           Class.StartDate,
+           Class.EndDate,
+           Class.classID, 
+           Class.StudentCount 
+    FROM LearnSQL.Attends INNER JOIN LearnSQL.Class  
+    ON Attends.ClassID = Class.ClassID  
+    WHERE Attends.Username = $1
+    AND Attends.isTeacher = TRUE;
+
+  ELSE
+
+  -- Check if the user is a student
+    IF NOT EXISTS (
+                    SELECT 1
+                    FROM LearnSQL.Attends
+                    WHERE Attends.userName = $1
+                    AND Attends.isTeacher = FALSE
+                  )
+    THEN
+      RAISE EXCEPTION 'User is not a student';     
+
+    END IF;
+  
+  -- Return enrolled classes where the user is a student
+    RETURN QUERY    
+    SELECT Class.ClassName, 
+           Class.Section, 
+           Class.Times, 
+           Class.Days, 
+           Class.StartDate,
+           Class.EndDate,
+           Class.classID, 
+           Class.StudentCount 
+    FROM LearnSQL.Attends INNER JOIN LearnSQL.Class  
+    ON Attends.ClassID = Class.ClassID  
+    WHERE Attends.Username = $1
+    AND Attends.isTeacher = FALSE;
+
+  END IF;
 
 END;
-$$ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql STABLE;
 
 
 
@@ -91,51 +138,40 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION LearnSQL.joinClass( 
   userName          LearnSQL.Attends.userName%Type, 
   userFullName      LearnSQL.UserData_t.fullName%Type,
-  userPassword      LearnSQL.UserData_t.password%Type,
   classID           LearnSQL.Attends.classID%Type,
   classPassword     LearnSQL.Class_t.password%Type,
   databaseUsername  VARCHAR(63),
   databasePassword  VARCHAR(64),
   adminUserName     LearnSQL.UserData_t.userName%Type 
-                    DEFAULT NULL,
-  adminPassword     LearnSQL.UserData_t.password%Type
                     DEFAULT NULL)
 RETURNS VOID AS
 
 $$
 DECLARE
-
   storedClassPassword  LearnSQL.Class_t.password%Type;
   checkAdminQuery      TEXT;
-  checkAdminPassword   BOOLEAN;
   isAdmin              BOOLEAN;
   addStudentQuery      TEXT;
-
 BEGIN
 
   isAdmin := FALSE;
   
   -- If an administrator's username is supplied, check if the user holds that 
-  --  role and if the password is correct.
-  IF $8 IS NOT NULL
+  --  role
+  IF $7 IS NOT NULL
   THEN
-    checkAdminQuery := 'SELECT ClassDB.isMember('''|| adminUserName ||''', 
-                                                ''classdb_admin'')';
 
-    SELECT *
-    INTO isAdmin
-    FROM LearnSQL.dblink('user='     || $6 || 
-                        ' password=' || $7 || 
-                        ' dbname='   || $4, checkAdminQuery)
-    AS throwAway(blank VARCHAR(30)); -- Unused return variable for `dblink`
+    -- This query borrows its implementation from ClassDB.isMember() to check
+    --  if the administrator has the classdb_admin role
+    SELECT
+    EXISTS (
+              SELECT * FROM pg_catalog.pg_roles
+              WHERE pg_catalog.pg_has_role(LOWER($7), oid, 'member')
+              AND rolname = 'classdb_admin'
+           )
+    INTO isAdmin;
 
-    SELECT 1
-    INTO checkAdminPassword
-    FROM LearnSQL.UserData_t
-    WHERE UserData_t.password = $9
-    AND UserData_t.userName = $8;
-
-    IF (isAdmin IS FALSE) OR (checkAdminPassword IS FALSE)
+    IF (isAdmin IS FALSE)
     THEN
       RAISE EXCEPTION 'The user does not have the permissions necessary to 
                         enroll other students';
@@ -148,47 +184,45 @@ BEGIN
               SELECT 1
               FROM LearnSQL.Attends
               WHERE Attends.userName = $1
-              AND Attends.classID = $4
+              AND Attends.classID = $3
             ) 
   THEN
     RAISE EXCEPTION 'Student is already a member of the specified class';
 
   END IF;
 
+  SELECT password
+  INTO storedClassPassword
+  FROM LearnSQL.Class
+  WHERE Class.classID = $3;
+
   -- Check if the given password matches the stored password.
-  -- Allows for users to join classes for which no password is set.
-  -- Allows administrators to force a student to enroll in a class.
-  IF $5 IS NOT NULL OR isAdmin IS TRUE
+  --  Allows for users to join classes for which no password is set.
+  --  Allows administrators to force a student to enroll in a class.
+  IF storedClassPassword = LearnSQL.crypt($4, storedClassPassword)  
+  OR isAdmin IS TRUE 
   THEN
-    SELECT password
-    INTO storedClassPassword
-    FROM LearnSQL.Class
-    WHERE Class.classID = $4;
 
-    IF storedClassPassword = $5  OR isAdmin IS TRUE 
-    THEN
+    -- Add the student to the class
+    INSERT INTO LearnSQL.Attends VALUES($3, $1, 'FALSE');
 
-      -- Add the student to the class
-      INSERT INTO LearnSQL.Attends VALUES($4, $1, 'FALSE');
+    -- Create the user under the ClassDB student role using a cross-
+    -- database query
 
-      -- Create the user under the ClassDB student role using a cross-
-      -- database query
+    addStudentQuery := 'SELECT ClassDB.createStudent(
+                                                '''|| userName ||''', 
+                                                '''|| userFullName ||''')';
 
-      addStudentQuery := 'SELECT ClassDB.createStudent(
-                                                  '''|| userName ||''', 
-                                                  '''|| userFullName ||''')';
+    PERFORM *
+    FROM LearnSQL.dblink('user='     || $5 || 
+                        ' password=' || $6 || 
+                        ' dbname='   || $3, addStudentQuery)
+    AS throwAway(blank VARCHAR(30)); 
+    -- Needed for dblink and the unused return value of this query
 
-      PERFORM *
-      FROM LearnSQL.dblink('user='     || $6 || 
-                          ' password=' || $7 || 
-                          ' dbname='   || $4, addStudentQuery)
-      AS throwAway(blank VARCHAR(30)); 
-      -- Needed for dblink and the unused return value of this query
+  ELSE
+    RAISE EXCEPTION 'Password incorrect for the desired class';
 
-    ELSE
-      RAISE EXCEPTION 'Password incorrect for the desired class';
-
-    END IF;
   END IF;
 
 END;

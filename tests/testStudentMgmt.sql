@@ -80,10 +80,8 @@ RETURNS VOID AS
 
 $$
 DECLARE
-
   dbName      TEXT;
   dropDBQuery TEXT;
-
 BEGIN
 
   SELECT INTO dbName LearnSQL.getClassID('testteacher', 'CS305', '71', 
@@ -104,59 +102,6 @@ BEGIN
 
 END;
 $$ LANGUAGE plpgsql;
-
-
-
-
---  Returns the hashed password of a user
-
-CREATE OR REPLACE FUNCTION pg_temp.getUserHashedPassword(
-  userName LearnSQL.Userdata_t.userName%Type)
-RETURNS VARCHAR AS
-
-$$
-DECLARE
-
-  hashedPassword  LearnSQL.Userdata_t.password%Type;
-
-BEGIN
-
-  SELECT password 
-  INTO hashedPassword 
-  FROM LearnSQL.Userdata_t 
-  WHERE Userdata_t.userName = $1;
-
-RETURN hashedPassword;
-  
-END;
-$$ LANGUAGE plpgsql;
-
-
-
-
---  Returns the hashed password of a class
-
-CREATE OR REPLACE FUNCTION pg_temp.getClassHashedPassword(
-  classID LearnSQL.Class_t.classID%Type)
-RETURNS VARCHAR AS
-
-$$
-DECLARE
-
-  hashedPassword  LearnSQL.Class_t.password%Type;
-
-BEGIN
-
-  SELECT password 
-  INTO hashedPassword 
-  FROM LearnSQL.Class_t 
-  WHERE Class_t.classID = $1;
-
-RETURN hashedPassword;
-  
-END;
-$$ LANGUAGE plpgsql;
-
 
 
 
@@ -254,26 +199,22 @@ RETURNS VOID AS
 
 $$
 DECLARE
-
   classID LearnSQL.Class_t.classID%Type;
-
 BEGIN
 
   SELECT INTO classID LearnSQL.getClassID('testteacher', 'CS305', '71', 
                                           '2018-8-28');
                               
   -- Test if a student can join a class using a class password
-  PERFORM LearnSQL.joinClass('testuser0', 'Test User 0', 
-                              pg_temp.getUserHashedPassword('testuser0'), 
+  PERFORM LearnSQL.joinClass('testuser0', 'Test User 0',  
                               classID, 
-                              pg_temp.getClassHashedPassword(classID), 
+                              'classPassword',
                               $1, $2);
 
   -- Test if an administrator can force a student into a class
-  PERFORM LearnSQL.joinClass('testuser1', 'Test User 1', 
-                              pg_temp.getUserHashedPassword('testuser1'), 
+  PERFORM LearnSQL.joinClass('testuser1', 'Test User 1',  
                               classID , NULL , $1, $2, 'testadmin');
-  
+ 
 END;
 $$ LANGUAGE plpgsql;
 
@@ -315,10 +256,8 @@ RETURNS VOID AS
 
 $$
 DECLARE
-
   existsDBUser     BOOLEAN;
   currentTimestamp TIMESTAMP;
-
 BEGIN
 
   existsDBUser := FALSE;
@@ -353,10 +292,8 @@ RETURNS VOID AS
 
 $$
 DECLARE
-
   testUserCount INTEGER;
   currentTimestamp TIMESTAMP;
-
 BEGIN
 
     testUserCount := 0;
@@ -397,12 +334,10 @@ RETURNS VOID AS
 
 $$
 DECLARE
-
   existsClassDatabase BOOLEAN;
   existsClassTable    BOOLEAN;
   storedClassID       LearnSQL.Class_t.classID%Type;
   currentTimestamp    TIMESTAMP;
-
 BEGIN
 
   existsClassDatabase := FALSE;
@@ -450,11 +385,9 @@ RETURNS VOID AS
 
 $$
 DECLARE
-
   currentTimestamp  TIMESTAMP;
   isEnrolled        BOOLEAN;
   storedClassID     LearnSQL.Class_t.classID%Type;
-    
 BEGIN
 
   isEnrolled := FALSE;
@@ -492,11 +425,9 @@ RETURNS VOID AS
 
 $$
 DECLARE
-
   testUserDBCount   INTEGER;
   testUserRoleCount INTEGER;
   currentTimestamp  TIMESTAMP;
-
 BEGIN
 
     testUserDBCount := 0;
@@ -552,10 +483,8 @@ RETURNS VOID AS
 
 $$
 DECLARE
-
   existsDBUser     BOOLEAN;
   currentTimestamp TIMESTAMP;
-
 BEGIN
 
   existsDBUser := FALSE;
@@ -635,27 +564,42 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- Commit these functions and ErrorLog table to the database in order 
+-- Commit these functions and the ErrorLog table to the database in order 
 --  to perform the test operations below
 COMMIT;
 
--- Erase the error log upon every call of this script
+-- Erase the error log upon every call of this script so that old test 
+--  results are not mixed with new
 TRUNCATE pg_temp.ErrorLog;
 
+-- Create a DBMS server level user with appropriate permissions and roles
 SELECT pg_temp.createTempDBUser('test_dbuser', 'testPassword');
+
+-- Ensure the user exists and specifiy TRUE to indicate to the function that the 
+--  user was intended to exist at this time and to record the event based on 
+--  this assumption
 SELECT pg_temp.checkTempDBUser('test_dbuser', TRUE);
 
+-- Create LearnSQL database level users and ensure they exist
 SELECT pg_temp.addTestUsers();
 SELECT pg_temp.checkTestUsers();
 
+-- Create a new class using the temporary teacher account created in the
+--  `pg_temp.addTestUsers()` function
 SELECT LearnSQL.createClass('test_dbuser', 'testPassword', 'testteacher', 
                             'classPassword', 'CS305', '71', '5:30 - 7:10', 
                             'TR', '2018-8-28', '2018-12-13');
+
+-- Make sure the class exists and the teacher is enrolled
 SELECT pg_temp.checkClassCreation('testteacher', 'CS305', '71', '2018-8-28');
 SELECT pg_temp.checkClassEnrollment('testteacher','testteacher', 'CS305', '71', 
                                     '2018-8-28');
-SELECT * FROM LearnSQL.getClasses('testteacher');
 
+-- Return the list of classes the teacher is currently instructing                                    
+SELECT * FROM LearnSQL.getClasses('testteacher', TRUE);
+
+-- Enroll the LearnSQL student accounts in the class, check if the operation
+--  is successful then return a list of classes the students are enrolled in
 SELECT pg_temp.joinClassTest('test_dbuser', 'testPassword');
 SELECT pg_temp.checkClassEnrollment('testuser0','testteacher', 'CS305', '71', 
                                     '2018-8-28');
@@ -664,13 +608,22 @@ SELECT pg_temp.checkClassEnrollment('testuser1','testteacher', 'CS305', '71',
                                     '2018-8-28');
 SELECT * FROM LearnSQL.getClasses('testuser1');
 
+-- Drop the class
 SELECT LearnSQL.dropClass('test_dbuser', 'testPassword', 
                           'testteacher', 'CS305', '71', '2018-8-28');
 
+-- Drop the LearnSQL database level users and make sure their roles
+--  and LearnSQL.Userdata_t entry is deleted
 SELECT pg_temp.dropTestUsers();
 SELECT pg_temp.checkDropUsers();
 
+-- Drop the DBMS server level user. Specifiy FALSE to indicate to the function 
+--  that the user was intended not to exist at this time and to record the event 
+--  based on this assumption
 SELECT pg_temp.dropTempDBUser('test_dbuser', 'testPassword');
 SELECT pg_temp.checkTempDBUser('test_dbuser', FALSE);
 
+-- Return the table with the results of the `pg_temp.check...()` functions.
+--  Most importantly, this information includes the pass/fail condition for
+--  each test operation.
 SELECT * FROM pg_temp.getTestResults();
