@@ -1,6 +1,6 @@
 --addAllToDB.psql
 
--- Kevin Kelly, Michael Torres
+-- Christopher Innaco, Kevin Kelly, Michael Torres
 -- Web Applications and Databases for Education (WADE)
 
 -- This script runs all the necessary SQL scripts. This script must be executed as a superuser
@@ -17,3 +17,4 @@
 \ir initializeDB.sql
 \ir userMgmt.sql
 \ir classMgmt.sql
+\ir studentMgmt.sql

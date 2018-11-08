@@ -63,7 +63,7 @@ function addStudent(req, res) {
         } else {
           // Get class join password
           return t.one('SELECT Password '
-                       + 'FROM Class '
+                       + 'FROM LearnSQL.Class '
                        + 'WHERE ClassID = $1',
           [req.body.classID])
             .then((result2) => {
