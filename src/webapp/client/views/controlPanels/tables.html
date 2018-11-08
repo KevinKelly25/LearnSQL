@@ -92,41 +92,44 @@
     <!-- END OF NAVBAR -->
 
     <!-- PAGE CONTENT -->
-    <section id="page-content" class="mt-5 container" ng-controller="tableCtrl" data-ng-init="initTables()">
+    <section id="page-content" class="mt-5 container" ng-controller="schemaCtrl" data-ng-init="initTables()">
         <!-- show when looking at all tables, is also the default view -->
-        <span ng-show="view =='allTables'">
+        <span ng-show="view =='allObjects'">
             <div ng-if="tables">
-                <h1 class="text-center">{{ userInfo.username }}'s Tables</h1>
+                <h1 class="text-center">{{ userInfo.username }}'s Schema</h1>
                 <!-- list of all tables -->
                 <a href="/views/workshop.html" class="btn btn-outline-success btn-block btn-lg" role="button">
                     Go To Workshop
                 </a>
                 <table class="ui celled table row-border hover order-column shadow-lg text-center" datatable="">
-                    <caption class="text-primary">List of Tables</caption>
+                    <caption class="text-primary">List of Objects</caption>
                     <thead>
                         <!-- column headings -->
                         <tr>
                             <th></th>
-                            <th>Table name</th>
-                            <th>Schema</th>
+                            <th>Object name</th>
                             <th>Type</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr ng-repeat="x in tables">
                             <td>{{ $index + 1 }}</td>
-                            <td>
-                               <a ng-click="getTable(x.tablename)" style="color:blue; text-decoration: underline; ">{{ x.tablename }}</a> 
+                            <td><a ng-click="getObjectDetails(x.name,x.type)" style="color:blue; text-decoration: underline; ">{{ x.name }}</a> 
                             </td>
-                            <td>{{ x.schemaname }}</td>
-                            <td>{{ x.tabletype }}</td>
+                            <td>{{ x.type }}</td>
+                            <td>
+                                <a href="" class="btn btn-success btn-block btn-lg" role="button">
+                                    Go To {{ x.type }}
+                                </a> 
+                            </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
         </span>
         <!-- show if looking at a single table -->
-        <span ng-show="view =='oneTable'">
+        <span ng-show="view =='objectDetailsView'">
                 <div ng-if="table">
                     <a ng-click="backToTables()" style="color:blue; text-decoration: underline; ">Go Back To Tables</a>
                     <h1 class="text-center">{{ tableInfo.name }} Table</h1>
@@ -158,7 +161,7 @@
     <script src="../../javascripts/jquery.dataTables.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.6/angular.min.js"></script>
     <script src="../../javascripts/controllers/mainControllers.js"></script>
-    <script src="../../javascripts/controllers/tableController.js"></script>
+    <script src="../../javascripts/controllers/schemaController.js"></script>
     <script src="../../javascripts/angular-datatables.min.js"></script>
     <script src="../../javascripts/popper.min.js"></script>
     <script src="../../javascripts/bootstrap.min.js"></script>

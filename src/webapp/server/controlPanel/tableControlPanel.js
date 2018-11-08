@@ -61,9 +61,9 @@ function getTables(req, res) {
      * username matches give username
      */
     const db = dbCreator(req.body.class);
-    db.any('SELECT * '
-           + 'FROM ClassDB.StudentTable '
-           + 'WHERE username = $1',
+    db.any('SELECT Name, Type '
+           + 'FROM ClassDB.MajorUserObjects '
+           + 'WHERE username = $1 AND schemaname = $1',
     [req.body.username])
       .then((result) => {
         db.$pool.end();// closes the connection to the database. IMPORTANT!!

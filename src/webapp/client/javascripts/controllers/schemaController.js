@@ -9,8 +9,8 @@
 
 
 
-app.controller('tableCtrl', ($scope, $http, $location) => {
-  $scope.view = 'allTables';// default view of the table
+app.controller('schemaCtrl', ($scope, $http, $location) => {
+  $scope.view = 'allObjects';// default view of the table
 
   /**
    * This function initializes the table that contains all the user's tables in
@@ -23,7 +23,7 @@ app.controller('tableCtrl', ($scope, $http, $location) => {
       username: $location.search().username,
       class: $location.search().classID,
     };
-    $http.post('/getTables', $scope.userInfo)
+    $http.post('/getObjects', $scope.userInfo)
       .success((data) => {
         $scope.tables = data;
       });
@@ -38,21 +38,37 @@ app.controller('tableCtrl', ($scope, $http, $location) => {
    *
    * @param {string} tableName the name of the table that will be retrieved
    */
-  $scope.getTable = (tableName) => {
-    $scope.tableInfo = {
-      name: tableName,
+  $scope.getObjectDetails = (name, type) => {
+    $scope.objectInfo = {
+      objectName: name,
+      objectType: type,
       schema: $location.search().username,
       classID: $location.search().classID,
     };
 
     // switch to another form
-    $scope.view = 'oneTable';
+    $scope.view = 'loadingObjectView';
 
     // get table details/rows
-    $http.post('/getTable', $scope.tableInfo)
+    $http.post('/getObjectDetails', $scope.objectInfo)
       .success((data) => {
-        $scope.columns = Object.keys(data[0]);// the amount of columns
-        $scope.table = data;
+        // check if data is empty
+        if (type === 'TABLE') {
+          $scope.columns = Object.keys(data[0]);// the amount of columns
+          $scope.object = data;
+        } else if (type === 'VIEW') {
+          $scope.columns = Object.keys(data[0]);// the amount of columns
+          $scope.object = data;
+        } else if (type === 'FUNCTION') {
+          $scope.columns = Object.keys(data[0]);// the amount of columns
+          $scope.object = data;
+        } else if (type === 'TRIGGER') {
+          $scope.columns = Object.keys(data[0]);// the amount of columns
+          $scope.object = data;
+        } else { // should be an index
+          $scope.columns = Object.keys(data[0]);// the amount of columns
+          $scope.object = data;
+        }
       });
   };
 
