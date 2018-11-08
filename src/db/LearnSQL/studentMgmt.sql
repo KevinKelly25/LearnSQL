@@ -7,51 +7,48 @@
 
 START TRANSACTION;
 
--- Make sure the current user has sufficient privilege to run this script
+-- Make sure the current user has sufficient privilege to run this script.
 --  Privilege required: SUPERUSER
 
 DO
 $$
 BEGIN
   IF NOT EXISTS (
-                  SELECT 1 FROM pg_catalog.pg_roles
-                  WHERE rolname = CURRENT_USER AND rolsuper = TRUE
+                  SELECT 1 
+                  FROM pg_catalog.pg_roles
+                  WHERE rolname = CURRENT_USER 
+                  AND rolsuper = TRUE
                 ) 
-    THEN
-      RAISE EXCEPTION 'Insufficient privileges: User must hold superuser '
-                      'permissions to execute this script';
-   END IF;
+  THEN
+    RAISE EXCEPTION 'Insufficient privileges: User must hold superuser '
+                    'permissions to execute this script';
+  END IF;
 END
 $$;
 
--- Allow for cross-database queries using the `dblink` extension on the 'LearnSQL'
---  schema
-
-CREATE EXTENSION IF NOT EXISTS dblink SCHEMA LearnSQL;
-
 --Suppress NOTICEs for this script only, this will not apply to functions
--- defined within. This hides unimportant, and possibly confusing messages
+-- defined within. This hides unimportant, and possibly confusing messages.
 SET LOCAL client_min_messages TO WARNING;
 
-/*
-*   Function returns a table listing the user's currently
-*    enrolled classes. Returns an error if the user is not
-*    a member of any class.
-*/
-CREATE OR REPLACE FUNCTION LearnSQL.getClasses(
-    userName  LearnSQL.UserData_t.UserName%Type)
 
-  RETURNS TABLE (
-                  ClassName     LearnSQL.Class_t.ClassName%Type,
-                  Section       LearnSQL.Class_t.Section%Type,
-                  Times         LearnSQL.Class_t.Times%Type,
-                  Days          LearnSQL.Class_t.Days%Type,
-                  StartDate     LearnSQL.Class_t.StartDate%Type,
-                  EndDate       LearnSQL.Class_t.EndDate%Type,
-                  StudentCount  LearnSQL.Class.StudentCount%Type,
-                  isTeacher     LearnSQL.Attends.isTeacher%Type
-                ) 
-  AS
+--  Function returns a table listing the user's currently
+--   enrolled classes. Returns an error if the user is not
+--   a member of any class.
+
+CREATE OR REPLACE FUNCTION LearnSQL.getClasses(
+  userName  LearnSQL.UserData_t.UserName%Type)
+RETURNS TABLE (
+                ClassName     LearnSQL.Class_t.ClassName%Type,
+                Section       LearnSQL.Class_t.Section%Type,
+                Times         LearnSQL.Class_t.Times%Type,
+                Days          LearnSQL.Class_t.Days%Type,
+                StartDate     LearnSQL.Class_t.StartDate%Type,
+                EndDate       LearnSQL.Class_t.EndDate%Type,
+                classID       LearnSQL.Class_t.classID%Type,
+                StudentCount  LearnSQL.Class.StudentCount%Type,
+                isTeacher     LearnSQL.Attends.isTeacher%Type
+              ) 
+AS
 
 $$
 BEGIN
@@ -59,10 +56,10 @@ BEGIN
 IF NOT EXISTS (
                 SELECT 1
                 FROM LearnSQL.Attends
-                WHERE LearnSQL.Attends.userName = $1
+                WHERE Attends.userName = $1
               )
-  THEN  
-    RAISE EXCEPTION 'User is not enrolled in any classes';     
+THEN  
+  RAISE EXCEPTION 'User is not enrolled in any classes';     
 
 END IF;
      
@@ -72,36 +69,38 @@ END IF;
          LearnSQL.Class.Times, 
          LearnSQL.Class.Days, 
          LearnSQL.Class.StartDate,
-         LearnSQL.Class.EndDate, 
+         LearnSQL.Class.EndDate,
+         LearnSQL.Class.classID, 
          LearnSQL.Class.StudentCount, 
          LearnSQL.Attends.isTeacher 
   FROM LearnSQL.Attends INNER JOIN LearnSQL.Class 
-  ON LearnSQL.Attends.ClassID = LearnSQL.Class.ClassID 
-  WHERE LearnSQL.Attends.Username = $1;
+  ON Attends.ClassID = Class.ClassID 
+  WHERE Attends.Username = $1;
 
 END;
 $$ LANGUAGE plpgsql;
 
 
-/*
-*   Function which enrolls the desired user to a class using a class password.
-*    When supplied with the optional parameter `adminUserName` and `adminPassword,
-*    the desired student is added to the class directly with the administrator user.
-*    A class password is not required when using these optional parameters.
-*/
+
+--  Function which enrolls the desired user to a class using a class password.
+--   When supplied with the optional parameter `adminUserName` and 
+--  `adminPassword, the desired student is added to the class directly with the 
+--   administrator user. A class password is not required when using these 
+--   optional parameters.
+
 CREATE OR REPLACE FUNCTION LearnSQL.joinClass( 
-    userName          LearnSQL.Attends.userName%Type, 
-    userFullName      LearnSQL.UserData_t.fullName%Type,
-    userPassword      LearnSQL.UserData_t.password%Type,
-    classID           LearnSQL.Attends.classID%Type,
-    classPassword     LearnSQL.Class_t.password%Type,
-    databaseUsername  VARCHAR(63),
-    databasePassword  VARCHAR(64),
-    adminUserName     LearnSQL.UserData_t.userName%Type 
-                      DEFAULT NULL,
-    adminPassword     LearnSQL.UserData_t.password%Type
-                      DEFAULT NULL)
-  RETURNS VOID AS
+  userName          LearnSQL.Attends.userName%Type, 
+  userFullName      LearnSQL.UserData_t.fullName%Type,
+  userPassword      LearnSQL.UserData_t.password%Type,
+  classID           LearnSQL.Attends.classID%Type,
+  classPassword     LearnSQL.Class_t.password%Type,
+  databaseUsername  VARCHAR(63),
+  databasePassword  VARCHAR(64),
+  adminUserName     LearnSQL.UserData_t.userName%Type 
+                    DEFAULT NULL,
+  adminPassword     LearnSQL.UserData_t.password%Type
+                    DEFAULT NULL)
+RETURNS VOID AS
 
 $$
 DECLARE
@@ -116,29 +115,31 @@ BEGIN
 
   isAdmin := FALSE;
   
-  -- If an administrator's username is supplied, check if the user holds that role
-  --  and if the password is correct
+  -- If an administrator's username is supplied, check if the user holds that 
+  --  role and if the password is correct.
   IF $8 IS NOT NULL
+  THEN
+    checkAdminQuery := 'SELECT ClassDB.isMember('''|| adminUserName ||''', 
+                                                ''classdb_admin'')';
+
+    SELECT *
+    INTO isAdmin
+    FROM LearnSQL.dblink('user='     || $6 || 
+                        ' password=' || $7 || 
+                        ' dbname='   || $4, checkAdminQuery)
+    AS throwAway(blank VARCHAR(30)); -- Unused return variable for `dblink`
+
+    SELECT 1
+    INTO checkAdminPassword
+    FROM LearnSQL.UserData_t
+    WHERE UserData_t.password = $9
+    AND UserData_t.userName = $8;
+
+    IF (isAdmin IS FALSE) OR (checkAdminPassword IS FALSE)
     THEN
-      checkAdminQuery := ' SELECT ClassDB.isMember('''|| adminUserName ||''', ''classdb_admin'') ';
-
-      SELECT *
-      INTO isAdmin
-      FROM LearnSQL.dblink('user='     || $6 || 
-                          ' password=' || $7 || 
-                          ' dbname='   || $4, checkAdminQuery)
-      AS throwAway(blank VARCHAR(30)); -- Unused return variable for `dblink`
-
-      SELECT 1
-      INTO checkAdminPassword
-      FROM LearnSQL.UserData_t
-      WHERE LearnSQL.UserData_t.password = $9
-      AND LearnSQL.UserData_t.userName = $8;
-
-      IF ((isAdmin IS FALSE) OR (checkAdminPassword IS FALSE))
-        THEN
-          RAISE EXCEPTION 'The user does not have the permissions necessary to enroll other students';
-      END IF;
+      RAISE EXCEPTION 'The user does not have the permissions necessary to 
+                        enroll other students';
+    END IF;
 
   END IF;
 
@@ -146,11 +147,11 @@ BEGIN
   IF EXISTS (
               SELECT 1
               FROM LearnSQL.Attends
-              WHERE LearnSQL.Attends.userName = $1
-              AND LearnSQL.Attends.classID = $4
+              WHERE Attends.userName = $1
+              AND Attends.classID = $4
             ) 
-    THEN
-      RAISE EXCEPTION 'Student is already a member of the specified class';
+  THEN
+    RAISE EXCEPTION 'Student is already a member of the specified class';
 
   END IF;
 
@@ -158,33 +159,36 @@ BEGIN
   -- Allows for users to join classes for which no password is set.
   -- Allows administrators to force a student to enroll in a class.
   IF $5 IS NOT NULL OR isAdmin IS TRUE
+  THEN
+    SELECT password
+    INTO storedClassPassword
+    FROM LearnSQL.Class
+    WHERE Class.classID = $4;
+
+    IF storedClassPassword = $5  OR isAdmin IS TRUE 
     THEN
-      SELECT password
-      INTO storedClassPassword
-      FROM LearnSQL.Class
-      WHERE Class.classID = $4;
 
-      IF storedClassPassword = $5  OR isAdmin IS TRUE 
-        THEN
+      -- Add the student to the class
+      INSERT INTO LearnSQL.Attends VALUES($4, $1, 'FALSE');
 
-          -- Add the student to the class
-          INSERT INTO LearnSQL.Attends VALUES($4, $1, 'FALSE');
+      -- Create the user under the ClassDB student role using a cross-
+      -- database query
 
-          -- Create the user under the ClassDB student role using a cross-
-          -- database query
+      addStudentQuery := 'SELECT ClassDB.createStudent(
+                                                  '''|| userName ||''', 
+                                                  '''|| userFullName ||''')';
 
-          addStudentQuery := ' SELECT ClassDB.createStudent('''|| userName ||''','''|| userFullName ||''') ';
+      PERFORM *
+      FROM LearnSQL.dblink('user='     || $6 || 
+                          ' password=' || $7 || 
+                          ' dbname='   || $4, addStudentQuery)
+      AS throwAway(blank VARCHAR(30)); 
+      -- Needed for dblink and the unused return value of this query
 
-          PERFORM *
-          FROM LearnSQL.dblink('user='     || $6 || 
-                              ' password=' || $7 || 
-                              ' dbname='   || $4, addStudentQuery)
-          AS throwAway(blank VARCHAR(30)); -- Needed for dblink and the unused return value of this query
+    ELSE
+      RAISE EXCEPTION 'Password incorrect for the desired class';
 
-      ELSE
-        RAISE EXCEPTION 'Password incorrect for the desired class';
-
-      END IF;
+    END IF;
   END IF;
 
 END;

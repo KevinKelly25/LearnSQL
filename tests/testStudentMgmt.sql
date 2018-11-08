@@ -8,31 +8,32 @@
 START TRANSACTION;
 
 -- Suppress NOTICEs for this script only, this will not apply to functions
---  defined within. This hides unimportant, and possibly confusing messages
+--  defined within. This hides unimportant, and possibly confusing messages.
 SET LOCAL client_min_messages TO WARNING;
 
--- Make sure the current user has sufficient privilege to run this script
+-- Make sure the current user has sufficient privilege to run this script.
 --  Privilege required: SUPERUSER
 
 DO
 $$
 BEGIN
   IF NOT EXISTS (
-                  SELECT 1 FROM pg_catalog.pg_roles
-                  WHERE rolname = CURRENT_USER AND rolsuper = TRUE
+                  SELECT 1 
+                  FROM pg_catalog.pg_roles
+                  WHERE rolname = CURRENT_USER 
+                  AND rolsuper = TRUE
                 ) 
-    THEN
-      RAISE EXCEPTION 'Insufficient privileges: User must hold superuser '
-                      'permissions to execute this script';
-   END IF;
+  THEN
+    RAISE EXCEPTION 'Insufficient privileges: User must hold superuser '
+                    'permissions to execute this script';
+  END IF;
 END
 $$;
 
 
 
-/*
-*   Create a table to store data about test results
-*/
+--  Create a table to store data about test results
+
 CREATE TABLE IF NOT EXISTS pg_temp.ErrorLog (
   eventTime               TIMESTAMP NOT NULL,
   functionName            VARCHAR(256) NOT NULL,
@@ -43,16 +44,15 @@ CREATE TABLE IF NOT EXISTS pg_temp.ErrorLog (
 
 
 
-/*
-*   Creates a database user with the permissions `SUPERUSER` 
-*    and `classdb_admin`. All testing functions which require
-*    a database user will use the username and password
-*    provided as a parameter.
-*/
+--  Creates a database user with the permissions `SUPERUSER` 
+--   and `classdb_admin`. All testing functions which require
+--   a database user will use the username and password
+--   provided as a parameter.
+
 CREATE OR REPLACE FUNCTION pg_temp.createTempDBUser(
-    userName  LearnSQL.UserData_t.userName%Type,
-    password  LearnSQL.UserData_t.password%Type)
-  RETURNS VOID AS
+  userName  LearnSQL.UserData_t.userName%Type,
+  password  LearnSQL.UserData_t.password%Type)
+RETURNS VOID AS
 
 $$
 BEGIN
@@ -70,13 +70,13 @@ $$ LANGUAGE plpgsql;
 
 
 
-/*
-*   Drops the database user and dependent database owned by the user
-*/
+
+--  Drops the database user and dependent database owned by the user
+
 CREATE OR REPLACE FUNCTION pg_temp.dropTempDBUser(
-    userName  LearnSQL.UserData_t.userName%Type,
-    password  LearnSQL.UserData_t.password%Type)
-  RETURNS VOID AS
+  userName  LearnSQL.UserData_t.userName%Type,
+  password  LearnSQL.UserData_t.password%Type)
+RETURNS VOID AS
 
 $$
 DECLARE
@@ -86,10 +86,8 @@ DECLARE
 
 BEGIN
 
-  SELECT datname
-  INTO dbName
-  FROM pg_database
-  WHERE pg_database.datname LIKE 'cs305%';
+  SELECT INTO dbName LearnSQL.getClassID('testteacher', 'CS305', '71', 
+                                         '2018-8-28');
 
   dropDBQuery := 'DROP DATABASE ' || dbName; 
 
@@ -109,12 +107,12 @@ $$ LANGUAGE plpgsql;
 
 
 
-/*
-*   Returns the hashed password of a user
-*/
+
+--  Returns the hashed password of a user
+
 CREATE OR REPLACE FUNCTION pg_temp.getUserHashedPassword(
-    userName LearnSQL.Userdata_t.userName%Type)
-  RETURNS VARCHAR AS
+  userName LearnSQL.Userdata_t.userName%Type)
+RETURNS VARCHAR AS
 
 $$
 DECLARE
@@ -126,7 +124,7 @@ BEGIN
   SELECT password 
   INTO hashedPassword 
   FROM LearnSQL.Userdata_t 
-  WHERE LearnSQL.Userdata_t.userName = $1;
+  WHERE Userdata_t.userName = $1;
 
 RETURN hashedPassword;
   
@@ -135,12 +133,12 @@ $$ LANGUAGE plpgsql;
 
 
 
-/*
-*   Returns the hashed password of a class
-*/
+
+--  Returns the hashed password of a class
+
 CREATE OR REPLACE FUNCTION pg_temp.getClassHashedPassword(
-    classID LearnSQL.Class_t.classID%Type)
-  RETURNS VARCHAR AS
+  classID LearnSQL.Class_t.classID%Type)
+RETURNS VARCHAR AS
 
 $$
 DECLARE
@@ -152,7 +150,7 @@ BEGIN
   SELECT password 
   INTO hashedPassword 
   FROM LearnSQL.Class_t 
-  WHERE LearnSQL.Class_t.classID = $1;
+  WHERE Class_t.classID = $1;
 
 RETURN hashedPassword;
   
@@ -161,11 +159,11 @@ $$ LANGUAGE plpgsql;
 
 
 
-/*
-*   Function creates test users of varying privilege levels
-*/
+
+--  Function creates test users of varying privilege levels
+
 CREATE OR REPLACE FUNCTION pg_temp.addTestUsers()
-  RETURNS VOID AS
+RETURNS VOID AS
 
 $$
 BEGIN
@@ -197,14 +195,14 @@ $$ LANGUAGE plpgsql;
 
 
 
-/* 
-*  Define a temporary function to delete the user in userdata_t table and the
-*   database role without the need of a database password.
-*   Should only be used to clean up at the end of test functions.
-*/ 
+
+--  Define a temporary function to delete the user in userdata_t table and the
+--   database role without the need of a database password.
+--   Should only be used to clean up at the end of test functions.
+ 
 CREATE OR REPLACE FUNCTION pg_temp.dropUser(
-    userName  LearnSQL.UserData_t.UserName%Type)
-  RETURNS VOID AS
+  userName  LearnSQL.UserData_t.UserName%Type)
+RETURNS VOID AS
 
 $$
 BEGIN
@@ -227,7 +225,7 @@ $$ LANGUAGE plpgsql;
 
 
 /*
-*   Removes test users after 
+*   Removes test users and permissions before the script completes
 */
 CREATE OR REPLACE FUNCTION pg_temp.dropTestUsers()
   RETURNS VOID AS
@@ -246,14 +244,13 @@ $$ LANGUAGE plpgsql;
 
 
 
-/*
-*   Function which calls the joinClass function
-*    to add students to a class
-*/
+
+--  Function which calls the joinClass function to add students to a class
+
 CREATE OR REPLACE FUNCTION pg_temp.joinClassTest(
-    databaseUsername  VARCHAR(63),
-    databasePassword  VARCHAR(64))
-  RETURNS VOID AS
+  databaseUsername  VARCHAR(63),
+  databasePassword  VARCHAR(64))
+RETURNS VOID AS
 
 $$
 DECLARE
@@ -262,7 +259,8 @@ DECLARE
 
 BEGIN
 
-  SELECT INTO classID LearnSQL.getClassID('testteacher', 'CS305', '71', '2018-8-28');
+  SELECT INTO classID LearnSQL.getClassID('testteacher', 'CS305', '71', 
+                                          '2018-8-28');
                               
   -- Test if a student can join a class using a class password
   PERFORM LearnSQL.joinClass('testuser0', 'Test User 0', 
@@ -281,25 +279,24 @@ $$ LANGUAGE plpgsql;
 
 
 
-/**************************************************************************************
+/*******************************************************************************
 *
 *   Helper functions
 *
-***************************************************************************************
+********************************************************************************
 */
 
 
 
-/*
-*   Records the details of a test function event
-*/
+--  Records the details of a test function event
+
 CREATE OR REPLACE FUNCTION pg_temp.recordTestEvent(
-    eventTime         pg_temp.ErrorLog.EventTime%Type,
-    functionName      pg_temp.ErrorLog.FunctionName%Type,
-    isTestSuccessful  pg_temp.ErrorLog.isTestSuccessful%Type,
-    errorDescription  pg_temp.ErrorLog.errorDescription%Type
-                      DEFAULT NULL)
-  RETURNS VOID AS
+  eventTime         pg_temp.ErrorLog.EventTime%Type,
+  functionName      pg_temp.ErrorLog.FunctionName%Type,
+  isTestSuccessful  pg_temp.ErrorLog.isTestSuccessful%Type,
+  errorDescription  pg_temp.ErrorLog.errorDescription%Type
+                    DEFAULT NULL)
+RETURNS VOID AS
 
 $$
 BEGIN
@@ -309,12 +306,13 @@ $$ LANGUAGE plpgsql;
 
 
 
-/*
-*   Checks if a temporary database user exists
-*/
-CREATE OR REPLACE FUNCTION
-  pg_temp.checkTempDBUser(userName  LearnSQL.UserData_t.UserName%Type)
-  RETURNS VOID AS
+
+--  Checks if a temporary database user exists
+
+CREATE OR REPLACE FUNCTION pg_temp.checkTempDBUser(
+  userName  LearnSQL.UserData_t.UserName%Type)
+RETURNS VOID AS
+
 $$
 DECLARE
 
@@ -332,13 +330,14 @@ BEGIN
   WHERE rolname = $1;
 
   IF existsDBUser IS TRUE
-    THEN  
-      PERFORM pg_temp.recordTestEvent(currentTimestamp, 'createTempDBUser()', 'TRUE', NULL);
-      RETURN;
-    ELSE
-      PERFORM pg_temp.recordTestEvent(currentTimestamp, 'createTempDBUser()', FALSE, 
-                                      'Failed to create database user');
-      RETURN;
+  THEN  
+    PERFORM pg_temp.recordTestEvent(currentTimestamp, 'createTempDBUser()', 
+                                    'TRUE', NULL);
+    RETURN;
+  ELSE
+    PERFORM pg_temp.recordTestEvent(currentTimestamp, 'createTempDBUser()', 
+                                    FALSE, 'Failed to create database user');
+    RETURN;
   END IF;
 
 END;
@@ -346,11 +345,11 @@ $$ LANGUAGE plpgsql;
 
 
 
-/*
-*   Checks if the four expected test users exist in the table
-*/
+
+--  Checks if the four expected test users exist in the table
+
 CREATE OR REPLACE FUNCTION pg_temp.checkTestUsers()
-  RETURNS VOID AS
+RETURNS VOID AS
 
 $$
 DECLARE
@@ -372,13 +371,13 @@ BEGIN
   OR userName = 'testuser1';
 
   IF testUserCount = 4
-    THEN  
-      PERFORM pg_temp.recordTestEvent(currentTimestamp, 'addTestUsers()', TRUE);
-      RETURN;
-    ELSE
-      PERFORM pg_temp.recordTestEvent(currentTimestamp, 'addTestUsers()', FALSE, 
-                                      'Failed to add test users');
-      RETURN;
+  THEN  
+    PERFORM pg_temp.recordTestEvent(currentTimestamp, 'addTestUsers()', TRUE);
+    RETURN;
+  ELSE
+    PERFORM pg_temp.recordTestEvent(currentTimestamp, 'addTestUsers()', FALSE, 
+                                    'Failed to add test users');
+    RETURN;
   END IF;
 
 END;
@@ -386,15 +385,15 @@ $$ LANGUAGE plpgsql;
 
 
 
-/*
-*   Checks if the LearnSQL class table and database exist
-*/
+
+--  Checks if the LearnSQL class table and database exist
+
 CREATE OR REPLACE FUNCTION pg_temp.checkClassCreation(
-    teacherName  LearnSQL.Attends.UserName%Type,
-    className    LearnSQL.Class_t.ClassName%Type,
-    classSection LearnSQL.Class_t.Section%Type,
-    startDate    LearnSQL.Class_t.StartDate%Type)
-  RETURNS VOID AS
+  teacherName  LearnSQL.Attends.UserName%Type,
+  className    LearnSQL.Class_t.ClassName%Type,
+  classSection LearnSQL.Class_t.Section%Type,
+  startDate    LearnSQL.Class_t.StartDate%Type)
+RETURNS VOID AS
 
 $$
 DECLARE
@@ -420,16 +419,17 @@ BEGIN
   SELECT 1
   INTO existsClassTable
   FROM LearnSQL.Class_t
-  WHERE LearnSQL.Class_t.classID = storedClassID;
+  WHERE Class_t.classID = storedClassID;
 
   IF (existsClassDatabase IS TRUE) AND (existsClassTable IS TRUE)
-    THEN  
-      PERFORM pg_temp.recordTestEvent(currentTimestamp, 'createClass()', TRUE);
-      RETURN;
-    ELSE
-      PERFORM pg_temp.recordTestEvent(currentTimestamp, 'createClass()', FALSE, 
-                                      'Failed to create class database and LearnSQL Class_t entry');
-      RETURN;
+  THEN  
+    PERFORM pg_temp.recordTestEvent(currentTimestamp, 'createClass()', TRUE);
+    RETURN;
+  ELSE
+    PERFORM pg_temp.recordTestEvent(currentTimestamp, 'createClass()', FALSE, 
+                                    'Failed to create class database and 
+                                    LearnSQL Class_t entry');
+    RETURN;
   END IF;
 
 END;
@@ -437,16 +437,16 @@ $$ LANGUAGE plpgsql;
 
 
 
-/*
-*   Checks if the users given in the parameters are members of a given class
-*/
+
+--  Checks if the users given in the parameters are members of a given class
+
 CREATE OR REPLACE FUNCTION pg_temp.checkClassEnrollment(
-    studentName  LearnSQL.Attends.UserName%Type,
-    teacherName  LearnSQL.Attends.UserName%Type,
-    className    LearnSQL.Class_t.ClassName%Type,
-    classSection LearnSQL.Class_t.Section%Type,
-    startDate    LearnSQL.Class_t.StartDate%Type)
-  RETURNS VOID AS
+  studentName  LearnSQL.Attends.UserName%Type,
+  teacherName  LearnSQL.Attends.UserName%Type,
+  className    LearnSQL.Class_t.ClassName%Type,
+  classSection LearnSQL.Class_t.Section%Type,
+  startDate    LearnSQL.Class_t.StartDate%Type)
+RETURNS VOID AS
 
 $$
 DECLARE
@@ -464,18 +464,19 @@ BEGIN
   SELECT 1
   INTO isEnrolled
   FROM LearnSQL.Attends
-  WHERE LearnSQL.Attends.classID = storedClassID
-  AND LearnSQL.Attends.userName = $1;
+  WHERE Attends.classID = storedClassID
+  AND Attends.userName = $1;
 
 
   IF isEnrolled IS TRUE
-    THEN  
-      PERFORM pg_temp.recordTestEvent(currentTimestamp, 'joinClass()', TRUE);
-      RETURN;
-    ELSE
-      PERFORM pg_temp.recordTestEvent(currentTimestamp, 'joinClass()', FALSE, 
-                                      'Failed to enroll student in the specified class');
-      RETURN;
+  THEN  
+    PERFORM pg_temp.recordTestEvent(currentTimestamp, 'joinClass()', TRUE);
+    RETURN;
+  ELSE
+    PERFORM pg_temp.recordTestEvent(currentTimestamp, 'joinClass()', FALSE, 
+                                    'Failed to enroll student in the 
+                                    specified class');
+    RETURN;
   END IF;
 
 END;
@@ -483,11 +484,11 @@ $$ LANGUAGE plpgsql;
 
 
 
-/*
-*   Checks if the four expected test users are dropped from the database
-*/
+
+--  Checks if the four expected test users are dropped from the database
+
 CREATE OR REPLACE FUNCTION pg_temp.checkDropUsers()
-  RETURNS VOID AS
+RETURNS VOID AS
 
 $$
 DECLARE
@@ -521,13 +522,17 @@ BEGIN
   OR rolname = 'testuser1';
 
   IF testUserDBCount = 0 AND testUserRoleCount = 0
-    THEN  
-      PERFORM pg_temp.recordTestEvent(currentTimestamp, 'dropTestUsers()', TRUE);
-      RETURN;
-    ELSE
-      PERFORM pg_temp.recordTestEvent(currentTimestamp, 'dropTestUsers()', FALSE, 
-                                      'Failed to drop test users');
-      RETURN;
+  THEN  
+    PERFORM pg_temp.recordTestEvent(currentTimestamp, 
+                                    'dropTestUsers()', 
+                                    TRUE);
+    RETURN;
+  ELSE
+    PERFORM pg_temp.recordTestEvent(currentTimestamp,
+                                    'dropTestUsers()', 
+                                    FALSE, 
+                                    'Failed to drop test users');
+    RETURN;
   END IF;
 
 END;
@@ -535,15 +540,15 @@ $$ LANGUAGE plpgsql;
 
 
 
-/*
-*   Checks if the temporary database user exists.
-*    When `mode` is set, the userName is expected to exist. Otherwise,
-*    it is expected the user was dropped before calling this function.
-*/
+
+--  Checks if the temporary database user exists.
+--   When `mode` is set, the userName is expected to exist. Otherwise,
+--   it is expected the user was dropped before calling this function.
+
 CREATE OR REPLACE FUNCTION pg_temp.checkTempDBUser(
-    userName  LearnSQL.UserData_t.UserName%Type,
-    mode      BOOLEAN)
-  RETURNS VOID AS
+  userName  LearnSQL.UserData_t.UserName%Type,
+  mode      BOOLEAN)
+RETURNS VOID AS
 
 $$
 DECLARE
@@ -565,25 +570,35 @@ BEGIN
     THEN
 
     IF existsDBUser IS TRUE 
-      THEN  
-        PERFORM pg_temp.recordTestEvent(currentTimestamp, 'dropTempDBUser(TRUE)', 'TRUE', NULL);
-        RETURN;
-      ELSE
-        PERFORM pg_temp.recordTestEvent(currentTimestamp, 'dropTempDBUser(TRUE)', FALSE, 
-                                        'Failed to create database user');
-        RETURN;
+    THEN  
+      PERFORM pg_temp.recordTestEvent(currentTimestamp, 
+                                      'dropTempDBUser(TRUE)', 
+                                      'TRUE', 
+                                      NULL);
+      RETURN;
+    ELSE
+      PERFORM pg_temp.recordTestEvent(currentTimestamp, 
+                                      'dropTempDBUser(TRUE)', 
+                                      FALSE, 
+                                      'Failed to create database user');
+      RETURN;
     END IF;
 
     ELSE -- If $2 is false
 
     IF existsDBUser IS NULL
-      THEN  
-        PERFORM pg_temp.recordTestEvent(currentTimestamp, 'dropTempDBUser(FALSE)', 'TRUE', NULL);
-        RETURN;
-    ELSE
-        PERFORM pg_temp.recordTestEvent(currentTimestamp, 'dropTempDBUser(FALSE)', FALSE, 
-                                        'Failed to drop database user');
-        RETURN;
+    THEN  
+      PERFORM pg_temp.recordTestEvent(currentTimestamp, 
+                                      'dropTempDBUser(FALSE)', 
+                                      'TRUE', 
+                                      NULL);
+      RETURN;
+  ELSE
+      PERFORM pg_temp.recordTestEvent(currentTimestamp, 
+                                      'dropTempDBUser(FALSE)', 
+                                      FALSE, 
+                                      'Failed to drop database user');
+      RETURN;
     END IF;
 
   END IF;
@@ -592,18 +607,18 @@ END;
 $$ LANGUAGE plpgsql;
 
 
-/* 
-*   Returns the results of the function calls in this script which
-*    test the facilities provided in the `studentMgmt.sql` script
-*/
+ 
+--  Returns the results of the function calls in this script which
+--   test the facilities provided in the `studentMgmt.sql` script
+
 CREATE OR REPLACE FUNCTION pg_temp.getTestResults()
-  RETURNS TABLE (
-                  eventTime         pg_temp.ErrorLog.eventTime%Type,
-                  functionName      pg_temp.ErrorLog.functionName%Type,
-                  isTestSuccessful  pg_temp.ErrorLog.isTestSuccessful%Type,
-                  errorDescription  pg_temp.ErrorLog.errorDescription%Type
-                ) 
-  AS
+RETURNS TABLE (
+                eventTime         pg_temp.ErrorLog.eventTime%Type,
+                functionName      pg_temp.ErrorLog.functionName%Type,
+                isTestSuccessful  pg_temp.ErrorLog.isTestSuccessful%Type,
+                errorDescription  pg_temp.ErrorLog.errorDescription%Type
+              ) 
+AS
 
 $$
 BEGIN
@@ -636,13 +651,16 @@ SELECT LearnSQL.createClass('test_dbuser', 'testPassword', 'testteacher',
                             'classPassword', 'CS305', '71', '5:30 - 7:10', 
                             'TR', '2018-8-28', '2018-12-13');
 SELECT pg_temp.checkClassCreation('testteacher', 'CS305', '71', '2018-8-28');
-SELECT pg_temp.checkClassEnrollment('testteacher','testteacher', 'CS305', '71', '2018-8-28');
+SELECT pg_temp.checkClassEnrollment('testteacher','testteacher', 'CS305', '71', 
+                                    '2018-8-28');
 SELECT * FROM LearnSQL.getClasses('testteacher');
 
 SELECT pg_temp.joinClassTest('test_dbuser', 'testPassword');
-SELECT pg_temp.checkClassEnrollment('testuser0','testteacher', 'CS305', '71', '2018-8-28');
+SELECT pg_temp.checkClassEnrollment('testuser0','testteacher', 'CS305', '71', 
+                                    '2018-8-28');
 SELECT * FROM LearnSQL.getClasses('testuser0');
-SELECT pg_temp.checkClassEnrollment('testuser1','testteacher', 'CS305', '71', '2018-8-28');
+SELECT pg_temp.checkClassEnrollment('testuser1','testteacher', 'CS305', '71', 
+                                    '2018-8-28');
 SELECT * FROM LearnSQL.getClasses('testuser1');
 
 SELECT LearnSQL.dropClass('test_dbuser', 'testPassword', 
