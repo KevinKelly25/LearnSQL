@@ -1,7 +1,7 @@
 /**
  * teacherController.js - LearnSQL
  *
- * Michael Torres, Kevin Kelly
+ * Kevin Kelly, Michael Torres
  * Web Applications and Databases for Education (WADE)
  *
  * This file contains the angularJS controller used for the teacher functionality
@@ -18,14 +18,6 @@ app.controller('teacherCtrl', ($scope, $http, $location, $window) => {
   $scope.class = {
     name: 'something',
   };
-
-
-  // Converts the date from postgres format to readable format
-  function convertDate(inputDateString) {
-    const date = new Date(inputDateString);
-    return `${date.getHours()}:${date.getMinutes()}   ${
-      date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
-  }
 
 
   /**
@@ -68,15 +60,14 @@ app.controller('teacherCtrl', ($scope, $http, $location, $window) => {
 
 
   /**
-   * This function calls the /admin/addClass post method to create ClassDB databases
-   *  and updates the associated LearnSQL tables. While processing a message
-   *  appears to let the user know to wait.
+   * This function calls the /teacher/addClass post method to create ClassDB
+   *  databases and updates the associated LearnSQL tables. While processing a 
+   *  message appears to let the user know to wait.
    */
   $scope.addClass = () => {
     $scope.error = false;
     $scope.success = true;
     $scope.message = 'Class Being Created, Please Wait';
-
 
     $scope.class = {
       className: $scope.className,
@@ -116,6 +107,8 @@ app.controller('teacherCtrl', ($scope, $http, $location, $window) => {
    *  the dropClassTeacher function.
    *
    * @param {string} className The classname that needs to be displays
+   * @param {string} section The section of the class that needs to be displayed.
+   * @param {date} startDate The start date of the class needs to be displayed.
    */
   $scope.displayClassName = (className, section, startDate) => {
     $scope.success = false;

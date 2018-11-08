@@ -1,7 +1,7 @@
 /**
  * controlPanel.js - LearnSQL
  *
- * Kevin Kelly
+ * Kevin Kelly, Michael Torres
  * Web Applications and Databases for Education (WADE)
  *
  * This file contains the functions for admin control panel
@@ -37,14 +37,14 @@ function handleErrors(req) {
 
 /**
  * This function gets student information from a ClassDB database. Using the
- *  given classname and the user's username a ClassID is derived; the ClassID is
+ *  given className and the user's username a ClassID is derived; the ClassID is
  *  also the ClassDB database name. Using the ClassID a connection is made to the
  *  database and a database object is returned. This db object then returns all
  *  columns of the StudentActivitySummary which is a view inside of ClassDB.
  *  See https://github.com/DASSL/ClassDB/wiki/Frequent-User-Views for more
  *  information on how ClassDB maintains the student activity
  *
- * @param {string} className The classname the student will be added to
+ * @param {string} className The className the student will be added to
  * @return Unformatted student activity from a ClassDB database or an error response
  */
 function getStudents(req, res) {
@@ -58,7 +58,7 @@ function getStudents(req, res) {
         db.any('SELECT * FROM ClassDB.StudentActivitySummary')
           .then((result2) => {
             resolve();
-            db.$pool.end();// closes the connection to the database. IMPORTANT!!
+            db.$pool.end();// Closes the connection to the database. IMPORTANT!!
             return res.status(200).json(result2);
           })
           .catch((error) => {
@@ -66,7 +66,7 @@ function getStudents(req, res) {
             reject(new Error('StudentActivitySummary not working'));
           });
       })
-      .catch((error) => { // goes here if you can't find the class
+      .catch((error) => { // Goes here if you can't find the class.
         logger.error(`getStudents: \n${error}`);
         reject(new Error('Could not find the class'));
       });
@@ -76,26 +76,24 @@ function getStudents(req, res) {
 
 /**
  * This function creates a class database using a ClassDB template Database. It
- *  also adds the class to the attends and class table of the learnsql database.
+ *  also adds the class to the attends and class table of the learnSQL database.
  *  The access parameters for the database also is restored since they are not
  *  copied over in the creation of the database using the template.
  *
- * @param {string} dbUserName The name of the database user
- * @param {string} dbPassword The database password
- * @param {string} teacherUserName The teacher's username
- * @param {string} classPassword The password for the class
- * @param {string} className The name of the class to be added
- * @param {string} section The section of the class
- * @param {string} times Time the class is supposed to meet
- * @param {string} days The days that the class is supposed to meet
- * @param {string} startDate The date of the first class
- * @param {string} endDate The last day of class
- * @return Http response if class was added or reject promise if error
+ * @param {string} dbUserName The name of the database user.
+ * @param {string} dbPassword The database password.
+ * @param {string} teacherUserName The teacher's username.
+ * @param {string} classPassword The password for the class.
+ * @param {string} className The name of the class to be added.
+ * @param {string} section The section of the class.
+ * @param {string} times Time the class is supposed to meet.
+ * @param {string} days The days that the class is supposed to meet.
+ * @param {string} startDate The date of the first class.
+ * @param {string} endDate The last day of class.
  */
 function createClass(req, res) {
   return handleErrors(req)
     .then(() => {
-      console.log(req.body);
       ldb.func('LearnSQL.createClass',
         [process.env.DB_USER, process.env.DB_PASSWORD, req.user.username,
         req.body.password, req.body.className, req.body.section, 
@@ -104,14 +102,17 @@ function createClass(req, res) {
           return res.status(200).json(result);
         })
         .catch((error) => {
-          console.log(error.message);
           if (error.message === 'Section And Class Name Already Exists!') {
             return res.status(400).json('Section And Class Name Already Exists!');
           }
-
-          if (error.constraint === 'class_t_classname_check') {
-            return res.status(400).json('Class name missing!');
+          if (error.constraint === 'class_t_classname_check' || 
+              error.code === '23502') {
+            return res.status(400).json('Required field is missing!');
           }
+          if (error.code === '22007') {
+            return res.status(400).json('Required field has incorrect format!');
+          }
+
           return res.status(500).json('error');
         });
     });
@@ -119,10 +120,14 @@ function createClass(req, res) {
 
 /**
  * This function drops a class database as well as removes it from the attends
- *  and class table from the learnsql database
+ *  and class table from the learnSQL database.
  *
- * @param {string} name The name of the database
- * @return Http response on whether the class was successfully dropped
+ * @param {string} dbUsername The user name of the database user.
+ * @param {string} dbPassword The password of the user for the database.
+ * @param {string} className The name of the database.
+ * @param {string} section The name of the section of the class.
+ * @param {date} startDate The start date of the class.
+ * @param {}
  */
 function dropClass(req, res) {
   return new Promise((resolve, reject) => {
@@ -135,17 +140,17 @@ function dropClass(req, res) {
        })
        .catch((error) => {
          console.log(error.message);
-         return res.status(500).json('error');
+         return res.status(500).json('Server error');
        })
   });
 }
 
 
 /**
- * This function gets all the classes regestered to teacher and relevent class
+ * This function gets all the classes registered to teacher and relevant class
  *  information.
  *
- * @return The classes the user is in and relevent class information
+ * @return The classes the user is in and relevant class information.
  */
 function getClasses(req, res) {
   return new Promise((resolve, reject) => {
@@ -159,7 +164,7 @@ function getClasses(req, res) {
         resolve();
         return res.status(200).json(result);
       })
-      .catch((error) => { // goes here if you can't find the class
+      .catch((error) => { // goes here if you can't find the class.
         logger.error(`getClasses: \n${error}`);
         reject(new Error('Could not query the classes'));
       });
@@ -168,7 +173,7 @@ function getClasses(req, res) {
 
 /**
  * This function gets all the class information for a class when given a
- *  className
+ *  className.
  *
  * @param className
  * @return class information
@@ -186,7 +191,7 @@ function getClassInfo(req, res) {
         resolve();
         return res.status(200).json(result);
       })
-      .catch((error) => { // goes here if you can't find the class
+      .catch((error) => { // Goes here if you can't find the class.
         logger.error(`getClass: \n${error}`);
         reject(new Error('Could not query the classes'));
       });
