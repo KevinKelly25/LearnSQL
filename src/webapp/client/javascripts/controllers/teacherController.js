@@ -69,13 +69,19 @@ app.controller('teacherCtrl', ($scope, $http, $location, $window) => {
     $scope.success = true;
     $scope.message = 'Class Being Created, Please Wait';
 
+    // Converts the date from postgres format to readable format
+    function convertDate(inputDateString) {
+      const date = new Date(inputDateString);
+      return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
+    }
+
     $scope.class = {
       className: $scope.className,
       section: $scope.section,
       times: $scope.times,
       days: $scope.days,
-      startDate: $scope.startDate,
-      endDate: $scope.endDate,
+      startDate: convertDate($scope.startDate),
+      endDate: convertDate($scope.endDate),
       password: $scope.password,
     };
 
