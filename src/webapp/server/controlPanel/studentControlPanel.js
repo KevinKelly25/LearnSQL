@@ -1,7 +1,7 @@
 /**
  * studentControlPanel.js - LearnSQL
  *
- * Michael Torres, Kevin Kelly
+ * Christopher Innaco, Kevin Kelly, Michael Torres 
  * Web Applications and Databases for Education (WADE)
  *
  * This file contains the functions for student control panel
@@ -21,10 +21,7 @@ const dbCreator = require('../db/cdb.js');
  */
 function getClasses(req, res) {
   return new Promise((resolve, reject) => {
-    ldb.any('SELECT ClassName, Section, Times, Days, StartDate, '
-            + 'EndDate, StudentCount '
-            + 'FROM LearnSql.Attends INNER JOIN Class ON Attends.ClassID = Class.ClassID '
-            + 'WHERE Username = $1 AND isTeacher = false', [req.user.username])
+    ldb.any('SELECT * FROM LearnSQL.getClasses($1)', [req.user.username])
       .then((result) => {
         resolve();
         return res.status(200).json(result);
@@ -83,8 +80,8 @@ function addStudent(req, res) {
           [req.user.username, req.user.fullname])
           .then(() => {
             resolve();
-            db.$pool.end();// closes the connection to the database. IMPORTANT!!
-            return res.status(200).json('student added successfully');
+            db.$pool.end(); // closes the connection to the database. IMPORTANT!!
+            return res.status(200).json('Student added successfully');
           })
           .catch(() => {
             reject(new Error('Server Error: Could not create student'));
@@ -99,7 +96,7 @@ function addStudent(req, res) {
           return;
         }
         logger.error(`addStudent: \n${error}`);
-        reject(new Error('Server Error: Could not add you to the class'));
+        reject(new Error('Server Error: Unable to enroll in the class'));
       });
   });
 }
