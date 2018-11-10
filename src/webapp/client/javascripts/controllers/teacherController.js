@@ -42,11 +42,10 @@ app.controller('teacherCtrl', ($scope, $http, $location, $window) => {
       className: $location.search().class,
     };
 
-
     $http.post('/teacher/getStudents', $scope.classInfo)
       .success((data) => {
         data.forEach((element) => {
-          element.lastddlactivityat = convertDate(element.lastddlactivityat);
+          element.lastddlactivityat = element.lastddlactivityat;
         });
         $scope.class = data;
       });
@@ -61,7 +60,7 @@ app.controller('teacherCtrl', ($scope, $http, $location, $window) => {
 
   /**
    * This function calls the /teacher/addClass post method to create ClassDB
-   *  databases and updates the associated LearnSQL tables. While processing a 
+   *  databases and updates the associated LearnSQL tables. While processing a
    *  message appears to let the user know to wait.
    */
   $scope.addClass = () => {
@@ -120,9 +119,9 @@ app.controller('teacherCtrl', ($scope, $http, $location, $window) => {
     $scope.success = false;
     $scope.error = false;
     $scope.dropClass = {
-      className: className,
-      section: section,
-      startDate: startDate,
+      className,
+      section,
+      startDate,
     };
   };
 

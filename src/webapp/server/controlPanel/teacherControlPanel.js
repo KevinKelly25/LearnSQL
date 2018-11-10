@@ -8,7 +8,6 @@
  */
 
 
-const uniqid = require('uniqid');
 const ldb = require('../db/ldb.js');
 const dbCreator = require('../db/cdb.js');
 const logger = require('../logs/winston.js');
@@ -95,18 +94,16 @@ function createClass(req, res) {
   return handleErrors(req)
     .then(() => {
       ldb.func('LearnSQL.createClass',
-        [process.env.DB_USER, process.env.DB_PASSWORD, req.user.username,
-        req.body.password, req.body.className, req.body.section, 
-        req.body.times, req.body.days, req.body.startDate, req.body.endDate])
-        .then((result) => {
-          return res.status(200).json(result);
-        })
+        [process.env.DB_USER, process.env.DB_PASSWORD, req.user.username, req.body.password,
+          req.body.className, req.body.section, req.body.times, req.body.days,
+          req.body.startDate, req.body.endDate])
+        .then(result => res.status(200).json(result))
         .catch((error) => {
           if (error.message === 'Section And Class Name Already Exists!') {
             return res.status(400).json('Section And Class Name Already Exists!');
           }
-          if (error.constraint === 'class_t_classname_check' || 
-              error.code === '23502') {
+          if (error.constraint === 'class_t_classname_check'
+              || error.code === '23502') {
             return res.status(400).json('Required field is missing!');
           }
           if (error.code === '22007') {
@@ -130,18 +127,12 @@ function createClass(req, res) {
  * @param {}
  */
 function dropClass(req, res) {
-  return new Promise((resolve, reject) => {
-    console.log(req.body);
+  return new Promise(() => {
     ldb.func('LearnSQL.dropClass',
       [process.env.DB_USER, process.env.DB_PASSWORD, req.user.username,
-       req.body.className, req.body.section, req.body.startDate])
-       .then((result) => {
-         return res.status(200).json(result);
-       })
-       .catch((error) => {
-         console.log(error.message);
-         return res.status(500).json('Server error');
-       })
+        req.body.className, req.body.section, req.body.startDate])
+      .then(result => res.status(200).json(result))
+      .catch(() => res.status(500).json('Server error'));
   });
 }
 
