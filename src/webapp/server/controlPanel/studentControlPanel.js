@@ -48,57 +48,50 @@ function getClasses(req, res) {
  * @param {string} classID the class id of the class the student will be added to
  * @return http response on if the student was successfully added
  */
-function addStudent(req, res) {
-  return new Promise((resolve, reject) => {
-    ldb.task(t => t.oneOrNone('SELECT 1 '
-                              + 'FROM LearnSql.Attends '
-                              + 'WHERE Username = $1 AND ClassID = $2',
-    [req.user.username, req.body.classID])
-      .then((result) => {
-        if (result) {
-          throw new Error('Already Joined The Class');
-        } else {
-          // Get class join password
-          return t.one('SELECT Password '
-                       + 'FROM LearnSQL.Class '
-                       + 'WHERE ClassID = $1',
-          [req.body.classID])
-            .then((result2) => {
-              // TODO: once hash password used switch to authHelpers.CompareHashed
-              if (req.body.password !== result2.password) {
-                throw new Error('Join Password Incorrect');
-              }
-            });
-        }
+function addStudent(req, res) 
+{
+  return new Promise((resolve, reject) => 
+  {
+    // TODO: Get instuctor name instead of hardcoding
+    //       Accept all date formats
+    ldb.oneOrNone('SELECT LearnSQL.getClassID(\'teacher\', $1, $2, $3)',
+                  [req.body.className, req.body.classSection, req.body.startDate])
+      .then((result) => 
+      {
+        var classID = 0;
+        classID = result.getclassid;
+        ldb.any('SELECT LearnSQL.joinClass($1, $2, $3, $4, $5)',
+                      [req.user.username, classID, req.body.classPassword, 
+                       process.env.DB_USER, process.env.DB_PASSWORD])
+        .then((result_joinClass) => 
+        {
+          resolve();
+          return res.status(200).json('Student enrolled successfully');
+        })
+        .catch((error_joinClass) =>
+        {
+          // TODO: Test for SQLSTATE or error code instead of error string
+          console.log(error_joinClass);
+          if(error_joinClass == 'error: Student is already a member of the specified class')
+          {
+            reject('You are already a member of the specified class');
+          }
+          else if (error_joinClass == 'error: Password incorrect for the desired class')
+          {
+            reject('Password incorrect for the desired class');
+          }
+          else
+          {
+            reject('Failed to enroll into the desired class');
+          }
+                
+        }); 
       })
-      .then(() => t.none('INSERT INTO LearnSQL.Attends VALUES($1, $2, false)',
-        [req.body.classID, req.user.username]))
-      .then(() => {
-        // Create a db object on ClassDB database and add student
-        const db = dbCreator(req.body.classID);
-        db.func('ClassDB.createStudent',
-          [req.user.username, req.user.fullname])
-          .then(() => {
-            resolve();
-            db.$pool.end(); // closes the connection to the database. IMPORTANT!!
-            return res.status(200).json('Student added successfully');
-          })
-          .catch(() => {
-            reject(new Error('Server Error: Could not create student'));
-            db.$pool.end();
-          });
-      }))
-      .catch((error) => {
-        // if common error send it back to user, otherwise log it and send back
-        // server error message to user
-        if (error === 'Join Password Incorrect' || error === 'Already Joined The Class') {
-          reject(new Error(error));
-          return;
-        }
-        logger.error(`addStudent: \n${error}`);
-        reject(new Error('Server Error: Unable to enroll in the class'));
+      .catch((error) => 
+      {
+        reject('Class does not exist');
       });
-  });
+    });
 }
 
 

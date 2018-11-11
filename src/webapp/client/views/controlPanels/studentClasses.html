@@ -1,7 +1,7 @@
 <!--
   studentClasses.html - LearnSQL
 
-  Michael Torres
+  Christopher Innaco, Michael Torres
   Web Applications and Databases for Education (WADE)
 
   This file contains the html view of the student control panel which
@@ -111,21 +111,41 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
+
+                    <span ng-show="error">
+                        <div class="alert alert-danger">
+                            {{ message }}
+                        </div>
+                      </span>
+                      <span ng-show="success">
+                        <div class="alert alert-success">
+                            {{ message }}
+                        </div>
+                      </span>
+
                     <div class="modal-body">
                         <form>
                             <div class="form-group">
                                 <label for="recipient-name" class="col-form-label">Class Name:</label>
-                                <input type="text" class="form-control">
+                                <input type="text" class="form-control" ng-model="className">
+                            </div>
+                            <div class="form-group">
+                                <label for="recipient-name" class="col-form-label">Section:</label>
+                                <input type="text" class="form-control" ng-model="classSection">
+                            </div>
+                            <div class="form-group">
+                                <label for="recipient-name" class="col-form-label">Start Date:</label>
+                                <input type="text" class="form-control" ng-model="startDate">
                             </div>
                             <div class="form-group">
                                 <label for="recipient-name" class="col-form-label">Join Password:</label>
-                                <input type="text" class="form-control">
+                                <input type="text" class="form-control" ng-model="classPassword">
                             </div>
                         </form>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                        <button type="button" class="btn btn-primary">Join Class</button>
+                        <button type="button" class="btn btn-primary" ng-click="joinClassFromPage()">Join Class</button>
                     </div>
                 </div>
             </div>
@@ -155,6 +175,7 @@
                         <th>Days</th>
                         <th>Start Date</th>
                         <th>End Date</th>
+                        <th>Students Enrolled</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -171,6 +192,7 @@
                         <td>{{ x.days }}</td>
                         <td>{{ x.startdate }}</td>
                         <td>{{ x.enddate }}</td>
+                        <td>{{ x.studentcount }}</td>
                     </tr>
                 </tbody>
             </table>
