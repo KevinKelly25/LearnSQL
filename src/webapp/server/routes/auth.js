@@ -106,12 +106,14 @@ router.get('/check', (req, res) => res.status(200).json(req.user));
  */
 // TODO: add timeout for verification token
 router.get('/verification/:token/:username', (req, res) => {
-  db.task(t => t.one('SELECT Username, Token FROM UserData WHERE Username = $1', [req.params.username])
+  db.task(t => t.one('SELECT Username, Token FROM LearnSQL.UserData '
+                   + 'WHERE Username = $1', [req.params.username])
     .then((data) => {
       if (!authHelpers.compareHashed(req.params.token, data.token)) {
         throw new Error('Token hashes do not match');
       } else {
-        return t.none('UPDATE UserData SET isVerified = true WHERE Username = $1', [data.username]);
+        return t.none('UPDATE LearnSQL.UserData SET isVerified = true '
+                    + ' WHERE Username = $1', [data.username]);
       }
     }))
     .then(() => {
@@ -148,7 +150,7 @@ router.post('/forgotPasswordEmail', (req, res) => authHelpers.forgotPassword(req
  *  to be appended to the end of the link after #?token=. For example
  *  http://localhost:3000/auth/resetPassword/#?token=59ff4734c92f789058b2
  */
-router.get('/resetPassword/', (res) => {
+router.get('/resetPassword/', (req, res) => {
   res.sendFile(path.join(
     __dirname, '..', '..', 'client', 'views', 'account', 'resetPassword.html',
   ));

@@ -30,7 +30,7 @@ module.exports = () => {
    */
   passport.deserializeUser((id, done) => {
     db.one('SELECT username, fullname, email, datejoined, isAdmin, isTeacher, isstudent '
-           + 'FROM UserData '
+           + 'FROM LearnSQL.UserData '
            + 'WHERE username = $1', id)
       .then((user) => {
         done(null, user);

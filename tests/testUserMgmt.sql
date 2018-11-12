@@ -40,12 +40,13 @@ $$;
 
 -- Define a temporary function to test if the username exists in both the database
 --  and the UserData table
-CREATE OR REPLACE FUNCTION
-  pg_temp.checkIfUsernameExists(UserName  LearnSQL.UserData_t.UserName%Type)
-  RETURNS BOOLEAN AS
+CREATE OR REPLACE FUNCTION pg_temp.checkIfUsernameExists(
+  UserName   LearnSQL.UserData_t.UserName%Type)
+
+RETURNS BOOLEAN AS
 $$
 BEGIN
-   -- Check if username is a postgres rolename
+   -- Check if username is a PostgreSQL rolename
   IF NOT EXISTS (
                   SELECT *
                   FROM pg_catalog.pg_roles
@@ -72,10 +73,11 @@ $$ LANGUAGE plpgsql;
 
 
 -- Define a temporary function to test if the user has given associated FullName
-CREATE OR REPLACE FUNCTION
-  pg_temp.checkFullName(UserName  LearnSQL.UserData_t.UserName%Type,
-                        FullName  LearnSQL.UserData_t.FullName%Type)
-   RETURNS BOOLEAN AS
+CREATE OR REPLACE FUNCTION pg_temp.checkFullName(
+  UserName   LearnSQL.UserData_t.UserName%Type,
+  FullName   LearnSQL.UserData_t.FullName%Type)
+
+RETURNS BOOLEAN AS
 $$
 BEGIN
   -- Check if username is a LearnSQL user
@@ -96,10 +98,11 @@ $$ LANGUAGE plpgsql;
 
 -- Define a temporary function to test if the username has given associated 
 --  password
-CREATE OR REPLACE FUNCTION
-  pg_temp.checkPassword(UserName  LearnSQL.UserData_t.UserName%Type,
-                        Password  VARCHAR(256))
-   RETURNS BOOLEAN AS
+CREATE OR REPLACE FUNCTION pg_temp.checkPassword(
+  UserName   LearnSQL.UserData_t.UserName%Type,
+  Password   VARCHAR(256))
+
+RETURNS BOOLEAN AS
 $$
 DECLARE
   encryptedPassword VARCHAR(60); --hashed password from UserData_t
@@ -109,7 +112,7 @@ BEGIN
   WHERE UserData_t.UserName = $1;
 
   -- If password is matches after hashing then this is true
-  IF (encryptedPassword = crypt($2, encryptedPassword))
+  IF (encryptedPassword = LearnSQL.crypt($2, encryptedPassword))
   THEN
     RETURN TRUE;
   ELSE
@@ -120,10 +123,11 @@ $$ LANGUAGE plpgsql;
 
 
 -- Define a temporary function to test if the user has given associated FullName
-CREATE OR REPLACE FUNCTION
-  pg_temp.checkEmail(UserName  LearnSQL.UserData_t.UserName%Type,
-                     Email     LearnSQL.UserData_t.Email%Type)
-   RETURNS BOOLEAN AS
+CREATE OR REPLACE FUNCTION pg_temp.checkEmail(
+  UserName   LearnSQL.UserData_t.UserName%Type,
+  Email      LearnSQL.UserData_t.Email%Type)
+
+RETURNS BOOLEAN AS
 $$
 BEGIN
   IF EXISTS (
@@ -142,9 +146,10 @@ $$ LANGUAGE plpgsql;
 
 
 -- Define a temporary function to test if the user is a teacher
-CREATE OR REPLACE FUNCTION
-  pg_temp.isTeacher(UserName  LearnSQL.UserData_t.UserName%Type)
-  RETURNS BOOLEAN AS
+CREATE OR REPLACE FUNCTION pg_temp.isTeacher(
+  UserName   LearnSQL.UserData_t.UserName%Type)
+
+RETURNS BOOLEAN AS
 $$
 BEGIN
   IF EXISTS (
@@ -163,9 +168,10 @@ $$ LANGUAGE plpgsql;
 
 
 -- Define a temporary function to test if the user is an admin
-CREATE OR REPLACE FUNCTION
-  pg_temp.isAdmin(UserName  LearnSQL.UserData_t.UserName%Type)
-  RETURNS BOOLEAN AS
+CREATE OR REPLACE FUNCTION pg_temp.isAdmin(
+  UserName   LearnSQL.UserData_t.UserName%Type)
+
+RETURNS BOOLEAN AS
 $$
 BEGIN
   IF EXISTS (
@@ -183,12 +189,13 @@ $$ LANGUAGE plpgsql;
 
 -- Define a temporary function to test if the username exists in both the 
 --  database and the UserData table
-CREATE OR REPLACE FUNCTION
-  pg_temp.checkIfDropped(UserName  LearnSQL.UserData_t.UserName%Type)
-   RETURNS BOOLEAN AS
+CREATE OR REPLACE FUNCTION pg_temp.checkIfDropped(
+  UserName   LearnSQL.UserData_t.UserName%Type)
+
+RETURNS BOOLEAN AS
 $$
 BEGIN
-   -- Check if username is a postgres rolename
+   -- Check if username is a PostgreSQL rolename
   IF EXISTS (
               SELECT *
               FROM pg_catalog.pg_roles
@@ -216,15 +223,16 @@ $$ LANGUAGE plpgsql;
 -- Define a temporary function to delete the user in userdata_t table and the
 --  database role without the need of a database password like in dropUser()
 -- Should only be used to clean up at the end of test functions
-CREATE OR REPLACE FUNCTION
-  pg_temp.dropUser(UserName  LearnSQL.UserData_t.UserName%Type)
-  RETURNS VOID AS
+CREATE OR REPLACE FUNCTION pg_temp.dropUser(
+  UserName   LearnSQL.UserData_t.UserName%Type)
+
+RETURNS VOID AS
 $$
 BEGIN
   -- Delete user from LearnSQL tables
   DELETE FROM LearnSQL.UserData_t WHERE UserData_t.Username = $1;
 
-  -- Check if username is a postgres rolename and if so delete
+  -- Check if username is a PostgreSQL rolename and if so delete
   IF EXISTS (
               SELECT *
               FROM pg_catalog.pg_roles
@@ -249,7 +257,9 @@ $$ LANGUAGE plpgsql;
 
 -- This function tests the creation and delete of users for the LearnSQL database
 --  as well as the server roles. 
-CREATE OR REPLACE FUNCTION pg_temp.createAndDropUserTest() RETURNS TEXT AS
+CREATE OR REPLACE FUNCTION pg_temp.createAndDropUserTest() 
+
+RETURNS TEXT AS
 $$
 BEGIN
   -- Ensure the test users do not exist
@@ -345,7 +355,9 @@ $$ LANGUAGE plpgsql;
 -- This function tests the changeUsername function. This function creates 3 test
 --  accounts and then changes their name. It then checks to make sure that
 --  the new username exists
-CREATE OR REPLACE FUNCTION pg_temp.changeUsernameTest() RETURNS TEXT AS
+CREATE OR REPLACE FUNCTION pg_temp.changeUsernameTest() 
+
+RETURNS TEXT AS
 $$
 BEGIN
   -- Ensure the test users do not exist
@@ -404,7 +416,9 @@ $$ LANGUAGE plpgsql;
 --This function tests the changePassword function. This function creates 3 test
 -- accounts and then changes their Password. It then checks to make sure that
 -- the password exists in the Userdata_t table
-CREATE OR REPLACE FUNCTION pg_temp.changePasswordTest() RETURNS TEXT AS
+CREATE OR REPLACE FUNCTION pg_temp.changePasswordTest() 
+
+RETURNS TEXT AS
 $$
 BEGIN
   -- Ensure the test users do not exist
@@ -455,7 +469,9 @@ $$ LANGUAGE plpgsql;
 --This function tests the changeFullName function. This function creates 3 test
 -- accounts and then changes their Full Name. It then checks to make sure that
 -- the FullName exists in the Userdata_t table for that given user
-CREATE OR REPLACE FUNCTION pg_temp.changeFullNameTest() RETURNS TEXT AS
+CREATE OR REPLACE FUNCTION pg_temp.changeFullNameTest() 
+
+RETURNS TEXT AS
 $$
 BEGIN
   --Ensure the test users do not exist
@@ -507,7 +523,9 @@ $$ LANGUAGE plpgsql;
 -- This function tests the changeEmail function. This function creates 3 test
 --  accounts and then changes their Email. It then checks to make sure that
 --  the Email exists in the Userdata_t table for that user
-CREATE OR REPLACE FUNCTION pg_temp.changeEmailTest() RETURNS TEXT AS
+CREATE OR REPLACE FUNCTION pg_temp.changeEmailTest() 
+
+RETURNS TEXT AS
 $$
 BEGIN
   --Ensure the test users do not exist
@@ -555,10 +573,13 @@ $$ LANGUAGE plpgsql;
 
 
 
--- This function tests the forgotPasswordReset function. This function creates 3 test
---  accounts and then resets thier password with forgotPasswordReset Function.
---  It then checks to make sure that the Email exists in the Userdata_t table for that user.
-CREATE OR REPLACE FUNCTION pg_temp.forgotPasswordResetTest() RETURNS TEXT AS
+-- This function tests the forgotPasswordReset function. This function creates 3 
+--  test accounts and then resets thier password with forgotPasswordReset 
+--  Function. It then checks to make sure that the Email exists in the 
+--  Userdata_t table for that user.
+CREATE OR REPLACE FUNCTION pg_temp.forgotPasswordResetTest() 
+
+RETURNS TEXT AS
 $$
 BEGIN
   -- Ensure the test users do not exist
@@ -612,7 +633,9 @@ $$ LANGUAGE plpgsql;
 
 
 
-CREATE OR REPLACE FUNCTION pg_temp.userMgmtTest() RETURNS VOID AS
+CREATE OR REPLACE FUNCTION pg_temp.userMgmtTest() 
+
+RETURNS VOID AS
 $$
 BEGIN
    RAISE INFO '%   createAndDropUserTest()',  pg_temp.createAndDropUserTest();
@@ -623,6 +646,7 @@ BEGIN
    RAISE INFO '%   forgotPasswordResetTest()',pg_temp.forgotPasswordResetTest();
 END;
 $$  LANGUAGE plpgsql;
+
 
 
 SELECT pg_temp.userMgmtTest();

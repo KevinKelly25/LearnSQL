@@ -6,6 +6,8 @@
 -- This file creates the functions involved with user management in the LearnSQL
 --  database.This file should be run after createLearnSQLTables.sql
 
+
+
 START TRANSACTION;
 
 
@@ -27,13 +29,46 @@ END
 $$;
 
 
+
 -- Suppress NOTICEs for this script only, this will not apply to functions
 --  defined within. This hides unimportant, but possibly confusing messages
 SET LOCAL client_min_messages TO WARNING;
 
 
+
+-- Define a view to return all users who are students.
+--  A user is determined to be a student if the isStudent flag in Userdata is 
+--  true. This flag is true when a student attends any class and is not the
+--  Teacher.
+CREATE OR REPLACE VIEW LearnSQL.Student AS 
+SELECT Username, Fullname, Password, Email
+FROM LearnSQL.UserData
+WHERE isStudent = TRUE;
+
+
+
+-- Define a view to return all users who are Teacher.
+--  A user is determined to be a Teacher if the isTeacher flag in Userdata 
+--  is true. 
+CREATE OR REPLACE VIEW LearnSQL.Teacher AS 
+SELECT Username, Fullname, Password, Email
+FROM LearnSQL.UserData_t
+WHERE isTeacher = TRUE;
+
+
+
+-- Define a view to return all users who are admins.
+--  A user is determined to be an admin if the isAdmin flag in userdata is true.
+CREATE OR REPLACE VIEW LearnSQL.Admin AS 
+SELECT Username, Fullname, Password, Email
+FROM LearnSQL.UserData_t
+WHERE isAdmin = TRUE;
+
+
+
 -- Enable the pgcrypto extension for PostgreSQL for hashing and generating salts
-CREATE EXTENSION IF NOT EXISTS pgcrypto;
+CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA LearnSQL;
+CREATE EXTENSION IF NOT EXISTS dblink WITH SCHEMA LearnSQL;
 
 
 
@@ -41,25 +76,26 @@ CREATE EXTENSION IF NOT EXISTS pgcrypto;
 --  the database and also a user within the tables of the LearnSQL database
 -- If any errors are encountered an exception will be raised and the function
 --  will stop execution
-CREATE OR REPLACE FUNCTION
-  LearnSQL.createUser(userName  LearnSQL.UserData_t.UserName%Type,
-                      fullName  LearnSQL.UserData_t.FullName%Type,
-                      password  LearnSQL.UserData_t.Password%Type,
-                      email     LearnSQL.UserData_t.Email%Type,
-                      token     LearnSQL.UserData_t.Token%Type,
-                      isTeacher LearnSQL.UserData_t.isTeacher%Type DEFAULT FALSE,
-                      isAdmin   LearnSQL.UserData_t.isAdmin%Type DEFAULT FALSE)
-  RETURNS VOID AS
+CREATE OR REPLACE FUNCTION LearnSQL.createUser(
+  userName    LearnSQL.UserData_t.UserName%Type,
+  fullName    LearnSQL.UserData_t.FullName%Type,
+  password    LearnSQL.UserData_t.Password%Type,
+  email       LearnSQL.UserData_t.Email%Type,
+  token       LearnSQL.UserData_t.Token%Type,
+  isTeacher   LearnSQL.UserData_t.isTeacher%Type DEFAULT FALSE,
+  isAdmin     LearnSQL.UserData_t.isAdmin%Type DEFAULT FALSE)
+
+RETURNS VOID AS
 $$
 DECLARE
   encryptedPassword VARCHAR(60); -- hashed password to be stored in UserData_t
   encryptedToken VARCHAR(60); -- hashed password to be stored in UserData_t
 BEGIN
   -- Create "hashed" password using blowfish cipher
-  encryptedPassword = crypt($3, gen_salt('bf'));
+  encryptedPassword = LearnSQL.crypt($3, LearnSQL.gen_salt('bf'));
 
   -- Create "hashed" token using blowfish cipher
-  encryptedToken = crypt($5, gen_salt('bf'));
+  encryptedToken = LearnSQL.crypt($5, LearnSQL.gen_salt('bf'));
 
   -- Add user information to the LearnSQL UserData table
   INSERT INTO LearnSQL.UserData_t VALUES (LOWER($1),$2,encryptedPassword,$4,
@@ -103,11 +139,12 @@ REVOKE ALL ON FUNCTION
 --  objects in non-ClassDB databases the drop will fail
 -- If any errors are encountered an exception will be raised and the function
 --  will stop execution
-CREATE OR REPLACE FUNCTION
-  LearnSQL.dropUser(username           LearnSQL.UserData_t.UserName%Type,
-                    databaseUsername   VARCHAR DEFAULT NULL,
-                    databasePassword   VARCHAR DEFAULT NULL)
-  RETURNS VOID AS
+CREATE OR REPLACE FUNCTION LearnSQL.dropUser(
+  username           LearnSQL.UserData_t.UserName%Type,
+  databaseUsername   VARCHAR DEFAULT NULL,
+  databasePassword   VARCHAR DEFAULT NULL)
+
+RETURNS VOID AS
 $$
 DECLARE
     rec RECORD;
@@ -132,17 +169,15 @@ BEGIN
       RAISE EXCEPTION 'User does not exist in database';
     END IF;
 
-    -- TODO: add Schema qualifier once it is added to the attends table
     -- This will drop all objects owned by that user in each ClassDB database it is
     --  in. This may cause cascade issues until ClassDB has Multi-DB remove User
     --  support
     FOR rec IN
-      SELECT ClassID FROM Attends WHERE Attends.UserName = $1
+      SELECT ClassID FROM LearnSQL.Attends WHERE Attends.UserName = $1
     LOOP
       SELECT *
-      FROM dblink('user='|| $2 ||' dbname='|| rec.ClassID || ' password=' || $3, 
-                  'DROP OWNED BY '|| $1)
-      AS throwAway(blank VARCHAR(30));--needed for dblink but unused
+      FROM dblink_exec('user='|| $2 ||' dbname='|| rec.ClassID || ' password=' || $3, 
+                       'DROP OWNED BY '|| $1);
     END LOOP;
 
     -- Delete user from the database
@@ -151,7 +186,7 @@ BEGIN
 
 
   -- Delete user information to the LearnSQL UserData and Attends table
-  DELETE FROM Attends WHERE Attends.UserName = $1;
+  DELETE FROM LearnSQL.Attends WHERE Attends.UserName = $1;
   DELETE FROM LearnSQL.UserData_t WHERE UserData_t.UserName = $1;
 
 END;
@@ -169,13 +204,15 @@ REVOKE ALL ON FUNCTION
 
 
 
+
 -- This function is given a old username and a new username. It updates the role
 --  and tables associated with the old username with the new username as long as
 --  the new username is not already taken  
-CREATE OR REPLACE FUNCTION
-  LearnSQL.changeUsername(oldUserName LearnSQL.UserData_t.UserName%Type,
-                          newUserName LearnSQL.UserData_t.UserName%Type)
-  RETURNS VOID AS
+CREATE OR REPLACE FUNCTION LearnSQL.changeUsername(
+  oldUserName   LearnSQL.UserData_t.UserName%Type,
+  newUserName   LearnSQL.UserData_t.UserName%Type)
+
+RETURNS VOID AS
 $$
 BEGIN
   -- Update database rolename to the new value
@@ -206,11 +243,20 @@ REVOKE ALL ON FUNCTION
 -- This function updates the given user's password with a new password. Before
 --  it applies the new password it checks to make sure the given old password 
 --  matches the password stored in the database 
+<<<<<<< HEAD
 CREATE OR REPLACE FUNCTION
   LearnSQL.changePassword(userName     LearnSQL.UserData_t.UserName%Type,
                           oldPassword  LearnSQL.UserData_t.Password%Type,
                           newPassword  LearnSQL.UserData_t.Password%Type)
   RETURNS VOID AS
+=======
+CREATE OR REPLACE FUNCTION LearnSQL.changePassword(
+  userName      LearnSQL.UserData_t.Password%Type,
+  oldPassword   LearnSQL.UserData_t.Password%Type,
+  newPassword   LearnSQL.UserData_t.Password%Type)
+
+RETURNS VOID AS
+>>>>>>> dev
 $$
 DECLARE
   encryptedPassword VARCHAR(60); -- Hashed password from UserData_t
@@ -219,14 +265,14 @@ BEGIN
   FROM LearnSQL.UserData_t 
   WHERE UserData_t.UserName = $1;  
 
-  IF (encryptedPassword = crypt($2, encryptedPassword)) 
+  IF (encryptedPassword = LearnSQL.crypt($2, encryptedPassword)) 
     THEN
       -- Update database rolename to the new value
       EXECUTE FORMAT('ALTER USER %s WITH PASSWORD %L',$1,$3);
 
       -- Update LearnSQL database password
       UPDATE LearnSQL.UserData_t 
-      SET Password = crypt($3, gen_salt('bf'))
+      SET Password = LearnSQL.crypt($3, LearnSQL.gen_salt('bf'))
       WHERE UserData_t.Username = $1;
     ELSE
       RAISE EXCEPTION 'Old Password Does Not Match';
@@ -251,10 +297,11 @@ REVOKE ALL ON FUNCTION
 
 
 -- This function updates the given username with the given Full Name
-CREATE OR REPLACE FUNCTION
-  LearnSQL.changeFullName(userName LearnSQL.UserData_t.UserName%Type,
-                          newFullName LearnSQL.UserData_t.FullName%Type)
-  RETURNS VOID AS
+CREATE OR REPLACE FUNCTION LearnSQL.changeFullName(
+  userName      LearnSQL.UserData_t.UserName%Type,
+  newFullName   LearnSQL.UserData_t.FullName%Type)
+
+RETURNS VOID AS
 $$
 BEGIN
   UPDATE LearnSQL.UserData_t SET FullName = $2 WHERE UserData_t.UserName = $1;
@@ -276,10 +323,11 @@ REVOKE ALL ON FUNCTION
 
 
 -- This function updates the given username with the given Email
-CREATE OR REPLACE FUNCTION
-  LearnSQL.changeEmail(userName LearnSQL.UserData_t.UserName%Type,
-                       email LearnSQL.UserData_t.Email%Type)
-  RETURNS VOID AS
+CREATE OR REPLACE FUNCTION LearnSQL.changeEmail(
+  userName   LearnSQL.UserData_t.UserName%Type,
+  email      LearnSQL.UserData_t.Email%Type)
+
+RETURNS VOID AS
 $$
 BEGIN
   UPDATE LearnSQL.UserData_t SET email = $2 WHERE UserData_t.UserName = $1;
@@ -305,11 +353,12 @@ REVOKE ALL ON FUNCTION
 --  what is supposed to be the correct hashed token and compares the given token
 --  to the hashed token. If matched and forgotPassword is true the password is
 --  updated to the given new password
-CREATE OR REPLACE FUNCTION
-  LearnSQL.forgotPasswordReset(userName     LearnSQL.UserData_t.UserName%Type,
-                               token        LearnSQL.UserData_t.Token%Type,
-                               newPassword  LearnSQL.UserData_t.Token%Type)
-  RETURNS VOID AS
+CREATE OR REPLACE FUNCTION LearnSQL.forgotPasswordReset(
+  userName      LearnSQL.UserData_t.UserName%Type,
+  token         LearnSQL.UserData_t.Token%Type,
+  newPassword   LearnSQL.UserData_t.Token%Type)
+
+RETURNS VOID AS
 $$
 DECLARE
   encryptedPassword VARCHAR(60); -- Hashed password to be stored in UserData_t
@@ -319,22 +368,22 @@ BEGIN
   IF EXISTS (
               SELECT 1 FROM LearnSQL.UserData_t 
               WHERE UserData_t.UserName = $1 
-              AND UserData_t.TokenTimestamp > now() - '30 minutes'::interval
+              AND UserData_t.TokenTimestamp < now() - '30 minutes'::interval
             )
   THEN
     RAISE EXCEPTION 'Token has expired';
   END IF;
-
+  
   -- Retrieve the hashed token that was stored in the UserData when
   SELECT UserData_t.Token INTO hashedToken
   FROM LearnSQL.UserData_t 
   WHERE UserData_t.UserName = $1; 
 
   -- Check if the given token and the username is correct
-  IF (hashedToken = crypt($2, hashedToken))
+  IF (hashedToken = LearnSQL.crypt($2, hashedToken))
   THEN
     -- Create "hashed" password using blowfish cipher
-    encryptedPassword = crypt($3, gen_salt('bf'));
+    encryptedPassword = LearnSQL.crypt($3, LearnSQL.gen_salt('bf'));
 
     -- Update UserData_t with the new password
     UPDATE LearnSQL.UserData_t 
@@ -363,6 +412,73 @@ REVOKE ALL ON FUNCTION
                                LearnSQL.UserData_t.Token%Type,
                                LearnSQL.UserData_t.Token%Type) 
   FROM PUBLIC;
+
+
+
+-- Define a function returns a boolean value on whether user is a student
+CREATE OR REPLACE FUNCTION LearnSQL.isStudent(
+  userName   LearnSQL.UserData_t.UserName%Type)
+
+RETURNS BOOLEAN AS
+$$
+BEGIN
+  IF EXISTS (
+              SELECT 1 FROM LearnSQL.UserData_t 
+              WHERE UserData_t.UserName = $1 
+              AND UserData_t.isStudent = TRUE
+            )
+  THEN
+    RETURN TRUE;
+  ELSE
+    RETURN FALSE;
+  END IF;
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+-- Define a function returns a boolean value on whether user is a teacher
+CREATE OR REPLACE FUNCTION LearnSQL.isTeacher(
+  userName   LearnSQL.UserData_t.UserName%Type)
+
+RETURNS BOOLEAN AS
+$$
+BEGIN
+  IF EXISTS (
+              SELECT 1 FROM LearnSQL.UserData_t 
+              WHERE UserData_t.UserName = $1 
+              AND UserData_t.isTeacher = TRUE
+            )
+  THEN
+    RETURN TRUE;
+  ELSE
+    RETURN FALSE;
+  END IF;
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+-- Define a function returns a boolean value on whether user is an admin
+CREATE OR REPLACE FUNCTION LearnSQL.isAdmin(
+  userName   LearnSQL.UserData_t.UserName%Type)
+  
+RETURNS BOOLEAN AS
+$$
+BEGIN
+  IF EXISTS (
+              SELECT 1 FROM LearnSQL.UserData_t 
+              WHERE UserData_t.UserName = $1 
+              AND UserData_t.isAdmin = TRUE
+            )
+  THEN
+    RETURN TRUE;
+  ELSE
+    RETURN FALSE;
+  END IF;
+END;
+$$ LANGUAGE plpgsql;
+
 
 
 COMMIT;
