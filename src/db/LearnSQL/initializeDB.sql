@@ -118,8 +118,8 @@ CREATE TABLE IF NOT EXISTS LearnSQL.Class_t (
 );
 
 --Change table's owner and privileges so that only LearnSQl can use it
-ALTER TABLE Class_t OWNER TO LearnSQL;
-REVOKE ALL PRIVILEGES ON Class_t FROM PUBLIC;
+ALTER TABLE LearnSQL.Class_t OWNER TO LearnSQL;
+REVOKE ALL PRIVILEGES ON LearnSQL.Class_t FROM PUBLIC;
 
 
 
@@ -135,8 +135,8 @@ CREATE TABLE IF NOT EXISTS LearnSQL.Attends (
 );
 
 --Change table's owner and privileges so that only LearnSQl can use it
-ALTER TABLE Attends OWNER TO LearnSQL;
-REVOKE ALL PRIVILEGES ON Attends FROM PUBLIC;
+ALTER TABLE LearnSQL.Attends OWNER TO LearnSQL;
+REVOKE ALL PRIVILEGES ON LearnSQL.Attends FROM PUBLIC;
 
 
 
@@ -151,11 +151,11 @@ SELECT ClassID, ClassName, Section, Times, Days, StartDate, EndDate, Password,
     FROM LearnSQL.Attends
     WHERE Attends.ClassID = LearnSQL.Class_t.ClassID AND isTeacher = FALSE
   ) AS studentCount
-FROM LearnSQl.Class_t;
+FROM LearnSQL.Class_t;
 
 --Change table's owner and privileges so that only LearnSQl can use it
-ALTER TABLE Class OWNER TO LearnSQL;
-REVOKE ALL PRIVILEGES ON Class FROM PUBLIC;
+ALTER TABLE Learnsql.Class_t OWNER TO LearnSQL;
+REVOKE ALL PRIVILEGES ON LearnSQL.Class FROM PUBLIC;
 
 
 
@@ -175,7 +175,7 @@ EXISTS
 FROM LearnSQL.UserData_t;
 
 --Change table's owner and privileges so that only LearnSQl can use it
-ALTER TABLE UserData OWNER TO LearnSQL;
-REVOKE ALL PRIVILEGES ON UserData FROM PUBLIC;
+ALTER TABLE Learnsql.UserData OWNER TO LearnSQL;
+REVOKE ALL PRIVILEGES ON Learnsql.UserData FROM PUBLIC;
 
 COMMIT;
