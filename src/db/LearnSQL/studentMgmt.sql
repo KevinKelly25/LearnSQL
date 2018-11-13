@@ -26,8 +26,8 @@ BEGIN
 END
 $$;
 
---Suppress NOTICEs for this script only, this will not apply to functions
--- defined within. This hides unimportant, and possibly confusing messages.
+-- Suppress NOTICEs for this script only, this will not apply to functions
+--  defined within. This hides unimportant, and possibly confusing messages.
 SET LOCAL client_min_messages TO WARNING;
 
 
@@ -122,7 +122,7 @@ END;
 $$ LANGUAGE plpgsql 
    STABLE;
 
---Change function's owner and privileges so that only LearnSQl can use it
+-- Change function's owner and privileges so that only LearnSQl can use it
 ALTER FUNCTION 
   LearnSQL.getClasses(userName  LearnSQL.UserData_t.UserName%Type,
                       isTeacher BOOLEAN) 

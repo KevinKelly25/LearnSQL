@@ -40,7 +40,7 @@ BEGIN
    --  Postgres grants CONNECT to all by default
    EXECUTE format('REVOKE CONNECT ON DATABASE %I FROM public', currentDB);
 
-   --Only allow connect from learnsql role
+   -- Only allow connect from learnsql role
    EXECUTE format('GRANT CONNECT ON DATABASE %I TO learnsql', currentDB);
 END
 $$;
@@ -88,7 +88,7 @@ CREATE UNIQUE INDEX IF NOT EXISTS idx_Unique_Email
   ON LearnSQL.UserData_t(LOWER(TRIM(Email)));
 
 
---Change table's owner and privileges so that only LearnSQl can use it
+-- Change table's owner and privileges so that only LearnSQl can use it
 ALTER TABLE LearnSQL.UserData_t OWNER TO LearnSQL;
 REVOKE ALL PRIVILEGES ON LearnSQl.UserData_t FROM PUBLIC;
 
@@ -117,7 +117,7 @@ CREATE TABLE IF NOT EXISTS LearnSQL.Class_t (
                             CHECK(TRIM(Password) <> '')  
 );
 
---Change table's owner and privileges so that only LearnSQl can use it
+-- Change table's owner and privileges so that only LearnSQl can use it
 ALTER TABLE LearnSQL.Class_t OWNER TO LearnSQL;
 REVOKE ALL PRIVILEGES ON LearnSQL.Class_t FROM PUBLIC;
 
@@ -153,7 +153,7 @@ SELECT ClassID, ClassName, Section, Times, Days, StartDate, EndDate, Password,
   ) AS studentCount
 FROM LearnSQL.Class_t;
 
---Change table's owner and privileges so that only LearnSQl can use it
+-- Change table's owner and privileges so that only LearnSQl can use it
 ALTER TABLE Learnsql.Class_t OWNER TO LearnSQL;
 REVOKE ALL PRIVILEGES ON LearnSQL.Class FROM PUBLIC;
 
@@ -174,7 +174,7 @@ EXISTS
   ) AS isstudent
 FROM LearnSQL.UserData_t;
 
---Change table's owner and privileges so that only LearnSQl can use it
+-- Change table's owner and privileges so that only LearnSQl can use it
 ALTER TABLE Learnsql.UserData OWNER TO LearnSQL;
 REVOKE ALL PRIVILEGES ON Learnsql.UserData FROM PUBLIC;
 
