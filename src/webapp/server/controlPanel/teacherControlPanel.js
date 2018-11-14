@@ -125,7 +125,6 @@ function createClass(req, res) {
  * @param {string} className The name of the database.
  * @param {string} section The name of the section of the class.
  * @param {date} startDate The start date of the class.
- * @param {}
  */
 function dropClass(req, res) {
   return new Promise(() => {
