@@ -12,7 +12,7 @@
 
 app.controller('studentCtrl', ($scope, $http, $window) => {
   $scope.class = {
-    name: 'something',
+    name: '',
   };
 
   /* 
@@ -39,8 +39,6 @@ app.controller('studentCtrl', ($scope, $http, $window) => {
       .success((data) => {       
         data.forEach((element) => { 
           element.classname = element.classname.toUpperCase();
-          element.startdate = convertDate(element.startdate, false);
-          element.enddate =  convertDate(element.enddate, false);
         });
         $scope.classes = data;
       });
@@ -54,7 +52,7 @@ app.controller('studentCtrl', ($scope, $http, $window) => {
     $scope.joinClass = {
       className: $scope.className,
       classSection: $scope.classSection,
-      startDate: $scope.startDate,
+      startDate: convertDate($scope.startDate, true),
       classPassword: $scope.classPassword,
     };
     $http.post('/student/joinClass', $scope.joinClass)
