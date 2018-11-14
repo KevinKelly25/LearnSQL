@@ -78,8 +78,8 @@ app.controller('teacherCtrl', ($scope, $http, $location, $window) => {
       section: $scope.section,
       times: $scope.times,
       days: $scope.days,
-      startDate: convertDate($scope.startDate),
-      endDate: convertDate($scope.endDate),
+      startDate: $scope.startDate,
+      endDate: $scope.endDate,
       password: $scope.password,
     };
 

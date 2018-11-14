@@ -98,19 +98,19 @@ function createClass(req, res) {
           req.body.className, req.body.section, req.body.times, req.body.days,
           req.body.startDate, req.body.endDate])
         .then(result => res.status(200).json(result))
-        .catch((error) => {
-          logger.error(`createClasses: \n${error}`);
+        .catch((error) => {          
           if (error.message === 'Section And Class Name Already Exists!') {
             return res.status(400).json('Section And Class Name Already Exists!');
           }
+
           if (error.constraint === 'class_t_classname_check'
               || error.code === '23502') {
             return res.status(400).json('Required field is missing!');
           }
+          
           if (error.code === '22007') {
             return res.status(400).json('Required field has incorrect format!');
           }
-
           return res.status(500).json('error');
         });
     });
@@ -133,7 +133,6 @@ function dropClass(req, res) {
         req.body.className, req.body.section, req.body.startDate])
       .then(result => res.status(200).json(result))
       .catch((error) => {
-        logger.error(`dropClass: \n${error}`);
         res.status(500).json('Server error');
       });
   });
