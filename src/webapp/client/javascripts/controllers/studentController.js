@@ -15,10 +15,23 @@ app.controller('studentCtrl', ($scope, $http, $window) => {
     name: 'something',
   };
 
-  // Converts the date from PostgreSQL format to readable format
-  function convertDate(inputDateString) {
+  /* 
+  *  Converts a date from ISO format to "Short Date" format
+  *   or vice versa based on the boolean value of `toISOFormat`
+  */
+  function convertDate(inputDateString, toISOFormat) 
+  {
     const date = new Date(inputDateString);
-    return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
+
+    if(toISOFormat)
+    {
+      return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+    }
+    else
+    {  
+      return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
+    }
+    
   }
 
   $scope.init = () => {
@@ -26,8 +39,8 @@ app.controller('studentCtrl', ($scope, $http, $window) => {
       .success((data) => {       
         data.forEach((element) => { 
           element.classname = element.classname.toUpperCase();
-          element.startdate = convertDate(element.startdate);
-          element.enddate =  convertDate(element.enddate);
+          element.startdate = convertDate(element.startdate, false);
+          element.enddate =  convertDate(element.enddate, false);
         });
         $scope.classes = data;
       });

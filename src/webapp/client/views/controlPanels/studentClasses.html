@@ -125,22 +125,49 @@
 
                     <div class="modal-body">
                         <form>
-                            <div class="form-group">
-                                <label for="recipient-name" class="col-form-label">Class Name:</label>
-                                <input type="text" class="form-control" ng-model="className">
-                            </div>
-                            <div class="form-group">
-                                <label for="recipient-name" class="col-form-label">Section:</label>
+                            <div class="input-group input-group-lg">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"> 
+                                            <span class="fa fa-i-cursor"></span>
+                                        </span>
+                                        <span class="input-group-text" id="inputGroup-sizing-lg">Class Name</span>
+                                    </div>
+                                    <input type="text" class="form-control" ng-model="className">
+                                </div> 
+                            <div>&nbsp</div>
+
+                            <div class="input-group input-group-lg">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"> 
+                                        <span class="fa fa-group"></span>
+                                    </span>
+                                    <span class="input-group-text" id="inputGroup-sizing-lg">Section</span>
+                                </div>
                                 <input type="text" class="form-control" ng-model="classSection">
-                            </div>
-                            <div class="form-group">
-                                <label for="recipient-name" class="col-form-label">Start Date:</label>
-                                <input type="text" class="form-control" ng-model="startDate">
-                            </div>
-                            <div class="form-group">
-                                <label for="recipient-name" class="col-form-label">Join Password:</label>
-                                <input type="text" class="form-control" ng-model="classPassword">
-                            </div>
+                            </div>  
+                            <div>&nbsp</div>
+
+                            <!-- Note: `type=date` is incompatible with Internet Explorer 11 -->
+                            <div class="input-group input-group-lg">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"> 
+                                        <span class="fa fa-calendar"></span>
+                                    </span>
+                                    <span class="input-group-text" id="inputGroup-sizing-lg">Start Date</span>
+                                </div>
+                                <input type="date" class="form-control" ng-model="startDate">
+                            </div> 
+                            <div>&nbsp</div>
+
+                            <div class="input-group input-group-lg">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"> 
+                                       <span class="fa fa-lock"></span>
+                                    </span>
+                                    <span class="input-group-text" id="inputGroup-sizing-lg">Join Password</span>
+                                </div>
+                                <input type="password" class="form-control" ng-model="classPassword">
+                            </div>  
                         </form>
                     </div>
                     <div class="modal-footer">
