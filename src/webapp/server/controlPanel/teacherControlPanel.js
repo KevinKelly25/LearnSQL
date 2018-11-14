@@ -75,7 +75,7 @@ function getStudents(req, res) {
 
 /**
  * This function creates a class database using a ClassDB template Database. It
- *  also adds the class to the attends and class table of the learnSQL database.
+ *  also adds the class to the attends and class table of the LearnSQL database.
  *  The access parameters for the database also is restored since they are not
  *  copied over in the creation of the database using the template.
  *
@@ -99,6 +99,7 @@ function createClass(req, res) {
           req.body.startDate, req.body.endDate])
         .then(result => res.status(200).json(result))
         .catch((error) => {
+          logger.error(`createClasses: \n${error}`);
           if (error.message === 'Section And Class Name Already Exists!') {
             return res.status(400).json('Section And Class Name Already Exists!');
           }
@@ -117,7 +118,7 @@ function createClass(req, res) {
 
 /**
  * This function drops a class database as well as removes it from the attends
- *  and class table from the learnSQL database.
+ *  and class table from the LearnSQL database.
  *
  * @param {string} dbUsername The user name of the database user.
  * @param {string} dbPassword The password of the user for the database.
@@ -132,7 +133,10 @@ function dropClass(req, res) {
       [process.env.DB_USER, process.env.DB_PASSWORD, req.user.username,
         req.body.className, req.body.section, req.body.startDate])
       .then(result => res.status(200).json(result))
-      .catch(() => res.status(500).json('Server error'));
+      .catch((error) => {
+        logger.error(`dropClass: \n${error}`);
+        res.status(500).json('Server error');
+      });
   });
 }
 

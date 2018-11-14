@@ -9,7 +9,12 @@
  */
 /* eslint-disable no-param-reassign */
 
-
+// Converts the date from PostgreSQL format to readable format
+function convertDate(inputDateString) {
+  const date = new Date(inputDateString);
+  return `${date.getHours()}:${date.getMinutes()}   ${
+    date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
+}
 
 /**
  * This controller is used for teacher related angular functionality.
@@ -45,7 +50,7 @@ app.controller('teacherCtrl', ($scope, $http, $location, $window) => {
     $http.post('/teacher/getStudents', $scope.classInfo)
       .success((data) => {
         data.forEach((element) => {
-          element.lastddlactivityat = element.lastddlactivityat;
+          element.lastddlactivityat = convertDate(element.lastddlactivityat);
         });
         $scope.class = data;
       });
@@ -67,12 +72,6 @@ app.controller('teacherCtrl', ($scope, $http, $location, $window) => {
     $scope.error = false;
     $scope.success = true;
     $scope.message = 'Class Being Created, Please Wait';
-
-    // Converts the date from postgres format to readable format
-    function convertDate(inputDateString) {
-      const date = new Date(inputDateString);
-      return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
-    }
 
     $scope.class = {
       className: $scope.className,
