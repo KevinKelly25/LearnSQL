@@ -11,6 +11,7 @@
 const ldb = require('../db/ldb.js');
 const logger = require('../logs/winston.js');
 const dbCreator = require('../db/cdb.js');
+const authHelpers = require('../auth/_helpers');
 
 
 /**
