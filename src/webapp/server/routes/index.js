@@ -16,7 +16,7 @@ const nodemailer = require('nodemailer');
 
 const connectionStringQuestions = 'postgresql://postgres:password@localhost:5432/questions';
 const authHelpers = require('../auth/_helpers');
-const tableHelpers = require('../controlPanel/tableControlPanel.js');
+const schemaHelpers = require('../controlPanel/schemaControlPanel.js');
 const logger = require('../logs/winston.js');
 
 
@@ -144,34 +144,38 @@ router.post('/sendContact', (req, res) => {
  * This route sends the user to tables.html. However, for it to work properly
  *  it must have two attached url parameters, username and classID. An example
  *  of this is:
- *  http://localhost:3000/table/#?username=teststu1&classID=testing1_1lvc01hojllf1r02
+ *  http://localhost:3000/schema/#?username=teststu1&classID=testing1_1lvc01hojllf1r02
  */
-router.get('/table/', authHelpers.loginRequired, (req, res) => {
+router.get('/schema/', authHelpers.loginRequired, (req, res) => {
   res.sendFile(path.join(
-    __dirname, '..', '..', 'client', 'views', 'controlPanels', 'tables.html',
+    __dirname, '..', '..', 'client', 'views', 'controlPanels', 'schema.html',
   ));
 });
 
 
 
 /**
- *  This route retrieves all tables/views for a user. Most functionality is in
- *   `tableControlPanel.js` getTables function.
+ *  This route retrieves all objects for a user. Most functionality is in
+ *   `schemaControlPanel.js` getTables function.
  *
  * @param {string} username The username of the user who's tables are being
  *                           retrieved
  * @param {string} classID The classID of the class the tables are in
  */
-router.post('/getTables', authHelpers.loginRequired, (req, res) => tableHelpers.getTables(req, res)
+router.post('/getObjects', authHelpers.loginRequired, (req, res) => {
+  schemaHelpers.getObjects(req, res)
   .catch((err) => {
     handleResponse(res, 500, err);
-  }));
+  })
+});
+  
+
 
 
 
 /**
- * This route returns a table in JSON format when given a tableName. Most
- *  functionality is in `tableControlPanel.js` getTable function.
+ * This route returns objects details in JSON format when given a tableName. Most
+ *  functionality is in `schemaControlPanel.js` getTable function.
  *
  * @param {string} name The name of the table
  * @param {string} schema The schema the table is located in. Normally is the
@@ -179,10 +183,13 @@ router.post('/getTables', authHelpers.loginRequired, (req, res) => tableHelpers.
  * @param {string} classID The classID of the class the table is in
  * @return a table when given a tableName.
  */
-router.post('/getTable', authHelpers.loginRequired, (req, res) => tableHelpers.getTable(req, res)
+router.post('/getObjectDetails', authHelpers.loginRequired, (req, res) => {
+  console.log(req.body);
+  schemaHelpers.getObjectDetails(req, res)
   .catch((err) => {
     handleResponse(res, 500, err);
-  }));
+  })
+});
 
 
 

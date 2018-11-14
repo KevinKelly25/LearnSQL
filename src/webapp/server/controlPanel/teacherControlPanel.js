@@ -50,9 +50,9 @@ function handleErrors(req) {
 function getStudents(req, res) {
   return new Promise((resolve, reject) => {
     ldb.one('SELECT C.ClassID '
-            + 'FROM LearnSQL.Attends AS A INNER JOIN Class AS C ON A.ClassID = C.ClassID '
-            + 'WHERE Username = $1 AND ClassName = $2',
-    [req.user.username, req.body.className])
+            + 'FROM LearnSQL.Attends AS A INNER JOIN LearnSQL.Class_t AS C ON A.ClassID = C.ClassID '
+            + 'WHERE Username = $1 AND ClassName = $2 AND Section = $3',
+    [req.user.username, req.body.className, req.body.section])
       .then((result) => {
         const db = dbCreator(result.classid);
         db.any('SELECT * FROM ClassDB.StudentActivitySummary')
@@ -95,7 +95,7 @@ function createClass(req, res) {
       const classid = `${req.body.name}_${uniqid()}`; // Guarantee uniqueness
       // Check to make sure that there is none conflicting ClassName for that user
       ldb.task(t => t.oneOrNone('SELECT Username, C.ClassID '
-                         + 'FROM LearnSQL.Attends AS A INNER JOIN Class AS C '
+                         + 'FROM LearnSQL.Attends AS A INNER JOIN LearnSQL.Class_t AS C '
                          + 'ON A.ClassID = C.ClassID '
                          + 'WHERE Username = $1 AND ClassName = $2 AND '
                          + 'isTeacher = true',
@@ -158,7 +158,7 @@ function dropClass(req, res) {
   return new Promise((resolve, reject) => {
     ldb.task(t => t.one(
       'SELECT C.ClassID '
-      + 'FROM LearnSQL.Attends AS A INNER JOIN Class AS C '
+      + 'FROM LearnSQL.Attends AS A INNER JOIN LearnSQL.Class_t AS C '
       + 'ON A.ClassID = C.ClassID '
       + 'WHERE Username = $1 AND ClassName = $2 AND isTeacher = True',
       [req.user.username, req.body.name],
@@ -219,8 +219,9 @@ function getClassInfo(req, res) {
       'SELECT LearnSQL.Attends.ClassID, ClassName, Section, Times, Days, '
       + 'StartDate, EndDate, StudentCount '
       + 'FROM LearnSQL.Attends INNER JOIN LearnSQL.Class ON Attends.ClassID = Class.ClassID '
-      + 'WHERE ClassName = $1 AND Username = $2 AND isTeacher = true',
-      [req.body.className, req.user.username],
+      + 'WHERE ClassName = $1 AND Username = $2 AND '
+      + 'Section = $3 AND isTeacher = true ',
+      [req.body.className, req.user.username, req.body.section],
     )
       .then((result) => {
         resolve();

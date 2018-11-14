@@ -1,5 +1,5 @@
 /**
- * tableControlPanel.js - LearnSQL
+ * schemaControlPanel.js - LearnSQL
  *
  * Kevin Kelly
  * Web Applications and Databases for Education (WADE)
@@ -24,7 +24,7 @@ const logger = require('../logs/winston.js');
  * @return A http response with attached object that contains all the tables the
  *          user has or error details
  */
-function getTables(req, res) {
+function getObjects(req, res) {
   return new Promise((resolve, reject) => {
     // if user requesting to see table is not owner, test if requesting user is
     // teacher of class
@@ -50,7 +50,7 @@ function getTables(req, res) {
           if (error === 'User Not Authorized') {
             reject(error);
           } else {
-            logger.error(`getTables: \n${error}`);
+            logger.error(`getObjects: \n${error}`);
             reject(new Error('Server Error: Could query the tables'));
           }
         });
@@ -71,7 +71,7 @@ function getTables(req, res) {
         return res.status(200).json(result);
       })
       .catch((error) => {
-        logger.error(`getTables: \n${error}`);
+        logger.error(`getObjects: \n${error}`);
         reject(new Error('Server Error: Could query the tables'));
       });
   });
@@ -82,33 +82,54 @@ function getTables(req, res) {
  * This function returns a table when given a tableName and the schema qualifier
  *  Schema qualifier is typically the username of the user who created table
  *
- * @param {string} name The name of the table
+ * @param {string} name The name of the object
  * @param {string} schema The schema the table is located in. Normally is the
  *                         username of the user who owns table
  * @param {string} classID The classID of the class the table is in
  * @return a table when given a tableName.
  */
-function getTable(req, res) {
+function getObjectDetails(req, res) {
   return new Promise((resolve, reject) => {
     const db = dbCreator(req.body.classID);
-    // Select all from given table. ~ is used for SQL names in pg-promise.
-    // $1 is the schema qualifier and $2 is the name of the table
-    db.any('SELECT * '
-           + 'FROM $1~.$2~ ',
-    [req.body.schema, req.body.name])
+
+    if (req.body.objectType === 'TABLE') {
+    // Select all from given table. Sending multiple queries to get multiple
+    //  results with pg_promise multi
+    db.multi('SELECT Username, SchemaName, TableName, HasIndexes, HasTriggers '
+            +'HasRules, Attributes FROM ClassDB.getTableDetails($1,$2); '
+            +'SELECT * FROM $1~.$2~', 
+      [req.body.schema, req.body.objectName])
       .then((result) => {
-        db.$pool.end();// closes the connection to the database. IMPORTANT!!
-        resolve();
-        return res.status(200).json(result);
+      db.$pool.end();// closes the connection to the database. IMPORTANT!!
+      resolve();
+      console.log(result[0]);
+      console.log(result[1]);
+      console.log(result[0] + result[1]);
+      console.log({ details : result[0], result: result[1] });
+      
+      return res.status(200).json({ details : result[0], result: result[1] });
       })
       .catch((error) => {
-        logger.error(`getTable: \n${error}`);
-        reject(new Error('Server Error: Could not query the table'));
+      logger.error(`getTableDetails: \n${error}`);
+      reject(new Error('Server Error: Could not get table details'));
       });
+    } 
+    else if (req.body.type === 'VIEW') { 
+
+    }
+    else if (req.body.type === 'FUNCTION') {
+
+    }
+    else if (req.body.type === 'TRIGGER') {
+
+    }
+    else { 
+      
+    }
   });
 }
 
 module.exports = {
-  getTables,
-  getTable,
+  getObjects,
+  getObjectDetails,
 };

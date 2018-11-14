@@ -48,6 +48,7 @@ app.controller('teacherCtrl', ($scope, $http, $location, $window) => {
   $scope.initClass = () => {
     $scope.classInfo = {
       className: $location.search().class,
+      section: $location.search().section,
     };
 
 

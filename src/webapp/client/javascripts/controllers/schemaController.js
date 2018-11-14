@@ -25,7 +25,7 @@ app.controller('schemaCtrl', ($scope, $http, $location) => {
     };
     $http.post('/getObjects', $scope.userInfo)
       .success((data) => {
-        $scope.tables = data;
+        $scope.schema = data;
       });
   };
 
@@ -54,8 +54,9 @@ app.controller('schemaCtrl', ($scope, $http, $location) => {
       .success((data) => {
         // check if data is empty
         if (type === 'TABLE') {
-          $scope.columns = Object.keys(data[0]);// the amount of columns
-          $scope.object = data;
+          $scope.columns = Object.keys(data.result[0]);// the amount of columns
+          $scope.tableResult = data.result;
+          $scope.tableInfo = data.details;
         } else if (type === 'VIEW') {
           $scope.columns = Object.keys(data[0]);// the amount of columns
           $scope.object = data;
@@ -69,6 +70,7 @@ app.controller('schemaCtrl', ($scope, $http, $location) => {
           $scope.columns = Object.keys(data[0]);// the amount of columns
           $scope.object = data;
         }
+        $scope.view = 'objectDetailsView';
       });
   };
 

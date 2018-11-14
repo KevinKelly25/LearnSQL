@@ -198,7 +198,7 @@
                 <tbody>
                     <tr ng-repeat="x in class">
                         <td>{{ $index + 1 }}</td>
-                        <td><a ng-href="/teacher/class/#?class={{x.username}}" style="color:blue;">{{ x.username }}</a></td>
+                        <td><a ng-href="http://localhost:3000/schema/#?username={{x.username}}&classID={{classInfo[0].classid}}" style="color:blue;">{{ x.username }}</a></td>
                         <td>{{ x.ddlcount }}</td>
                         <td>{{ x.lastddloperation }}</td>
                         <td>{{ x.lastddlobject }}</td>

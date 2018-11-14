@@ -1,10 +1,10 @@
 <!--
-  tables.html - LearnSQL
+  schema.html - LearnSQL
 
   Kevin Kelly
   Web Applications and Databases for Education (WADE)
 
-  This file contains the html view of a users tables
+  This file contains the html view of a user's schema
 -->
 
 <!DOCTYPE html>
@@ -95,7 +95,7 @@
     <section id="page-content" class="mt-5 container" ng-controller="schemaCtrl" data-ng-init="initTables()">
         <!-- show when looking at all tables, is also the default view -->
         <span ng-show="view =='allObjects'">
-            <div ng-if="tables">
+            <div ng-if="schema">
                 <h1 class="text-center">{{ userInfo.username }}'s Schema</h1>
                 <!-- list of all tables -->
                 <a href="/views/workshop.html" class="btn btn-outline-success btn-block btn-lg" role="button">
@@ -113,13 +113,13 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr ng-repeat="x in tables">
+                        <tr ng-repeat="x in schema">
                             <td>{{ $index + 1 }}</td>
                             <td><a ng-click="getObjectDetails(x.name,x.type)" style="color:blue; text-decoration: underline; ">{{ x.name }}</a> 
                             </td>
                             <td>{{ x.type }}</td>
                             <td>
-                                <a href="" class="btn btn-success btn-block btn-lg" role="button">
+                                <a href="" class="btn btn-success btn-block btn" role="button">
                                     Go To {{ x.type }}
                                 </a> 
                             </td>
@@ -130,9 +130,29 @@
         </span>
         <!-- show if looking at a single table -->
         <span ng-show="view =='objectDetailsView'">
-                <div ng-if="table">
+                <div ng-if="tableInfo">
                     <a ng-click="backToTables()" style="color:blue; text-decoration: underline; ">Go Back To Tables</a>
-                    <h1 class="text-center">{{ tableInfo.name }} Table</h1>
+                    <h3 class="text-center">Table Information</h3>
+                    <table class="ui celled table row-border hover order-column shadow-lg text-center">
+                        <tbody>
+                                <tr class="d-flex">
+                                    <td class="col-2" style="font-weight:bold;">Table Name</td>
+                                    <td class="col-10">{{ tableInfo[0].tablename }}</td>
+                                </tr>
+                                <tr class="d-flex" >
+                                    <td class="col-2" style="font-weight:bold;">Has Indexes</td>
+                                    <td class="col-10">{{ tableInfo[0].hasindexes }}</td>
+                                </tr>
+                                <tr class="d-flex">
+                                    <td class="col-2" style="font-weight:bold;">Has Rules</td>
+                                    <td class="col-10">{{ tableInfo[0].hasrules }}</td>
+                                </tr>
+                                <tr class="d-flex">
+                                    <td class="col-2" style="font-weight:bold;">Column Attributes</td>
+                                    <td class="col-10">{{ tableInfo[0].attributes }}</td>
+                                </tr>
+                        </tbody>
+                    </table>
                     <!-- list of all tables -->
                     <table class="ui celled table row-border hover order-column shadow-lg text-center" datatable="">
                         <thead>
@@ -145,7 +165,7 @@
                         </thead>
                         <tbody>
                             <!-- display all rows of the table -->
-                            <tr ng-repeat="rows in table">
+                            <tr ng-repeat="rows in tableResult">
                                 <td>{{ $index + 1 }}</td>
                                 <!-- display all attribute values of the row -->
                                 <td ng-repeat="attribute in rows">{{ attribute }}</td>
