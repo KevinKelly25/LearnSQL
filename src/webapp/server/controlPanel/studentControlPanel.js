@@ -53,48 +53,33 @@ function addStudent(req, res)
 {
   return new Promise((resolve, reject) => 
   {
-    // TODO: Get instuctor name instead of hardcoding
-    //       Accept all date formats
-    ldb.oneOrNone('SELECT LearnSQL.getClassID(\'teacher\', $1, $2, $3)',
-                  [req.body.className, req.body.classSection, req.body.startDate])
+    ldb.oneOrNone('SELECT LearnSQL.joinClass($1, $2, $3, $4, $5)',
+                  [req.user.username, req.body.classID, req.body.classPassword, 
+                  process.env.DB_USER, process.env.DB_PASSWORD])
       .then((result) => 
       {
-        var classID = 0;
-        classID = result.getclassid;
-        ldb.any('SELECT LearnSQL.joinClass($1, $2, $3, $4, $5)',
-                      [req.user.username, classID, req.body.classPassword, 
-                       process.env.DB_USER, process.env.DB_PASSWORD])
-        .then((result_joinClass) => 
-        {
-          resolve();
-          return res.status(200).json('Student enrolled successfully');
-        })
-        .catch((error_joinClass) =>
-        {
-          // TODO: Test for SQLSTATE or error code instead of error string
-          console.log(error_joinClass);
-          if(error_joinClass == 'error: Student is already a member of the specified class')
-          {
-            reject('You are already a member of the specified class');
-          }
-          else if (error_joinClass == 'error: Password incorrect for the desired class')
-          {
-            reject('Password incorrect for the desired class');
-          }
-          else
-          {
-            reject('Failed to enroll into the desired class');
-          }
-                
-        }); 
+        resolve();
+        return res.status(200).json('Student enrolled successfully');
       })
       .catch((error) => 
       {
-        reject('Class does not exist');
+        // TODO: Test for SQLSTATE or error code instead of error string
+        console.log(error);
+        if(error == 'error: Student is already a member of the specified class')
+        {
+          reject('You are already a member of the specified class');
+        }
+        else if (error == 'error: Password incorrect for the desired class')
+        {
+          reject('Password incorrect for the desired class');
+        }
+        else
+        {
+          reject('Failed to enroll into the desired class');
+        }
       });
-    });
+    })
 }
-
 
 module.exports = {
   getClasses,

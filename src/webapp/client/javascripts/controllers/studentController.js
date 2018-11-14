@@ -51,9 +51,7 @@ app.controller('studentCtrl', ($scope, $http, $window) => {
     $scope.message = 'Joining Class . . .';
     $scope.joinClass = {
       className: $scope.className,
-      classSection: $scope.classSection,
-      startDate: convertDate($scope.startDate, true),
-      classPassword: $scope.classPassword,
+      classID: $scope.classID,
     };
     $http.post('/student/joinClass', $scope.joinClass)
       .success(() => {
