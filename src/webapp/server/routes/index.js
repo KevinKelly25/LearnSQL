@@ -141,7 +141,7 @@ router.post('/sendContact', (req, res) => {
 
 
 /**
- * This route sends the user to tables.html. However, for it to work properly
+ * This route sends the user to schema.html. However, for it to work properly
  *  it must have two attached url parameters, username and classID. An example
  *  of this is:
  *  http://localhost:3000/schema/#?username=teststu1&classID=testing1_1lvc01hojllf1r02

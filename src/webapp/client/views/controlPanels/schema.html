@@ -92,7 +92,7 @@
     <!-- END OF NAVBAR -->
 
     <!-- PAGE CONTENT -->
-    <section id="page-content" class="mt-5 container" ng-controller="schemaCtrl" data-ng-init="initTables()">
+    <section id="page-content" class="mt-5 container" ng-controller="schemaCtrl" data-ng-init="initSchema()">
         <!-- show when looking at all tables, is also the default view -->
         <span ng-show="view =='allObjects'">
             <div ng-if="schema">
@@ -101,7 +101,7 @@
                 <a href="/views/workshop.html" class="btn btn-outline-success btn-block btn-lg" role="button">
                     Go To Workshop
                 </a>
-                <table class="ui celled table row-border hover order-column shadow-lg text-center" datatable="">
+                <table id="allObjects" class="ui celled table row-border hover order-column shadow-lg text-center" datatable="">
                     <caption class="text-primary">List of Objects</caption>
                     <thead>
                         <!-- column headings -->
@@ -114,12 +114,11 @@
                     </thead>
                     <tbody>
                         <tr ng-repeat="x in schema">
-                            <td>{{ $index + 1 }}</td>
-                            <td><a ng-click="getObjectDetails(x.name,x.type)" style="color:blue; text-decoration: underline; ">{{ x.name }}</a> 
-                            </td>
-                            <td>{{ x.type }}</td>
-                            <td>
-                                <a href="" class="btn btn-success btn-block btn" role="button">
+                            <td style="width: 10%">{{ $index + 1 }}</td>
+                            <td style="width: 40%">{{ x.name }}</td>
+                            <td style="width: 40%">{{ x.type }}</td>
+                            <td style="width: 10%">
+                                <a href="" class="btn btn-success btn-block btn" role="button" ng-click="getObjectDetails(x.name,x.type)">
                                     Go To {{ x.type }}
                                 </a> 
                             </td>
@@ -128,50 +127,183 @@
                 </table>
             </div>
         </span>
-        <!-- show if looking at a single table -->
+        <!-- show if looking at a single object -->
         <span ng-show="view =='objectDetailsView'">
-                <div ng-if="tableInfo">
-                    <a ng-click="backToTables()" style="color:blue; text-decoration: underline; ">Go Back To Tables</a>
-                    <h3 class="text-center">Table Information</h3>
+            <div ng-if="tableInfo[0]">
+                <a ng-click="backToObjects('table')" style="color:blue; text-decoration: underline; ">Go Back To Objects</a>
+                <h3 class="text-center">Table Information</h3>
+                <table class="ui celled table row-border hover order-column shadow-lg text-center">
+                    <tbody>
+                            <tr class="d-flex">
+                                <td class="col-2" style="font-weight:bold;">Name</td>
+                                <td class="col-10">{{ tableInfo[0].tablename }}</td>
+                            </tr>
+                            <tr class="d-flex" >
+                                <td class="col-2" style="font-weight:bold;">Has Indexes</td>
+                                <td class="col-10">{{ tableInfo[0].hasindexes }}</td>
+                            </tr>
+                            <tr class="d-flex">
+                                <td class="col-2" style="font-weight:bold;">Has Rules</td>
+                                <td class="col-10">{{ tableInfo[0].hasrules }}</td>
+                            </tr>
+                            <tr class="d-flex">
+                                <td class="col-2" style="font-weight:bold;">Column Attributes</td>
+                                <td class="col-10">{{ tableInfo[0].attributes }}</td>
+                            </tr>
+                    </tbody>
+                </table>
+                <!-- table results -->
+                <table class="ui celled table row-border hover order-column shadow-lg text-center" datatable="">
+                    <thead>
+                        <!-- column headings -->
+                        <tr>
+                            <th></th>
+                            <!-- display all column headers -->
+                            <th ng-repeat="x in columns">{{ x }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- display all rows of the table -->
+                        <tr ng-repeat="rows in tableResult">
+                            <td>{{ $index + 1 }}</td>
+                            <!-- display all attribute values of the row -->
+                            <td ng-repeat="attribute in rows">{{ attribute }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div ng-if="viewInfo">
+                <a ng-click="backToObjects('view')" style="color:blue; text-decoration: underline; ">Go Back To Objects</a>
+                <h3 class="text-center">View Information</h3>
+                <table class="ui celled table row-border hover order-column shadow-lg text-center">
+                    <tbody>
+                            <tr class="d-flex">
+                                <td class="col-2" style="font-weight:bold;">Name</td>
+                                <td class="col-10">{{ viewInfo[0].viewname }}</td>
+                            </tr>
+                            <tr class="d-flex" >
+                                <td class="col-2" style="font-weight:bold;">Definition</td>
+                                <td class="col-10">{{ viewInfo[0].definition }}</td>
+                            </tr>
+                    </tbody>
+                </table>
+                <!-- view results -->
+                <table class="ui celled table row-border hover order-column shadow-lg text-center" datatable="">
+                    <thead>
+                        <!-- column headings -->
+                        <tr>
+                            <th></th>
+                            <!-- display all column headers -->
+                            <th ng-repeat="x in columns">{{ x }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- display all rows of the view -->
+                        <tr ng-repeat="rows in viewResult">
+                            <td>{{ $index + 1 }}</td>
+                            <!-- display all attribute values of the row -->
+                            <td ng-repeat="attribute in rows">{{ attribute }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div ng-if="functionInfo" class="py-5">
+                    <a ng-click="backToObjects('function')" style="color:blue; text-decoration: underline; ">Go Back To Objects</a>
+                    <h3 class="text-center">Function Information</h3>
                     <table class="ui celled table row-border hover order-column shadow-lg text-center">
                         <tbody>
                                 <tr class="d-flex">
-                                    <td class="col-2" style="font-weight:bold;">Table Name</td>
-                                    <td class="col-10">{{ tableInfo[0].tablename }}</td>
+                                    <td class="col-3" style="font-weight:bold;">Name</td>
+                                    <td class="col-9">{{ functionInfo[0].functionname }}</td>
                                 </tr>
                                 <tr class="d-flex" >
-                                    <td class="col-2" style="font-weight:bold;">Has Indexes</td>
-                                    <td class="col-10">{{ tableInfo[0].hasindexes }}</td>
+                                    <td class="col-3" style="font-weight:bold;">Number of Arguments</td>
+                                    <td class="col-9">{{ functionInfo[0].numberofarguments }}</td>
                                 </tr>
-                                <tr class="d-flex">
-                                    <td class="col-2" style="font-weight:bold;">Has Rules</td>
-                                    <td class="col-10">{{ tableInfo[0].hasrules }}</td>
+                                <tr class="d-flex" >
+                                    <td class="col-3" style="font-weight:bold;">Return Type</td>
+                                    <td class="col-9">{{ functionInfo[0].returntype }}</td>
                                 </tr>
-                                <tr class="d-flex">
-                                    <td class="col-2" style="font-weight:bold;">Column Attributes</td>
-                                    <td class="col-10">{{ tableInfo[0].attributes }}</td>
+                                <tr class="d-flex" >
+                                    <td class="col-3" style="font-weight:bold;">Estimated Number of Returned Rows</td>
+                                    <td class="col-9">{{ functionInfo[0].estimatedreturnrows }}</td>
                                 </tr>
+                                <tr class="d-flex" >
+                                    <td class="col-3" style="font-weight:bold;">Is Aggregate</td>
+                                    <td class="col-9">{{ functionInfo[0].isaggregate }}</td>
+                                </tr>
+                                <tr class="d-flex" >
+                                    <td class="col-3" style="font-weight:bold;">Is Window Function</td>
+                                    <td class="col-9">{{ functionInfo[0].iswindowfunction }}</td>
+                                </tr>
+                                <tr class="d-flex" >
+                                    <td class="col-3" style="font-weight:bold;">Is Security Definer</td>
+                                    <td class="col-9">{{ functionInfo[0].issecuritydefiner }}</td>
+                                </tr>
+                                <tr class="d-flex" >
+                                    <td class="col-3" style="font-weight:bold;">Returns Result Set</td>
+                                    <td class="col-9">{{ functionInfo[0].returnsresultset }}</td>
+                                </tr>
+                                <tr class="d-flex" >
+                                    <td class="col-3" style="font-weight:bold;">Argument Types</td>
+                                    <td class="col-9">{{ functionInfo[0].argumenttypes }}</td>
+                                </tr>
+                                <tr><td style="font-weight:bold;">Source Code</td></tr>
+                                <tr><td><p style="white-space: pre;text-align: left">{{ functionInfo[0].sourcecode }}</p></td></tr>
                         </tbody>
-                    </table>
-                    <!-- list of all tables -->
-                    <table class="ui celled table row-border hover order-column shadow-lg text-center" datatable="">
-                        <thead>
-                            <!-- column headings -->
-                            <tr>
-                                <th></th>
-                                <!-- display all column headers -->
-                                <th ng-repeat="x in columns">{{ x }}</th>
-                            </tr>
-                        </thead>
+                    </table>                      
+                </div>
+                <div ng-if="triggerInfo" class="py-5">
+                    <a ng-click="backToObjects('trigger')" style="color:blue; text-decoration: underline; ">Go Back To Objects</a>
+                    <h3 class="text-center">Trigger Information</h3>
+                    <table class="ui celled table row-border hover order-column shadow-lg text-center">
                         <tbody>
-                            <!-- display all rows of the table -->
-                            <tr ng-repeat="rows in tableResult">
-                                <td>{{ $index + 1 }}</td>
-                                <!-- display all attribute values of the row -->
-                                <td ng-repeat="attribute in rows">{{ attribute }}</td>
+                            <tr class="d-flex">
+                                <td class="col-2" style="font-weight:bold;">Name</td>
+                                <td class="col-10">{{ triggerInfo[0].triggername }}</td>
+                            </tr>
+                            <tr class="d-flex" >
+                                <td class="col-2" style="font-weight:bold;">On Table</td>
+                                <td class="col-10">{{ triggerInfo[0].ontable}}</td>
+                            </tr>
+                            <tr class="d-flex" >
+                                <td class="col-2" style="font-weight:bold;">Uses Function</td>
+                                <td class="col-10">{{ triggerInfo[0].onfunction }}</td>
                             </tr>
                         </tbody>
-                    </table>
+                    </table>                      
+                </div>
+                <div ng-if="indexInfo" class="py-5">
+                    <a ng-click="backToObjects('index')" style="color:blue; text-decoration: underline; ">Go Back To Objects</a>
+                    <h3 class="text-center">Index Information</h3>
+                    <table class="ui celled table row-border hover order-column shadow-lg text-center">
+                        <tbody>
+                            <tr class="d-flex">
+                                <td class="col-2" style="font-weight:bold;">Name</td>
+                                <td class="col-10">{{ indexInfo[0].indexname }}</td>
+                            </tr>
+                            <tr class="d-flex" >
+                                <td class="col-2" style="font-weight:bold;">On Table</td>
+                                <td class="col-10">{{ indexInfo[0].ontable }}</td>
+                            </tr>
+                            <tr class="d-flex" >
+                                <td class="col-2" style="font-weight:bold;">Number Of Columns</td>
+                                <td class="col-10">{{ indexInfo[0].numberofcolumns }}</td>
+                            </tr>
+                            <tr class="d-flex" >
+                                <td class="col-2" style="font-weight:bold;">Is Unique Index</td>
+                                <td class="col-10">{{ indexInfo[0].isunique }}</td>
+                            </tr>
+                            <tr class="d-flex" >
+                                <td class="col-2" style="font-weight:bold;">Is Primary Key</td>
+                                <td class="col-10">{{ indexInfo[0].isprimarykey }}</td>
+                            </tr>
+                            <tr class="d-flex" >
+                                <td class="col-2" style="font-weight:bold;">Definition</td>
+                                <td class="col-10">{{ indexInfo[0].indexdefinition }}</td>
+                            </tr>
+                        </tbody>
+                    </table>                      
                 </div>
             </span>
     </section>

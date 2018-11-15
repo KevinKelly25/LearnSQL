@@ -1,10 +1,10 @@
 /**
- * tableController.js - LearnSQL
+ * schemaController.js - LearnSQL
  *
  * Kevin Kelly
  * Web Applications and Databases for Education (WADE)
  *
- * This file contains the angularJS controller used for viewing tables
+ * This file contains the angularJS controller used for viewing objects
  */
 
 
@@ -13,12 +13,12 @@ app.controller('schemaCtrl', ($scope, $http, $location) => {
   $scope.view = 'allObjects';// default view of the table
 
   /**
-   * This function initializes the table that contains all the user's tables in
+   * This function initializes the table that contains all the user's objects in
    *  ClassDB database. The class and username are supplied by URL parameters.
    *  An example of a possible acceptable URL is shown here:
-   * http://localhost:3000/table/#?username=teststu1&classID=testing1_1lvc01hojllf1r02
+   * http://localhost:3000/schema/#?username=teststu1&classID=testing1_1lvc01hojllf1r02
    */
-  $scope.initTables = () => {
+  $scope.initSchema = () => {
     $scope.userInfo = {
       username: $location.search().username,
       class: $location.search().classID,
@@ -31,12 +31,14 @@ app.controller('schemaCtrl', ($scope, $http, $location) => {
 
 
   /**
-   * This function is given a table name and with URL parameters username and
-   *  classID it forms an object tableInfo. This object is passed to route
-   *  getTable which returns a table in JSON. It also switches view to
-   *  a view of the returned table.
+   * This function is supplied a object name and type as parameters. With URL
+   *  parameters username and classID are extracted. These four parameters form 
+   *  the object tableInfo. This object is passed to route getObjectDetails 
+   *  which returns a object details in JSON. It also switches view to
+   *  allow user to see details.
    *
-   * @param {string} tableName the name of the table that will be retrieved
+   * @param {string} objectName the name of the object that will be retrieved
+   * @param {string} type the type of the object
    */
   $scope.getObjectDetails = (name, type) => {
     $scope.objectInfo = {
@@ -46,29 +48,29 @@ app.controller('schemaCtrl', ($scope, $http, $location) => {
       classID: $location.search().classID,
     };
 
-    // switch to another form
-    $scope.view = 'loadingObjectView';
-
-    // get table details/rows
+    // use http post route to get the object details
     $http.post('/getObjectDetails', $scope.objectInfo)
       .success((data) => {
-        // check if data is empty
         if (type === 'TABLE') {
-          $scope.columns = Object.keys(data.result[0]);// the amount of columns
-          $scope.tableResult = data.result;
+          // check if result is empty so angular try to access undefined
+          if (Object.keys(data.result).length !== 0) {
+            $scope.columns = Object.keys(data.result[0]);// the amount of columns
+            $scope.tableResult = data.result;
+          }
           $scope.tableInfo = data.details;
         } else if (type === 'VIEW') {
-          $scope.columns = Object.keys(data[0]);// the amount of columns
-          $scope.object = data;
+          // check if result is empty so angular try to access undefined
+          if (Object.keys(data.result).length !== 0) { 
+            $scope.columns = Object.keys(data.result[0]);// the amount of columns
+            $scope.viewResult = data.result;
+          }
+          $scope.viewInfo = data.details;
         } else if (type === 'FUNCTION') {
-          $scope.columns = Object.keys(data[0]);// the amount of columns
-          $scope.object = data;
+          $scope.functionInfo = data;
         } else if (type === 'TRIGGER') {
-          $scope.columns = Object.keys(data[0]);// the amount of columns
-          $scope.object = data;
+          $scope.triggerInfo = data;
         } else { // should be an index
-          $scope.columns = Object.keys(data[0]);// the amount of columns
-          $scope.object = data;
+          $scope.indexInfo = data;
         }
         $scope.view = 'objectDetailsView';
       });
@@ -76,13 +78,31 @@ app.controller('schemaCtrl', ($scope, $http, $location) => {
 
 
   /**
-   * This function is used to go from single table view to view of all tables.
-   *  It also clears the data stored in the single table view.
+   * This function is used to go from single object view to view of all objects.
+   *  It also clears the data stored in the single object view.
    */
-  $scope.backToTables = () => {
-    // switch to another form
-    $scope.view = 'allTables';
-    delete $scope.table;
-    delete $scope.columns;
+  $scope.backToObjects = (type) => {
+    //delete the object details
+    switch(type) {
+      case 'table':
+        delete $scope.tableInfo;
+        delete $scope.tableResult;
+        break;
+      case 'view': 
+        delete $scope.viewInfo;
+        delete $scope.viewResult;
+        break;
+      case 'function': 
+        delete $scope.functionInfo;
+        break;
+      case 'trigger': 
+        delete $scope.triggerInfo;
+        break;
+      case 'index': 
+        delete $scope.indexInfo;
+        break;
+    }
+    // switch to main view
+    $scope.view = 'allObjects';
   };
 });
