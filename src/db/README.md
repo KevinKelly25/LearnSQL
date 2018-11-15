@@ -1,5 +1,7 @@
 ## Database Source
 
+_Author: Christopher Innaco_
+
 ### Script-level Significance
 
 This directory includes the SQL and PL/pgSQL scripts which perform the following actions:
@@ -14,6 +16,7 @@ This directory includes the SQL and PL/pgSQL scripts which perform the following
     * Extensions
         * `dblink` for cross database queries
         * `pgcrypto` for password hashing and salting
+
 * Create PostgreSQL server-level roles
 * Create and populate the Questions database with a sample schema and data based on the fictitious Pine Valley Furniture Company (PVFC)
     * The current iteration of the product does not interact with this database with the exception of the exercises on the `LearnSQL\src\webapp\client\views\learn\select.html` page. Further expansion is not anticipated in the scope of the Fall 2018 semester.

@@ -1,5 +1,7 @@
 ## Tests
 
+_Author: Christopher Innaco_
+
 This directory includes the PL/pgSQL scripts and JavaScript files whose purpose is to perform automated testing on the functionality of the product. Since the core of the operations critical to the product reside in the LearnSQL database, it is appropriate to have comprehensive tests which encompass the following objectives.
 
 ### Current Test Script Design
