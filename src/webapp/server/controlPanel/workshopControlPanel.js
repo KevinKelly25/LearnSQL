@@ -26,7 +26,6 @@ function getClasses(req, res) {
       + 'WHERE Username = $1', [req.user.username],
     )
       .then((result) => {
-        console.log(result);
         resolve();
         return res.status(200).json(result);
       })
@@ -37,6 +36,34 @@ function getClasses(req, res) {
   });
 }
 
+/**
+ * This function gets all the class name for a class when given a
+ *
+ * @param className
+ * @return class name
+ */
+function getClassInfo(req, res) {
+  console.log(req.body);
+  return new Promise((resolve, reject) => {
+    ldb.any(
+      'SELECT ClassName '
+      + 'FROM LearnSQL.Attends INNER JOIN LearnSQL.Class_t ON Attends.ClassID = Class_t.ClassID '
+      + 'WHERE ClassName = $1 AND Username = $2',
+      [req.body.className, req.user.username],
+    )
+      .then((result) => {
+        console.log(result);
+        resolve();
+        return res.status(200).json(result);
+      })
+      .catch((error) => { // Goes here if you can't find the class.
+        logger.error(`getClass: \n${error}`);
+        reject(new Error('Could not query the classes'));
+      });
+  });
+}
+
 module.exports = {
   getClasses,
+  getClassInfo,
 };

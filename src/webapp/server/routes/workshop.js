@@ -39,9 +39,20 @@ router.get('/getClasses', authHelpers.loginRequired, (req, res) => workshopHelpe
   }));
 
 /**
- * This will redirect a user to the resetPassword page. The reset token needs
- *  to be appended to the end of the link after #?token=. For example
- *  http://localhost:3000/auth/resetPassword/#?token=59ff4734c92f789058b2
+ * This method returns class name from a ClassDB database. Most
+ *  functionality is in `workshopControlPanel.js` getClass function.
+ *  expects a promise to be returned
+ *
+ * @param {string} classname The classname that is looked for
+ * @return Response
+ */
+router.post('/getClassInfo', authHelpers.loginRequired, (req, res) => workshopHelpers.getClassInfo(req, res)
+  .catch((err) => {
+    handleResponse(res, 500, err);
+  }));
+
+/**
+ * This is used to display all the class information of the user.
  */
 router.get('/class/', (req, res) => {
   res.sendFile(path.join(
