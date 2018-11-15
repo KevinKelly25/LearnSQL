@@ -10,15 +10,14 @@
 
 const ldb = require('../db/ldb.js');
 const logger = require('../logs/winston.js');
-const dbCreator = require('../db/cdb.js');
-const authHelpers = require('../auth/_helpers');
 
 
 /**
- * This function gets all the classes registered to a student and relevant class
- *  information.
+ * This function calls the `LearnSQL.getClasses()` PL/pgSQL function which 
+ *  returns a list of classes in which the student is registered with additional
+ *  relevant class information.
  *
- * @return the classes the user is in and relevant class information
+ * @return the classes the user is enrolled and relevant class information
  */
 function getClasses(req, res) {
   return new Promise((resolve, reject) => {
@@ -36,18 +35,18 @@ function getClasses(req, res) {
 
 
 /**
- * This function adds a student to a ClassDB database. Student is checked to see
- *  if they are already in the class. Then the user is then added to the class
- *  via the attends table. Using the ClassID a database object based on the
- *  connection to the ClassDB database is made. This db object then uses the
- *  given username and fullname to create a student in the ClassDB database.
- *  To do this a built in classdb function 'createStudent' is used.
+ * This function calls the `LearnSQL.joinClass()` PL/pgSQL function which
+ *  enrolls a student into a class when given a classID and classPassword.
+ *  Various checks are present to ensure the class exists and the user is 
+ *  not a current member of the class. If successful, a cross-database query
+ *  to the PL/pgSQL function `SELECT ClassDB.createStudent()` is called for
+ *  the user and a record is added to the `LearnSQL.Attends` table.
  *  See https://github.com/DASSL/ClassDB/wiki/Adding-Users for more information
- *  on how ClassDB adds students
+ *  on how ClassDB adds students.
  *
- * @param {string} password the password used in order to join class
- * @param {string} classID the class id of the class the student will be added to
- * @return http response on if the student was successfully added
+ * @param {string} classPassword the password used to enroll into the class
+ * @param {string} classID the classID of the class the student will be added to
+ * @return http response if the student was successfully added
  */
 function addStudent(req, res) 
 {
@@ -72,7 +71,6 @@ function addStudent(req, res)
       });
     })
 }
-
 
 
 module.exports = {
