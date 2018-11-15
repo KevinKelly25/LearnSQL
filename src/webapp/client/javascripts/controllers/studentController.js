@@ -17,8 +17,8 @@ app.controller('studentCtrl', ($scope, $http, $window) => {
 
   $scope.init = () => {
     $http.get('/student/getClasses')
-      .success((data) => {       
-        data.forEach((element) => { 
+      .success((data) => {
+        data.forEach((element) => {
           element.classname = element.classname.toUpperCase();
         });
         $scope.classes = data;

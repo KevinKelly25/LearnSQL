@@ -1,7 +1,7 @@
 /**
  * studentControlPanel.js - LearnSQL
  *
- * Christopher Innaco, Kevin Kelly, Michael Torres 
+ * Christopher Innaco, Kevin Kelly, Michael Torres
  * Web Applications and Databases for Education (WADE)
  *
  * This file contains the functions for student control panel
@@ -13,7 +13,7 @@ const logger = require('../logs/winston.js');
 
 
 /**
- * This function calls the `LearnSQL.getClasses()` PL/pgSQL function which 
+ * This function calls the `LearnSQL.getClasses()` PL/pgSQL function which
  *  returns a list of classes in which the student is registered with additional
  *  relevant class information.
  *
@@ -37,7 +37,7 @@ function getClasses(req, res) {
 /**
  * This function calls the `LearnSQL.joinClass()` PL/pgSQL function which
  *  enrolls a student into a class when given a classID and classPassword.
- *  Various checks are present to ensure the class exists and the user is 
+ *  Various checks are present to ensure the class exists and the user is
  *  not a current member of the class. If successful, a cross-database query
  *  to the PL/pgSQL function `SELECT ClassDB.createStudent()` is called for
  *  the user and a record is added to the `LearnSQL.Attends` table.
@@ -48,28 +48,30 @@ function getClasses(req, res) {
  * @param {string} classID the classID of the class the student will be added to
  * @return http response if the student was successfully added
  */
-function addStudent(req, res) 
-{
+function addStudent(req, res) {
   return new Promise((resolve, reject) => {
     ldb.oneOrNone('SELECT LearnSQL.joinClass($1, $2, $3, $4, $5)',
-                  [req.user.username, req.body.classID, req.body.classPassword, 
-                  process.env.DB_USER, process.env.DB_PASSWORD])
-      .then((result) => {
+      [req.user.username, req.body.classID, req.body.classPassword,
+        process.env.DB_USER, process.env.DB_PASSWORD])
+
+      .then(() => {
         resolve();
         return res.status(200).json('Student enrolled successfully');
       })
       .catch((error) => {
-        if(error.code == '42710') {
+        /* eslint-disable prefer-promise-reject-errors */
+        if (error.code === '42710') {
           reject('You are already a member of the specified class');
-        } else if (error.code == '28P01') {
+        } else if (error.code === '28P01') {
           reject('Password incorrect for the desired class');
-        } else if (error.code == '42704') {
+        } else if (error.code === '42704') {
           reject('Class not found');
         } else {
           reject('Failed to enroll into the desired class');
         }
+        /* eslint-enable prefer-promise-reject-errors */
       });
-    })
+  });
 }
 
 
