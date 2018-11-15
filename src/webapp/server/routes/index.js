@@ -164,12 +164,10 @@ router.get('/schema/', authHelpers.loginRequired, (req, res) => {
  */
 router.post('/getObjects', authHelpers.loginRequired, (req, res) => {
   schemaHelpers.getObjects(req, res)
-  .catch((err) => {
-    handleResponse(res, 500, err);
-  })
+    .catch((err) => {
+      handleResponse(res, 500, err);
+    });
 });
-  
-
 
 
 
@@ -184,11 +182,10 @@ router.post('/getObjects', authHelpers.loginRequired, (req, res) => {
  * @return a table when given a tableName.
  */
 router.post('/getObjectDetails', authHelpers.loginRequired, (req, res) => {
-  console.log(req.body);
   schemaHelpers.getObjectDetails(req, res)
-  .catch((err) => {
-    handleResponse(res, 500, err);
-  })
+    .catch((err) => {
+      handleResponse(res, 500, err);
+    });
 });
 
 

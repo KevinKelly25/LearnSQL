@@ -4,7 +4,7 @@
  * Kevin Kelly
  * Web Applications and Databases for Education (WADE)
  *
- * This file contains the functions related to the functionality of schemas and 
+ * This file contains the functions related to the functionality of schemas and
  *  associated objects for a user.
  */
 
@@ -66,8 +66,8 @@ function getObjects(req, res) {
      */
     const db = dbCreator(req.body.class);
     db.any('SELECT Name, Type '
-           + 'FROM ClassDB.MajorUserObjects '
-           + 'WHERE username = $1 AND schemaname = $1',
+         + 'FROM ClassDB.MajorUserObjects '
+         + 'WHERE username = $1 AND schemaname = $1',
     [req.body.username])
       .then((result) => {
         db.$pool.end();// closes the connection to the database. IMPORTANT!!
@@ -83,11 +83,11 @@ function getObjects(req, res) {
 
 
 /**
- * This function returns object details when given the object's name and the 
+ * This function returns object details when given the object's name and the
  *  schema the object is in.
  *
  * @param {string} name The name of the object
- * @param {string} schema The schema the object is located in. 
+ * @param {string} schema The schema the object is located in.
  * @param {string} classID The classID of the class the object is in
  * @return object details
  */
@@ -99,43 +99,40 @@ function getObjectDetails(req, res) {
       // Select all from given table. Sending multiple queries to get multiple
       //  results with pg_promise multi
       db.multi('SELECT TableName, HasIndexes, HasTriggers, HasRules, Attributes '
-              +'FROM ClassDB.getTableDetails($1,$2); '
-              +'SELECT * FROM $1~.$2~', 
-        [req.body.schema, req.body.objectName])
+             + 'FROM ClassDB.getTableDetails($1,$2); '
+             + 'SELECT * FROM $1~.$2~',
+      [req.body.schema, req.body.objectName])
         .then((result) => {
           db.$pool.end();// closes the connection to the database. IMPORTANT!!
           resolve();
-          console.log({ details : result[0], result: result[1] })   
-          return res.status(200).json({ details : result[0], result: result[1] });
+          return res.status(200).json({ details: result[0], result: result[1] });
         })
         .catch((error) => {
           logger.error(`getTableDetails: \n${error}`);
           reject(new Error('Server Error: Could not get table details'));
         });
-    } 
-    else if (req.body.objectType === 'VIEW') {
+    } else if (req.body.objectType === 'VIEW') {
       // Select all from given view. Sending multiple queries to get multiple
       //  results with pg_promise multi
       db.multi('SELECT ViewName, definition '
-              +'FROM ClassDB.getViewDetails($1,$2); '
-              +'SELECT * FROM $1~.$2~', 
-        [req.body.schema, req.body.objectName])
+             + 'FROM ClassDB.getViewDetails($1,$2); '
+             + 'SELECT * FROM $1~.$2~',
+      [req.body.schema, req.body.objectName])
         .then((result) => {
           db.$pool.end();// closes the connection to the database. IMPORTANT!!
           resolve();
-          return res.status(200).json({ details : result[0], result: result[1] });
+          return res.status(200).json({ details: result[0], result: result[1] });
         })
         .catch((error) => {
           logger.error(`getViewDetails: \n${error}`);
           reject(new Error('Server Error: Could not get view details'));
         });
-    }
-    else if (req.body.objectType === 'FUNCTION') {
+    } else if (req.body.objectType === 'FUNCTION') {
       db.any('SELECT FunctionName, NumberOfArguments, ReturnType, '
-            +'EstimatedReturnRows, isAggregate, isWindowFunction, '
-            +'isSecurityDefiner, returnsResultSet, ArgumentTypes, SourceCode '
-            +'FROM ClassDB.getFunctionDetails($1,$2); ', 
-        [req.body.schema, req.body.objectName])
+           + 'EstimatedReturnRows, isAggregate, isWindowFunction, '
+           + 'isSecurityDefiner, returnsResultSet, ArgumentTypes, SourceCode '
+           + 'FROM ClassDB.getFunctionDetails($1,$2); ',
+      [req.body.schema, req.body.objectName])
         .then((result) => {
           db.$pool.end();// closes the connection to the database. IMPORTANT!!
           resolve();
@@ -145,36 +142,33 @@ function getObjectDetails(req, res) {
           logger.error(`getFunctionDetails: \n${error}`);
           reject(new Error('Server Error: Could not get view details'));
         });
-    }
-    else if (req.body.objectType === 'TRIGGER') {
+    } else if (req.body.objectType === 'TRIGGER') {
       db.any('SELECT TriggerName, onTable, onFunction '
-            +'FROM ClassDB.getTriggerDetails($1,$2); ', 
-          [req.body.schema, req.body.objectName])
-          .then((result) => {
-            db.$pool.end();// closes the connection to the database. IMPORTANT!!
-            resolve();
-            return res.status(200).json(result);
-          })
-          .catch((error) => {
-            logger.error(`getTriggerDetails: \n${error}`);
-            reject(new Error('Server Error: Could not get view details'));
-          });
-    }
-    else { 
+           + 'FROM ClassDB.getTriggerDetails($1,$2); ',
+      [req.body.schema, req.body.objectName])
+        .then((result) => {
+          db.$pool.end();// closes the connection to the database. IMPORTANT!!
+          resolve();
+          return res.status(200).json(result);
+        })
+        .catch((error) => {
+          logger.error(`getTriggerDetails: \n${error}`);
+          reject(new Error('Server Error: Could not get view details'));
+        });
+    } else {
       db.any('SELECT indexName, onTable, NumberOfColumns, isUnique, '
-            +'isPrimaryKey, indexDefinition '
-            +'FROM ClassDB.getIndexDetails($1,$2); ', 
-          [req.body.schema, req.body.objectName])
-          .then((result) => {
-            db.$pool.end();// closes the connection to the database. IMPORTANT!!
-            resolve();
-            console.log(result);
-            return res.status(200).json(result);
-          })
-          .catch((error) => {
-            logger.error(`getIndexDetails: \n${error}`);
-            reject(new Error('Server Error: Could not get view details'));
-          });
+           + 'isPrimaryKey, indexDefinition '
+           + 'FROM ClassDB.getIndexDetails($1,$2); ',
+      [req.body.schema, req.body.objectName])
+        .then((result) => {
+          db.$pool.end();// closes the connection to the database. IMPORTANT!!
+          resolve();
+          return res.status(200).json(result);
+        })
+        .catch((error) => {
+          logger.error(`getIndexDetails: \n${error}`);
+          reject(new Error('Server Error: Could not get view details'));
+        });
     }
   });
 }

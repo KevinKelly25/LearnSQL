@@ -69,7 +69,7 @@ function addStudent(req, res) {
           [req.body.classID])
             .then((result2) => {
               // TODO: once hash password used switch to authHelpers.CompareHashed
-              if (!authHelpers.compareHashed(req.body.password,result2.password)) {
+              if (!authHelpers.compareHashed(req.body.password, result2.password)) {
                 throw new Error('Join Password Incorrect');
               }
             });
