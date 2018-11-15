@@ -10,6 +10,7 @@
 
 const express = require('express');
 const router = express.Router();
+const path = require('path');
 const workshopHelpers = require('../controlPanel/workshopControlPanel.js');
 const authHelpers = require('../auth/_helpers');
 
@@ -36,5 +37,16 @@ router.get('/getClasses', authHelpers.loginRequired, (req, res) => workshopHelpe
   .catch((err) => {
     handleResponse(res, 500, err);
   }));
+
+/**
+ * This will redirect a user to the resetPassword page. The reset token needs
+ *  to be appended to the end of the link after #?token=. For example
+ *  http://localhost:3000/auth/resetPassword/#?token=59ff4734c92f789058b2
+ */
+router.get('/class/', (req, res) => {
+  res.sendFile(path.join(
+    __dirname, '..', '..', 'client', 'views', 'sandbox.html',
+  ));
+});
 
 module.exports = router;
