@@ -59,7 +59,8 @@ BEGIN
                   WHERE Attends.userName = $1
                 )
   THEN  
-    RAISE EXCEPTION 'User is not enrolled or teaching any classes';     
+    RAISE EXCEPTION 'User is not enrolled or teaching any classes'
+    USING ERRCODE = 'reading_sql_data_not_permitted'; -- SQLSTATE: 2F004 
   END IF;
 
   IF $2 IS TRUE
@@ -72,7 +73,8 @@ BEGIN
                     AND UserData_t.isTeacher = TRUE
                   )
     THEN
-      RAISE EXCEPTION 'User is not a teacher';
+      RAISE EXCEPTION 'User is not a teacher'
+      USING ERRCODE = 'invalid_role_specification'; -- SQLSTATE: 0P000 
     END IF;
 
     -- Return enrolled classes where the user is a teacher
@@ -99,7 +101,8 @@ BEGIN
                     AND Attends.isTeacher = FALSE
                   )
     THEN
-      RAISE EXCEPTION 'User is not a student';     
+      RAISE EXCEPTION 'User is not a student'
+      USING ERRCODE = 'invalid_role_specification'; -- SQLSTATE: 0P000    
     END IF;
   
   -- Return enrolled classes where the user is a student
@@ -160,8 +163,31 @@ BEGIN
     IF (isAdmin IS FALSE)
     THEN
       RAISE EXCEPTION 'The user does not have the permissions necessary to 
-                        enroll other students';
+                        enroll other students'
+      USING ERRCODE = 'insufficient_privilege'; -- SQLSTATE: 42501
     END IF;
+  END IF;
+
+  -- Check if the class database exists
+  IF NOT EXISTS (
+                  SELECT 1
+                  FROM pg_database
+                  WHERE datname = $2
+                )
+  THEN
+    RAISE EXCEPTION 'Class database does not exist' 
+    USING ERRCODE = 'undefined_object'; -- SQLSTATE: 42704
+  END IF;
+
+  -- Check if the class record exists in the LearnSQL database
+  IF NOT EXISTS (
+                  SELECT 1
+                  FROM LearnSQL.Class
+                  WHERE Class.classID = $2
+                )
+  THEN
+    RAISE EXCEPTION 'ClassID does not exist'
+    USING ERRCODE = 'undefined_object'; -- SQLSTATE: 42704
   END IF;
 
   -- Check if the student is already a member of the class
@@ -172,7 +198,8 @@ BEGIN
               AND Attends.classID = $2
             ) 
   THEN
-    RAISE EXCEPTION 'Student is already a member of the specified class';
+    RAISE EXCEPTION 'Student is already a member of the specified class'
+    USING ERRCODE = 'duplicate_object'; -- SQLSTATE: 42710
   END IF;
 
   SELECT password
@@ -207,7 +234,8 @@ BEGIN
     -- Needed for dblink and the unused return value of this query
 
   ELSE
-    RAISE EXCEPTION 'Password incorrect for the desired class';
+    RAISE EXCEPTION 'Password incorrect for the desired class'
+    USING ERRCODE = 'invalid_password'; -- SQLSTATE: 28P01
   END IF;
 END;
 $$ LANGUAGE plpgsql;

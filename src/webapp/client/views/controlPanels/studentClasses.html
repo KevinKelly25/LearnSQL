@@ -62,12 +62,12 @@
                     </span>
                     <span ng-show="currentUser.isteacher">
                         <li class="nav-item">
-                          <a href="../controlPanels/teacherClasses.html" class="nav-link border-right px-4">Classes</a>
+                          <a href="../controlPanels/teacherClasses.html" class="nav-link border-right px-4">Class Info</a>
                         </li>
                     </span>
                     <span ng-show="currentUser.isstudent">
                         <li class="nav-item active">
-                            <a href="../controlPanels/students.html" class="nav-link shadow-lg bg-primary text-white px-4">Classes</a>
+                            <a href="../controlPanels/studentClasses.html" class="nav-link shadow-lg bg-primary text-white px-4">Classes</a>
                         </li>
                     </span>
                     <span ng-show="currentUser.isadmin">
@@ -135,7 +135,7 @@
                                 </div>
                                 <input type="text" class="form-control" ng-model="classID">
                             </div> 
-                            <div>&nbsp</div>
+                            <div>&nbsp;</div>
 
                             <div class="input-group input-group-lg">
                                 <div class="input-group-prepend">
@@ -188,7 +188,7 @@
                         <td>{{ $index + 1 }}</td>
                         <!-- TODO: make class name link to a class -->
                         <td>
-                            <a href="#">
+                            <a href="#" style="color:blue;">
                                 {{ x.classname }}
                             </a>
                         </td>

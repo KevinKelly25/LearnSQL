@@ -51,35 +51,29 @@ function getClasses(req, res) {
  */
 function addStudent(req, res) 
 {
-  return new Promise((resolve, reject) => 
-  {
+  return new Promise((resolve, reject) => {
     ldb.oneOrNone('SELECT LearnSQL.joinClass($1, $2, $3, $4, $5)',
                   [req.user.username, req.body.classID, req.body.classPassword, 
                   process.env.DB_USER, process.env.DB_PASSWORD])
-      .then((result) => 
-      {
+      .then((result) => {
         resolve();
         return res.status(200).json('Student enrolled successfully');
       })
-      .catch((error) => 
-      {
-        // TODO: Test for SQLSTATE or error code instead of error string
-        console.log(error);
-        if(error == 'error: Student is already a member of the specified class')
-        {
+      .catch((error) => {
+        if(error.code == '42710') {
           reject('You are already a member of the specified class');
-        }
-        else if (error == 'error: Password incorrect for the desired class')
-        {
+        } else if (error.code == '28P01') {
           reject('Password incorrect for the desired class');
-        }
-        else
-        {
+        } else if (error.code == '42704') {
+          reject('Class not found');
+        } else {
           reject('Failed to enroll into the desired class');
         }
       });
     })
 }
+
+
 
 module.exports = {
   getClasses,

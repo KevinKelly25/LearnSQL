@@ -39,7 +39,7 @@ function handleResponse(res, code, statusMsg) {
  *          object which has the classes the user is in and relevant class
  *          information
  */
-router.get('/getClasses', authHelpers.studentRequired, (req, res) => studentHelpers.getClasses(req, res)
+router.get('/getClasses', authHelpers.loginRequired, (req, res) => studentHelpers.getClasses(req, res)
   .catch((err) => {
     handleResponse(res, 500, err);
   }));

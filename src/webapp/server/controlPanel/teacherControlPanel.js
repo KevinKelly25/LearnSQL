@@ -49,7 +49,7 @@ function handleErrors(req) {
 function getStudents(req, res) {
   return new Promise((resolve, reject) => {
     ldb.one('SELECT C.ClassID '
-            + 'FROM LearnSQL.Attends AS A INNER JOIN Class AS C ON A.ClassID = C.ClassID '
+            + 'FROM LearnSQL.Attends AS A INNER JOIN LearnSQL.Class AS C ON A.ClassID = C.ClassID '
             + 'WHERE Username = $1 AND ClassName = $2',
     [req.user.username, req.body.className])
       .then((result) => {

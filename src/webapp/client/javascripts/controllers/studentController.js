@@ -15,25 +15,6 @@ app.controller('studentCtrl', ($scope, $http, $window) => {
     name: '',
   };
 
-  /* 
-  *  Converts a date from ISO format to "Short Date" format
-  *   or vice versa based on the boolean value of `toISOFormat`
-  */
-  function convertDate(inputDateString, toISOFormat) 
-  {
-    const date = new Date(inputDateString);
-
-    if(toISOFormat)
-    {
-      return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
-    }
-    else
-    {  
-      return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
-    }
-    
-  }
-
   $scope.init = () => {
     $http.get('/student/getClasses')
       .success((data) => {       
@@ -44,14 +25,13 @@ app.controller('studentCtrl', ($scope, $http, $window) => {
       });
   };
 
-
   $scope.joinClassFromPage = () => {
     $scope.error = false;
     $scope.success = true;
     $scope.message = 'Joining Class . . .';
     $scope.joinClass = {
-      className: $scope.className,
       classID: $scope.classID,
+      classPassword: $scope.classPassword,
     };
     $http.post('/student/joinClass', $scope.joinClass)
       .success(() => {
