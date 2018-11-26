@@ -50,7 +50,7 @@ app.controller('studentCtrl', ($scope, $http, $window) => {
         $scope.currentUser = data;
       });
     // go to class page
-    $window.location.href = 'http://localhost:3000/table/#?username='
+    $window.location.href = 'http://localhost:3000/schema/#?username='
                             + `${$scope.currentUser.username}&classID=${classid}`;
   };
 });

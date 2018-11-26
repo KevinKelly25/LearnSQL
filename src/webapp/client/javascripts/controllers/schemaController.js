@@ -52,14 +52,16 @@ app.controller('schemaCtrl', ($scope, $http, $location) => {
     $http.post('/getObjectDetails', $scope.objectInfo)
       .success((data) => {
         if (type === 'TABLE') {
-          // check if result is empty so angular try to access undefined
+          // check to make sure at least 1 column was returned so that code
+          //  doesn't try to access undefined object
           if (Object.keys(data.result).length !== 0) {
             $scope.columns = Object.keys(data.result[0]);// the amount of columns
             $scope.tableResult = data.result;
           }
           $scope.tableInfo = data.details;
         } else if (type === 'VIEW') {
-          // check if result is empty so angular try to access undefined
+          // check to make sure at least 1 column was returned so that code
+          //  doesn't try to access undefined object
           if (Object.keys(data.result).length !== 0) {
             $scope.columns = Object.keys(data.result[0]);// the amount of columns
             $scope.viewResult = data.result;

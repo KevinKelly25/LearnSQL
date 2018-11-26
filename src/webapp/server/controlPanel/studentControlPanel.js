@@ -22,7 +22,7 @@ const authHelpers = require('../auth/_helpers');
  */
 function getClasses(req, res) {
   return new Promise((resolve, reject) => {
-    ldb.any('SELECT ClassName, Section, Times, Days, StartDate, '
+    ldb.any('SELECT Class.ClassID, ClassName, Section, Times, Days, StartDate, '
             + 'EndDate, StudentCount '
             + 'FROM LearnSql.Attends INNER JOIN LearnSQL.Class ON Attends.ClassID = Class.ClassID '
             + 'WHERE Username = $1 AND isTeacher = false', [req.user.username])
@@ -64,7 +64,7 @@ function addStudent(req, res) {
         } else {
           // Get class join password
           return t.one('SELECT Password '
-                     + 'FROM LearnSQL.Class '
+                     + 'FROM LearnSQL.Class_t '
                      + 'WHERE ClassID = $1',
           [req.body.classID])
             .then((result2) => {
