@@ -1,7 +1,7 @@
 /**
  * teacherController.js - LearnSQL
  *
- * Michael Torres, Kevin Kelly
+ * Kevin Kelly, Michael Torres
  * Web Applications and Databases for Education (WADE)
  *
  * This file contains the angularJS controller used for the teacher functionality
@@ -9,7 +9,12 @@
  */
 /* eslint-disable no-param-reassign */
 
-
+// Converts the date from PostgreSQL format to readable format
+function convertDate(inputDateString) {
+  const date = new Date(inputDateString);
+  return `${date.getHours()}:${date.getMinutes()}   ${
+    date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
+}
 
 /**
  * This controller is used for teacher related angular functionality.
@@ -18,14 +23,6 @@ app.controller('teacherCtrl', ($scope, $http, $location, $window) => {
   $scope.class = {
     name: 'something',
   };
-
-
-  // Converts the date from postgres format to readable format
-  function convertDate(inputDateString) {
-    const date = new Date(inputDateString);
-    return `${date.getHours()}:${date.getMinutes()}   ${
-      date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
-  }
 
 
   /**
@@ -51,7 +48,6 @@ app.controller('teacherCtrl', ($scope, $http, $location, $window) => {
       section: $location.search().section,
     };
 
-
     $http.post('/teacher/getStudents', $scope.classInfo)
       .success((data) => {
         data.forEach((element) => {
@@ -69,18 +65,17 @@ app.controller('teacherCtrl', ($scope, $http, $location, $window) => {
 
 
   /**
-   * This function calls the /admin/addClass post method to create ClassDB databases
-   *  and updates the associated LearnSQL tables. While processing a message
-   *  appears to let the user know to wait.
+   * This function calls the /teacher/addClass post method to create ClassDB
+   *  databases and updates the associated LearnSQL tables. While processing a
+   *  message appears to let the user know to wait.
    */
   $scope.addClass = () => {
     $scope.error = false;
     $scope.success = true;
     $scope.message = 'Class Being Created, Please Wait';
 
-
     $scope.class = {
-      name: $scope.className,
+      className: $scope.className,
       section: $scope.section,
       times: $scope.times,
       days: $scope.days,
@@ -91,7 +86,7 @@ app.controller('teacherCtrl', ($scope, $http, $location, $window) => {
 
     // Make sure that is a valid name
     const regex = new RegExp('^[a-zA-Z0-9_]*$');
-    if (regex.test($scope.class.name)) {
+    if (regex.test($scope.class.className)) {
       $http.post('/teacher/addClass', $scope.class)
         .success(() => {
           $scope.success = true;
@@ -101,7 +96,7 @@ app.controller('teacherCtrl', ($scope, $http, $location, $window) => {
         .error((error) => {
           $scope.success = false;
           $scope.error = true;
-          $scope.message = error.status;
+          $scope.message = error;
         });
     } else {
       $scope.message = 'Invalid Characters Detected! Please Use only the following '
@@ -117,12 +112,16 @@ app.controller('teacherCtrl', ($scope, $http, $location, $window) => {
    *  the dropClassTeacher function.
    *
    * @param {string} className The classname that needs to be displays
+   * @param {string} section The section of the class that needs to be displayed.
+   * @param {date} startDate The start date of the class needs to be displayed.
    */
-  $scope.displayClassName = (className) => {
+  $scope.displayClassName = (className, section, startDate) => {
     $scope.success = false;
     $scope.error = false;
     $scope.dropClass = {
-      name: className,
+      className,
+      section,
+      startDate,
     };
   };
 
