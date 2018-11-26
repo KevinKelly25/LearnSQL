@@ -32,8 +32,8 @@ app.controller('schemaCtrl', ($scope, $http, $location) => {
 
   /**
    * This function is supplied a object name and type as parameters. With URL
-   *  parameters username and classID are extracted. These four parameters form 
-   *  the object tableInfo. This object is passed to route getObjectDetails 
+   *  parameters username and classID are extracted. These four parameters form
+   *  the object tableInfo. This object is passed to route getObjectDetails
    *  which returns a object details in JSON. It also switches view to
    *  allow user to see details.
    *
@@ -60,7 +60,7 @@ app.controller('schemaCtrl', ($scope, $http, $location) => {
           $scope.tableInfo = data.details;
         } else if (type === 'VIEW') {
           // check if result is empty so angular try to access undefined
-          if (Object.keys(data.result).length !== 0) { 
+          if (Object.keys(data.result).length !== 0) {
             $scope.columns = Object.keys(data.result[0]);// the amount of columns
             $scope.viewResult = data.result;
           }
@@ -82,24 +82,26 @@ app.controller('schemaCtrl', ($scope, $http, $location) => {
    *  It also clears the data stored in the single object view.
    */
   $scope.backToObjects = (type) => {
-    //delete the object details
-    switch(type) {
+    // delete the object details
+    switch (type) {
       case 'table':
         delete $scope.tableInfo;
         delete $scope.tableResult;
         break;
-      case 'view': 
+      case 'view':
         delete $scope.viewInfo;
         delete $scope.viewResult;
         break;
-      case 'function': 
+      case 'function':
         delete $scope.functionInfo;
         break;
-      case 'trigger': 
+      case 'trigger':
         delete $scope.triggerInfo;
         break;
-      case 'index': 
+      case 'index':
         delete $scope.indexInfo;
+        break;
+      default:
         break;
     }
     // switch to main view
