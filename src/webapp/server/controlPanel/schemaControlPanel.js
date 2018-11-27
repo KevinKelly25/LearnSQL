@@ -28,15 +28,15 @@ const logger = require('../logs/winston.js');
  */
 function getObjects(req, res) {
   return new Promise((resolve, reject) => {
-    // if user requesting to see object is not owner, test if requesting user is
-    // teacher of class
+    // If user requesting to see object is not owner, test if requesting user is
+    //  teacher of class
     if (!req.body.username === req.user.username) {
       ldb.any('SELECT Username '
-              + 'FROM LearnSQL.Attends '
-              + 'WHERE ClassID = $1 AND isTeacher = true',
+            + 'FROM LearnSQL.Attends '
+            + 'WHERE ClassID = $1 AND isTeacher = true',
       [req.body.class])
         .then((result) => {
-        // check if each teacher returned is the user requesting to see
+        // Check if each teacher returned is the user requesting to see
           let isTeacher = false;
           result.forEach((element) => {
             if (element === req.body.username) {
@@ -48,7 +48,7 @@ function getObjects(req, res) {
           }
         })
         .catch((error) => {
-          // if normal error don't log it and send our appropriate response
+          // If normal error don't log it and send our appropriate response
           if (error === 'User Not Authorized') {
             reject(error);
           } else {
@@ -59,10 +59,10 @@ function getObjects(req, res) {
     }
     /**
      * User is either teacher of class or owner of objects at this point
-     * Get all objects from ClassDB view "MajorUserObjects" where
-     * username matches give username and schema matches username. This should
-     * always show user's private schema since learnSQL doesn't allow custom
-     * schema names
+     *  Get all objects from ClassDB view "MajorUserObjects" where
+     *  username matches give username and schema matches username. This should
+     *  always show user's private schema since learnSQL doesn't allow custom
+     *  schema names
      */
     const db = dbCreator(req.body.class);
     db.any('SELECT Name, Type '
@@ -70,7 +70,7 @@ function getObjects(req, res) {
          + 'WHERE username = $1 AND schemaname = $1',
     [req.body.username])
       .then((result) => {
-        db.$pool.end();// closes the connection to the database. IMPORTANT!!
+        db.$pool.end();// Closes the connection to the database
         resolve();
         return res.status(200).json(result);
       })
@@ -103,7 +103,7 @@ function getObjectDetails(req, res) {
              + 'SELECT * FROM $1~.$2~',
       [req.body.schema, req.body.objectName])
         .then((result) => {
-          db.$pool.end();// closes the connection to the database. IMPORTANT!!
+          db.$pool.end();// Closes the connection to the database
           resolve();
           return res.status(200).json({ details: result[0], result: result[1] });
         })
@@ -119,7 +119,7 @@ function getObjectDetails(req, res) {
              + 'SELECT * FROM $1~.$2~',
       [req.body.schema, req.body.objectName])
         .then((result) => {
-          db.$pool.end();// closes the connection to the database. IMPORTANT!!
+          db.$pool.end();// Closes the connection to the database
           resolve();
           return res.status(200).json({ details: result[0], result: result[1] });
         })
@@ -130,11 +130,12 @@ function getObjectDetails(req, res) {
     } else if (req.body.objectType === 'FUNCTION') {
       db.any('SELECT FunctionName, NumberOfArguments, ReturnType, '
            + 'EstimatedReturnRows, isAggregate, isWindowFunction, '
-           + 'isSecurityDefiner, returnsResultSet, ArgumentTypes, SourceCode '
+           + 'FunctionLanguage, isSecurityDefiner, returnsResultSet,'
+           + 'ArgumentTypes, SourceCode '
            + 'FROM ClassDB.getFunctionDetails($1,$2); ',
       [req.body.schema, req.body.objectName])
         .then((result) => {
-          db.$pool.end();// closes the connection to the database. IMPORTANT!!
+          db.$pool.end();// Closes the connection to the database
           resolve();
           return res.status(200).json(result);
         })
@@ -147,7 +148,7 @@ function getObjectDetails(req, res) {
            + 'FROM ClassDB.getTriggerDetails($1,$2); ',
       [req.body.schema, req.body.objectName])
         .then((result) => {
-          db.$pool.end();// closes the connection to the database. IMPORTANT!!
+          db.$pool.end();// Closes the connection to the database
           resolve();
           return res.status(200).json(result);
         })
@@ -161,7 +162,7 @@ function getObjectDetails(req, res) {
            + 'FROM ClassDB.getIndexDetails($1,$2); ',
       [req.body.schema, req.body.objectName])
         .then((result) => {
-          db.$pool.end();// closes the connection to the database. IMPORTANT!!
+          db.$pool.end();// Closes the connection to the database
           resolve();
           return res.status(200).json(result);
         })

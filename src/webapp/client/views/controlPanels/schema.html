@@ -248,7 +248,11 @@
                                     <td class="col-3" style="font-weight:bold;">Argument Types</td>
                                     <td class="col-9">{{ functionInfo[0].argumenttypes }}</td>
                                 </tr>
-                                <tr><td style="font-weight:bold;">Source Code</td></tr>
+                                <tr class="d-flex" >
+                                    <td class="col-3" style="font-weight:bold;">Function Language</td>
+                                    <td class="col-9">{{ functionInfo[0].functionlanguage }}</td>
+                                </tr>
+                                <tr><td style="font-weight:bold;">Function Body</td></tr>
                                 <tr><td><p style="white-space: pre;text-align: left">{{ functionInfo[0].sourcecode }}</p></td></tr>
                         </tbody>
                     </table>                      

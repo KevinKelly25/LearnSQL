@@ -57,7 +57,7 @@ function getStudents(req, res) {
         db.any('SELECT * FROM ClassDB.StudentActivitySummary')
           .then((result2) => {
             resolve();
-            db.$pool.end();// Closes the connection to the database. IMPORTANT!!
+            db.$pool.end();// Closes the connection to the database
             return res.status(200).json(result2);
           })
           .catch((error) => {

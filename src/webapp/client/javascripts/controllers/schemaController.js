@@ -37,8 +37,8 @@ app.controller('schemaCtrl', ($scope, $http, $location) => {
    *  which returns a object details in JSON. It also switches view to
    *  allow user to see details.
    *
-   * @param {string} objectName the name of the object that will be retrieved
-   * @param {string} type the type of the object
+   * @param {string} objectName The name of the object that will be retrieved
+   * @param {string} type The type of the object
    */
   $scope.getObjectDetails = (name, type) => {
     $scope.objectInfo = {
@@ -48,11 +48,11 @@ app.controller('schemaCtrl', ($scope, $http, $location) => {
       classID: $location.search().classID,
     };
 
-    // use http post route to get the object details
+    // Use http post route to get the object details
     $http.post('/getObjectDetails', $scope.objectInfo)
       .success((data) => {
         if (type === 'TABLE') {
-          // check to make sure at least 1 column was returned so that code
+          // Check to make sure at least 1 column was returned so that code
           //  doesn't try to access undefined object
           if (Object.keys(data.result).length !== 0) {
             $scope.columns = Object.keys(data.result[0]);// the amount of columns
@@ -60,19 +60,21 @@ app.controller('schemaCtrl', ($scope, $http, $location) => {
           }
           $scope.tableInfo = data.details;
         } else if (type === 'VIEW') {
-          // check to make sure at least 1 column was returned so that code
+          // Check to make sure at least 1 column was returned so that code
           //  doesn't try to access undefined object
           if (Object.keys(data.result).length !== 0) {
-            $scope.columns = Object.keys(data.result[0]);// the amount of columns
+            $scope.columns = Object.keys(data.result[0]);// The amount of columns
             $scope.viewResult = data.result;
           }
           $scope.viewInfo = data.details;
-        } else if (type === 'FUNCTION') {
-          $scope.functionInfo = data;
+        } else if (type === 'INDEX') {
+          $scope.indexInfo = data;
         } else if (type === 'TRIGGER') {
           $scope.triggerInfo = data;
-        } else { // should be an index
-          $scope.indexInfo = data;
+        } else { // Should be a function
+          $scope.functionInfo = data;
+          if (!$scope.functionInfo[0].argumenttypes)
+            $scope.functionInfo[0].argumenttypes = 'None';
         }
         $scope.view = 'objectDetailsView';
       });
@@ -84,7 +86,7 @@ app.controller('schemaCtrl', ($scope, $http, $location) => {
    *  It also clears the data stored in the single object view.
    */
   $scope.backToObjects = (type) => {
-    // delete the object details
+    // Delete the object details
     switch (type) {
       case 'table':
         delete $scope.tableInfo;
@@ -106,7 +108,7 @@ app.controller('schemaCtrl', ($scope, $http, $location) => {
       default:
         break;
     }
-    // switch to main view
+    // Switch to main view
     $scope.view = 'allObjects';
   };
 });

@@ -84,7 +84,7 @@ function addStudent(req, res) {
           [req.user.username, req.user.fullname])
           .then(() => {
             resolve();
-            db.$pool.end();// closes the connection to the database. IMPORTANT!!
+            db.$pool.end();// Closes the connection to the database
             return res.status(200).json('student added successfully');
           })
           .catch(() => {
