@@ -162,15 +162,15 @@
                         <td>{{ $index + 1 }}</td>
                         <!-- TODO: make class name link to a class -->
                         <td>
-                            <a href="#">
+                            <a href ng-click="goToClass(x.classid)"  />
                                 {{ x.classname }}
                             </a>
                         </td>
                         <td>{{ x.section }}</td>
                         <td>{{ x.times }}</td>
                         <td>{{ x.days }}</td>
-                        <td>{{ x.startdate }}</td>
-                        <td>{{ x.enddate }}</td>
+                        <td>{{ x.startdate | date}}</td>
+                        <td>{{ x.enddate | date}}</td>
                     </tr>
                 </tbody>
             </table>

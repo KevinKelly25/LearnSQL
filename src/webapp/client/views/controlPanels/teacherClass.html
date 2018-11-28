@@ -121,7 +121,7 @@
                     </tr>
                     <tr class="d-flex">
                         <td class="col-2">Start Date</td>
-                        <td class="col-8">{{ classInfo[0].startdate }}</td>
+                        <td class="col-8">{{ classInfo[0].startdate | date }}</td>
                         <td class="col-2">
                             <a class="btn btn-edit" href="#">
                                 <i class="fa fa-pencil-square-o fa-2x" data-toggle="modal" data-target="#doesntwork" aria-hidden="true"></i>
@@ -130,7 +130,7 @@
                     </tr>
                     <tr class="d-flex">
                         <td class="col-2">End Date</td>
-                        <td class="col-8">{{ classInfo[0].enddate }}</td>
+                        <td class="col-8">{{ classInfo[0].enddate | date }}</td>
                         <td class="col-2">
                             <a class="btn btn-edit" href="#">
                                 <i class="fa fa-pencil-square-o fa-2x" data-toggle="modal" data-target="#doesntwork" aria-hidden="true"></i>
@@ -198,7 +198,7 @@
                 <tbody>
                     <tr ng-repeat="x in class">
                         <td>{{ $index + 1 }}</td>
-                        <td><a ng-href="/teacher/class/#?class={{x.username}}" style="color:blue;">{{ x.username }}</a></td>
+                        <td><a ng-href="http://localhost:3000/schema/#?username={{x.username}}&classID={{classInfo[0].classid}}" style="color:blue;">{{ x.username }}</a></td>
                         <td>{{ x.ddlcount }}</td>
                         <td>{{ x.lastddloperation }}</td>
                         <td>{{ x.lastddlobject }}</td>
