@@ -88,8 +88,8 @@ CREATE OR REPLACE FUNCTION LearnSQL.createUser(
 RETURNS VOID AS
 $$
 DECLARE
-  encryptedPassword VARCHAR(60); -- hashed password to be stored in UserData_t
-  encryptedToken VARCHAR(60); -- hashed password to be stored in UserData_t
+  encryptedPassword VARCHAR(60); -- Hashed password to be stored in UserData_t
+  encryptedToken VARCHAR(60); -- Hashed password to be stored in UserData_t
 BEGIN
   -- Create "hashed" password using blowfish cipher
   encryptedPassword = LearnSQL.crypt($3, LearnSQL.gen_salt('bf'));
@@ -105,7 +105,30 @@ BEGIN
   EXECUTE FORMAT('CREATE USER %s WITH ENCRYPTED PASSWORD %L',LOWER($1), $3);
 
 END;
-$$ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql
+   SECURITY DEFINER;
+
+-- Change function's owner and privileges so that only LearnSQl can use it
+ALTER FUNCTION 
+  LearnSQL.createUser(LearnSQL.UserData_t.UserName%Type, 
+                      LearnSQL.UserData_t.FullName%Type,
+                      LearnSQL.UserData_t.Password%Type,
+                      LearnSQL.UserData_t.Email%Type,
+                      LearnSQL.UserData_t.Token%Type,
+                      LearnSQL.UserData_t.isTeacher%Type,
+                      LearnSQL.UserData_t.isAdmin%Type
+                     ) 
+  OWNER TO LearnSQL;
+REVOKE ALL ON FUNCTION 
+    LearnSQL.createUser(LearnSQL.UserData_t.UserName%Type, 
+                        LearnSQL.UserData_t.FullName%Type,
+                        LearnSQL.UserData_t.Password%Type,
+                        LearnSQL.UserData_t.Email%Type,
+                        LearnSQL.UserData_t.Token%Type,
+                        LearnSQL.UserData_t.isTeacher%Type,
+                        LearnSQL.UserData_t.isAdmin%Type
+                       )
+    FROM PUBLIC;
 
 
 
@@ -167,7 +190,18 @@ BEGIN
   DELETE FROM LearnSQL.UserData_t WHERE UserData_t.UserName = $1;
 
 END;
-$$ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql
+   SECURITY DEFINER;
+
+-- Change function's owner and privileges so that only LearnSQl can use it
+ALTER FUNCTION 
+  LearnSQL.dropUser(LearnSQL.UserData_t.UserName%Type, VARCHAR, VARCHAR) 
+  OWNER TO LearnSQL;
+
+REVOKE ALL ON FUNCTION 
+    LearnSQL.dropUser(LearnSQL.UserData_t.UserName%Type, VARCHAR, VARCHAR)
+    FROM PUBLIC;
+
 
 
 
@@ -190,19 +224,30 @@ BEGIN
   WHERE UserName = $1;
  
 END;
-$$ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql
+   SECURITY DEFINER;
+
+-- Change function's owner and privileges so that only LearnSQl can use it
+ALTER FUNCTION 
+  LearnSQL.changeUsername(LearnSQL.UserData_t.UserName%Type,
+                          LearnSQL.UserData_t.UserName%Type) 
+  OWNER TO LearnSQL;
+
+REVOKE ALL ON FUNCTION 
+  LearnSQL.changeUsername(LearnSQL.UserData_t.UserName%Type,
+                          LearnSQL.UserData_t.UserName%Type) 
+  FROM PUBLIC;
 
 
 
 -- This function updates the given user's password with a new password. Before
 --  it applies the new password it checks to make sure the given old password 
 --  matches the password stored in the database 
-CREATE OR REPLACE FUNCTION LearnSQL.changePassword(
-  userName      LearnSQL.UserData_t.Password%Type,
-  oldPassword   LearnSQL.UserData_t.Password%Type,
-  newPassword   LearnSQL.UserData_t.Password%Type)
-
-RETURNS VOID AS
+CREATE OR REPLACE FUNCTION
+  LearnSQL.changePassword(userName     LearnSQL.UserData_t.UserName%Type,
+                          oldPassword  LearnSQL.UserData_t.Password%Type,
+                          newPassword  LearnSQL.UserData_t.Password%Type)
+  RETURNS VOID AS
 $$
 DECLARE
   encryptedPassword VARCHAR(60); -- Hashed password from UserData_t
@@ -224,7 +269,21 @@ BEGIN
       RAISE EXCEPTION 'Old Password Does Not Match';
   END IF;
 END;
-$$ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql
+   SECURITY DEFINER;
+
+-- Change function's owner and privileges so that only LearnSQl can use it
+ALTER FUNCTION 
+  LearnSQL.changePassword(LearnSQL.UserData_t.UserName%Type,
+                          LearnSQL.UserData_t.Password%Type,
+                          LearnSQL.UserData_t.Password%Type) 
+  OWNER TO LearnSQL;
+
+REVOKE ALL ON FUNCTION 
+  LearnSQL.changePassword(LearnSQL.UserData_t.UserName%Type,
+                          LearnSQL.UserData_t.Password%Type,
+                          LearnSQL.UserData_t.Password%Type) 
+  FROM PUBLIC;
 
 
 
@@ -238,7 +297,19 @@ $$
 BEGIN
   UPDATE LearnSQL.UserData_t SET FullName = $2 WHERE UserData_t.UserName = $1;
 END;
-$$ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql
+   SECURITY DEFINER;
+
+-- Change function's owner and privileges so that only LearnSQl can use it
+ALTER FUNCTION 
+  LearnSQL.changeFullName(LearnSQL.UserData_t.UserName%Type,
+                          LearnSQL.UserData_t.FullName%Type) 
+  OWNER TO LearnSQL;
+
+REVOKE ALL ON FUNCTION 
+  LearnSQL.changeFullName(LearnSQL.UserData_t.UserName%Type,
+                          LearnSQL.UserData_t.FullName%Type) 
+  FROM PUBLIC;
 
 
 
@@ -252,7 +323,19 @@ $$
 BEGIN
   UPDATE LearnSQL.UserData_t SET email = $2 WHERE UserData_t.UserName = $1;
 END;
-$$ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql
+   SECURITY DEFINER;
+
+-- Change function's owner and privileges so that only LearnSQl can use it
+ALTER FUNCTION 
+  LearnSQL.changeEmail(LearnSQL.UserData_t.UserName%Type,
+                       LearnSQL.UserData_t.Email%Type) 
+  OWNER TO LearnSQL;
+
+REVOKE ALL ON FUNCTION 
+  LearnSQL.changeEmail(LearnSQL.UserData_t.UserName%Type,
+                       LearnSQL.UserData_t.Email%Type) 
+  FROM PUBLIC;
 
 
 
@@ -305,7 +388,21 @@ BEGIN
     RAISE EXCEPTION 'Token is incorrect';
   END IF;
 END;
-$$ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql
+   SECURITY DEFINER;
+
+-- Change function's owner and privileges so that only LearnSQl can use it
+ALTER FUNCTION 
+  LearnSQL.forgotPasswordReset(LearnSQL.UserData_t.UserName%Type,
+                               LearnSQL.UserData_t.Token%Type,
+                               LearnSQL.UserData_t.Token%Type) 
+  OWNER TO LearnSQL;
+
+REVOKE ALL ON FUNCTION 
+  LearnSQL.forgotPasswordReset(LearnSQL.UserData_t.UserName%Type,
+                               LearnSQL.UserData_t.Token%Type,
+                               LearnSQL.UserData_t.Token%Type) 
+  FROM PUBLIC;
 
 
 
@@ -329,6 +426,15 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+-- Change function's owner and privileges so that only LearnSQl can use it
+ALTER FUNCTION 
+  LearnSQL.isStudent(LearnSQL.UserData_t.UserName%Type) 
+  OWNER TO LearnSQL;
+
+REVOKE ALL ON FUNCTION 
+  LearnSQL.isStudent(LearnSQL.UserData_t.UserName%Type) 
+  FROM PUBLIC;
+
 
 
 -- Define a function returns a boolean value on whether user is a teacher
@@ -351,6 +457,15 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+-- Change function's owner and privileges so that only LearnSQl can use it
+ALTER FUNCTION 
+  LearnSQL.isTeacher(LearnSQL.UserData_t.UserName%Type) 
+  OWNER TO LearnSQL;
+
+REVOKE ALL ON FUNCTION 
+  LearnSQL.isTeacher(LearnSQL.UserData_t.UserName%Type) 
+  FROM PUBLIC;
+
 
 
 -- Define a function returns a boolean value on whether user is an admin
@@ -372,6 +487,15 @@ BEGIN
   END IF;
 END;
 $$ LANGUAGE plpgsql;
+
+-- Change function's owner and privileges so that only LearnSQl can use it
+ALTER FUNCTION 
+  LearnSQL.isAdmin(LearnSQL.UserData_t.UserName%Type) 
+  OWNER TO LearnSQL;
+
+REVOKE ALL ON FUNCTION 
+  LearnSQL.isAdmin(LearnSQL.UserData_t.UserName%Type) 
+  FROM PUBLIC;
 
 
 

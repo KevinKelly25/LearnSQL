@@ -26,8 +26,8 @@ BEGIN
 END
 $$;
 
---Suppress NOTICEs for this script only, this will not apply to functions
--- defined within. This hides unimportant, and possibly confusing messages.
+-- Suppress NOTICEs for this script only, this will not apply to functions
+--  defined within. This hides unimportant, and possibly confusing messages.
 SET LOCAL client_min_messages TO WARNING;
 
 
@@ -119,7 +119,19 @@ BEGIN
 
   END IF;
 END;
-$$ LANGUAGE plpgsql STABLE;
+$$ LANGUAGE plpgsql 
+   STABLE;
+
+-- Change function's owner and privileges so that only LearnSQl can use it
+ALTER FUNCTION 
+  LearnSQL.getClasses(userName  LearnSQL.UserData_t.UserName%Type,
+                      isTeacher BOOLEAN) 
+  OWNER TO LearnSQL;
+
+REVOKE ALL ON FUNCTION 
+  LearnSQL.getClasses(userName  LearnSQL.UserData_t.UserName%Type,
+                      isTeacher BOOLEAN) 
+  FROM PUBLIC;
 
 
 
@@ -211,5 +223,24 @@ BEGIN
   END IF;
 END;
 $$ LANGUAGE plpgsql;
+
+--Change function's owner and privileges so that only LearnSQl can use it
+ALTER FUNCTION 
+  LearnSQL.joinClass(userName          LearnSQL.Attends.userName%Type,
+                     classID           LearnSQL.Attends.classID%Type,
+                     classPassword     LearnSQL.Class_t.password%Type,
+                     databaseUsername  VARCHAR(63),
+                     databasePassword  VARCHAR(64),
+                     adminUserName     LearnSQL.UserData_t.userName%Type) 
+  OWNER TO LearnSQL;
+
+REVOKE ALL ON FUNCTION 
+  LearnSQL.joinClass(userName          LearnSQL.Attends.userName%Type,
+                     classID           LearnSQL.Attends.classID%Type,
+                     classPassword     LearnSQL.Class_t.password%Type,
+                     databaseUsername  VARCHAR(63),
+                     databasePassword  VARCHAR(64),
+                     adminUserName     LearnSQL.UserData_t.userName%Type) 
+  FROM PUBLIC;
 
 COMMIT;
