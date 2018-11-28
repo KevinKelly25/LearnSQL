@@ -62,11 +62,8 @@
                             <a href="/views/controlPanels/admin.html" class="nav-link border-right px-4">Admin Control Panel</a>
                         </li>
                     </span>
-                    <li class="nav-item">
-                        <a href="/views/workshop.html" class="nav-link border-right px-4">Workshop</a>
-                    </li>
                     <li class="nav-item active">
-                        <a href="#" class="nav-link shadow-lg bg-primary text-white border-right px-4">Sandbox</a>
+                        <a href="/views/workshop.html" class="nav-link shadow-lg bg-primary text-white border-right px-4">Workshop</a>
                     </li>
                     <span ng-show="currentUser">
                         <li class="nav-item">
@@ -89,16 +86,17 @@
   <!-- PAGE CONTENT -->
   <section id="page-content" class="mt-5 container" ng-controller="workshopCtrl" data-ng-init="initClass()">
     <div class="container">
+        <h1 class="text-center">{{ classInfo[0].classname }} database</h1>
         <div class="row">
             <div class="form-group">
                 <label for="exampleFormControlTextarea1">Command history</label>
-                <textarea class="form-control rounded-0 text-white" id="exampleFormControlTextarea1" cols="200px" rows="10"></textarea>
+                <textarea class="form-control rounded-0 text-white" id="exampleFormControlTextarea1" cols="200px" rows="10" readonly></textarea>
             </div>
         </div>
         <div class="row">
             <div class="form-group">
-                <label for="exampleFormControlTextarea2">Query composer</label>
-                <textarea class="form-control text-white" placeholder= "{{ classInfo[0].classname }}>" id="exampleFormControlTextarea2" cols="200px" rows="10"></textarea>
+                <label for="exampleFormControlTextarea2"></label>
+                <textarea class="form-control text-white" placeholder="Enter query here for database" id="exampleFormControlTextarea2" cols="200px" rows="7"></textarea>
             </div>
         </div>
     </div>
