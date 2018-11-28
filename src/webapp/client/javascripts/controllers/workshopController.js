@@ -4,7 +4,7 @@
  * Michael Torres
  * Web Applications and Databases for Education (WADE)
  *
- * This file contains the angularJS controller used for users to be able to view 
+ * This file contains the angularJS controller used for users to be able to view
  *  log into their class database.
  */
 
@@ -18,7 +18,7 @@ app.controller('workshopCtrl', ($scope, $http, $location) => {
         $scope.classes = data;
       });
   };
-  
+
   $scope.initClass = () => {
     $scope.classInfo = {
       className: $location.search().class,
@@ -29,5 +29,5 @@ app.controller('workshopCtrl', ($scope, $http, $location) => {
       .success((data) => {
         $scope.classInfo = data;
       });
-    };
+  };
 });

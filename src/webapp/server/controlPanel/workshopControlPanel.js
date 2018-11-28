@@ -43,7 +43,6 @@ function getClasses(req, res) {
  * @return class name
  */
 function getClassInfo(req, res) {
-  console.log(req.body);
   return new Promise((resolve, reject) => {
     ldb.any(
       'SELECT ClassName '
@@ -52,7 +51,6 @@ function getClassInfo(req, res) {
       [req.body.className, req.user.username],
     )
       .then((result) => {
-        console.log(result);
         resolve();
         return res.status(200).json(result);
       })
