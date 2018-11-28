@@ -146,9 +146,9 @@ router.post('/dropClass', authHelpers.teacherRequired, (req, res) => teacherHelp
 
 
 /**
- * This will redirect a user to the resetPassword page. The reset token needs
- *  to be appended to the end of the link after #?token=. For example
- *  http://localhost:3000/auth/resetPassword/#?token=59ff4734c92f789058b2
+ * This will redirect a user to the class page. The class name and section needs
+ *  to be appended to the end of the link. For example
+ *  http://localhost:3000/teacher/class/#?class=cs305&section=71
  */
 router.get('/class/', (req, res) => {
   res.sendFile(path.join(
