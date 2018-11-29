@@ -30,7 +30,7 @@ function handleResponse(res, code, statusMsg) {
 /**
  * This method returns the classes for the user logged in. Most
  *  functionality is in `workshopControlPanel.js` getClasses function.
- *  expects a promise to be returned
+ *  expects a Promise to be returned
  *
  * @return response
  */
@@ -39,18 +39,6 @@ router.get('/getClasses', authHelpers.loginRequired, (req, res) => workshopHelpe
     handleResponse(res, 500, err);
   }));
 
-/**
- * This method returns class name from a ClassDB database. Most
- *  functionality is in `workshopControlPanel.js` getClass function.
- *  expects a promise to be returned
- *
- * @param {string} classname The classname that is looked for
- * @return Response
- */
-router.post('/getClassInfo', authHelpers.loginRequired, (req, res) => workshopHelpers.getClassInfo(req, res)
-  .catch((err) => {
-    handleResponse(res, 500, err);
-  }));
 
 /**
  * This displays the html view which provides the interface to send queries to
