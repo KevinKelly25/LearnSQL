@@ -32,6 +32,9 @@ app.controller('teacherCtrl', ($scope, $http, $location, $window) => {
   $scope.initClasses = () => {
     $http.get('/teacher/getClasses')
       .success((data) => {
+        data.forEach((element) => {
+          element.classname = element.classname.toUpperCase();
+        });
         $scope.classes = data;
       });
   };
@@ -44,7 +47,7 @@ app.controller('teacherCtrl', ($scope, $http, $location, $window) => {
    */
   $scope.initClass = () => {
     $scope.classInfo = {
-      className: $location.search().class,
+      className: ($location.search().class).toLowerCase(),
       section: $location.search().section,
     };
 
@@ -59,6 +62,9 @@ app.controller('teacherCtrl', ($scope, $http, $location, $window) => {
     $scope.test = 'help';
     $http.post('/teacher/getClassInfo', $scope.classInfo)
       .success((data) => {
+        data.forEach((element) => {
+          element.classname = element.classname.toUpperCase();
+        });
         $scope.classInfo = data;
       });
   };
@@ -111,7 +117,7 @@ app.controller('teacherCtrl', ($scope, $http, $location, $window) => {
    *  updated dropClass object is also used as a parameter to drop the class in
    *  the dropClassTeacher function.
    *
-   * @param {string} className The classname that needs to be displays
+   * @param {string} className The classname that needs to be displayed
    * @param {string} section The section of the class that needs to be displayed.
    * @param {date} startDate The start date of the class needs to be displayed.
    */

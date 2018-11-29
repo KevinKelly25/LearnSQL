@@ -73,7 +73,9 @@ app.controller('schemaCtrl', ($scope, $http, $location) => {
           $scope.triggerInfo = data;
         } else { // Should be a function
           $scope.functionInfo = data;
-          if (!$scope.functionInfo[0].argumenttypes) $scope.functionInfo[0].argumenttypes = 'None';
+          if (!$scope.functionInfo[0].argumenttypes) {
+            $scope.functionInfo[0].argumenttypes = 'None';
+          }
         }
         $scope.view = 'objectDetailsView';
       });

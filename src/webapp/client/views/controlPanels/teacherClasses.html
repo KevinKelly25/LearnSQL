@@ -1,7 +1,7 @@
 <!--
-  classes.html - LearnSQL
+  teacherClasses.html - LearnSQL
 
-  Michael Torres
+  Christopher Innaco, Michael Torres
   Web Applications and Databases for Education (WADE)
 
   This file contains the html view of the teacher control panel which
@@ -51,7 +51,7 @@
                     </li>
                     <span ng-show="currentUser.isteacher">
                         <li class="nav-item active">
-                          <a href="../controlPanels/teacherClasses.html" class="nav-link shadow-lg bg-primary text-white border-right px-4">Classes</a>
+                          <a href="../controlPanels/teacherClasses.html" class="nav-link shadow-lg bg-primary text-white border-right px-4">Class Info</a>
                         </li>
                     </span>
                     <span ng-show="currentUser.isstudent">
@@ -106,7 +106,7 @@
                     <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-
+                
                 <span ng-show="error">
                         <div class="alert alert-danger">
                             {{ message }}
@@ -190,22 +190,32 @@
                 </div>
         </div>
         <!-- End dropClass Modal -->
+
         <div ng-if="classes">
-           <!-- tables of classes -->
+           <!-- Tables of classes -->
             <table class="ui celled table row-border hover order-column shadow-lg text-center"
               datatable="">
                 <caption class="text-primary">List of classes</caption>
-                <thead>
-                    <!-- Add class row -->
+                <thead>          
                     <tr>
-                        <td colspan="9">
+                        <td></td>
+                        <!-- Add Class button -->
+                        <td colspan="4">
                             <button type="button" id="addRow" class="btn btn-outline-success btn-block btn-lg"
                               data-toggle="modal" data-target="#addClass">
                                 Add Class
                             </button>
                         </td>
+                        <!-- Join Class button -->
+                        <td colspan="3">
+                            <button type="button" id="addRow" class="btn btn-outline-success btn-block btn-lg"
+                                data-toggle="modal" data-target="#joinClass">
+                                Join Class
+                            </button>
+                        </td>
+                        <td></td>
                     </tr>
-                    <!-- column headings -->
+                    <!-- Column headings -->
                     <tr>
                         <th></th>
                         <th>Class Name</th>
@@ -240,11 +250,72 @@
     </section>
     <!-- END OF PAGE CONTENT -->
 
+    <!-- joinClass Modal -->
+    <section class="mt-5 container" ng-controller="studentCtrl">
+            <!-- joinClass Modal -->
+            <div class="modal fade" id="joinClass" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                
+                            <h5 class="modal-title" >Join Class</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+    
+                        <span ng-show="error">
+                            <div class="alert alert-danger">
+                                {{ message }}
+                            </div>
+                          </span>
+                          <span ng-show="success">
+                            <div class="alert alert-success">
+                                {{ message }}
+                            </div>
+                          </span>
+    
+                        <div class="modal-body">
+                            <form>
+                                <!-- Note: `type=date` is incompatible with Internet Explorer 11 -->
+                                <div class="input-group input-group-lg">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"> 
+                                            <span class="fa fa-group"></span>
+                                        </span>
+                                        <span class="input-group-text" id="inputGroup-sizing-lg">Class ID</span>
+                                    </div>
+                                    <input type="text" class="form-control" ng-model="classID">
+                                </div> 
+                                <div>&nbsp;</div>
+    
+                                <div class="input-group input-group-lg">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"> 
+                                           <span class="fa fa-lock"></span>
+                                        </span>
+                                        <span class="input-group-text" id="inputGroup-sizing-lg">Join Password</span>
+                                    </div>
+                                    <input type="password" class="form-control" ng-model="classPassword">
+                                </div>  
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-primary" ng-click="joinClassFromPage()">Join Class</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </section>
+    <!-- End joinClass Modal -->
+
     <script src="../../javascripts/jquery.min.js"></script>
     <script src="../../javascripts/jquery.dataTables.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.6/angular.min.js"></script>
     <script src="../../javascripts/controllers/mainControllers.js"></script>
     <script src="../../javascripts/controllers/teacherController.js"></script>
+    <script src="../../javascripts/controllers/studentController.js"></script>
     <script src="../../javascripts/angular-datatables.min.js"></script>
     <script src="../../javascripts/popper.min.js"></script>
     <script src="../../javascripts/bootstrap.min.js"></script>

@@ -1,7 +1,7 @@
 /**
  * studentControlPanel.js - LearnSQL
  *
- * Michael Torres, Kevin Kelly
+ * Christopher Innaco, Kevin Kelly, Michael Torres
  * Web Applications and Databases for Education (WADE)
  *
  * This file contains the functions for student control panel
@@ -10,22 +10,18 @@
 
 const ldb = require('../db/ldb.js');
 const logger = require('../logs/winston.js');
-const dbCreator = require('../db/cdb.js');
-const authHelpers = require('../auth/_helpers');
 
 
 /**
- * This function gets all the classes registered to a student and relevant class
- *  information.
+ * This function calls the `LearnSQL.getClasses()` PL/pgSQL function which
+ *  returns a list of classes in which the student is registered with additional
+ *  relevant class information.
  *
- * @return the classes the user is in and relevant class information
+ * @return the classes the user is enrolled and relevant class information
  */
 function getClasses(req, res) {
   return new Promise((resolve, reject) => {
-    ldb.any('SELECT Class.ClassID, ClassName, Section, Times, Days, StartDate, '
-            + 'EndDate, StudentCount '
-            + 'FROM LearnSql.Attends INNER JOIN LearnSQL.Class ON Attends.ClassID = Class.ClassID '
-            + 'WHERE Username = $1 AND isTeacher = false', [req.user.username])
+    ldb.any('SELECT * FROM LearnSQL.getClasses($1)', [req.user.username])
       .then((result) => {
         resolve();
         return res.status(200).json(result);
@@ -39,68 +35,41 @@ function getClasses(req, res) {
 
 
 /**
- * This function adds a student to a ClassDB database. Student is checked to see
- *  if they are already in the class. Then the user is then added to the class
- *  via the attends table. Using the ClassID a database object based on the
- *  connection to the ClassDB database is made. This db object then uses the
- *  given username and fullname to create a student in the ClassDB database.
- *  To do this a built in classdb function 'createStudent' is used.
+ * This function calls the `LearnSQL.joinClass()` PL/pgSQL function which
+ *  enrolls a student into a class when given a classID and classPassword.
+ *  Various checks are present to ensure the class exists and the user is
+ *  not a current member of the class. If successful, a cross-database query
+ *  to the PL/pgSQL function `SELECT ClassDB.createStudent()` is called for
+ *  the user and a record is added to the `LearnSQL.Attends` table.
  *  See https://github.com/DASSL/ClassDB/wiki/Adding-Users for more information
- *  on how ClassDB adds students
+ *  on how ClassDB adds students.
  *
- * @param {string} password the password used in order to join class
- * @param {string} classID the class id of the class the student will be added to
- * @return http response on if the student was successfully added
+ * @param {string} classPassword the password used to enroll into the class
+ * @param {string} classID the classID of the class the student will be added to
+ * @return http response if the student was successfully added
  */
 function addStudent(req, res) {
   return new Promise((resolve, reject) => {
-    ldb.task(t => t.oneOrNone('SELECT 1 '
-                              + 'FROM LearnSql.Attends '
-                              + 'WHERE Username = $1 AND ClassID = $2',
-    [req.user.username, req.body.classID])
-      .then((result) => {
-        if (result) {
-          throw new Error('Already Joined The Class');
-        } else {
-          // Get class join password
-          return t.one('SELECT Password '
-                     + 'FROM LearnSQL.Class_t '
-                     + 'WHERE ClassID = $1',
-          [req.body.classID])
-            .then((result2) => {
-              // TODO: once hash password used switch to authHelpers.CompareHashed
-              if (!authHelpers.compareHashed(req.body.password, result2.password)) {
-                throw new Error('Join Password Incorrect');
-              }
-            });
-        }
-      })
-      .then(() => t.none('INSERT INTO LearnSQL.Attends VALUES($1, $2, false)',
-        [req.body.classID, req.user.username]))
+    ldb.func('LearnSQL.joinClass',
+      [req.user.username, req.body.classID, req.body.classPassword,
+        process.env.DB_USER, process.env.DB_PASSWORD])
+
       .then(() => {
-        // Create a db object on ClassDB database and add student
-        const db = dbCreator(req.body.classID);
-        db.func('ClassDB.createStudent',
-          [req.user.username, req.user.fullname])
-          .then(() => {
-            resolve();
-            db.$pool.end();// Closes the connection to the database
-            return res.status(200).json('student added successfully');
-          })
-          .catch(() => {
-            reject(new Error('Server Error: Could not create student'));
-            db.$pool.end();
-          });
-      }))
+        resolve();
+        return res.status(200).json('Student enrolled successfully');
+      })
       .catch((error) => {
-        // if common error send it back to user, otherwise log it and send back
-        // server error message to user
-        if (error === 'Join Password Incorrect' || error === 'Already Joined The Class') {
-          reject(new Error(error));
-          return;
+        /* eslint-disable prefer-promise-reject-errors */
+        if (error.code === '42710') {
+          reject('You are already a member of the specified class');
+        } else if (error.code === '28P01') {
+          reject('Password incorrect for the desired class');
+        } else if (error.code === '42704') {
+          reject('Class not found');
+        } else {
+          reject('Failed to enroll into the desired class');
         }
-        logger.error(`addStudent: \n${error}`);
-        reject(new Error('Server Error: Could not add you to the class'));
+        /* eslint-enable prefer-promise-reject-errors */
       });
   });
 }
