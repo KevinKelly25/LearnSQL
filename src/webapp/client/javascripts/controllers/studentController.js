@@ -44,4 +44,15 @@ app.controller('studentCtrl', ($scope, $http, $window) => {
         $scope.message = error.status;
       });
   };
+
+
+  $scope.goToClass = (classid) => {
+    $http.get('/auth/check')
+      .success((data) => {
+        $scope.currentUser = data;
+      });
+    // Go to class page
+    $window.location.href = 'http://localhost:3000/schema/#?username='
+                            + `${$scope.currentUser.username}&classID=${classid}`;
+  };
 });

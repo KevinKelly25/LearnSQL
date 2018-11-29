@@ -1,0 +1,326 @@
+<!--
+  schema.html - LearnSQL
+
+  Kevin Kelly
+  Web Applications and Databases for Education (WADE)
+
+  This file contains the html view of a user's schema
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>Learn</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css"
+        integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp"
+        crossorigin="anonymous">
+    <link rel="stylesheet" href="../../stylesheets/angular-datatables.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.css" />
+    <link rel="stylesheet" href="../../stylesheets/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css"> 
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.1/semantic.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/dataTables.semanticui.min.css">
+    <link rel="stylesheet" href="../../stylesheets/bootstrap.css">
+    <link rel="stylesheet" href="../../stylesheets/student.css">
+
+</head>
+<body ng-app="LearnSQL">
+
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light" ng-controller="NavCtrl" data-ng-init="init()">
+        <div class="container-fluid">
+            <!-- navbar header -->
+            <h2 class="font-weight-bold">
+                <a href="http://localhost:3000/" class="navbar-brand text-primary">LearnSQL</a>
+            </h2>
+            <!-- end of navbar header -->
+
+            <!-- navbar sections -->
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <ul class="nav navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a href="http://localhost:3000/" class="nav-link border-left border-right px-4">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/views/learn/select.html" class="nav-link border-right px-4">Learn</a>
+                    </li>
+                    <span ng-show="currentUser.isteacher">
+                        <li class="nav-item">
+                          <a href="/views/controlPanels/teacherClasses.html" class="nav-link shadow-lg bg-primary text-white border-right px-4">Classes</a>
+                        </li>
+                    </span>
+                    <span ng-show="currentUser.isstudent">
+                        <li class="nav-item active">
+                            <a href="/views/controlPanels/students.html" class="nav-link shadow-lg bg-primary text-white border-right px-4">Classes</a>
+                        </li>
+                    </span>
+                    <span ng-show="!currentUser">
+                        <li class="nav-item">
+                            <a href="/views/Account/signIn.html" class="nav-link px-4 pl-4">Sign in</a>
+                        </li>
+                    </span>
+                    <span ng-show="currentUser.isadmin">
+                        <li class="nav-item">
+                          <a href="/views/controlPanels/admin.html" class="nav-link border-right px-4">Admin Control Panel</a>
+                        </li>
+                    </span>
+                    <span ng-show="currentUser">
+                        <li class="nav-item">
+                            <a href="/views/workshop.html" class="nav-link border-right px-4">Workshop</a>
+                        </li>
+                    </span>
+                    <span ng-show="currentUser">
+                        <li class="nav-item">
+                            <a href="/views/Account/profile.html" class="nav-link border-right px-4">Profile</a>
+                        </li>
+                    </span>
+                    <span ng-show="currentUser">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link px-4 pl-4" ng-click="logout()">Logout</a>
+                        </li>
+                    </span>
+                </ul>
+            </div>
+            <!-- end of navbar sections -->
+
+        </div>
+    </nav>
+    <!-- END OF NAVBAR -->
+
+    <!-- PAGE CONTENT -->
+    <section id="page-content" class="mt-5 container" ng-controller="schemaCtrl" data-ng-init="initSchema()">
+        <!-- show when looking at all tables, is also the default view -->
+        <span ng-show="view =='allObjects'">
+            <div ng-if="schema">
+                <h1 class="text-center">{{ userInfo.username }}'s Schema</h1>
+                <!-- list of all tables -->
+                <a href="/views/workshop.html" class="btn btn-outline-success btn-block btn-lg" role="button">
+                    Go To Workshop
+                </a>
+                <table id="allObjects" class="ui celled table row-border hover order-column shadow-lg text-center" datatable="">
+                    <caption class="text-primary">List of Objects</caption>
+                    <thead>
+                        <!-- column headings -->
+                        <tr>
+                            <th></th>
+                            <th>Object name</th>
+                            <th>Type</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="x in schema">
+                            <td style="width: 10%">{{ $index + 1 }}</td>
+                            <td style="width: 40%">{{ x.name }}</td>
+                            <td style="width: 40%">{{ x.type }}</td>
+                            <td style="width: 10%">
+                                <a href="" class="btn btn-success btn-block btn" role="button" ng-click="getObjectDetails(x.name,x.type)">
+                                    Go To {{ x.type }}
+                                </a> 
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </span>
+        <!-- show if looking at a single object -->
+        <span ng-show="view =='objectDetailsView'">
+            <div ng-if="tableInfo[0]">
+                <a ng-click="backToObjects('table')" style="color:blue; text-decoration: underline; ">Go Back To Objects</a>
+                <h3 class="text-center">Table Information</h3>
+                <table class="ui celled table row-border hover order-column shadow-lg text-center">
+                    <tbody>
+                            <tr class="d-flex">
+                                <td class="col-2" style="font-weight:bold;">Name</td>
+                                <td class="col-10">{{ tableInfo[0].tablename }}</td>
+                            </tr>
+                            <tr class="d-flex" >
+                                <td class="col-2" style="font-weight:bold;">Has Indexes</td>
+                                <td class="col-10">{{ tableInfo[0].hasindexes }}</td>
+                            </tr>
+                            <tr class="d-flex">
+                                <td class="col-2" style="font-weight:bold;">Has Rules</td>
+                                <td class="col-10">{{ tableInfo[0].hasrules }}</td>
+                            </tr>
+                            <tr class="d-flex">
+                                <td class="col-2" style="font-weight:bold;">Column Attributes</td>
+                                <td class="col-10">{{ tableInfo[0].attributes }}</td>
+                            </tr>
+                    </tbody>
+                </table>
+                <!-- table results -->
+                <table class="ui celled table row-border hover order-column shadow-lg text-center" datatable="">
+                    <thead>
+                        <!-- column headings -->
+                        <tr>
+                            <th></th>
+                            <!-- display all column headers -->
+                            <th ng-repeat="x in columns">{{ x }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- display all rows of the table -->
+                        <tr ng-repeat="rows in tableResult">
+                            <td>{{ $index + 1 }}</td>
+                            <!-- display all attribute values of the row -->
+                            <td ng-repeat="attribute in rows">{{ attribute }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div ng-if="viewInfo">
+                <a ng-click="backToObjects('view')" style="color:blue; text-decoration: underline; ">Go Back To Objects</a>
+                <h3 class="text-center">View Information</h3>
+                <table class="ui celled table row-border hover order-column shadow-lg text-center">
+                    <tbody>
+                            <tr class="d-flex">
+                                <td class="col-2" style="font-weight:bold;">Name</td>
+                                <td class="col-10">{{ viewInfo[0].viewname }}</td>
+                            </tr>
+                            <tr class="d-flex" >
+                                <td class="col-2" style="font-weight:bold;">Definition</td>
+                                <td class="col-10">{{ viewInfo[0].definition }}</td>
+                            </tr>
+                    </tbody>
+                </table>
+                <!-- view results -->
+                <table class="ui celled table row-border hover order-column shadow-lg text-center" datatable="">
+                    <thead>
+                        <!-- column headings -->
+                        <tr>
+                            <th></th>
+                            <!-- display all column headers -->
+                            <th ng-repeat="x in columns">{{ x }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- display all rows of the view -->
+                        <tr ng-repeat="rows in viewResult">
+                            <td>{{ $index + 1 }}</td>
+                            <!-- display all attribute values of the row -->
+                            <td ng-repeat="attribute in rows">{{ attribute }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div ng-if="functionInfo" class="py-5">
+                    <a ng-click="backToObjects('function')" style="color:blue; text-decoration: underline; ">Go Back To Objects</a>
+                    <h3 class="text-center">Function Information</h3>
+                    <table class="ui celled table row-border hover order-column shadow-lg text-center">
+                        <tbody>
+                                <tr class="d-flex">
+                                    <td class="col-3" style="font-weight:bold;">Name</td>
+                                    <td class="col-9">{{ functionInfo[0].functionname }}</td>
+                                </tr>
+                                <tr class="d-flex" >
+                                    <td class="col-3" style="font-weight:bold;">Number of Arguments</td>
+                                    <td class="col-9">{{ functionInfo[0].numberofarguments }}</td>
+                                </tr>
+                                <tr class="d-flex" >
+                                    <td class="col-3" style="font-weight:bold;">Return Type</td>
+                                    <td class="col-9">{{ functionInfo[0].returntype }}</td>
+                                </tr>
+                                <tr class="d-flex" >
+                                    <td class="col-3" style="font-weight:bold;">Estimated Number of Returned Rows</td>
+                                    <td class="col-9">{{ functionInfo[0].estimatedreturnrows }}</td>
+                                </tr>
+                                <tr class="d-flex" >
+                                    <td class="col-3" style="font-weight:bold;">Is Aggregate</td>
+                                    <td class="col-9">{{ functionInfo[0].isaggregate }}</td>
+                                </tr>
+                                <tr class="d-flex" >
+                                    <td class="col-3" style="font-weight:bold;">Is Window Function</td>
+                                    <td class="col-9">{{ functionInfo[0].iswindowfunction }}</td>
+                                </tr>
+                                <tr class="d-flex" >
+                                    <td class="col-3" style="font-weight:bold;">Is Security Definer</td>
+                                    <td class="col-9">{{ functionInfo[0].issecuritydefiner }}</td>
+                                </tr>
+                                <tr class="d-flex" >
+                                    <td class="col-3" style="font-weight:bold;">Returns Result Set</td>
+                                    <td class="col-9">{{ functionInfo[0].returnsresultset }}</td>
+                                </tr>
+                                <tr class="d-flex" >
+                                    <td class="col-3" style="font-weight:bold;">Argument Types</td>
+                                    <td class="col-9">{{ functionInfo[0].argumenttypes }}</td>
+                                </tr>
+                                <tr class="d-flex" >
+                                    <td class="col-3" style="font-weight:bold;">Function Language</td>
+                                    <td class="col-9">{{ functionInfo[0].functionlanguage }}</td>
+                                </tr>
+                                <tr><td style="font-weight:bold;">Function Body</td></tr>
+                                <tr><td><p style="white-space: pre;text-align: left">{{ functionInfo[0].sourcecode }}</p></td></tr>
+                        </tbody>
+                    </table>                      
+                </div>
+                <div ng-if="triggerInfo" class="py-5">
+                    <a ng-click="backToObjects('trigger')" style="color:blue; text-decoration: underline; ">Go Back To Objects</a>
+                    <h3 class="text-center">Trigger Information</h3>
+                    <table class="ui celled table row-border hover order-column shadow-lg text-center">
+                        <tbody>
+                            <tr class="d-flex">
+                                <td class="col-2" style="font-weight:bold;">Name</td>
+                                <td class="col-10">{{ triggerInfo[0].triggername }}</td>
+                            </tr>
+                            <tr class="d-flex" >
+                                <td class="col-2" style="font-weight:bold;">On Table</td>
+                                <td class="col-10">{{ triggerInfo[0].ontable}}</td>
+                            </tr>
+                            <tr class="d-flex" >
+                                <td class="col-2" style="font-weight:bold;">Uses Function</td>
+                                <td class="col-10">{{ triggerInfo[0].onfunction }}</td>
+                            </tr>
+                        </tbody>
+                    </table>                      
+                </div>
+                <div ng-if="indexInfo" class="py-5">
+                    <a ng-click="backToObjects('index')" style="color:blue; text-decoration: underline; ">Go Back To Objects</a>
+                    <h3 class="text-center">Index Information</h3>
+                    <table class="ui celled table row-border hover order-column shadow-lg text-center">
+                        <tbody>
+                            <tr class="d-flex">
+                                <td class="col-2" style="font-weight:bold;">Name</td>
+                                <td class="col-10">{{ indexInfo[0].indexname }}</td>
+                            </tr>
+                            <tr class="d-flex" >
+                                <td class="col-2" style="font-weight:bold;">On Table</td>
+                                <td class="col-10">{{ indexInfo[0].ontable }}</td>
+                            </tr>
+                            <tr class="d-flex" >
+                                <td class="col-2" style="font-weight:bold;">Number Of Columns</td>
+                                <td class="col-10">{{ indexInfo[0].numberofcolumns }}</td>
+                            </tr>
+                            <tr class="d-flex" >
+                                <td class="col-2" style="font-weight:bold;">Is Unique Index</td>
+                                <td class="col-10">{{ indexInfo[0].isunique }}</td>
+                            </tr>
+                            <tr class="d-flex" >
+                                <td class="col-2" style="font-weight:bold;">Is Primary Key</td>
+                                <td class="col-10">{{ indexInfo[0].isprimarykey }}</td>
+                            </tr>
+                            <tr class="d-flex" >
+                                <td class="col-2" style="font-weight:bold;">Definition</td>
+                                <td class="col-10">{{ indexInfo[0].indexdefinition }}</td>
+                            </tr>
+                        </tbody>
+                    </table>                      
+                </div>
+            </span>
+    </section>
+    <!-- END OF PAGE CONTENT -->
+
+    <script src="../../javascripts/jquery.min.js"></script>
+    <script src="../../javascripts/jquery.dataTables.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.6/angular.min.js"></script>
+    <script src="../../javascripts/controllers/mainControllers.js"></script>
+    <script src="../../javascripts/controllers/schemaController.js"></script>
+    <script src="../../javascripts/angular-datatables.min.js"></script>
+    <script src="../../javascripts/popper.min.js"></script>
+    <script src="../../javascripts/bootstrap.min.js"></script>
+
+</body>
+</html>

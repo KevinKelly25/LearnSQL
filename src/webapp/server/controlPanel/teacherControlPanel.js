@@ -49,15 +49,15 @@ function handleErrors(req) {
 function getStudents(req, res) {
   return new Promise((resolve, reject) => {
     ldb.one('SELECT C.ClassID '
-            + 'FROM LearnSQL.Attends AS A INNER JOIN LearnSQL.Class AS C ON A.ClassID = C.ClassID '
-            + 'WHERE Username = $1 AND ClassName = $2',
-    [req.user.username, req.body.className])
+            + 'FROM LearnSQL.Attends AS A INNER JOIN LearnSQL.Class_t AS C ON A.ClassID = C.ClassID '
+            + 'WHERE Username = $1 AND ClassName = $2 AND Section = $3',
+    [req.user.username, req.body.className, req.body.section])
       .then((result) => {
         const db = dbCreator(result.classid);
         db.any('SELECT * FROM ClassDB.StudentActivitySummary')
           .then((result2) => {
             resolve();
-            db.$pool.end();// Closes the connection to the database. IMPORTANT!!
+            db.$pool.end();// Closes the connection to the database
             return res.status(200).json(result2);
           })
           .catch((error) => {
@@ -177,8 +177,9 @@ function getClassInfo(req, res) {
       'SELECT LearnSQL.Attends.ClassID, ClassName, Section, Times, Days, '
       + 'StartDate, EndDate, StudentCount '
       + 'FROM LearnSQL.Attends INNER JOIN LearnSQL.Class ON Attends.ClassID = Class.ClassID '
-      + 'WHERE ClassName = $1 AND Username = $2 AND isTeacher = true',
-      [req.body.className, req.user.username],
+      + 'WHERE ClassName = $1 AND Username = $2 AND '
+      + 'Section = $3 AND isTeacher = true ',
+      [req.body.className, req.user.username, req.body.section],
     )
       .then((result) => {
         resolve();

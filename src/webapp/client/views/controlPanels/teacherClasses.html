@@ -231,7 +231,7 @@
                 <tbody>
                     <tr ng-repeat="x in classes">
                         <td>{{ $index + 1 }}</td>
-                        <td><a ng-href="/teacher/class/#?class={{x.classname}}" style="color:blue;">{{ x.classname }}</a></td>
+                        <td><a ng-href="/teacher/class/#?class={{x.classname}}&section={{x.section}}" style="color:blue;">{{ x.classname }}</a></td>
                         <td>{{ x.section }}</td>
                         <td>{{ x.times }}</td>
                         <td>{{ x.days }}</td>
