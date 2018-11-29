@@ -34,7 +34,8 @@ app.controller('workshopCtrl', ($scope, $http, $location) => {
     //  to the class's database
     $scope.classID = $location.search().class;
     
-    // Get the className from the classID using the '_' as a delimiter
+    // Get the className from the classID using the '_' as a delimiter, 
+    //  then make uppercase
     $scope.className = ($scope.classID.substr(0, $scope.classID.search("_"))).toUpperCase();
   };
 
@@ -42,8 +43,7 @@ app.controller('workshopCtrl', ($scope, $http, $location) => {
     $scope.submitQuery_Button = 'Running Query . . .';
 
     // Check if the user entered a query
-    if (typeof $scope.userQuery == 'undefined')
-    {
+    if (typeof $scope.userQuery == 'undefined') {
       printToCommandHistory("No query was entered. Try again.");
       $scope.submitQuery_Button = 'Run Code';  
       return;
@@ -61,8 +61,17 @@ app.controller('workshopCtrl', ($scope, $http, $location) => {
         //  (the query results)
         queryResult = data[0];
 
-        // Get the property name of the first element, access it and print it
-        printToCommandHistory(queryResult[Object.keys(data[0])]);
+        for(i = 0; i < Object.keys(queryResult).length; ++i) 
+        {
+          $scope.commandHistory += " | " + (Object.keys(queryResult)[i]);
+        }
+
+        printToCommandHistory('\n');
+
+        for (i in queryResult)
+        {
+          $scope.commandHistory += " | " + (JSON.stringify((queryResult[i]))).trim();
+        }
                 
       })
       .error((error) => {
@@ -74,8 +83,11 @@ app.controller('workshopCtrl', ($scope, $http, $location) => {
       $scope.submitQuery_Button = 'Run Code'; 
   }
 
-  function printToCommandHistory(input)
-  {
+  $scope.clearHistory = () => {
+    $scope.commandHistory = "";
+  }
+
+  function printToCommandHistory(input) {
     $scope.commandHistory += "> " + input + '\n';
     return;
   }

@@ -18,7 +18,7 @@ const pgp = require('pg-promise')({
  *
  * @param {string} classid The name of the database
  */
-// TODO: Find better way to do this
+
 /* eslint-disable */
 module.exports = function (classid) {
   const connectionString = `postgresql://${process.env.DB_USER}`

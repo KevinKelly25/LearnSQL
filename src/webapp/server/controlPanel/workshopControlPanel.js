@@ -39,23 +39,37 @@ function getClasses(req, res) {
 
 function sendQuery(req, res) {
   return new Promise((resolve, reject) => {
-    console.log(JSON.stringify(req.body));
-    console.log("Req.body.classid: " + req.body.classID);
-    const db = dbCreator(req.body.classID);
+
+    //console.log(JSON.stringify(req.body));
+    //console.log("Req.body.classid: " + req.body.classID);
     console.log("userQuery: " + req.body.userQuery);
 
-    db.any(req.body.userQuery)
-    .then((result) => {
-      console.log("Result: " + result);
-      resolve();
-      db.$pool.end();// Closes the connection to the database
-      return res.status(200).json(result);
-    })
-    .catch((error) => {
-      logger.error(`sendQuery: \n${error}`);
-      reject(new Error('sendQuery failed'));
-    });
+    const db = dbCreator(req.body.classID);
 
+    // Set the current_user to access the user's tables
+    db.oneOrNone('SET ROLE $1', [req.user.username],
+    )
+    .then(() => {
+
+      db.any(req.body.userQuery)
+      .then((result_UserQuery) => {
+        console.log("Query Result:");
+        console.log(result_UserQuery);
+        resolve();
+        db.$pool.end(); // Closes the connection to the database
+        return res.status(200).json(result_UserQuery);
+      })
+
+      .catch((error_UserQuery) => {
+        logger.error(`sendQuery Query: \n${error_UserQuery}`);
+        reject(new Error('sendQuery failed: Unable to execute user query'));
+      });
+
+    })
+    .catch((error_Role) => {
+      logger.error(`sendQuery Role: \n${error_Role}`);
+      reject(new Error('sendQuery failed: Cannot set role'));
+    });
   });
 }
 
