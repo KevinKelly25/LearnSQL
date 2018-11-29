@@ -20,10 +20,10 @@ const logger = require('../logs/winston.js');
 function getClasses(req, res) {
   return new Promise((resolve, reject) => {
     ldb.any(
-      'SELECT Attends.ClassID, ClassName, Section, Times, Days, StartDate, EndDate, UserData_t.isTeacher'
-      + 'FROM LearnSQL.Attends INNER JOIN LearnSQL.Class_t ON Attends.ClassID = Class_t.ClassID'
-      + 'INNER JOIN LearnSQL.UserData_t on Attends.username = UserData_t.username'
-      + 'WHERE UserData_t.username = $1', [req.user.username],
+      'SELECT Attends.ClassID, ClassName, Section, Times, Days, StartDate, EndDate, UserData_t.isTeacher '
+    + 'FROM LearnSQL.Attends INNER JOIN LearnSQL.Class_t ON Attends.ClassID = Class_t.ClassID '
+    + 'INNER JOIN LearnSQL.UserData_t ON Attends.username = UserData_t.username '
+    + 'WHERE UserData_t.username = $1', [req.user.username],
     )
       .then((result) => {
         resolve();
