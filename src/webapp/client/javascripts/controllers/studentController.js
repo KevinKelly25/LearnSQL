@@ -23,6 +23,11 @@ app.controller('studentCtrl', ($scope, $http, $window) => {
         });
         $scope.classes = data;
       });
+
+    $http.get('/auth/check')
+      .success((data) => {
+        $scope.currentUser = data;
+      });
   };
 
   $scope.joinClassFromPage = () => {
@@ -45,12 +50,7 @@ app.controller('studentCtrl', ($scope, $http, $window) => {
       });
   };
 
-
   $scope.goToClass = (classid) => {
-    $http.get('/auth/check')
-      .success((data) => {
-        $scope.currentUser = data;
-      });
     // Go to class page
     $window.location.href = 'http://localhost:3000/schema/#?username='
                             + `${$scope.currentUser.username}&classID=${classid}`;
