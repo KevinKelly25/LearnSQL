@@ -86,18 +86,20 @@
   <!-- PAGE CONTENT -->
   <section id="page-content" class="mt-5 container" ng-controller="workshopCtrl" data-ng-init="initClass()">
     <div class="container">
-        <h1 class="text-center">{{ classInfo[0].classname }} database</h1>
+        <h1 class="text-center">{{ classInfo[0].classname }}'s database</h1>
         <div class="row">
             <div class="form-group">
-                <label for="exampleFormControlTextarea1">Command history</label>
-                <textarea class="form-control rounded-0 text-white" id="exampleFormControlTextarea1" cols="200px" rows="10" readonly></textarea>
+                <label for="textarea1">Command history</label>
+                <textarea class="form-control rounded-0 text-white" id="textarea1" cols="200" rows="10" readonly></textarea>
             </div>
         </div>
         <div class="row">
             <div class="form-group">
-                <label for="exampleFormControlTextarea2"></label>
-                <textarea class="form-control text-white" placeholder="Enter query here" id="exampleFormControlTextarea2" cols="200px" rows="7"></textarea>
-                <button type="button" class="btn btn-success btn-lg btn-block">Run code</button>
+                <label for="textarea2"></label>
+                <textarea class="form-control text-white" placeholder="Enter query here" id="textarea2" cols="200" rows="7"></textarea>
+                <div class="py-1">
+                    <button type="button" class="btn btn-success btn-lg btn-block">Run code</button>
+                </div>
             </div>
         </div>
     </div>

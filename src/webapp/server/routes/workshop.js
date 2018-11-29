@@ -53,7 +53,8 @@ router.post('/getClassInfo', authHelpers.loginRequired, (req, res) => workshopHe
   }));
 
 /**
- * This is used to display all the class information of the user.
+ * This displays the html view which provides the interface to send queries to
+ *  classes database.
  */
 router.get('/class/', (req, res) => {
   res.sendFile(path.join(
