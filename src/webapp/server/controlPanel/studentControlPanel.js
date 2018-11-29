@@ -50,7 +50,7 @@ function getClasses(req, res) {
  */
 function addStudent(req, res) {
   return new Promise((resolve, reject) => {
-    ldb.oneOrNone('SELECT LearnSQL.joinClass($1, $2, $3, $4, $5)',
+    ldb.func('LearnSQL.joinClass',
       [req.user.username, req.body.classID, req.body.classPassword,
         process.env.DB_USER, process.env.DB_PASSWORD])
 
