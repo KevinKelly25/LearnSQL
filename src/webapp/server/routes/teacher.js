@@ -138,10 +138,12 @@ router.post('/addClass', authHelpers.teacherRequired, (req, res) => teacherHelpe
  * @param {string} name The name of the class to be added
  * @return Http response if class was dropped
  */
-router.post('/dropClass', authHelpers.teacherRequired, (req, res) => teacherHelpers.dropClass(req, res)
-  .catch((err) => {
-    handleResponse(res, 500, err);
-  }));
+router.post('/dropClass', authHelpers.teacherRequired, (req, res) => {
+  teacherHelpers.createClass(req, res)
+    .catch((err) => {
+      handleResponse(res, 500, err);
+    });
+});
 
 /**
  * This method creates a team in a ClassDB instance. Most functionality is
@@ -155,11 +157,10 @@ router.post('/dropClass', authHelpers.teacherRequired, (req, res) => teacherHelp
  */
 router.post('/addTeam', authHelpers.teacherRequired, (req, res) => {
   teacherHelpers.createTeam(req, res)
-  .catch((err) => {
-    handleResponse(res, 500, err);
-  });
- });
-
+    .catch((err) => {
+      handleResponse(res, 500, err);
+    });
+});
 
 
 

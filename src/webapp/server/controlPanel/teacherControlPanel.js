@@ -133,16 +133,16 @@ function createClass(req, res) {
 function createTeam(req, res) {
   return new Promise((resolve, reject) => {
     const db = dbCreator(req.body.classID);
-      db.func('ClassDB.createTeam', [req.body.teamName, req.body.teamFullName])
-        .then((result) => {      
-          resolve();
-          db.$pool.end();// Closes the connection to the database
-          return res.status(200).json(result);
-        })
-        .catch((error) => {
-          logger.error(`createTeam: \n${error}`);
-          reject(new Error('Could Not Add Team'));
-        });
+    db.func('ClassDB.createTeam', [req.body.teamName, req.body.teamFullName])
+      .then((result) => {
+        resolve();
+        db.$pool.end();// Closes the connection to the database
+        return res.status(200).json(result);
+      })
+      .catch((error) => {
+        logger.error(`createTeam: \n${error}`);
+        reject(new Error('Could Not Add Team'));
+      });
   });
 }
 

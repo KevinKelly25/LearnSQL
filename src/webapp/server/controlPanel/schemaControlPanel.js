@@ -67,7 +67,7 @@ function getObjects(req, res) {
     const db = dbCreator(req.body.class);
     db.any('SELECT Name, Type '
          + 'FROM ClassDB.MajorUserObjects '
-         + 'WHERE username = $1 AND schemaname = $1',
+         + 'WHERE schemaname = $1',
     [req.body.username])
       .then((result) => {
         db.$pool.end();// Closes the connection to the database
