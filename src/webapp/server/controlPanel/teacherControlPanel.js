@@ -49,16 +49,23 @@ function handleErrors(req) {
 function getStudents(req, res) {
   return new Promise((resolve, reject) => {
     ldb.one('SELECT C.ClassID '
-            + 'FROM LearnSQL.Attends AS A INNER JOIN LearnSQL.Class_t AS C ON A.ClassID = C.ClassID '
-            + 'WHERE Username = $1 AND ClassName = $2 AND Section = $3',
+          + 'FROM LearnSQL.Attends AS A INNER JOIN LearnSQL.Class_t AS C ON A.ClassID = C.ClassID '
+          + 'WHERE Username = $1 AND ClassName = $2 AND Section = $3',
     [req.user.username, req.body.className, req.body.section])
       .then((result) => {
         const db = dbCreator(result.classid);
-        db.any('SELECT * FROM ClassDB.StudentActivitySummary')
+        db.multi('SELECT Username, DDLCount, LastDDLOperation, LastDDLObject, '
+               + 'LastDDLActivityAt, ConnectionCount, LastConnectionAt '
+               + 'FROM ClassDB.StudentActivitySummary; '
+               + 'SELECT TeamName, FullName, MemberCount '
+               + 'FROM ClassDB.Team;')
           .then((result2) => {
             resolve();
             db.$pool.end();// Closes the connection to the database
-            return res.status(200).json(result2);
+            return res.status(200).json({
+              students: result2[0],
+              teams: result2[1],
+            });
           })
           .catch((error) => {
             logger.error(`getStudents: \n${error}`);
@@ -114,6 +121,29 @@ function createClass(req, res) {
           return res.status(500).json('error');
         });
     });
+}
+
+/**
+ * This function creates a classDB team in a choosen ClassDB instance.
+ *
+ * @param {string} classID the classID of the class the team is being added to
+ * @param {string} teamName The team name
+ * @param {string} teamFullName The full name of the class being added
+ */
+function createTeam(req, res) {
+  return new Promise((resolve, reject) => {
+    const db = dbCreator(req.body.classID);
+      db.func('ClassDB.createTeam', [req.body.teamName, req.body.teamFullName])
+        .then((result) => {      
+          resolve();
+          db.$pool.end();// Closes the connection to the database
+          return res.status(200).json(result);
+        })
+        .catch((error) => {
+          logger.error(`createTeam: \n${error}`);
+          reject(new Error('Could Not Add Team'));
+        });
+  });
 }
 
 /**
@@ -200,4 +230,5 @@ module.exports = {
   createClass,
   dropClass,
   getClassInfo,
+  createTeam,
 };

@@ -143,6 +143,24 @@ router.post('/dropClass', authHelpers.teacherRequired, (req, res) => teacherHelp
     handleResponse(res, 500, err);
   }));
 
+/**
+ * This method creates a team in a ClassDB instance. Most functionality is
+ *  contained in `teacherControlPanel.js` createTeam function. Expects a
+ *  promise to be returned
+ *
+ * @param {string} classID The class id of the class being added to
+ * @param {string} teamName The name of the team to be added
+ * @param {string} section The full name of the team
+ * @return Http response if class was added
+ */
+router.post('/addTeam', authHelpers.teacherRequired, (req, res) => {
+  teacherHelpers.createTeam(req, res)
+  .catch((err) => {
+    handleResponse(res, 500, err);
+  });
+ });
+
+
 
 
 /**
