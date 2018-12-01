@@ -63,12 +63,11 @@ app.controller('studentCtrl', ($scope, $http, $window) => {
     $scope.class = {
       classID: classid,
     };
-
-    $scope.classID = classid; // So that it can be used later for goToClass()
+    $scope.classID = classid; // Used for goToClass()
 
     $http.post('/student/getTeams', $scope.class)
       .success((data) => {
-      // check if object is empty
+        // Check if object is empty
         if (Object.keys(data).length === 0) {
           $scope.goToClass($scope.currentUser.username);
         } else {
