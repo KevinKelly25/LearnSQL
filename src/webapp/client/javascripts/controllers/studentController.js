@@ -50,9 +50,36 @@ app.controller('studentCtrl', ($scope, $http, $window) => {
       });
   };
 
-  $scope.goToClass = (classid) => {
+  $scope.goToClass = (schema) => {
+    $scope.test = 'getting here';
+    $scope.data = schema;
     // Go to class page
     $window.location.href = 'http://localhost:3000/schema/#?username='
-                            + `${$scope.currentUser.username}&classID=${classid}`;
+                            + `${schema}&classID=${$scope.classID}`;
+  };
+
+  // Gets all the teams the user is in for a given class
+  $scope.getTeams = (classid) => {
+    $scope.class = {
+      classID: classid,
+    };
+
+    $scope.classID = classid; // So that it can be used later for goToClass()
+
+    $http.post('/student/getTeams', $scope.class)
+      .success((data) => {
+      // check if object is empty
+        if (Object.keys(data).length === 0) {
+          $scope.goToClass($scope.currentUser.username);
+        } else {
+          delete $scope.classes;
+          $scope.teams = data;
+        }
+      })
+      .error((error) => {
+        $scope.error = true;
+        $scope.success = false;
+        $scope.message = error.status;
+      });
   };
 });

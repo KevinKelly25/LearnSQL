@@ -139,7 +139,7 @@ router.post('/addClass', authHelpers.teacherRequired, (req, res) => teacherHelpe
  * @return Http response if class was dropped
  */
 router.post('/dropClass', authHelpers.teacherRequired, (req, res) => {
-  teacherHelpers.createClass(req, res)
+  teacherHelpers.dropClass(req, res)
     .catch((err) => {
       handleResponse(res, 500, err);
     });

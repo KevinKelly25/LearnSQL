@@ -188,7 +188,7 @@
                         <td>{{ $index + 1 }}</td>
                         <!-- TODO: make class name link to a class -->
                         <td>
-                            <a href="" style="color:blue" ng-click="goToClass(x.classid)">
+                            <a href="" style="color:blue" ng-click="getTeams(x.classid)">
                                 {{ x.classname }}
                             </a>
                         </td>
@@ -198,6 +198,48 @@
                         <td>{{ x.startdate | date }}</td>
                         <td>{{ x.enddate | date }}</td>
                         <td>{{ x.studentcount }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div ng-if="teams">
+            <h1 class="text-center">List of Available Schemas</h1>
+            <!-- tables of classes -->
+            <table class="ui celled table row-border hover order-column shadow-lg text-center" datatable="">
+                <caption class="text-primary">List of Available Schemas</caption>
+                <thead>
+                    <!-- join class row -->
+                    <!-- TODO: add functionality to join class button -->
+                    <tr>
+                        <td colspan="9">
+                            <button type="button" id="addRow" class="btn btn-outline-success btn-block btn-lg"
+                                data-toggle="modal" data-target="#joinClass">
+                                Join Class
+                            </button>
+                        </td>
+                    </tr>
+                    <!-- column headings -->
+                    <tr>
+                        <th style="width: 50%">Schema Names</th>
+                        <th style="width: 50%">Go To Schema</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{ currentUser.username }}</td>
+                        <td>
+                            <a href="" class="btn btn-success btn-block btn" role="button" ng-click="goToClass(currentUser.username)">
+                                Go To Schema {{ currentUser.username }}
+                            </a> 
+                        </td>
+                    </tr>
+                    <tr ng-repeat="team in teams">
+                        <td>{{ team.teamname }}</td>
+                        <td>
+                            <a href="" class="btn btn-success btn-block btn" role="button" ng-click="goToClass(team.teamname)">
+                                Go To Schema {{ team.teamname }}
+                            </a> 
+                        </td>
                     </tr>
                 </tbody>
             </table>

@@ -113,8 +113,8 @@ app.controller('teacherCtrl', ($scope, $http, $location, $window) => {
 
   /**
    * This function calls the /teacher/addTeam post method to create a ClassDB
-   *  team. While waiting to creation a message appears to let the user know to
-   *  wait.
+   *  team. While waiting for the creation of the team, a message appears to let
+   *  the user know that the class is being created and to wait.
    */
   $scope.addTeam = () => {
     $scope.error = false;
