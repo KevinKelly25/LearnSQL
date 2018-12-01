@@ -10,6 +10,22 @@
 
 const app = angular.module('LearnSQL', ['datatables']);
 
+app.directive('nagPrism', [function() {
+  return {
+      restrict: 'A',
+      scope: {
+          source: '@'
+      },
+      link: function(scope, element, attrs) {
+          scope.$watch('source', function(v) {
+              if(v) {
+                  Prism.highlightElement(element.find("code")[0]);
+              }
+          });
+      },
+      template: "<code ng-bind='source'></code>"
+  };
+}]);
 
 /**
  * This controller is used to dynamically display the navbar of the website

@@ -26,6 +26,8 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/dataTables.semanticui.min.css">
     <link rel="stylesheet" href="../../stylesheets/bootstrap.css">
     <link rel="stylesheet" href="../../stylesheets/student.css">
+    <link rel="stylesheet" href="../../stylesheets/prism.css">
+
 
 </head>
 <body ng-app="LearnSQL">
@@ -253,7 +255,7 @@
                                     <td class="col-9">{{ functionInfo[0].functionlanguage }}</td>
                                 </tr>
                                 <tr><td style="font-weight:bold;">Function Body</td></tr>
-                                <tr><td><p style="white-space: pre;text-align: left">{{ functionInfo[0].sourcecode }}</p></td></tr>
+                                <pre nag-prism source="{{ functionInfo[0].sourcecode }}" class="language-sql line-numbers"></pre>
                         </tbody>
                     </table>                      
                 </div>
@@ -321,6 +323,7 @@
     <script src="../../javascripts/angular-datatables.min.js"></script>
     <script src="../../javascripts/popper.min.js"></script>
     <script src="../../javascripts/bootstrap.min.js"></script>
+    <script src="../../javascripts/prism.js"></script>
 
 </body>
 </html>
