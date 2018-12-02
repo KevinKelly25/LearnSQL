@@ -255,7 +255,11 @@
                                     <td class="col-9">{{ functionInfo[0].functionlanguage }}</td>
                                 </tr>
                                 <tr><td style="font-weight:bold;">Function Body</td></tr>
-                                <pre nag-prism source="{{ functionInfo[0].sourcecode }}" class="language-sql line-numbers"></pre>
+                                <tr>
+                                    <td>
+                                        <pre nag-prism source="{{ functionInfo[0].sourcecode }}" class="language-sql line-numbers"></pre>
+                                    </td>
+                                </tr>
                         </tbody>
                     </table>                      
                 </div>
