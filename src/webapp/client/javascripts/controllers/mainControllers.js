@@ -1,7 +1,7 @@
 /**
  * mainControllers.js - LearnSQL
  *
- * Kevin Kelly
+ * Kevin Kelly, Michael Torres
  * Web Applications and Databases for Education (WADE)
  *
  * This file contains the Main angularJS controllers that are used throughout the
@@ -10,20 +10,24 @@
 
 const app = angular.module('LearnSQL', ['datatables']);
 
-app.directive('nagPrism', [function() {
+/**
+ * This provides the functionality of creating a new directive using the
+ *  .directive function syntaxHighlight
+ */
+app.directive('syntaxHighlight', [function () { // eslint-disable-line func-names
   return {
-      restrict: 'A',
-      scope: {
-          source: '@'
-      },
-      link: function(scope, element, attrs) {
-          scope.$watch('source', function(v) {
-              if(v) {
-                  Prism.highlightElement(element.find("code")[0]);
-              }
-          });
-      },
-      template: "<code ng-bind='source'></code>"
+    restrict: 'C', // determines that a directive can be used only on a class.
+    scope: {
+      source: '@', // @ reads the attribute value
+    },
+    link(scope, element) { // DOM manipulation
+      scope.$watch('source', (v) => {
+        if (v) {
+          Prism.highlightElement(element.find('code')[0]); // eslint-disable-line no-undef
+        }
+      });
+    },
+    template: "<code ng-bind='source'></code>",
   };
 }]);
 
