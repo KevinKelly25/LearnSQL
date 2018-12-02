@@ -79,13 +79,13 @@ BEGIN
 
     -- Return enrolled classes where the user is a teacher
     RETURN QUERY    
-    SELECT Class.ClassName, 
+    SELECT Class.ClassID, 
+           Class.ClassName, 
            Class.Section, 
            Class.Times, 
            Class.Days, 
            Class.StartDate,
            Class.EndDate,
-           Class.classID, 
            Class.StudentCount 
     FROM LearnSQL.Attends INNER JOIN LearnSQL.Class  
     ON Attends.ClassID = Class.ClassID  
@@ -107,13 +107,13 @@ BEGIN
   
   -- Return enrolled classes where the user is a student
     RETURN QUERY    
-    SELECT Class.ClassName, 
+    SELECT Class.ClassID, 
+           Class.ClassName, 
            Class.Section, 
            Class.Times, 
            Class.Days, 
            Class.StartDate,
            Class.EndDate,
-           Class.classID, 
            Class.StudentCount 
     FROM LearnSQL.Attends INNER JOIN LearnSQL.Class  
     ON Attends.ClassID = Class.ClassID  
