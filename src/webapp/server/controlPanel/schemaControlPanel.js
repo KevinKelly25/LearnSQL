@@ -9,7 +9,6 @@
  */
 
 
-const ldb = require('../db/ldb.js');
 const dbCreator = require('../db/cdb.js');
 const logger = require('../logs/winston.js');
 
@@ -28,27 +27,20 @@ const logger = require('../logs/winston.js');
  */
 function getObjects(req, res) {
   return new Promise((resolve, reject) => {
+    const db = dbCreator(req.body.class);
+
     // If user requesting to see object is not owner, test if requesting user is
     //  teacher of class
-    if (!req.body.username === req.user.username) {
-      ldb.any('SELECT Username '
-            + 'FROM LearnSQL.Attends '
-            + 'WHERE ClassID = $1 AND isTeacher = true',
-      [req.body.class])
+    if (req.body.username !== req.user.username) {
+      db.any('SELECT pg_catalog.has_schema_privilege($1, $2, \'USAGE\')',
+        [req.user.username, req.body.username])
         .then((result) => {
-        // Check if each teacher returned is the user requesting to see
-          let isTeacher = false;
-          result.forEach((element) => {
-            if (element === req.body.username) {
-              isTeacher = true;
-            }
-          });
-          if (isTeacher === false) {
+          if (!result[0].has_schema_privilege) {
             throw new Error('User Not Authorized');
           }
         })
         .catch((error) => {
-          // If normal error don't log it and send our appropriate response
+        // If normal error don't log it and send our appropriate response
           if (error === 'User Not Authorized') {
             reject(error);
           } else {
@@ -57,14 +49,14 @@ function getObjects(req, res) {
           }
         });
     }
+    // pg_catalog.has_schema_privilege(current_user, "name", 'CREATE')
     /**
-     * User is either teacher of class or owner of objects at this point
+     * User is either teacher of class or has access to objects at this point
      *  Get all objects from ClassDB view "MajorUserObjects" where
      *  username matches give username and schema matches username. This should
      *  always show user's private schema since learnSQL doesn't allow custom
      *  schema names
      */
-    const db = dbCreator(req.body.class);
     db.any('SELECT Name, Type '
          + 'FROM ClassDB.MajorUserObjects '
          + 'WHERE schemaname = $1',
