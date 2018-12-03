@@ -91,7 +91,7 @@
             <form>
                 <div class="form-group">
                     <label for="textarea1">Command History</label>
-                    <textarea class="form-control rounded-0 text-white" id="textarea1" cols="200" rows="10" ng-model="commandHistory" spellcheck="false" readonly></textarea>
+                    <textarea class="form-control rounded-0 text-white" id="textarea1" cols="200" rows="10" ng-model="commandHistory" spellcheck="false" scroll-glue readonly></textarea>
                     <div class="py-1">
                         <button type="button" class="btn btn-info btn-lg btn-block" ng-click="clearHistory()">Clear History</button>
                     </div>
@@ -151,6 +151,7 @@
   <script src="../../javascripts/angular-datatables.min.js"></script>
   <script src="../../javascripts/popper.min.js"></script>
   <script src="../../javascripts/bootstrap.min.js"></script>
+  <script src="../../javascripts/scrollglue.js"></script>
 
 </body>
 </html>

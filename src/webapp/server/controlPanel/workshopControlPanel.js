@@ -39,9 +39,7 @@ function getClasses(req, res) {
 
 function sendQuery(req, res) {
   return new Promise((resolve, reject) => {
-
-    //console.log(JSON.stringify(req.body));
-    //console.log("Req.body.classid: " + req.body.classID);
+    
     console.log("userQuery: " + req.body.userQuery);
 
     const db = dbCreator(req.body.classID);
@@ -61,8 +59,7 @@ function sendQuery(req, res) {
       })
 
       .catch((error_UserQuery) => {
-        logger.error(`sendQuery Query: \n${error_UserQuery}`);
-        reject(new Error('sendQuery failed: Unable to execute user query'));
+       reject(error_UserQuery.message);
       });
 
     })
