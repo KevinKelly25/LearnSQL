@@ -85,34 +85,44 @@ app.controller('workshopCtrl', ($scope, $http, $location) => {
         var attributeCharLength = findAttributeLength(queryResult[0]);
 
         var resultCharLength;
+
+        var widthInfo;
         
+        // Find the longest string for every row in a column
         for(i in data)
         {
-          console.log(`data[${i}]`);
           queryResult = data[i];
           resultCharLength = findResultCharLength(queryResult);
-          
         }
 
-        console.log("resultCharLength: ");
-        console.log(resultCharLength);
+        /*for(i in data)
+        {
+          console.log(`resultCharLength:`);
+          console.log(resultCharLength);
+          queryResult = data[i];
+          widthInfo = determineColumnWidth(queryResult, attributeCharLength, resultCharLength);
 
-        formattedAttributes = determineColumnWidth(attributeCharLength, resultCharLength)
-        separatorRow = formatSeparatorRow(formattedAttributes);
+        }*/
+
+        
+        separatorRow = formatSeparatorRow(widthInfo[1]); // Send formattedAttributes  //formatSeparatorRow(formattedAttributes);
 
         printToCommandHistory($scope.userQuery + '\n');
-
-        printHeader(queryResult, formattedAttributes, separatorRow);
+        printHeader(widthInfo[0], widthInfo[1], separatorRow);
 
         for(i in data)
         {
+         // queryResult = data[0];
+
+
           queryResult = data[i];
+          widthInfo = determineColumnWidth(queryResult, attributeCharLength, resultCharLength);
+
+          printToCommandHistory('\n');
           printRow(queryResult);
         }
-        
-        
-      
-
+                
+        nextCommandPrompt();
       })
 
       .error((error) => {
@@ -172,7 +182,7 @@ app.controller('workshopCtrl', ($scope, $http, $location) => {
     return resultCharLength;
   }
 
-  function determineColumnWidth(attributeCharLength, resultCharLength) {
+  function determineColumnWidth(queryResult, attributeCharLength, resultCharLength) {
 
     // Array to store the formatted (padded) attribute headers
     formattedAttributes = Object.keys(queryResult);
@@ -193,7 +203,7 @@ app.controller('workshopCtrl', ($scope, $http, $location) => {
       }
     }
 
-    return formattedAttributes;
+    return [queryResult, formattedAttributes];
   }
 
   function formatSeparatorRow(fromStringLength) {
@@ -240,11 +250,13 @@ app.controller('workshopCtrl', ($scope, $http, $location) => {
       $scope.commandHistory += " | " + queryResult[i];
     }
   
+    return;
+  }
+
+  function nextCommandPrompt() {
     printToCommandHistory(" | ");
 
     printToCommandHistory('\n\n' + $scope.classID + "=> ");
-
-    return;
   }
 
   function printToCommandHistory(input) {
