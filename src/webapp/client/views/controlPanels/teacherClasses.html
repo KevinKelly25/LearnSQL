@@ -119,34 +119,77 @@
                 </span>
                 <div class="modal-body">
                     <form>
+
                     <div class="form-group">
-                        <label for="recipient-name" class="col-form-label">Class Name:</label>
-                        <input type="text" class="form-control" ng-model="className">
+                        <label for="recipient-name" class="col-form-label" for="inlineFormInputGroup"></label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text"><ion-icon name="create"></ion-icon></div>
+                            </div>
+                            <input type="text" class="form-control" ng-model="className" placeholder="Class Name">
+                        </div>
                     </div>
+
                     <div class="form-group">
-                        <label for="recipient-name" class="col-form-label">Section:</label>
-                        <input type="text" class="form-control" ng-model="section">
+                        <label for="recipient-name" class="col-form-label" for="inlineFormInputGroup"></label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text"><ion-icon name="create"></ion-icon></div>
+                            </div>
+                            <input type="text" class="form-control" ng-model="section" placeholder="Section">
+                        </div>
                     </div>
+
                     <div class="form-group">
-                        <label for="recipient-name" class="col-form-label">Meeting Times:</label>
-                        <input type="text" class="form-control" ng-model="times">
+                        <label for="recipient-name" class="col-form-label" for="inlineFormInputGroup"></label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text"><ion-icon name="time"></ion-icon></div>
+                            </div>
+                            <input type="text" class="form-control" ng-model="times" placeholder="Meeting Times">
+                        </div>
                     </div>
+
                     <div class="form-group">
-                        <label for="recipient-name" class="col-form-label">Days:</label>
-                        <input type="text" class="form-control" ng-model="days">
+                        <label for="recipient-name" class="col-form-label" for="inlineFormInputGroup"></label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text"><ion-icon name="today"></ion-icon></div>
+                            </div>
+                            <input type="text" class="form-control" ng-model="days" placeholder="Days">
+                        </div>
                     </div>
+
                     <div class="form-group">
-                        <label for="recipient-name" class="col-form-label">Start Date:</label>
-                        <input type="text" class="form-control" ng-model="startDate">
+                        <label for="recipient-name" class="col-form-label" for="inlineFormInputGroup"></label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text"><ion-icon name="calendar"></ion-icon></div>
+                            </div>
+                            <input type="text" class="form-control" ng-model="startDate" placeholder="Start Date">
+                        </div>
                     </div>
+
                     <div class="form-group">
-                        <label for="recipient-name" class="col-form-label">End Date:</label>
-                        <input type="text" class="form-control" ng-model="endDate">
+                        <label for="recipient-name" class="col-form-label" for="inlineFormInputGroup"></label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text"><ion-icon name="calendar"></ion-icon></div>
+                            </div>
+                            <input type="text" class="form-control" ng-model="endDate" placeholder="End Date">
+                        </div>
                     </div>
+
                     <div class="form-group">
-                        <label for="recipient-name" class="col-form-label">Join Password:</label>
-                        <input type="password" class="form-control" ng-model="password">
+                        <label for="recipient-name" class="col-form-label" for="inlineFormInputGroup"></label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text"><ion-icon name="key"></ion-icon></div>
+                            </div>
+                            <input type="password" class="form-control" ng-model="password" placeholder="Password">
+                        </div>
                     </div>
+
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -310,6 +353,24 @@
     </section>
     <!-- End joinClass Modal -->
 
+    <!-- FOOTER -->
+    <footer id="main-footer" class="bg-light">
+        <div class="container">
+          <div class="row">
+            <div class="col text-center">
+              <div class="py-4">
+                <h1 id="learnSQLFooterHeader" class="h3">
+                  <a href="http://localhost:3000/" id="footer-header">LearnSQL</a>
+                </h1>
+                <p>Copyright &copy; 2018</p>
+                <a href="/views/contact.html" id="contact-us-button" class="btn btn-primary text-white shadow" role="button">Contact Us</a>
+              </div>
+            </div>
+          </div>
+        </div>
+    </footer>
+    <!-- END OF FOOTER -->
+
     <script src="../../javascripts/jquery.min.js"></script>
     <script src="../../javascripts/jquery.dataTables.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.6/angular.min.js"></script>
@@ -319,6 +380,7 @@
     <script src="../../javascripts/angular-datatables.min.js"></script>
     <script src="../../javascripts/popper.min.js"></script>
     <script src="../../javascripts/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/ionicons@4.4.8/dist/ionicons.js"></script>
 
 </body>
 </html>
