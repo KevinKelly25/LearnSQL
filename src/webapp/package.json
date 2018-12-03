@@ -23,6 +23,7 @@
   "homepage": "https://github.com/kptkarl/bootstrap4starter#readme",
   "dependencies": {
     "angular-datatables": "^0.6.4",
+    "angularjs-scroll-glue": "^2.2.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.3",
     "bootstrap": "^4.1.3",

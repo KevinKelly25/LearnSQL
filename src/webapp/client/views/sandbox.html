@@ -84,14 +84,14 @@
   <!-- END OF NAVBAR -->
 
   <!-- PAGE CONTENT -->
-  <section id="page-content" class="mt-5 container" ng-controller="workshopCtrl" data-ng-init="initClass()">
-    <div class="container">
+  <section id="page-content" ng-controller="workshopCtrl" data-ng-init="initClass()">
+    <div class="mx-5 container-fluid"> 
         <h1 class="text-center">{{ className }}'s database</h1>
         <div class="row">
             <form>
                 <div class="form-group">
                     <label for="textarea1">Command History</label>
-                    <textarea class="form-control rounded-0 text-white" id="textarea1" cols="200" rows="10" ng-model="commandHistory" readonly></textarea>
+                    <textarea class="form-control rounded-0 text-white" id="textarea1" cols="200" rows="10" ng-model="commandHistory" spellcheck="false" readonly></textarea>
                     <div class="py-1">
                         <button type="button" class="btn btn-info btn-lg btn-block" ng-click="clearHistory()">Clear History</button>
                     </div>
@@ -114,7 +114,7 @@
             <div class="row">
                 <div class="form-group">
                     <label for="textarea2"></label>
-                    <textarea class="form-control text-white" placeholder="Enter query here" id="textarea2" cols="200" rows="7" ng-model="userQuery"></textarea>
+                    <textarea class="form-control text-white" placeholder="Enter query here" id="textarea2" cols="200" rows="7" ng-model="userQuery" spellcheck="false"></textarea>
                     <div class="py-1">
                         <button type="button" class="btn btn-success btn-lg btn-block" ng-click="sendQuery()">{{ submitQuery_Button }}</button>
                     </div>

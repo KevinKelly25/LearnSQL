@@ -8,7 +8,7 @@
  * LearnSQL website
  */
 
-const app = angular.module('LearnSQL', ['datatables']);
+const app = angular.module('LearnSQL', ['datatables', 'luegg.directives']);
 
 
 /**
