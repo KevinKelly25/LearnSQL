@@ -45,7 +45,8 @@ app.controller('workshopCtrl', ($scope, $http, $location) => {
 
     // Check if the user entered a query
     if (typeof $scope.userQuery == 'undefined') {
-      printToCommandHistory("No query was entered. Try again.");
+      printToCommandHistory('\n' + "No query was entered. Try again.");
+      printToCommandHistory('\n\n' + $scope.classID + "=> ");
       $scope.submitQuery_Button = 'Run Code';  
       return;
     }
@@ -57,6 +58,9 @@ app.controller('workshopCtrl', ($scope, $http, $location) => {
 
     $http.post('/workshop/sendQuery', $scope.queryInfo)
       .success((data) => {
+
+        console.log("Client Query Result: ");
+        console.log(data);
 
         // If the entered query produced successful results and has no return value
         if(!Array.isArray(data) || !data.length)
@@ -70,10 +74,44 @@ app.controller('workshopCtrl', ($scope, $http, $location) => {
          * Limit the parsable results to only those of interest 
          *  (the query results)
          */  
-        queryResult = data[0];
+        //queryResult = data[0];
+
+        /*determineColumnWidth(compareStringLengths());
+        printQueryResultTable();*/
+
+        queryResult = data;
+        //console.log(queryResult.length);
+
+        var attributeCharLength = findAttributeLength(queryResult[0]);
+
+        var resultCharLength;
         
-        separatorRow = determineColumnWidth(compareStringLengths());
-        printQueryResultTable();
+        for(i in data)
+        {
+          console.log(`data[${i}]`);
+          queryResult = data[i];
+          resultCharLength = findResultCharLength(queryResult);
+          
+        }
+
+        console.log("resultCharLength: ");
+        console.log(resultCharLength);
+
+        formattedAttributes = determineColumnWidth(attributeCharLength, resultCharLength)
+        separatorRow = formatSeparatorRow(formattedAttributes);
+
+        printToCommandHistory($scope.userQuery + '\n');
+
+        printHeader(queryResult, formattedAttributes, separatorRow);
+
+        for(i in data)
+        {
+          queryResult = data[i];
+          printRow(queryResult);
+        }
+        
+        
+      
 
       })
 
@@ -89,7 +127,7 @@ app.controller('workshopCtrl', ($scope, $http, $location) => {
     $scope.commandHistory = `${$scope.classID}=> `;
   }
 
-  function findAttributeLength() {
+  function findAttributeLength(queryResult) {
     attributeCharLength = [];
 
     // Find the length of the characters for each attribute
@@ -101,7 +139,7 @@ app.controller('workshopCtrl', ($scope, $http, $location) => {
     return attributeCharLength;
   }
 
-  function findResultCharLength() {
+  function findResultCharLength(queryResult) {
 
     var resultCharLength = [];
 
@@ -116,17 +154,25 @@ app.controller('workshopCtrl', ($scope, $http, $location) => {
        */
       var currentResultString = String(queryResult[Object.keys(queryResult)[i]]);
 
-      // Get the length of the element
-      resultCharLength[i] = currentResultString.length;
+      // Get the length of the element and ensure the largest character length is assigned as the element
+      if(resultCharLength[i] < currentResultString.length)
+      {
+        resultCharLength[i] = currentResultString.length;
+      }
+      else if (resultCharLength[i] == null)
+      {
+        resultCharLength[i] = currentResultString.length;
+      }
+      else
+      {
+        continue;
+      }
     }
 
     return resultCharLength;
   }
 
-  function compareStringLengths() {
-
-    var attributeCharLength = findAttributeLength();
-    var resultCharLength = findResultCharLength();
+  function determineColumnWidth(attributeCharLength, resultCharLength) {
 
     // Array to store the formatted (padded) attribute headers
     formattedAttributes = Object.keys(queryResult);
@@ -150,7 +196,7 @@ app.controller('workshopCtrl', ($scope, $http, $location) => {
     return formattedAttributes;
   }
 
-  function determineColumnWidth(fromPreviousRow) {
+  function formatSeparatorRow(fromStringLength) {
     
     // Array to store the row which visually separates the attributes from the result rows
     separatorRow = [];
@@ -158,15 +204,13 @@ app.controller('workshopCtrl', ($scope, $http, $location) => {
     for(i = 0; i < Object.keys(queryResult).length; ++i)
     {
       // Set the formatting for the separator row using `psql` style
-      separatorRow[i] = "-" + "-".repeat(String(fromPreviousRow[i]).length) + "-+";
+      separatorRow[i] = "-" + "-".repeat(String(fromStringLength[i]).length) + "-+";
     }
     return separatorRow;
   }
 
-  function printQueryResultTable() {
-
-    printToCommandHistory($scope.userQuery + '\n');
-
+  function printHeader(queryResult, formattedAttributes, separatorRow) {
+  
     // Print the attributes of the query results
     for(i = 0; i < Object.keys(queryResult).length; ++i) 
     {
@@ -186,13 +230,16 @@ app.controller('workshopCtrl', ($scope, $http, $location) => {
     }
 
     printToCommandHistory('\n');
+  }
+
+  function printRow(queryResult) {
 
     // Print the rows of the query results
-    for (i in queryResult)
-    {
+    for (i in queryResult) 
+    { 
       $scope.commandHistory += " | " + queryResult[i];
     }
-
+  
     printToCommandHistory(" | ");
 
     printToCommandHistory('\n\n' + $scope.classID + "=> ");
