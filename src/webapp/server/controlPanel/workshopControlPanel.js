@@ -39,10 +39,8 @@ function getClasses(req, res) {
 
 function sendQuery(req, res) {
   return new Promise((resolve, reject) => {
-    
-    console.log("userQuery: " + req.body.userQuery);
 
-    const db = dbCreator(req.body.classID);
+    db = dbCreator(req.body.classID);
 
     // Set the current_user to access the user's tables
     db.oneOrNone('SET ROLE $1', [req.user.username],
@@ -51,17 +49,21 @@ function sendQuery(req, res) {
 
       db.any(req.body.userQuery)
       .then((result_UserQuery) => {
-        console.log("Query Result:");
-        console.log(result_UserQuery);
         resolve();
-        db.$pool.end(); // Closes the connection to the database
+        
+        // Closes the connection to the database
+        db.$pool.end(); 
+
+        // Force garbage collection to prevent multiple database objects for the same connection
+        db = null;
+
         return res.status(200).json(result_UserQuery);
       })
 
-      .catch((error_UserQuery) => {
+      .catch((error_UserQuery) => { 
        reject(error_UserQuery.message);
-      });
-
+      })
+      
     })
     .catch((error_Role) => {
       logger.error(`sendQuery Role: \n${error_Role}`);

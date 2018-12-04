@@ -42,6 +42,9 @@ app.controller('workshopCtrl', ($scope, $http, $location) => {
 
   $scope.formatQuery = () => {
 
+    // Check if the query is a PL/pgSQL function
+    console.log($scope.userQuery);
+
     // Array of the user input queries delimited by ';'
     userQueries = $scope.userQuery.split(';');
 
@@ -50,6 +53,9 @@ app.controller('workshopCtrl', ($scope, $http, $location) => {
     {
       // Remove newlines, tabs and other line breaks
       userQueries[i] = userQueries[i].replace(/(\r\n\t|\n|\r\t)/gm,"");
+
+      console.log(`Query: ${i}`);
+      console.log(userQueries[i]);
 
       if(userQueries[i] != "")
       {
@@ -77,9 +83,10 @@ app.controller('workshopCtrl', ($scope, $http, $location) => {
     $http.post('/workshop/sendQuery', $scope.queryInfo)
       .success((data) => {
 
-        // If the entered query produced successful results and has no return value
+        // If the entered query produced successful results, but has no return value
         if(!Array.isArray(data) || !data.length)
         {
+          printToCommandHistory(inputQuery + ";\n");
           printToCommandHistory('\n' + "Operation completed successfully");
           printToCommandHistory('\n\n' + $scope.classID + "=> ");
           return;
