@@ -28,6 +28,23 @@
     <link rel="stylesheet" href="../../stylesheets/bootstrap.css">
     <link rel="stylesheet" href="../../stylesheets/student.css">
 
+<style>
+            .modal-body { 
+   background-color: #45526e !important; 
+}
+
+.modal-header {
+    background-color: #45526e;
+}
+
+.modal-footer {
+    background-color: #45526e;
+}
+    body {
+    background-color: #f5f5f5;
+}
+</style>
+
 </head>
 <body ng-app="LearnSQL">
 
@@ -105,9 +122,8 @@
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-            
-                        <h5 class="modal-title" >Join Class</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <h5 class="modal-title text-light" >Join Class</h5>
+                        <button type="button" class="close text-light" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
@@ -128,23 +144,17 @@
                             <!-- Note: `type=date` is incompatible with Internet Explorer 11 -->
                             <div class="input-group input-group-lg">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text"> 
-                                        <span class="fa fa-group"></span>
-                                    </span>
-                                    <span class="input-group-text" id="inputGroup-sizing-lg">Class ID</span>
+                                    <div class="input-group-text"><ion-icon name="people"></ion-icon></div>
                                 </div>
-                                <input type="text" class="form-control" ng-model="classID">
+                                <input type="text" class="form-control" ng-model="classID" placeholder="Class ID">
                             </div> 
                             <div>&nbsp;</div>
 
                             <div class="input-group input-group-lg">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text"> 
-                                       <span class="fa fa-lock"></span>
-                                    </span>
-                                    <span class="input-group-text" id="inputGroup-sizing-lg">Join Password</span>
+                                    <div class="input-group-text"><ion-icon name="key"></ion-icon></div>
                                 </div>
-                                <input type="password" class="form-control" ng-model="classPassword">
+                                <input type="password" class="form-control" ng-model="classPassword" placeholder="Join Password">
                             </div>  
                         </form>
                     </div>
@@ -215,7 +225,7 @@
                             <a href="http://localhost:3000/">LearnSQL</a>
                         </h1>
                         <p>Copyright &copy; 2018</p>
-                        <a href="../views/contact.html" class="btn btn-primary text-white">Contact Us</a>
+                        <a href="/views/contact.html" class="btn btn-primary text-white">Contact Us</a>
                     </div>
                 </div>
             </div>
@@ -231,6 +241,7 @@
     <script src="../../javascripts/angular-datatables.min.js"></script>
     <script src="../../javascripts/popper.min.js"></script>
     <script src="../../javascripts/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/ionicons@4.4.8/dist/ionicons.js"></script>
 
 </body>
 </html>
