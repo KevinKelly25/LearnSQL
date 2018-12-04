@@ -12,6 +12,7 @@
 
 
 app.controller('workshopCtrl', ($scope, $http, $location) => {
+
   $scope.initClasses = () => {
     $http.get('/workshop/getClasses')
       .success((data) => {
@@ -26,6 +27,12 @@ app.controller('workshopCtrl', ($scope, $http, $location) => {
   $scope.initClass = () => {
     // Set the submit button text
     $scope.submitQuery_Button = 'Run Code';
+
+    $scope.SQL_Button = 'SQL';
+    $scope.PLpgSQL_Button = 'PL/pgSQL';
+
+    // Set the default language
+    $scope.language = 'SQL';
     
     // Get the classID to create the connection string to send queries 
     //  to the class's database
@@ -44,6 +51,8 @@ app.controller('workshopCtrl', ($scope, $http, $location) => {
 
     // Check if the query is a PL/pgSQL function
     console.log($scope.userQuery);
+    console.log("Langauge: ");
+    console.log($scope.language);
 
     // Array of the user input queries delimited by ';'
     userQueries = $scope.userQuery.split(';');
@@ -142,6 +151,12 @@ app.controller('workshopCtrl', ($scope, $http, $location) => {
       });
 
       $scope.submitQuery_Button = 'Run Code';
+  }
+
+  $scope.currentLanguage = (inputLanguage) => {
+    $scope.language = inputLanguage;
+    printToCommandHistory(" " + "Selected language: " + $scope.language + '\n');
+    nextCommandPrompt();
   }
 
   $scope.clearHistory = () => {

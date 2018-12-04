@@ -124,14 +124,10 @@
                         </div>
 
                         <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                            <label class="btn btn-secondary active">
-                                <input type="radio" name="options" id="languageSQL" autocomplete="off" checked> SQL
-                            </label>
-                            <label class="btn btn-secondary">
-                                <input type="radio" name="options" id="languagePLpgSQL" autocomplete="off"> PL/pgSQL
-                            </label>
+                            <button type="button" class="btn btn-secondary"  ng-click="currentLanguage('SQL')"> {{ SQL_Button }} </button>
+                            <button type="button" class="btn btn-secondary"  ng-click="currentLanguage('PL/pgSQL')"> {{ PLpgSQL_Button }} </button>
                         </div>
-                        
+
                     </div> 
                 </div>
             </div>
