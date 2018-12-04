@@ -70,54 +70,48 @@ app.controller('workshopCtrl', ($scope, $http, $location) => {
           return;
         }
 
+        printToCommandHistory($scope.userQuery + '\n\n');
+
         /**
          * Limit the parsable results to only those of interest 
          *  (the query results)
          */  
-        //queryResult = data[0];
-
-        /*determineColumnWidth(compareStringLengths());
-        printQueryResultTable();*/
 
         queryResult = data;
-        //console.log(queryResult.length);
 
         var attributeCharLength = findAttributeLength(queryResult[0]);
 
-        var resultCharLength;
-
-        var widthInfo;
+        var resultCharLength = [];
         
-        // Find the longest string for every row in a column
+        // Find the longest string for every column in each row
         for(i in data)
         {
           queryResult = data[i];
-          resultCharLength = findResultCharLength(queryResult);
+          resultCharLength[i] = storeColumnWidth(queryResult);
         }
 
-        /*for(i in data)
-        {
-          console.log(`resultCharLength:`);
-          console.log(resultCharLength);
-          queryResult = data[i];
-          widthInfo = determineColumnWidth(queryResult, attributeCharLength, resultCharLength);
+       // console.log("Before resultCharLength");
+       // console.log(resultCharLength);
+        resultCharLength = compareWidths(resultCharLength);
+       // console.log("After resultCharLength");
+       // console.log(resultCharLength);
 
-        }*/
-
+        formattedResults = [];
         
-        separatorRow = formatSeparatorRow(widthInfo[1]); // Send formattedAttributes  //formatSeparatorRow(formattedAttributes);
+        for(i in data)
+        {
+          queryResult = data[i];
+          formattedAttributes = setColumnWidth(queryResult, attributeCharLength, resultCharLength);
 
-        printToCommandHistory($scope.userQuery + '\n');
-        printHeader(widthInfo[0], widthInfo[1], separatorRow);
+        }
+        separatorRow = formatSeparatorRow(formattedAttributes);
+
+        printHeader(queryResult, formattedAttributes, separatorRow);
+
 
         for(i in data)
         {
-         // queryResult = data[0];
-
-
           queryResult = data[i];
-          widthInfo = determineColumnWidth(queryResult, attributeCharLength, resultCharLength);
-
           printToCommandHistory('\n');
           printRow(queryResult);
         }
@@ -149,7 +143,7 @@ app.controller('workshopCtrl', ($scope, $http, $location) => {
     return attributeCharLength;
   }
 
-  function findResultCharLength(queryResult) {
+  function storeColumnWidth(queryResult) {
 
     var resultCharLength = [];
 
@@ -163,26 +157,44 @@ app.controller('workshopCtrl', ($scope, $http, $location) => {
        *  with named indices.
        */
       var currentResultString = String(queryResult[Object.keys(queryResult)[i]]);
-
-      // Get the length of the element and ensure the largest character length is assigned as the element
-      if(resultCharLength[i] < currentResultString.length)
-      {
-        resultCharLength[i] = currentResultString.length;
-      }
-      else if (resultCharLength[i] == null)
-      {
-        resultCharLength[i] = currentResultString.length;
-      }
-      else
-      {
-        continue;
-      }
+      
+      resultCharLength[i] = currentResultString.length;
     }
 
     return resultCharLength;
   }
 
-  function determineColumnWidth(queryResult, attributeCharLength, resultCharLength) {
+  function compareWidths(resultCharLength) {
+
+    resultCharLength_Parsed = [];
+
+    // Store the largest string length in the first array of arrays
+      for(i = 0; i < Object.keys(resultCharLength).length; ++i)
+      {
+        subArray = resultCharLength[i];
+        for(j = 0; j < Object.keys(subArray).length; ++j)
+        {
+          
+          columnWidth = [];
+          for(k = 0; k < Object.keys(resultCharLength).length; ++k)
+          {       
+            // Find the max width by comparing rows in the same column 
+            columnWidth.push(resultCharLength[k][j]);           
+          }
+ 
+         // console.log("MAX:");
+         // console.log(Math.max(...columnWidth));
+          resultCharLength_Parsed.push(Math.max(...columnWidth));
+        }
+
+        break;
+      }
+      console.log(resultCharLength_Parsed);
+
+    return resultCharLength_Parsed;
+  }
+
+  function setColumnWidth(queryResult, attributeCharLength, resultCharLength) {
 
     // Array to store the formatted (padded) attribute headers
     formattedAttributes = Object.keys(queryResult);
@@ -190,23 +202,29 @@ app.controller('workshopCtrl', ($scope, $http, $location) => {
     // Determine the size of each column by comparing the arrays
     for(i = 0; i < Object.keys(queryResult).length; ++i)
     {
-      // Pad the end of the string with spaces to match the length of the attribute it corresponds with
+      // Pad the end of the column with spaces to match the length of the attribute it corresponds with
       if(attributeCharLength[i] > resultCharLength[i])
       {
         var currentResultString = String(queryResult[Object.keys(queryResult)[i]]);
         queryResult[Object.keys(queryResult)[i]] = currentResultString.padEnd(Number(attributeCharLength[i]));
+
       }
       else
       {
+        // If the attribute string is shorter, pad the end using the length of the longest string in the column
+        var currentResultString = String(queryResult[Object.keys(queryResult)[i]]);
+        queryResult[Object.keys(queryResult)[i]] = currentResultString.padEnd(Number(resultCharLength[i]));
+
         var currentAttributeString = String(formattedAttributes[i]);
         formattedAttributes[i] = currentAttributeString.padEnd(Number(resultCharLength[i]));
+
       }
     }
 
-    return [queryResult, formattedAttributes];
+    return formattedAttributes;
   }
 
-  function formatSeparatorRow(fromStringLength) {
+  function formatSeparatorRow(fromAttributeLength) {
     
     // Array to store the row which visually separates the attributes from the result rows
     separatorRow = [];
@@ -214,7 +232,7 @@ app.controller('workshopCtrl', ($scope, $http, $location) => {
     for(i = 0; i < Object.keys(queryResult).length; ++i)
     {
       // Set the formatting for the separator row using `psql` style
-      separatorRow[i] = "-" + "-".repeat(String(fromStringLength[i]).length) + "-+";
+      separatorRow[i] = "-" + "-".repeat(String(fromAttributeLength[i]).length) + "-+";
     }
     return separatorRow;
   }
@@ -239,7 +257,6 @@ app.controller('workshopCtrl', ($scope, $http, $location) => {
       $scope.commandHistory += separatorRow[i];
     }
 
-    printToCommandHistory('\n');
   }
 
   function printRow(queryResult) {
@@ -249,13 +266,13 @@ app.controller('workshopCtrl', ($scope, $http, $location) => {
     { 
       $scope.commandHistory += " | " + queryResult[i];
     }
+
+    printToCommandHistory(" | ");
   
     return;
   }
 
   function nextCommandPrompt() {
-    printToCommandHistory(" | ");
-
     printToCommandHistory('\n\n' + $scope.classID + "=> ");
   }
 
