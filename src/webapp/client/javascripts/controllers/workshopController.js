@@ -40,7 +40,25 @@ app.controller('workshopCtrl', ($scope, $http, $location) => {
     $scope.className = ($scope.classID.substr(0, $scope.classID.search("_"))).toUpperCase();
   };
 
-  $scope.sendQuery = () => {
+  $scope.formatQuery = () => {
+
+    // Array of the user input queries delimited by ';'
+    userQueries = $scope.userQuery.split(';');
+
+    // Send queries one at a time to be processed
+    for(i in userQueries)
+    {
+      // Remove newlines, tabs and other line breaks
+      userQueries[i] = userQueries[i].replace(/(\r\n\t|\n|\r\t)/gm,"");
+
+      if(userQueries[i] != "")
+      {
+        $scope.sendQuery(userQueries[i]);
+      }
+    }
+  }
+
+  $scope.sendQuery = (inputQuery) => {
     $scope.submitQuery_Button = 'Running Query . . .';
 
     // Check if the user entered a query
@@ -52,15 +70,12 @@ app.controller('workshopCtrl', ($scope, $http, $location) => {
     }
 
     $scope.queryInfo = {
-      userQuery: $scope.userQuery,
+      userQuery: inputQuery,
       classID: $scope.classID,
     };
 
     $http.post('/workshop/sendQuery', $scope.queryInfo)
       .success((data) => {
-
-        console.log("Client Query Result: ");
-        console.log(data);
 
         // If the entered query produced successful results and has no return value
         if(!Array.isArray(data) || !data.length)
@@ -70,12 +85,7 @@ app.controller('workshopCtrl', ($scope, $http, $location) => {
           return;
         }
 
-        printToCommandHistory($scope.userQuery + '\n\n');
-
-        /**
-         * Limit the parsable results to only those of interest 
-         *  (the query results)
-         */  
+        printToCommandHistory(inputQuery + ";\n\n");
 
         queryResult = data;
 
@@ -83,27 +93,27 @@ app.controller('workshopCtrl', ($scope, $http, $location) => {
 
         var resultCharLength = [];
         
-        // Find the longest string for every column in each row
+        // For each result row, find the length of each string
         for(i in data)
         {
           queryResult = data[i];
-          resultCharLength[i] = storeColumnWidth(queryResult);
+          resultCharLength[i] = storeColumnWidth(queryResult); 
         }
 
-       // console.log("Before resultCharLength");
-       // console.log(resultCharLength);
+        // Find the longest string in each column and store in an array
         resultCharLength = compareWidths(resultCharLength);
-       // console.log("After resultCharLength");
-       // console.log(resultCharLength);
 
         formattedResults = [];
         
+        // Set the width of each column to the longest string
         for(i in data)
         {
           queryResult = data[i];
           formattedAttributes = setColumnWidth(queryResult, attributeCharLength, resultCharLength);
-
         }
+
+        // Print the table
+
         separatorRow = formatSeparatorRow(formattedAttributes);
 
         printHeader(queryResult, formattedAttributes, separatorRow);
@@ -129,6 +139,10 @@ app.controller('workshopCtrl', ($scope, $http, $location) => {
 
   $scope.clearHistory = () => {
     $scope.commandHistory = `${$scope.classID}=> `;
+  }
+
+  $scope.clearQueries = () => {
+    $scope.userQuery = "";
   }
 
   function findAttributeLength(queryResult) {
@@ -182,15 +196,10 @@ app.controller('workshopCtrl', ($scope, $http, $location) => {
             columnWidth.push(resultCharLength[k][j]);           
           }
  
-         // console.log("MAX:");
-         // console.log(Math.max(...columnWidth));
           resultCharLength_Parsed.push(Math.max(...columnWidth));
         }
-
         break;
       }
-      console.log(resultCharLength_Parsed);
-
     return resultCharLength_Parsed;
   }
 

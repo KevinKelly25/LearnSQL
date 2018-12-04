@@ -1,7 +1,7 @@
 <!--
   sandbox.html - LearnSQL
 
-  Michael Torres
+  Christopher Innaco, Michael Torres
   Web Applications and Databases for Education (WADE)
 
   This file contains the sandbox for writing queries and displaying results
@@ -86,14 +86,15 @@
   <!-- PAGE CONTENT -->
   <section id="page-content" ng-controller="workshopCtrl" data-ng-init="initClass()">
     <div class="mx-5 container-fluid"> 
-        <h1 class="text-center">{{ className }}'s database</h1>
+        <h2 class="text-center">{{ className }}'s database</h2>
         <div class="row">
             <form>
                 <div class="form-group">
-                    <label for="textarea1">Command History</label>
-                    <textarea class="form-control rounded-0 text-white" id="textarea1" cols="200" rows="10" ng-model="commandHistory" spellcheck="false" scroll-glue readonly></textarea>
+                    <textarea class="form-control rounded-0 text-white" id="commandHistory" cols="200" rows="17" ng-model="commandHistory" spellcheck="false" style="white-space: nowrap;" scroll-glue readonly></textarea>
                     <div class="py-1">
-                        <button type="button" class="btn btn-info btn-lg btn-block" ng-click="clearHistory()">Clear History</button>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-warning btn-lg" ng-click="clearHistory()">Clear History</button>
+                        </div>
                     </div>
                 </div>
             </form>
@@ -113,10 +114,13 @@
         <form>
             <div class="row">
                 <div class="form-group">
-                    <label for="textarea2"></label>
-                    <textarea class="form-control text-white" placeholder="Enter query here" id="textarea2" cols="200" rows="7" ng-model="userQuery" spellcheck="false"></textarea>
+                    <label for="userQuery"></label>
+                    <textarea class="form-control text-white" placeholder="Enter query here . . ." id="userQuery" cols="200" rows="7" ng-model="userQuery" spellcheck="false"></textarea>
                     <div class="py-1">
-                        <button type="button" class="btn btn-success btn-lg btn-block" ng-click="sendQuery()">{{ submitQuery_Button }}</button>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-success btn-lg" ng-click="formatQuery()">{{ submitQuery_Button }}</button>
+                            <button type="button" class="btn btn-info btn-lg" ng-click="clearQueries()">Clear</button>
+                        </div>
                     </div>
                 </div>
             </div>
