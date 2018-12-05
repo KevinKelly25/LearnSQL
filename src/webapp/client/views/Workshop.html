@@ -12,7 +12,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8"/>
-    <title>Learn</title>
+    <title>Workshop</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
@@ -56,7 +56,7 @@
                     </span>
                     <span ng-show="currentUser.isstudent">
                         <li class="nav-item active">
-                            <a href="/views/controlPanels/students.html" class="nav-link px-4 pl-4">Classes</a>
+                            <a href="/views/controlPanels/studentClasses.html" class="nav-link px-4 pl-4">Classes</a>
                         </li>
                     </span>
                     <span ng-show="!currentUser">
@@ -92,6 +92,7 @@
 
     <!-- PAGE CONTENT -->
     <section id="page-content" class="mt-5 container" ng-controller="workshopCtrl" data-ng-init="initClasses()">
+        <h1 class="display-3 text-center">Workshop</h1>
         <!-- table of classes -->
         <div ng-if="classes">
             <table class="ui celled table row-border hover order-column shadow-lg text-center" datatable="">

@@ -39,36 +39,32 @@ function getClasses(req, res) {
 
 function sendQuery(req, res) {
   return new Promise((resolve, reject) => {
-
-    db = dbCreator(req.body.classID);
+    let db = dbCreator(req.body.classID);
 
     // Set the current_user to access the user's tables
-    db.oneOrNone('SET ROLE $1', [req.user.username],
-    )
-    .then(() => {
+    db.oneOrNone('SET ROLE $1', [req.user.username])
+      .then(() => {
+        db.any(req.body.userQuery)
+          .then((resultUserQuery) => {
+            resolve();
 
-      db.any(req.body.userQuery)
-      .then((result_UserQuery) => {
-        resolve();
-        
-        // Closes the connection to the database
-        db.$pool.end(); 
+            // Closes the connection to the database
+            db.$pool.end();
 
-        // Force garbage collection to prevent multiple database objects for the same connection
-        db = null;
+            // Force garbage collection to prevent multiple database objects for the same connection
+            db = null;
 
-        return res.status(200).json(result_UserQuery);
+            return res.status(200).json(resultUserQuery);
+          })
+
+          .catch((errorUserQuery) => {
+            reject(errorUserQuery.message);
+          });
       })
-
-      .catch((error_UserQuery) => { 
-       reject(error_UserQuery.message);
-      })
-      
-    })
-    .catch((error_Role) => {
-      logger.error(`sendQuery Role: \n${error_Role}`);
-      reject(new Error('sendQuery failed: Cannot set role'));
-    });
+      .catch((errorRole) => {
+        logger.error(`sendQuery Role: \n${errorRole}`);
+        reject(new Error('sendQuery failed: Cannot set role'));
+      });
   });
 }
 

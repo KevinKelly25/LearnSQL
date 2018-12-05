@@ -86,17 +86,16 @@
   <!-- PAGE CONTENT -->
   <section id="page-content" ng-controller="workshopCtrl" data-ng-init="initClass()">
     <div class="container-fluid">
-
-            
-        <h2 class="text-center">{{ className }}'s database</h2>
+      
+        <h1 class="display-5 text-center">{{ className }}'s database</h1>
 
         <div class="row pb-2">
             <div class="col mx-auto">
-                <textarea class="form-control rounded-0 text-white" id="commandHistory" rows="16" cols="200" ng-model="commandHistory" spellcheck="false" scroll-glue readonly></textarea>               
+                <textarea class="form-control rounded-0 text-white" id="commandHistory" scroll-glue cols="1000" rows="16" ng-model="commandHistory" spellcheck="false" onfocus="this.blur()" readonly></textarea>               
             </div>
         </div>
 
-        <div class="row pb-2">
+        <div class="row pb-4">
             <form>
                 <div class="col mx-auto"> 
                     <div class="btn-group">
@@ -104,22 +103,11 @@
                     </div>
                 </div>
             </form>
-        </div>      
-
-        <!-- <span ng-show="error">
-            <div class="alert alert-danger">
-                {{ message }}
-            </div>
-        </span>
-        <span ng-show="success">
-            <div class="alert alert-success">
-                {{ message }}
-            </div>
-        </span> -->
+        </div>
 
         <div class="row pb-2">
             <div class="col mx-auto">
-                <textarea class="form-control rounded-0 text-white" placeholder="Enter query here . . ." id="userQuery" rows="5" cols="200" ng-model="userQuery" spellcheck="false" autofocus></textarea>        
+                <textarea class="form-control rounded-0 text-white" placeholder="Enter query here . . ." id="userQuery" cols="200" rows="5" ng-model="userQuery" spellcheck="false" autofocus></textarea>        
             </div>  
         </div>
 

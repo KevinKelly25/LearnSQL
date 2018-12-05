@@ -51,7 +51,7 @@ router.get('/class/', (req, res) => {
 });
 
 /**
- * This route enables user defined queries from the `sandbox.html` page to be 
+ * This route enables user defined queries from the `sandbox.html` page to be
  *  sent to a specifed database
  */
 router.post('/sendQuery', authHelpers.loginRequired, (req, res) => workshopHelpers.sendQuery(req, res)
