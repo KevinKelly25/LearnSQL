@@ -114,10 +114,10 @@
         <!-- end of contact page description -->
 
         <!-- contact form section -->
-        <div class="contact-form-section container mt-4">
+        <div class="contact-form-section container mt-4 mb-5">
             <div class="row">
                 <!-- contact form -->
-                <div class="contact-form container-fluid" ng-controller="ContactCtrl">
+                <div class="contact-form container-fluid" style="width: 60rem;" ng-controller="ContactCtrl">
                     <div class="card contact-form-background-color">
                         <div class="card-body">
                             <h3 class="text-center text-white">Please fill out this form to contact us</h3>
@@ -138,42 +138,35 @@
                             </span>
 
                             <form>
-
-                                <div class="row">
-                                    <!-- full name-->
-                                    <div class="col-md-6">
-                                        <div class="form-group">
+                                <div class="d-flex flex-row">
+                                    <div class="d-flex flex-column flex-fill">
+                                        <!-- full name-->
+                                        <div class="form-group w-100">
                                             <input type="name" class="form-control" ng-model="fullName" placeholder="Full Name" required>
                                         </div>
-                                    </div>
-                                    <!-- end of full name -->
+                                        <!-- end of full name -->
 
-                                    <!-- email -->
-                                    <div class="col-md-6">
-                                        <div class="form-group">
+                                        <!-- email -->
+                                        <div class="form-group w-100">
                                             <input type="email" class="form-control" ng-model="email" placeholder="Email" required>
                                         </div>
-                                    </div>
-                                    <!-- end of email -->
+                                        <!-- end of email -->
+                                    </div>                                                                           
 
-                                </div>
-
-                                <!-- message -->
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <textarea name="message" class="form-control" ng-model="clientMessage" placeholder="Message" required></textarea>
+                                    <div class="d-flex flex-column align-items-stretch flex-fill pl-5">
+                                        <!-- message -->
+                                        <div class="d-flex form-group">
+                                            <textarea rows="5" name="message" class="form-control" ng-model="clientMessage" placeholder="Message" required></textarea>
                                         </div>
+                                        <!-- end of message -->
+
+                                        <!-- submit message button -->
+                                        <div class="d-flex">
+                                            <button type="submit" value="submit" class="btn btn-outline-danger btn-block form-control" ng-click="submit()">Submit</button>
+                                        </div>
+                                        <!-- end of submit message button -->
                                     </div>
                                 </div>
-                                <!-- end of message -->
-
-                                <!-- submit message button -->
-                                <div class="col-md-12">
-                                    <button type="submit" value="submit" class="btn btn-outline-danger btn-block form-control" ng-click="submit()">Submit</button>
-                                </div>
-                                <!-- end of submit message button -->
-
                             </form>
 
                         </div>
@@ -187,7 +180,7 @@
     <!-- END OF PAGE CONTENT -->
 
     <!-- FOOTER -->
-    <footer id="main-footer" class="bg-light mt-3 fixed-bottom">
+    <footer id="main-footer" class="bg-light mt-5">
         <div class="container">
             <div class="row">
                 <div class="col text-center">
