@@ -15,12 +15,15 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>LearnSQL</title>
   <link rel="stylesheet" href="../../stylesheets/style.css" media="screen">
-  <link rel="stylesheet" href="../../stylesheets/font-awesome.min.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css"
+        integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp"
+        crossorigin="anonymous">
   <link rel="stylesheet" href="../../stylesheets/bootstrap.css">
   <link rel="stylesheet" href="../../stylesheets/angular-datatables.css">
   <link href='https://fonts.googleapis.com/css?family=Alegreya:400,700,700i' rel='stylesheet'>
   <link href="https://fonts.googleapis.com/css?family=Merriweather:400,700" rel="stylesheet">
   <link rel="stylesheet" href="../../stylesheets/signIn.css">
+  <link rel="shortcut icon" href="../imgs/database-solid..png" type="image/png" />
 </head>
 <body ng-app="LearnSQL">
 
@@ -29,6 +32,7 @@
     <div class="container-fluid">
       <!-- NAVBAR HEADER -->
       <h2 class="font-weight-bold">
+        <img src="../imgs/database-solid..png" alt="db" style="width: 26px; height: 20px;">
         <a href="http://localhost:3000/" class="navbar-brand text-primary">LearnSQL</a>
       </h2>
       <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
@@ -105,7 +109,7 @@
                   <label for="inputEmail" class="sr-only" for="inlineFormInputGroup">Username</label>
                   <div class="input-group mb-2">
                     <div class="input-group-prepend">
-                      <div class="input-group-text">@</div>
+                      <div class="input-group-text"><i class="fas fa-user"></i></div>
                     </div>
                     <input type="name" class="form-control " ng-model="username" placeholder="Username" required autofocus>
                   </div>
@@ -113,7 +117,7 @@
                   <label for="inputPassword" class="sr-only" for="inlineFormInputGroup">Password</label>
                   <div class="input-group mb-2">
                     <div class="input-group-prepend">
-                      <div class="input-group-text"><ion-icon name="key"></ion-icon></div>
+                      <div class="input-group-text"><i class="fas fa-lock"></i></div>
                     </div>
                     <input type="password" class="form-control" ng-model="password" placeholder="Password" required>
                   </div>
@@ -201,24 +205,6 @@
     </div>
   </section>
 
-  <!-- FOOTER -->
-  <footer id="main-footer" class="bg-light mt-5">
-    <div class="container">
-      <div class="row">
-        <div class="col text-center">
-          <div class="py-4">
-            <h1 id="learnSQLFooterHeader" class="h3">
-              <a href="http://localhost:3000/" id="footer-header">LearnSQL</a>
-            </h1>
-            <p>Copyright &copy; 2018</p>
-            <a href="/views/contact.html" id="contact-us-button" class="btn btn-primary text-white shadow" role="button">Contact Us</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </footer>
-  <!-- END OF FOOTER -->
-
   <script src="../../javascripts/jquery.min.js"></script>
   <script src="../../javascripts/jquery.dataTables.min.js"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.6/angular.min.js"></script>
@@ -227,7 +213,6 @@
   <script src="../../javascripts/angular-datatables.min.js"></script>
   <script src="../../javascripts/popper.min.js"></script>
   <script src="../../javascripts/bootstrap.min.js"></script>
-  <script src="https://unpkg.com/ionicons@4.4.8/dist/ionicons.js"></script>
 
 </body>
 </html>

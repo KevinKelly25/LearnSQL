@@ -27,6 +27,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/dataTables.semanticui.min.css">
     <link rel="stylesheet" href="../stylesheets/bootstrap.css">
     <link rel="stylesheet" href="../stylesheets/student.css">
+    <link rel="shortcut icon" href="../views/imgs/database-solid..png" type="image/png" />
 </head>
 <body ng-app="LearnSQL">
 
@@ -35,6 +36,7 @@
         <div class="container-fluid">
             <!-- navbar header -->
             <h2 class="font-weight-bold">
+                <img src="./imgs/database-solid..png" alt="db" style="width: 26px; height: 20px;">
                 <a href="http://localhost:3000/" class="navbar-brand text-primary">LearnSQL</a>
             </h2>
             <!-- end of navbar header -->
@@ -55,7 +57,7 @@
                     </span>
                     <span ng-show="currentUser.isstudent">
                         <li class="nav-item active">
-                            <a href="/views/controlPanels/students.html" class="nav-link px-4 pl-4">Classes</a>
+                            <a href="/views/controlPanels/studentClasses.html" class="nav-link px-4 pl-4">Classes</a>
                         </li>
                     </span>
                     <span ng-show="!currentUser">
@@ -126,24 +128,6 @@
         </div>
     </section>
     <!-- END OF PAGE CONTENT -->
-
-    <!-- footer -->
-    <footer id="main-footer" class="bg-light fixed-bottom">
-        <div class="container">
-            <div class="row">
-                <div class="col text-center">
-                    <div class="py-4">
-                        <h1 class="h3">
-                            <a href="http://localhost:3000/">LearnSQL</a>
-                        </h1>
-                        <p>Copyright &copy; 2018</p>
-                        <a href="../views/contact.html" class="btn btn-primary text-white">Contact Us</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </footer>
-    <!-- end of footer-->
 
     <script src="../../javascripts/jquery.min.js"></script>
     <script src="../../javascripts/jquery.dataTables.min.js"></script>
