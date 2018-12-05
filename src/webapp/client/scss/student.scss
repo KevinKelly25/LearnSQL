@@ -14,6 +14,18 @@ body {
   font-size: 16px;
 }
 
+.modal-body { 
+  background-color: #45526e !important; 
+}
+
+.modal-header {
+  background-color: #45526e;
+}
+
+.modal-footer {
+  background-color: #45526e;
+}
+
 // overrides the font of the navbar brand "LearnSQL"
 .navbar-brand {
   font-size: 20px;
