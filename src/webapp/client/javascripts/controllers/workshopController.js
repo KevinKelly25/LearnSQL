@@ -33,6 +33,7 @@ app.controller('workshopCtrl', ($scope, $http, $location) => {
 
     // Set the default language
     $scope.language = 'SQL';
+   // $scope.currentLanguage($scope.language);
     
     // Get the classID to create the connection string to send queries 
     //  to the class's database
@@ -49,40 +50,47 @@ app.controller('workshopCtrl', ($scope, $http, $location) => {
 
   $scope.formatQuery = () => {
 
-    // Check if the query is a PL/pgSQL function
-    console.log($scope.userQuery);
-    console.log("Langauge: ");
-    console.log($scope.language);
+    // Check if the user entered a query
+    if (typeof $scope.userQuery == 'undefined' || $scope.userQuery === "") {
+      printToCommandHistory('\n' + "No query was entered. Try again.");
+      nextCommandPrompt();
+      $scope.submitQuery_Button = 'Run Code';  
+      return;
+    }
 
-    // Array of the user input queries delimited by ';'
-    userQueries = $scope.userQuery.split(';');
-
-    // Send queries one at a time to be processed
-    for(i in userQueries)
+    // Check if the query is SQL or PL/pgSQL
+    if($scope.language === 'SQL') 
     {
-      // Remove newlines, tabs and other line breaks
-      userQueries[i] = userQueries[i].replace(/(\r\n\t|\n|\r\t)/gm,"");
+      // Array of the user input queries delimited by ';'
+      userQueries = $scope.userQuery.split(';');
 
-      console.log(`Query: ${i}`);
-      console.log(userQueries[i]);
-
-      if(userQueries[i] != "")
+      // Send queries one at a time to be processed
+      for(i in userQueries)
       {
-        $scope.sendQuery(userQueries[i]);
+        // Remove newlines, tabs and other line breaks
+        userQueries[i] = userQueries[i].replace(/(\r\n\t|\n|\r\t)/gm,"");
+
+        if(userQueries[i] != "")
+        {
+          $scope.sendQuery(userQueries[i]);
+        }
+      }
+    }
+    else
+    {
+      // If the language uses procedural extensions, do not use semicolons to delimit
+      userQuery = String($scope.userQuery);
+
+      if(userQuery != "")
+      {
+          $scope.sendQuery(userQuery);
       }
     }
   }
 
   $scope.sendQuery = (inputQuery) => {
-    $scope.submitQuery_Button = 'Running Query . . .';
 
-    // Check if the user entered a query
-    if (typeof $scope.userQuery == 'undefined') {
-      printToCommandHistory('\n' + "No query was entered. Try again.");
-      printToCommandHistory('\n\n' + $scope.classID + "=> ");
-      $scope.submitQuery_Button = 'Run Code';  
-      return;
-    }
+    $scope.submitQuery_Button = 'Running Query . . .';
 
     $scope.queryInfo = {
       userQuery: inputQuery,
@@ -96,7 +104,7 @@ app.controller('workshopCtrl', ($scope, $http, $location) => {
         if(!Array.isArray(data) || !data.length)
         {
           printToCommandHistory(inputQuery + ";\n");
-          printToCommandHistory('\n' + "Operation completed successfully");
+          printToCommandHistory('\n' + "Operation completed successfully (No returned rows)");
           printToCommandHistory('\n\n' + $scope.classID + "=> ");
           return;
         }
@@ -108,33 +116,39 @@ app.controller('workshopCtrl', ($scope, $http, $location) => {
         var attributeCharLength = findAttributeLength(queryResult[0]);
 
         var resultCharLength = [];
-        
+     
         // For each result row, find the length of each string
         for(i in data)
         {
           queryResult = data[i];
           resultCharLength[i] = storeColumnWidth(queryResult); 
         }
-
+ 
         // Find the longest string in each column and store in an array
         resultCharLength = compareWidths(resultCharLength);
-
+  
         formattedResults = [];
         
-        // Set the width of each column to the longest string
+        /**
+         * Compare the length of the longest result string to the length of the attribute,
+         *  then set the column width to the larger of the two values
+         */
         for(i in data)
         {
           queryResult = data[i];
           formattedAttributes = setColumnWidth(queryResult, attributeCharLength, resultCharLength);
         }
-
-        // Print the table
-
+ 
+        /** 
+         * Format the `psql`-style separator row to visually divide attributes from results 
+         *  based on the determined column widths
+         */
         separatorRow = formatSeparatorRow(formattedAttributes);
 
+        // Print the formatted attributes and separator row
         printHeader(queryResult, formattedAttributes, separatorRow);
 
-
+        // Print the formatted query results
         for(i in data)
         {
           queryResult = data[i];
@@ -273,19 +287,15 @@ app.controller('workshopCtrl', ($scope, $http, $location) => {
     // Print the attributes of the query results
     for(i = 0; i < Object.keys(queryResult).length; ++i) 
     {
-      $scope.commandHistory += " | " + formattedAttributes[i];
+      printToCommandHistory(" | " + formattedAttributes[i]);
     }
 
-    printToCommandHistory(" | ");
-
-    printToCommandHistory('\n');
-
-    $scope.commandHistory += " +";
+    printToCommandHistory(" | " + '\n' + " +");
 
     // Print the separator row
     for(i = 0; i < separatorRow.length; ++i) 
     {
-      $scope.commandHistory += separatorRow[i];
+      printToCommandHistory(separatorRow[i]);
     }
 
   }
@@ -295,7 +305,7 @@ app.controller('workshopCtrl', ($scope, $http, $location) => {
     // Print the rows of the query results
     for (i in queryResult) 
     { 
-      $scope.commandHistory += " | " + queryResult[i];
+      printToCommandHistory(" | " + queryResult[i]);
     }
 
     printToCommandHistory(" | ");
