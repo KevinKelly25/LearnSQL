@@ -84,8 +84,8 @@ BEGIN
               FROM LearnSQL.Class_t INNER JOIN LearnSQL.Attends
               ON Attends.classID = Class_t.classID
               WHERE Attends.userName = $3
-              AND Class_t.className = $5
-              AND Class_t.section = $6
+              AND Class_t.className = LOWER($5)
+              AND Class_t.section = LOWER($6)
             ) 
   THEN 
     RAISE EXCEPTION 'Section And Class Name Already Exists!';
