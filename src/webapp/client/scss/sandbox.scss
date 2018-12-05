@@ -1,7 +1,7 @@
 /* ---------------------------------------------------
   sandbox.scss - LearnSQL
 
-  Michael Torres
+  Christopher Innaco, Michael Torres
   Web Applications and Databases for Education (WADE)
 
   This file contains the Scss for the sandbox.html page
@@ -10,9 +10,15 @@
 #commandHistory {
   font-family: 'Consolas', 'Lucida Consolas', 'Lucida Sans Regular';
   background-color: black;
+  white-space: nowrap;
+  width:100%; 
+  height:100%;
 }
 
 #userQuery {
   font-family: 'Consolas', 'Lucida Consolas', 'Lucida Sans Regular';
   background-color: black;
+  white-space: nowrap;
+  width:100%; 
+  height:100%;
 }
