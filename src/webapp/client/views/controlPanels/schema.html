@@ -1,7 +1,7 @@
 <!--
   schema.html - LearnSQL
 
-  Kevin Kelly
+  Kevin Kelly, Michael Torres
   Web Applications and Databases for Education (WADE)
 
   This file contains the html view of a user's schema
@@ -26,6 +26,8 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/dataTables.semanticui.min.css">
     <link rel="stylesheet" href="../../stylesheets/bootstrap.css">
     <link rel="stylesheet" href="../../stylesheets/student.css">
+    <link rel="stylesheet" href="../../stylesheets/prism.css">
+
 
 </head>
 <body ng-app="LearnSQL">
@@ -183,7 +185,10 @@
                             </tr>
                             <tr class="d-flex" >
                                 <td class="col-2" style="font-weight:bold;">Definition</td>
-                                <td class="col-10">{{ viewInfo[0].definition }}</td>
+                                <td>
+                                    <pre  source="{{ viewInfo[0].definition }}" class="language-sql line-numbers syntax-highlight"></pre>
+                                </td>
+
                             </tr>
                     </tbody>
                 </table>
@@ -253,7 +258,11 @@
                                     <td class="col-9">{{ functionInfo[0].functionlanguage }}</td>
                                 </tr>
                                 <tr><td style="font-weight:bold;">Function Body</td></tr>
-                                <tr><td><p style="white-space: pre;text-align: left">{{ functionInfo[0].sourcecode }}</p></td></tr>
+                                <tr>
+                                    <td>
+                                        <pre  source="{{ functionInfo[0].sourcecode }}" class="language-sql line-numbers syntax-highlight"></pre>
+                                    </td>
+                                </tr>
                         </tbody>
                     </table>                      
                 </div>
@@ -304,7 +313,7 @@
                             </tr>
                             <tr class="d-flex" >
                                 <td class="col-2" style="font-weight:bold;">Definition</td>
-                                <td class="col-10">{{ indexInfo[0].indexdefinition }}</td>
+                                <td source="{{ indexInfo[0].indexdefinition }}" class="col-10 language-sql syntax-highlight"></td>
                             </tr>
                         </tbody>
                     </table>                      
@@ -322,6 +331,7 @@
     <script src="../../javascripts/popper.min.js"></script>
     <script src="../../javascripts/bootstrap.min.js"></script>
     <script src="../../javascripts/scrollglue.js"></script>
+    <script src="../../javascripts/prism.js"></script>
 
 </body>
 </html>

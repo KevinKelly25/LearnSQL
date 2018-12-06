@@ -41,13 +41,13 @@ CREATE OR REPLACE FUNCTION LearnSQL.getClasses(
   userName  LearnSQL.UserData_t.UserName%Type,
   isTeacher BOOLEAN DEFAULT FALSE)
 RETURNS TABLE (
+                ClassID       LearnSQL.Class_t.classID%Type,
                 ClassName     LearnSQL.Class_t.ClassName%Type,
                 Section       LearnSQL.Class_t.Section%Type,
                 Times         LearnSQL.Class_t.Times%Type,
                 Days          LearnSQL.Class_t.Days%Type,
                 StartDate     LearnSQL.Class_t.StartDate%Type,
                 EndDate       LearnSQL.Class_t.EndDate%Type,
-                classID       LearnSQL.Class_t.classID%Type,
                 StudentCount  LearnSQL.Class.StudentCount%Type
               ) 
 AS
@@ -79,13 +79,13 @@ BEGIN
 
     -- Return enrolled classes where the user is a teacher
     RETURN QUERY    
-    SELECT Class.ClassName, 
+    SELECT Class.ClassID, 
+           Class.ClassName, 
            Class.Section, 
            Class.Times, 
            Class.Days, 
            Class.StartDate,
            Class.EndDate,
-           Class.classID, 
            Class.StudentCount 
     FROM LearnSQL.Attends INNER JOIN LearnSQL.Class  
     ON Attends.ClassID = Class.ClassID  
@@ -107,13 +107,13 @@ BEGIN
   
   -- Return enrolled classes where the user is a student
     RETURN QUERY    
-    SELECT Class.ClassName, 
+    SELECT Class.ClassID, 
+           Class.ClassName, 
            Class.Section, 
            Class.Times, 
            Class.Days, 
            Class.StartDate,
            Class.EndDate,
-           Class.classID, 
            Class.StudentCount 
     FROM LearnSQL.Attends INNER JOIN LearnSQL.Class  
     ON Attends.ClassID = Class.ClassID  

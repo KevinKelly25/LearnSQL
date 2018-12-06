@@ -46,6 +46,21 @@ router.get('/getClasses', authHelpers.loginRequired, (req, res) => studentHelper
 
 
 /**
+ * This method returns class information from a ClassDB database. Most
+ *  functionality is in `studentControlPanel.js` getClass function.
+ *
+ * @param {string} classID The classID of the class the teams are in
+ * @return Http response on of all teams student is in for a given class
+ */
+router.post('/getTeams', authHelpers.loginRequired, (req, res) => {
+  studentHelpers.getTeams(req, res)
+    .catch((err) => {
+      handleResponse(res, 500, err);
+    });
+});
+
+
+/**
  * This method adds a student to a ClassDB database as well as Attends table.
  *  Most functionality is in `studentControlPanel.js` addStudent function.
  *
