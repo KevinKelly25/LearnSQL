@@ -188,7 +188,10 @@
                             </tr>
                             <tr class="d-flex" >
                                 <td class="col-2" style="font-weight:bold;">Definition</td>
-                                <td class="col-10">{{ viewInfo[0].definition }}</td>
+                                <td>
+                                    <pre  source="{{ viewInfo[0].definition }}" class="language-sql line-numbers syntax-highlight"></pre>
+                                </td>
+
                             </tr>
                     </tbody>
                 </table>
