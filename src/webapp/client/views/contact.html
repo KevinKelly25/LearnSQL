@@ -57,12 +57,17 @@
                     </span>
                     <span ng-show="currentUser.isteacher">
                         <li class="nav-item">
-                          <a href="../views/controlPanels/teacherClasses.html" class="nav-link border-left border-right px-4">Classes</a>
+                            <a href="/views/controlPanels/teacherClasses.html" class="nav-link border-right px-4">Class Info</a>
                         </li>
                     </span>
-                    <span ng-show   ="currentUser.isstudent">
+                    <span ng-show="currentUser.isstudent">
+                    <li class="nav-item">
+                        <a href="/views/controlPanels/studentClasses.html" class="nav-link border-right px-4">Classes</a>
+                    </li>
+                    </span>
+                    <span ng-show="currentUser && !currentUser.isteacher && !currentUser.isstudent">
                         <li class="nav-item">
-                            <a href="../views/controlPanels/studentClasses.html" class="nav-link border-left border-right px-4">Classes</a>
+                        <a href="/views/controlPanels/joinClass.html" class="nav-link border-right px-4">Classes</a>
                         </li>
                     </span>
                     <span ng-show="currentUser.isadmin">
@@ -210,4 +215,15 @@
     </footer>
     <!-- END OF FOOTER -->
 
+    <script src="../javascripts/jquery.min.js"></script>
+    <script src="../javascripts/jquery.dataTables.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.6/angular.min.js"></script>
+    <script src="../javascripts/controllers/mainControllers.js"></script>
+    <script src="../javascripts/controllers/contactController.js"></script>
+    <script src="../javascripts/angular-datatables.min.js"></script>
+    <script src="../javascripts/popper.min.js"></script>
+    <script src="../javascripts/bootstrap.min.js"></script>
+    <script src="../javascripts/scrollglue.js"></script>
+
+</body>
 </html>

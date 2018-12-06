@@ -1,7 +1,7 @@
 /**
  * workshop.js - LearnSQL
  *
- * Michael Torres
+ * Christopher Innaco, Michael Torres
  * Web Applications and Databases for Education (WADE)
  *
  * This file sets up the http routes associated with getting classes
@@ -49,5 +49,23 @@ router.get('/class/', (req, res) => {
     __dirname, '..', '..', 'client', 'views', 'sandbox.html',
   ));
 });
+
+/**
+ * This route enables user defined queries from the `sandbox.html` page to be
+ *  sent to a specifed database
+ */
+router.post('/sendQuery', authHelpers.loginRequired, (req, res) => workshopHelpers.sendQuery(req, res)
+  .catch((err) => {
+    handleResponse(res, 500, err);
+  }));
+
+/**
+ * This route is executed when the user navigates away from the `sandbox.html` page
+ *  in order to close the database connection pool
+ */
+router.post('/closeConnection', authHelpers.loginRequired, (req, res) => workshopHelpers.closeConnection(req, res)
+  .catch((err) => {
+    handleResponse(res, 500, err);
+  }));
 
 module.exports = router;
