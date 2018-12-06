@@ -66,6 +66,17 @@ p {
   background-color: $primary-color; 
 }
 
+body {
+  padding-bottom: 200px;
+}
+
+footer {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+}
+
 @media screen and (max-height: 450px) {
   .sidebar {
     padding-top: 15px;
