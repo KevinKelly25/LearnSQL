@@ -57,12 +57,17 @@
                     </span>
                     <span ng-show="currentUser.isteacher">
                         <li class="nav-item">
-                          <a href="../views/controlPanels/teacherClasses.html" class="nav-link border-left border-right px-4">Classes</a>
+                            <a href="/views/controlPanels/teacherClasses.html" class="nav-link border-right px-4">Class Info</a>
                         </li>
                     </span>
-                    <span ng-show   ="currentUser.isstudent">
+                    <span ng-show="currentUser.isstudent">
+                    <li class="nav-item">
+                        <a href="/views/controlPanels/studentClasses.html" class="nav-link border-right px-4">Classes</a>
+                    </li>
+                    </span>
+                    <span ng-show="currentUser && !currentUser.isteacher && !currentUser.isstudent">
                         <li class="nav-item">
-                            <a href="../views/controlPanels/studentClasses.html" class="nav-link border-left border-right px-4">Classes</a>
+                        <a href="/views/controlPanels/joinClass.html" class="nav-link border-right px-4">Classes</a>
                         </li>
                     </span>
                     <span ng-show="currentUser.isadmin">

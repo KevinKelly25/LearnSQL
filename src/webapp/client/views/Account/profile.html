@@ -47,14 +47,19 @@
                     <a href="/views/learn/select.html" id="learn-tab" class="nav-link border-right px-4">Learn</a>
                 </li>
                 <span ng-show="currentUser.isteacher">
-                  <li class="nav-item">
-                    <a href="/views/controlPanels/teacherClasses.html" class="nav-link border-right px-4">Classes</a>
-                  </li>
+                    <li class="nav-item">
+                        <a href="/views/controlPanels/teacherClasses.html" class="nav-link border-right px-4">Class Info</a>
+                    </li>
                 </span>
                 <span ng-show="currentUser.isstudent">
-                  <li class="nav-item">
+                <li class="nav-item">
                     <a href="/views/controlPanels/studentClasses.html" class="nav-link border-right px-4">Classes</a>
-                  </li>
+                </li>
+                </span>
+                <span ng-show="currentUser && !currentUser.isteacher && !currentUser.isstudent">
+                    <li class="nav-item">
+                    <a href="/views/controlPanels/joinClass.html" class="nav-link border-right px-4">Classes</a>
+                    </li>
                 </span>
                 <span ng-show="!currentUser">
                     <li class="nav-item">
@@ -339,8 +344,6 @@
 
     <!-- End Dynamic Alert messages -->
 
-
-
     <script src="../../javascripts/jquery.min.js"></script>
     <script src="../../javascripts/jquery.dataTables.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.6/angular.min.js"></script>
@@ -363,7 +366,7 @@
                         <a href="http://localhost:3000/" class="text-primary">LearnSQL</a>
                     </h1>
                     <p>Copyright &copy; 2018</p>
-                    <a href="contact.html" class="btn btn-primary text-white shadow" role="button">Contact Us</a>
+                    <a href="../contact.html" class="btn btn-primary text-white shadow" role="button">Contact Us</a>
                 </div>
             </div>
         </div>
