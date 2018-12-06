@@ -7,7 +7,6 @@
  * This file contains the angularJS controllers that are used throughout the
  * LearnSQL website
  */
-/* eslint-disable no-param-reassign */
 
 /**
  * This controller is used to display and use the login operations

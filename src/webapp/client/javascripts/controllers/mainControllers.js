@@ -48,7 +48,7 @@ app.controller('NavCtrl', ($scope, $http, $window) => {
   $scope.logout = () => {
     $http.get('/auth/logout')
       .success(() => {
-        $window.location.href = 'http://localhost:3000';// eslint-disable-line no-param-reassign
+        $window.location.href = 'http://localhost:3000';
       });
   };
 

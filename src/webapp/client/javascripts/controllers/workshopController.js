@@ -8,8 +8,6 @@
  *  log into their class database.
  */
 
-/* eslint-disable no-param-reassign */
-
 
 app.controller('workshopCtrl', ($scope, $http, $location) => {
   $scope.initClasses = () => {

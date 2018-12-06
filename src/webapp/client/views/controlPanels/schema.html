@@ -167,9 +167,9 @@
                     <tbody>
                         <!-- display all rows of the table -->
                         <tr ng-repeat="rows in tableResult">
-                            <td>{{ $index + 1 }}</td>
+                            <td style="vertical-align: middle">{{ $index + 1 }}</td>
                             <!-- display all attribute values of the row -->
-                            <td ng-repeat="attribute in rows">{{ attribute }}</td>
+                            <td ng-repeat="attribute in rows" style="vertical-align: middle">{{ attribute }}</td>
                         </tr>
                     </tbody>
                 </table>
