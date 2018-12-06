@@ -199,9 +199,9 @@
                 <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" >Remove Class</h5>
+                            <h5 class="modal-title text-light" >Remove Class</h5>
                 
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <button type="button" class="close text-light" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
@@ -216,8 +216,8 @@
                                 </div>
                         </span>
                         <div class="modal-body">
-                            <h3>Are You sure you want to remove {{ dropClass.name }} ?</h3>
-                            <p> <span class="font-weight-bold text-primary">WARNING:</span> Database cannot be recovered if removed</p>
+                            <h3 class="text-light">Are You sure you want to remove {{ dropClass.name }} ?</h3>
+                            <p class="text-light"> <span class="font-weight-bold text-danger">WARNING:</span> Database cannot be recovered if removed</p>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
