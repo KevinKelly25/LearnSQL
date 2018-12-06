@@ -18,7 +18,7 @@ Here is the process explained in technical terms of the structure of the product
 
 * The `/views/controlPanels/joinClass.html` page is loaded from the webserver which uses the `studentCtrl` AngularJS controller
 * When the `Join Class` button is clicked, AngularJS reveals the modal using the `ng-show` attribute.
-* When the user clicks the `Join Class` button within the modal after entering the required information, the controller sends an HTTP POST request using the `/student/joinClass` route
+* When the user clicks the `Join Class` button within the modal after entering the required information, the controller sends an HTTP `POST` request using the `/student/joinClass` route
 * This route calls the middleware `addStudent()` function which resides in the `studentControlPanel.js` file
 * In this function, a call to the `LearnSQL.joinClass()` PL/pgSQL function is made using the class information specified in the modal and using database credentials found in the `.env` file.
 * Based on the result of the query, a success message or error code is returned and is displayed in the modal.
