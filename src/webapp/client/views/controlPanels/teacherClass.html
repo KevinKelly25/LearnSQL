@@ -173,41 +173,123 @@
                     </tr>
             </tbody>
         </table>
-        <div ng-if="class" class="py-5">
-           <!-- tables of classes -->
-            <table class="ui celled table row-border hover order-column shadow-lg text-center"
-              datatable="">
-                <caption class="text-primary">List of All Students in {{ classInfo[0].classname }}</caption>
-                <thead>
-                    <tr>
-                      <td colspan="8"><h2 class="text-center">Students</h2></td>
-                    </tr>
-                    <!-- column headings -->
-                    <tr>
-                        <th></th>
-                        <th>Username</th>
-                        <th>DDL Count</th>
-                        <th>Last DDL Operation</th>
-                        <th>Last DDL Object</th>
-                        <th>Last DDL Activity At</th>
-                        <th>Connection Count</th>
-                        <th>Last Connection At</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr ng-repeat="x in class">
-                        <td>{{ $index + 1 }}</td>
-                        <td><a ng-href="http://localhost:3000/schema/#?username={{x.username}}&classID={{classInfo[0].classid}}" style="color:blue;">{{ x.username }}</a></td>
-                        <td>{{ x.ddlcount }}</td>
-                        <td>{{ x.lastddloperation }}</td>
-                        <td>{{ x.lastddlobject }}</td>
-                        <td>{{ x.lastddlactivityat }}</td>
-                        <td>{{ x.connectioncount }}</td>
-                        <td>{{ x.lastconnectionat }}</td>
-                    </tr>
-                </tbody>
-            </table>
+        <div ng-if="students" class="py-5">
+           <div class="pb-5">
+                <!-- table of students -->
+                <table class="ui celled table row-border hover order-column shadow-lg text-center"
+                datatable="">
+                    <caption class="text-primary">List of All Students in {{ classInfo[0].classname }}</caption>
+                    <thead>
+                        <tr>
+                        <td colspan="8"><h2 class="text-center">Students</h2></td>
+                        </tr>
+                        <!-- column headings -->
+                        <tr>
+                            <th></th>
+                            <th>Username</th>
+                            <th>DDL Count</th>
+                            <th>Last DDL Operation</th>
+                            <th>Last DDL Object</th>
+                            <th>Last DDL Activity At</th>
+                            <th>Connection Count</th>
+                            <th>Last Connection At</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="student in students">
+                            <td>{{ $index + 1 }}</td>
+                            <td><a ng-href="http://localhost:3000/schema/#?username={{student.username}}&classID={{classInfo[0].classid}}" style="color:blue;">{{ student.username }}</a></td>
+                            <td>{{ student.ddlcount }}</td>
+                            <td>{{ student.lastddloperation }}</td>
+                            <td>{{ student.lastddlobject }}</td>
+                            <td>{{ student.lastddlactivityat }}</td>
+                            <td>{{ student.connectioncount }}</td>
+                            <td>{{ student.lastconnectionat }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+           </div>
+
+            <!-- tables of classes -->
+            <div class="py-5">
+                <table class="ui celled table row-border hover order-column shadow-lg text-center"
+                datatable="2">
+                    <caption class="text-primary">List of All Teams in {{ classInfo[0].classname }}</caption>
+                    <thead>
+                        <tr>
+                        <td colspan="8"><h2 class="text-center">Teams</h2></td>
+                        <tr>
+                            <td colspan="8">
+                                <button type="button" class="btn btn-outline-success btn-block btn-lg"
+                                data-toggle="modal" data-target="#addTeam">
+                                    Add Team
+                                </button> 
+                            </td>
+                        </tr>
+                        </tr>
+                        <!-- column headings -->
+                        <tr>
+                            <th></th>
+                            <th>Team Name</th>
+                            <th>Full Name</th>
+                            <th>Number of Members</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="team in teams">
+                            <td>{{ $index + 1 }}</td>
+                            <td><a ng-href="http://localhost:3000/schema/#?username={{team.teamname}}&classID={{classInfo[0].classid}}" style="color:blue;">{{ team.teamname }}</a></td>
+                            <td>{{ team.fullname }}</td>
+                            <td>{{ team.membercount }}</td>
+                        </tr>
+                    </tbody>
+                </table>    
+            </div>
         </div>
+
+        <!-- addTeam Modal -->
+        <div class="modal fade" id="addTeam" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                <div class="modal-header">
+        
+                    <h5 class="modal-title" >Add Team</h5>
+        
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                
+                <span ng-show="error">
+                        <div class="alert alert-danger">
+                            {{ message }}
+                        </div>
+                    </span>
+                    <span ng-show="success">
+                        <div class="alert alert-success">
+                            {{ message }}
+                        </div>
+                </span>
+                <div class="modal-body">
+                    <form>
+                    <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">Team Name:</label>
+                        <input type="text" class="form-control" ng-model="teamName">
+                    </div>
+                    <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">Team Full Name:</label>
+                        <input type="text" class="form-control" ng-model="teamFullName">
+                    </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" ng-click="addTeam()">Add Team</button>
+                </div>
+                </div>
+            </div>
+        </div>
+        <!-- End addClass Modal -->
     </section>
     <!-- END OF PAGE CONTENT -->
 
