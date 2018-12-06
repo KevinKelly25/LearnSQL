@@ -98,8 +98,8 @@
 
   	<!-- Page Content -->
     <section id="page-content" class="mt-5 container" ng-controller="studentCtrl">
-        <table class="ui celled table row-border hover order-column shadow-lg text-center"
-              datatable="">
+        <h1 class="text-center text-primary font-weight-bold">Student's Classes</h1>
+        <table class="ui celled table row-border hover order-column shadow-lg text-center" datatable="">
                 <caption class="text-primary">List of classes</caption>
                 <thead>
                     <!-- Join class row -->
@@ -138,8 +138,8 @@
                     <div class="modal-content">
                         <div class="modal-header">
                 
-                            <h5 class="modal-title" >Join Class</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <h5 class="modal-title text-light" >Join Class</h5>
+                            <button type="button" class="close text-light" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
@@ -160,23 +160,17 @@
                                 <!-- Note: `type=date` is incompatible with Internet Explorer 11 -->
                                 <div class="input-group input-group-lg">
                                     <div class="input-group-prepend">
-                                        <span class="input-group-text"> 
-                                            <span class="fa fa-group"></span>
-                                        </span>
-                                        <span class="input-group-text" id="inputGroup-sizing-lg">Class ID</span>
+                                        <div class="input-group-text"><i class="fa fa-group"></i></div>
                                     </div>
-                                    <input type="text" class="form-control" ng-model="classID">
+                                    <input type="text" class="form-control" ng-model="classID" placeholder="Class ID">
                                 </div> 
                                 <div>&nbsp;</div>
     
                                 <div class="input-group input-group-lg">
                                     <div class="input-group-prepend">
-                                        <span class="input-group-text"> 
-                                           <span class="fa fa-lock"></span>
-                                        </span>
-                                        <span class="input-group-text" id="inputGroup-sizing-lg">Join Password</span>
+                                        <div class="input-group-text"><i class="fa fa-lock pr-2"></i></div>
                                     </div>
-                                    <input type="password" class="form-control" ng-model="classPassword">
+                                    <input type="password" class="form-control" ng-model="classPassword" placeholder="Class Password">
                                 </div>  
                             </form>
                         </div>
@@ -199,6 +193,7 @@
   <script src="../../javascripts/angular-datatables.min.js"></script>
   <script src="../../javascripts/popper.min.js"></script>
   <script src="../../javascripts/bootstrap.min.js"></script>
+  <script src="../../javascripts/scrollglue.js"></script>
 
 </body>
 </html>

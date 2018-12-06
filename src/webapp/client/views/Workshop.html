@@ -1,7 +1,7 @@
 <!--
-  Workshop.html - LearnSQL
+  workshop.html - LearnSQL
 
-  Kevin Kelly
+  Kevin Kelly, Michael Torres
   Web Applications and Databases for Education (WADE)
 
   This file contains the html view of the workshops they are currently 
@@ -12,7 +12,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8"/>
-    <title>Learn</title>
+    <title>Workshop</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
@@ -27,7 +27,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/dataTables.semanticui.min.css">
     <link rel="stylesheet" href="../stylesheets/bootstrap.css">
     <link rel="stylesheet" href="../stylesheets/student.css">
-
+    <link rel="shortcut icon" href="../views/imgs/database-solid..png" type="image/png" />
 </head>
 <body ng-app="LearnSQL">
 
@@ -36,6 +36,7 @@
         <div class="container-fluid">
             <!-- navbar header -->
             <h2 class="font-weight-bold">
+                <img src="./imgs/database-solid..png" alt="db" style="width: 26px; height: 20px;">
                 <a href="http://localhost:3000/" class="navbar-brand text-primary">LearnSQL</a>
             </h2>
             <!-- end of navbar header -->
@@ -51,12 +52,17 @@
                     </li>
                     <span ng-show="currentUser.isteacher">
                         <li class="nav-item">
-                          <a href="/views/controlPanels/teacherClasses.html" class="nav-link px-4 pl-4">Class Info</a>
+                            <a href="/views/controlPanels/teacherClasses.html" class="nav-link border-right px-4">Class Info</a>
                         </li>
                     </span>
                     <span ng-show="currentUser.isstudent">
-                        <li class="nav-item active">
-                            <a href="/views/controlPanels/students.html" class="nav-link px-4 pl-4">Classes</a>
+                    <li class="nav-item">
+                        <a href="/views/controlPanels/studentClasses.html" class="nav-link border-right px-4">Classes</a>
+                    </li>
+                    </span>
+                    <span ng-show="currentUser && !currentUser.isteacher && !currentUser.isstudent">
+                        <li class="nav-item">
+                        <a href="/views/controlPanels/joinClass.html" class="nav-link border-right px-4">Classes</a>
                         </li>
                     </span>
                     <span ng-show="!currentUser">
@@ -69,6 +75,9 @@
                           <a href="/views/controlPanels/admin.html" class="nav-link border-right px-4">Admin Control Panel</a>
                         </li>
                     </span>
+                    <li class="nav-item active">
+                        <a href="/src/webapp/client/views/Workshop.html" class="nav-link shadow-lg bg-primary text-white border-right px-4">Workshop</a>
+                    </li>
                     <span ng-show="currentUser">
                         <li class="nav-item">
                             <a href="/views/Account/profile.html" class="nav-link border-right px-4">Profile</a>
@@ -88,21 +97,53 @@
     <!-- END OF NAVBAR -->
 
     <!-- PAGE CONTENT -->
-    <section id="page-content" class="mt-5 container">
-      <div>
-        <h1>Will list of all workshop spaces the user is currently in</h1>
-      </div>
+    <section id="page-content" class="mt-5 container" ng-controller="workshopCtrl" data-ng-init="initClasses()">
+        <h1 class="text-center font-weight-bold text-primary">Workshop</h1>
+        <!-- table of classes -->
+        <div ng-if="classes">
+            <table class="ui celled table row-border hover order-column shadow-lg text-center" datatable="">
+                <caption class="text-primary">List of databases</caption>
+                <thead>
+                    <!-- column headings -->
+                    <tr>
+                        <th></th>
+                        <th>Class name</th>
+                        <th>Section</th>
+                        <th>Times</th>
+                        <th>Days</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="x in classes">
+                        <td>{{ $index + 1 }}</td>
+                        <td>
+                            <a ng-href="/workshop/class/#?class={{x.classid}}" style="color:blue;">
+                                {{ x.classname }}
+                            </a>
+                        </td>
+                        <td>{{ x.section }}</td>
+                        <td>{{ x.times }}</td>
+                        <td>{{ x.days }}</td>
+                        <td>{{ x.startdate | date }}</td>
+                        <td>{{ x.enddate | date }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </section>
     <!-- END OF PAGE CONTENT -->
 
-    <script src="../javascripts/jquery.min.js"></script>
-    <script src="../javascripts/jquery.dataTables.min.js"></script>
+    <script src="../../javascripts/jquery.min.js"></script>
+    <script src="../../javascripts/jquery.dataTables.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.6/angular.min.js"></script>
-    <script src="../javascripts/controllers/mainControllers.js"></script>
-    <script src="../javascripts/controllers/tableController.js"></script>
-    <script src="../javascripts/angular-datatables.min.js"></script>
-    <script src="../javascripts/popper.min.js"></script>
-    <script src="../javascripts/bootstrap.min.js"></script>
+    <script src="../../javascripts/controllers/mainControllers.js"></script>
+    <script src="../../javascripts/controllers/workshopController.js"></script>
+    <script src="../../javascripts/angular-datatables.min.js"></script>
+    <script src="../../javascripts/popper.min.js"></script>
+    <script src="../../javascripts/bootstrap.min.js"></script>
+    <script src="../../javascripts/scrollglue.js"></script>
 
 </body>
 </html>

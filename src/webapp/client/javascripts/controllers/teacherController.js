@@ -7,7 +7,6 @@
  * This file contains the angularJS controller used for the teacher functionality
  *  on the LearnSQL website
  */
-/* eslint-disable no-param-reassign */
 
 // Converts the date from PostgreSQL format to readable format
 function convertDate(inputDateString) {
@@ -48,17 +47,18 @@ app.controller('teacherCtrl', ($scope, $http, $location, $window) => {
   $scope.initClass = () => {
     $scope.classInfo = {
       className: ($location.search().class).toLowerCase(),
+      section: $location.search().section,
     };
 
     $http.post('/teacher/getStudents', $scope.classInfo)
       .success((data) => {
-        data.forEach((element) => {
+        data.students.forEach((element) => {
           element.lastddlactivityat = convertDate(element.lastddlactivityat);
         });
-        $scope.class = data;
+        $scope.teams = data.teams;
+        $scope.students = data.students;
       });
 
-    $scope.test = 'help';
     $http.post('/teacher/getClassInfo', $scope.classInfo)
       .success((data) => {
         data.forEach((element) => {
@@ -96,6 +96,43 @@ app.controller('teacherCtrl', ($scope, $http, $location, $window) => {
         .success(() => {
           $scope.success = true;
           $scope.message = 'Class Successfully Created';
+          $window.location.reload();
+        })
+        .error((error) => {
+          $scope.success = false;
+          $scope.error = true;
+          $scope.message = error;
+        });
+    } else {
+      $scope.message = 'Invalid Characters Detected! Please Use only the following '
+                       + 'characters: A-Z, 0-9, - only (case insensitive)';
+    }
+  };
+
+
+  /**
+   * This function calls the /teacher/addTeam post method to create a ClassDB
+   *  team. While waiting for the creation of the team, a message appears to let
+   *  the user know that the class is being created and to wait.
+   */
+  $scope.addTeam = () => {
+    $scope.error = false;
+    $scope.success = true;
+    $scope.message = 'Team Being Created, Please Wait';
+
+    $scope.team = {
+      classID: $scope.classInfo[0].classid,
+      teamName: $scope.teamName,
+      teamFullName: $scope.teamFullName,
+    };
+
+    // Make sure that is a valid name
+    const regex = new RegExp('^[a-zA-Z0-9_]*$');
+    if (regex.test($scope.class.teamName)) {
+      $http.post('/teacher/addTeam', $scope.team)
+        .success(() => {
+          $scope.success = true;
+          $scope.message = 'Team Successfully Created';
           $window.location.reload();
         })
         .error((error) => {

@@ -15,6 +15,7 @@
     const adminRoutes = require('../routes/admin');
     const teacherRoutes = require('../routes/teacher');
     const studentRoutes = require('../routes/student');
+    const workshopRoutes = require('../routes/workshop');
 
     // *** register routes *** //
     app.use('/', routes);
@@ -22,5 +23,7 @@
     app.use('/admin', adminRoutes);
     app.use('/teacher', teacherRoutes);
     app.use('/student', studentRoutes);
+    app.use('/workshop', workshopRoutes);
+
   };
 }(module.exports));

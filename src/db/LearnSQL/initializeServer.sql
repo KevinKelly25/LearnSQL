@@ -23,16 +23,28 @@ BEGIN
 END
 $$;
 
--- Create App-specific superuser 
+-- Create App-specific role
 DO
 $$
 BEGIN
+  -- Ensure the necessary classdb_admin role was already added. 
+  IF NOT EXISTS (
+                  SELECT * FROM pg_catalog.pg_roles
+                  WHERE rolname = 'classdb_admin'
+                ) 
+  THEN
+      RAISE EXCEPTION 'classdb_admin role should already exist'
+            USING HINT = 'Please ensure ClassDB template has already been set up';
+  END IF;
+
+  -- Create user for role based access control on LearnSQL
   IF NOT EXISTS (
                   SELECT * FROM pg_catalog.pg_roles
                   WHERE rolname = 'learnsql'
                 ) 
   THEN
-      CREATE USER learnsql WITH SUPERUSER;
+      CREATE USER learnsql WITH CREATEDB CREATEROLE;
+      GRANT classdb_admin to learnsql;
   END IF;
 END
 $$;

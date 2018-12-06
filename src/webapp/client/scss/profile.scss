@@ -17,9 +17,6 @@ $secondary-color: #45526e;
   background-color: $primary-color; 
 }
 
-#page-title {
-  color: $primary-color; }
-
 h1 {
   padding-bottom: 10px;
 }
@@ -67,6 +64,17 @@ p {
 
 #contact-us-button {
   background-color: $primary-color; 
+}
+
+body {
+  padding-bottom: 200px;
+}
+
+footer {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
 }
 
 @media screen and (max-height: 450px) {

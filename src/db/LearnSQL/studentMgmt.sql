@@ -26,8 +26,8 @@ BEGIN
 END
 $$;
 
---Suppress NOTICEs for this script only, this will not apply to functions
--- defined within. This hides unimportant, and possibly confusing messages.
+-- Suppress NOTICEs for this script only, this will not apply to functions
+--  defined within. This hides unimportant, and possibly confusing messages.
 SET LOCAL client_min_messages TO WARNING;
 
 
@@ -41,13 +41,13 @@ CREATE OR REPLACE FUNCTION LearnSQL.getClasses(
   userName  LearnSQL.UserData_t.UserName%Type,
   isTeacher BOOLEAN DEFAULT FALSE)
 RETURNS TABLE (
+                ClassID       LearnSQL.Class_t.classID%Type,
                 ClassName     LearnSQL.Class_t.ClassName%Type,
                 Section       LearnSQL.Class_t.Section%Type,
                 Times         LearnSQL.Class_t.Times%Type,
                 Days          LearnSQL.Class_t.Days%Type,
                 StartDate     LearnSQL.Class_t.StartDate%Type,
                 EndDate       LearnSQL.Class_t.EndDate%Type,
-                classID       LearnSQL.Class_t.classID%Type,
                 StudentCount  LearnSQL.Class.StudentCount%Type
               ) 
 AS
@@ -79,13 +79,13 @@ BEGIN
 
     -- Return enrolled classes where the user is a teacher
     RETURN QUERY    
-    SELECT Class.ClassName, 
+    SELECT Class.ClassID, 
+           Class.ClassName, 
            Class.Section, 
            Class.Times, 
            Class.Days, 
            Class.StartDate,
            Class.EndDate,
-           Class.classID, 
            Class.StudentCount 
     FROM LearnSQL.Attends INNER JOIN LearnSQL.Class  
     ON Attends.ClassID = Class.ClassID  
@@ -107,13 +107,13 @@ BEGIN
   
   -- Return enrolled classes where the user is a student
     RETURN QUERY    
-    SELECT Class.ClassName, 
+    SELECT Class.ClassID, 
+           Class.ClassName, 
            Class.Section, 
            Class.Times, 
            Class.Days, 
            Class.StartDate,
            Class.EndDate,
-           Class.classID, 
            Class.StudentCount 
     FROM LearnSQL.Attends INNER JOIN LearnSQL.Class  
     ON Attends.ClassID = Class.ClassID  
@@ -122,7 +122,19 @@ BEGIN
 
   END IF;
 END;
-$$ LANGUAGE plpgsql STABLE;
+$$ LANGUAGE plpgsql 
+   STABLE;
+
+-- Change function's owner and privileges so that only LearnSQl can use it
+ALTER FUNCTION 
+  LearnSQL.getClasses(userName  LearnSQL.UserData_t.UserName%Type,
+                      isTeacher BOOLEAN) 
+  OWNER TO LearnSQL;
+
+REVOKE ALL ON FUNCTION 
+  LearnSQL.getClasses(userName  LearnSQL.UserData_t.UserName%Type,
+                      isTeacher BOOLEAN) 
+  FROM PUBLIC;
 
 
 
@@ -239,5 +251,24 @@ BEGIN
   END IF;
 END;
 $$ LANGUAGE plpgsql;
+
+--Change function's owner and privileges so that only LearnSQl can use it
+ALTER FUNCTION 
+  LearnSQL.joinClass(userName          LearnSQL.Attends.userName%Type,
+                     classID           LearnSQL.Attends.classID%Type,
+                     classPassword     LearnSQL.Class_t.password%Type,
+                     databaseUsername  VARCHAR(63),
+                     databasePassword  VARCHAR(64),
+                     adminUserName     LearnSQL.UserData_t.userName%Type) 
+  OWNER TO LearnSQL;
+
+REVOKE ALL ON FUNCTION 
+  LearnSQL.joinClass(userName          LearnSQL.Attends.userName%Type,
+                     classID           LearnSQL.Attends.classID%Type,
+                     classPassword     LearnSQL.Class_t.password%Type,
+                     databaseUsername  VARCHAR(63),
+                     databasePassword  VARCHAR(64),
+                     adminUserName     LearnSQL.UserData_t.userName%Type) 
+  FROM PUBLIC;
 
 COMMIT;

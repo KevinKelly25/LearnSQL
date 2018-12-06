@@ -138,17 +138,36 @@ router.post('/addClass', authHelpers.teacherRequired, (req, res) => teacherHelpe
  * @param {string} name The name of the class to be added
  * @return Http response if class was dropped
  */
-router.post('/dropClass', authHelpers.teacherRequired, (req, res) => teacherHelpers.dropClass(req, res)
-  .catch((err) => {
-    handleResponse(res, 500, err);
-  }));
+router.post('/dropClass', authHelpers.teacherRequired, (req, res) => {
+  teacherHelpers.dropClass(req, res)
+    .catch((err) => {
+      handleResponse(res, 500, err);
+    });
+});
+
+/**
+ * This method creates a team in a ClassDB instance. Most functionality is
+ *  contained in `teacherControlPanel.js` createTeam function. Expects a
+ *  promise to be returned
+ *
+ * @param {string} classID The class id of the class being added to
+ * @param {string} teamName The name of the team to be added
+ * @param {string} section The full name of the team
+ * @return Http response if class was added
+ */
+router.post('/addTeam', authHelpers.teacherRequired, (req, res) => {
+  teacherHelpers.createTeam(req, res)
+    .catch((err) => {
+      handleResponse(res, 500, err);
+    });
+});
 
 
 
 /**
- * This will redirect a user to the resetPassword page. The reset token needs
- *  to be appended to the end of the link after #?token=. For example
- *  http://localhost:3000/auth/resetPassword/#?token=59ff4734c92f789058b2
+ * This will redirect a user to the class page. The class name and section needs
+ *  to be appended to the end of the link. For example
+ *  http://localhost:3000/teacher/class/#?class=cs305&section=71
  */
 router.get('/class/', (req, res) => {
   res.sendFile(path.join(

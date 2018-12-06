@@ -9,6 +9,7 @@
 
 
 const ldb = require('../db/ldb.js');
+const dbCreator = require('../db/cdb.js');
 const logger = require('../logs/winston.js');
 
 
@@ -33,6 +34,30 @@ function getClasses(req, res) {
   });
 }
 
+/**
+ * This function retrieves all the teams the user is in for a given class
+ *
+ * @param {string} classID The classID of the class the teams are in
+ * @return the Teams a user is in for a given class
+ */
+function getTeams(req, res) {
+  return new Promise((resolve, reject) => {
+    const db = dbCreator(req.body.classID);
+    db.any('SELECT Team AS TeamName '
+           + 'FROM ClassDB.TeamMember '
+           + 'WHERE Member = $1 ', [req.user.username])
+      .then((result) => {
+        resolve();
+        db.$pool.end();// Closes the connection to the database
+        return res.status(200).json(result);
+      })
+      .catch((error) => {
+        logger.error(`getTeams: \n${error}`);
+        reject(new Error('Cannot Fetch Teams'));
+      });
+  });
+}
+
 
 /**
  * This function calls the `LearnSQL.joinClass()` PL/pgSQL function which
@@ -50,7 +75,7 @@ function getClasses(req, res) {
  */
 function addStudent(req, res) {
   return new Promise((resolve, reject) => {
-    ldb.oneOrNone('SELECT LearnSQL.joinClass($1, $2, $3, $4, $5)',
+    ldb.func('LearnSQL.joinClass',
       [req.user.username, req.body.classID, req.body.classPassword,
         process.env.DB_USER, process.env.DB_PASSWORD])
 
@@ -78,4 +103,5 @@ function addStudent(req, res) {
 module.exports = {
   getClasses,
   addStudent,
+  getTeams,
 };

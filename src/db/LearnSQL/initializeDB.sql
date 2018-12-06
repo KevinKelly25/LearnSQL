@@ -40,6 +40,8 @@ BEGIN
    --  Postgres grants CONNECT to all by default
    EXECUTE format('REVOKE CONNECT ON DATABASE %I FROM public', currentDB);
 
+   -- Only allow connect from learnsql role
+   EXECUTE format('GRANT CONNECT ON DATABASE %I TO learnsql', currentDB);
 END
 $$;
 
@@ -86,6 +88,10 @@ CREATE UNIQUE INDEX IF NOT EXISTS idx_Unique_Email
   ON LearnSQL.UserData_t(LOWER(TRIM(Email)));
 
 
+-- Change table's owner and privileges so that only LearnSQl can use it
+ALTER TABLE LearnSQL.UserData_t OWNER TO LearnSQL;
+REVOKE ALL PRIVILEGES ON LearnSQl.UserData_t FROM PUBLIC;
+
 
 -- Define a table of classes for this DB
 --  a "ClassID" is a unique id that represents a classname plus a random ID
@@ -111,6 +117,10 @@ CREATE TABLE IF NOT EXISTS LearnSQL.Class_t (
                             CHECK(TRIM(Password) <> '')  
 );
 
+-- Change table's owner and privileges so that only LearnSQl can use it
+ALTER TABLE LearnSQL.Class_t OWNER TO LearnSQL;
+REVOKE ALL PRIVILEGES ON LearnSQL.Class_t FROM PUBLIC;
+
 
 
 -- Define a table that represents the relation between UserData and Class
@@ -123,6 +133,10 @@ CREATE TABLE IF NOT EXISTS LearnSQL.Attends (
   isTeacher               BOOLEAN DEFAULT FALSE,
   PRIMARY KEY (ClassID, Username)
 );
+
+--Change table's owner and privileges so that only LearnSQl can use it
+ALTER TABLE LearnSQL.Attends OWNER TO LearnSQL;
+REVOKE ALL PRIVILEGES ON LearnSQL.Attends FROM PUBLIC;
 
 
 
@@ -137,7 +151,11 @@ SELECT ClassID, ClassName, Section, Times, Days, StartDate, EndDate, Password,
     FROM LearnSQL.Attends
     WHERE Attends.ClassID = LearnSQL.Class_t.ClassID AND isTeacher = FALSE
   ) AS studentCount
-FROM LearnSQl.Class_t;
+FROM LearnSQL.Class_t;
+
+-- Change table's owner and privileges so that only LearnSQl can use it
+ALTER TABLE Learnsql.Class_t OWNER TO LearnSQL;
+REVOKE ALL PRIVILEGES ON LearnSQL.Class FROM PUBLIC;
 
 
 
@@ -155,5 +173,9 @@ EXISTS
     WHERE Attends.Username = LearnSQL.UserData_t.Username AND Attends.isTeacher = FALSE
   ) AS isstudent
 FROM LearnSQL.UserData_t;
+
+-- Change table's owner and privileges so that only LearnSQl can use it
+ALTER TABLE Learnsql.UserData OWNER TO LearnSQL;
+REVOKE ALL PRIVILEGES ON Learnsql.UserData FROM PUBLIC;
 
 COMMIT;

@@ -84,8 +84,8 @@ BEGIN
               FROM LearnSQL.Class_t INNER JOIN LearnSQL.Attends
               ON Attends.classID = Class_t.classID
               WHERE Attends.userName = $3
-              AND Class_t.className = $5
-              AND Class_t.section = $6
+              AND Class_t.className = LOWER($5)
+              AND Class_t.section = LOWER($6)
             ) 
   THEN 
     RAISE EXCEPTION 'Section And Class Name Already Exists!';
@@ -138,6 +138,33 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+--Change function's owner and privileges so that only LearnSQl can use it
+ALTER FUNCTION 
+  LearnSQL.createClass(dbUserName        VARCHAR(60),
+                       dbPassword        VARCHAR(64),
+                       teacherUserName   LearnSQL.UserData_t.UserName%Type,
+                       classPassword     LearnSQL.Class_t.Password%Type,
+                       className         LearnSQL.Class_t.ClassName%Type,
+                       section           LearnSQL.Class_t.Section%Type,
+                       times             LearnSQL.Class_t.Times%Type,
+                       days              LearnSQL.Class_t.Days%Type,
+                       startDate         LearnSQL.Class_t.StartDate%Type,
+                       endDate           LearnSQL.Class_t.EndDate%Type)
+  OWNER TO LearnSQL;
+
+REVOKE ALL ON FUNCTION 
+  LearnSQL.createClass(dbUserName        VARCHAR(60),
+                       dbPassword        VARCHAR(64),
+                       teacherUserName   LearnSQL.UserData_t.UserName%Type,
+                       classPassword     LearnSQL.Class_t.Password%Type,
+                       className         LearnSQL.Class_t.ClassName%Type,
+                       section           LearnSQL.Class_t.Section%Type,
+                       times             LearnSQL.Class_t.Times%Type,
+                       days              LearnSQL.Class_t.Days%Type,
+                       startDate         LearnSQL.Class_t.StartDate%Type,
+                       endDate           LearnSQL.Class_t.EndDate%Type)
+  FROM PUBLIC;
+
 
 
 -- This function returns theClassID to be used in LearnSQL.dropClass function so 
@@ -166,6 +193,22 @@ BEGIN
   RETURN LOWER(theClassId); -- Return theClassID in lowercase.
 END;
 $$ LANGUAGE plpgsql;
+
+
+--Change function's owner and privileges so that only LearnSQl can use it
+ALTER FUNCTION 
+  LearnSQL.getClassID (username       LearnSQL.Attends.UserName%Type,
+                       className      LearnSQL.Class_t.ClassName%Type,
+                       classSection   LearnSQL.Class_t.Section%Type,
+                       startDate      LearnSQL.Class_t.StartDate%Type)
+  OWNER TO LearnSQL;
+
+REVOKE ALL ON FUNCTION 
+  LearnSQL.getClassID (username       LearnSQL.Attends.UserName%Type,
+                       className      LearnSQL.Class_t.ClassName%Type,
+                       classSection   LearnSQL.Class_t.Section%Type,
+                       startDate      LearnSQL.Class_t.StartDate%Type)
+  FROM PUBLIC;
                        
 
 
@@ -243,5 +286,24 @@ BEGIN
   WHERE Class_t.classID = theClassID;
 END;
 $$ LANGUAGE plpgsql;
+
+--Change function's owner and privileges so that only LearnSQl can use it
+ALTER FUNCTION 
+  LearnSQL.dropClass(dbUserName        VARCHAR(63),
+                     dbPassword        VARCHAR(64),
+                     teacherUserName   LearnSQL.UserData_t.userName%Type,
+                     className         LearnSQL.Class_t.ClassName%Type,
+                     classSection      LearnSQL.Class_t.Section%Type,
+                     startDate         LearnSQL.Class_t.StartDate%Type)
+  OWNER TO LearnSQL;
+
+REVOKE ALL ON FUNCTION 
+  LearnSQL.dropClass(dbUserName        VARCHAR(63),
+                     dbPassword        VARCHAR(64),
+                     teacherUserName   LearnSQL.UserData_t.userName%Type,
+                     className         LearnSQL.Class_t.ClassName%Type,
+                     classSection      LearnSQL.Class_t.Section%Type,
+                     startDate         LearnSQL.Class_t.StartDate%Type)
+  FROM PUBLIC;
 
 COMMIT;
