@@ -59,4 +59,13 @@ router.post('/sendQuery', authHelpers.loginRequired, (req, res) => workshopHelpe
     handleResponse(res, 500, err);
   }));
 
+/**
+ * This route is executed when the user navigates away from the `sandbox.html` page
+ *  in order to close the database connection pool
+ */
+router.post('/closeConnection', authHelpers.loginRequired, (req, res) => workshopHelpers.closeConnection(req, res)
+  .catch((err) => {
+    handleResponse(res, 500, err);
+  }));
+
 module.exports = router;

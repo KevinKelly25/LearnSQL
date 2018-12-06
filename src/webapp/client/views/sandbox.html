@@ -23,7 +23,7 @@
     <link rel="stylesheet" href="../../stylesheets/sandbox.css">
 
 </head>
-<body ng-app="LearnSQL">
+<body id="workshopPage" ng-app="LearnSQL" onbeforeunload="return closeConnection()">
     <!-- NAVBAR -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light" ng-controller="NavCtrl" data-ng-init="init()">
         <div class="container-fluid">

@@ -15,8 +15,8 @@ app.controller('workshopCtrl', ($scope, $http, $location) => {
   function printToCommandHistory(input) {
     $scope.commandHistory += input;
   }
-  function nextCommandPrompt() {
-    printToCommandHistory(`\n\n ${$scope.classID}=> `);
+  function nextCommandPrompt(numNewLines) {
+    printToCommandHistory(`${'\n'.repeat(numNewLines)}${$scope.classID}=> `);
   }
 
   $scope.initClasses = () => {
@@ -61,7 +61,7 @@ app.controller('workshopCtrl', ($scope, $http, $location) => {
     // Check if the user entered a query
     if (typeof $scope.userQuery === 'undefined' || $scope.userQuery === '') {
       printToCommandHistory('\n No query was entered. Try again.');
-      nextCommandPrompt();
+      nextCommandPrompt(2);
       $scope.submitQuery_Button = 'Run Code';
       return;
     }
@@ -109,7 +109,7 @@ app.controller('workshopCtrl', ($scope, $http, $location) => {
     function storeColumnWidth(queryResult) {
       const resultCharLength = [];
 
-      // Get the lengths of the result strings of the query
+      // Get the lengths of each string in the result set
       for (let i = 0; i < Object.keys(queryResult).length; i += 1) {
         /**
          * Get the string representation of the element using Object.keys, which will
@@ -224,13 +224,13 @@ app.controller('workshopCtrl', ($scope, $http, $location) => {
       .success((data) => {
         // If the entered query produced successful results, but has no return value
         if (!Array.isArray(data) || !data.length) {
-          printToCommandHistory(`${inputQuery};\n`);
+          printToCommandHistory(`${inputQuery}\n`);
           printToCommandHistory('\n Operation completed successfully (No returned rows)');
-          nextCommandPrompt();
+          nextCommandPrompt(2);
           return;
         }
 
-        printToCommandHistory(`${inputQuery};\n`);
+        printToCommandHistory(`${inputQuery}\n`);
 
         let queryResult = data;
 
@@ -279,12 +279,13 @@ app.controller('workshopCtrl', ($scope, $http, $location) => {
           }
         }
 
-        nextCommandPrompt();
+        nextCommandPrompt(2);
       })
 
       .error((error) => {
+        printToCommandHistory(`${inputQuery}\n`);
         printToCommandHistory(`\nError: ${error.status}`);
-        nextCommandPrompt();
+        nextCommandPrompt(2);
       });
     $scope.submitQuery_Button = 'Run Code';
   };
@@ -292,7 +293,7 @@ app.controller('workshopCtrl', ($scope, $http, $location) => {
   $scope.currentLanguage = (inputLanguage) => {
     $scope.language = inputLanguage;
     printToCommandHistory(` Selected language: ${$scope.language}\n`);
-    nextCommandPrompt();
+    nextCommandPrompt(0);
   };
 
   $scope.clearHistory = () => {
@@ -302,4 +303,22 @@ app.controller('workshopCtrl', ($scope, $http, $location) => {
   $scope.clearQueries = () => {
     $scope.userQuery = '';
   };
+
+  $scope.closeConnection = () => {
+    $http.post('/workshop/closeConnection');
+  };
 });
+
+/**
+ * Upon page navigation, inform the user that queries and command history
+ *  will be lost. Additionally, close the connection pool to the database.
+ */
+
+// eslint-disable-next-line no-unused-vars
+function closeConnection() {
+  const scope = angular.element('[ng-controller=workshopCtrl]').scope();
+  scope.$apply(() => {
+    scope.closeConnection();
+  });
+  return 'All unsaved queries and command history will be lost.';
+}
