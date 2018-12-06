@@ -98,7 +98,7 @@
         <!-- show when looking at all tables, is also the default view -->
         <span ng-show="view =='allObjects'">
             <div ng-if="schema">
-                <h1 class="text-center">{{ userInfo.username }}'s Schema</h1>
+                <h1 class="text-center font-weight-bold text-primary">{{ userInfo.username }}'s Schema</h1>
                 <!-- list of all tables -->
                 <a href="/views/workshop.html" class="btn btn-outline-success btn-block btn-lg" role="button">
                     Go To Workshop
@@ -132,8 +132,8 @@
         <!-- show if looking at a single object -->
         <span ng-show="view =='objectDetailsView'">
             <div ng-if="tableInfo[0]">
-                <a ng-click="backToObjects('table')" style="color:blue; text-decoration: underline; ">Go Back To Objects</a>
-                <h3 class="text-center">Table Information</h3>
+                <a href ng-click="backToObjects('table')" style="color:blue; text-decoration: underline; ">Go Back To Objects</a>
+                <h3 class="text-center text-primary font-weight-bold">Table Information</h3>
                 <table class="ui celled table row-border hover order-column shadow-lg text-center">
                     <tbody>
                             <tr class="d-flex">
@@ -167,16 +167,16 @@
                     <tbody>
                         <!-- display all rows of the table -->
                         <tr ng-repeat="rows in tableResult">
-                            <td>{{ $index + 1 }}</td>
+                            <td style="vertical-align: middle">{{ $index + 1 }}</td>
                             <!-- display all attribute values of the row -->
-                            <td ng-repeat="attribute in rows">{{ attribute }}</td>
+                            <td ng-repeat="attribute in rows" style="vertical-align: middle">{{ attribute }}</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
             <div ng-if="viewInfo">
-                <a ng-click="backToObjects('view')" style="color:blue; text-decoration: underline; ">Go Back To Objects</a>
-                <h3 class="text-center">View Information</h3>
+                <a href ng-click="backToObjects('view')" style="color:blue; text-decoration: underline; ">Go Back To Objects</a>
+                <h3 class="text-center text-primary font-weight-bold">View Information</h3>
                 <table class="ui celled table row-border hover order-column shadow-lg text-center">
                     <tbody>
                             <tr class="d-flex">
@@ -213,8 +213,8 @@
                 </table>
             </div>
             <div ng-if="functionInfo" class="py-5">
-                    <a ng-click="backToObjects('function')" style="color:blue; text-decoration: underline; ">Go Back To Objects</a>
-                    <h3 class="text-center">Function Information</h3>
+                    <a href ng-click="backToObjects('function')" style="color:blue; text-decoration: underline; ">Go Back To Objects</a>
+                    <h3 class="text-center font-weight-bold text-primary">Function Information</h3>
                     <table class="ui celled table row-border hover order-column shadow-lg text-center">
                         <tbody>
                                 <tr class="d-flex">
@@ -267,8 +267,8 @@
                     </table>                      
                 </div>
                 <div ng-if="triggerInfo" class="py-5">
-                    <a ng-click="backToObjects('trigger')" style="color:blue; text-decoration: underline; ">Go Back To Objects</a>
-                    <h3 class="text-center">Trigger Information</h3>
+                    <a href ng-click="backToObjects('trigger')" style="color:blue; text-decoration: underline; ">Go Back To Objects</a>
+                    <h3 class="text-center font-weight-bold text-primary">Trigger Information</h3>
                     <table class="ui celled table row-border hover order-column shadow-lg text-center">
                         <tbody>
                             <tr class="d-flex">
@@ -287,8 +287,8 @@
                     </table>                      
                 </div>
                 <div ng-if="indexInfo" class="py-5">
-                    <a ng-click="backToObjects('index')" style="color:blue; text-decoration: underline; ">Go Back To Objects</a>
-                    <h3 class="text-center">Index Information</h3>
+                    <a href ng-click="backToObjects('index')" style="color:blue; text-decoration: underline; ">Go Back To Objects</a>
+                    <h3 class="text-center font-weight-bold text-primary">Index Information</h3>
                     <table class="ui celled table row-border hover order-column shadow-lg text-center">
                         <tbody>
                             <tr class="d-flex">

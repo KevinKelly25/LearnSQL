@@ -12,6 +12,25 @@
 app.controller('schemaCtrl', ($scope, $http, $location) => {
   $scope.view = 'allObjects';// default view of the table
 
+
+  // Converts the date from postgres format to readable format
+  function convertDate(inputDateString) {
+    const date = new Date(inputDateString);
+    return `${date.toDateString()}`;
+  }
+
+  // Converts the timestamp from postgres format to readable format
+  function convertTimeStamp(inputTimestampString) {
+    const date = new Date(inputTimestampString.replace(' ', 'T'));
+    return `${date.toDateString()} ${date.toLocaleTimeString('nb-NO')}`;
+  }
+
+  // Converts the timestampTZ from postgres format to readable format
+  function convertTimeStampTZ(inputTimestampString) {
+    const date = new Date(inputTimestampString.replace(' ', 'T'));
+    return `${date}`;
+  }
+
   /**
    * This function initializes the table that contains all the user's objects in
    *  ClassDB database. The class and username are supplied by URL parameters.
@@ -57,6 +76,22 @@ app.controller('schemaCtrl', ($scope, $http, $location) => {
           if (Object.keys(data.result).length !== 0) {
             $scope.columns = Object.keys(data.result[0]);// the amount of columns
             $scope.tableResult = data.result;
+            const types = data.details[0].attributes.split(',');
+            for (let i = 0; i < types.length; i++) {
+              if (types[i].trim() === 'date') {
+                data.result.forEach((element) => {
+                  element[$scope.columns[i]] = convertDate(element[$scope.columns[i]]);
+                });
+              } else if (types[i].trim() === 'timestamp') {
+                data.result.forEach((element) => {
+                  element[$scope.columns[i]] = convertTimeStamp(element[$scope.columns[i]]);
+                });
+              } else if (types[i].trim() === 'timestamptz') {
+                data.result.forEach((element) => {
+                  element[$scope.columns[i]] = convertTimeStampTZ(element[$scope.columns[i]]);
+                });
+              }
+            }
           }
           $scope.tableInfo = data.details;
         } else if (type === 'VIEW') {

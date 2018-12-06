@@ -14,11 +14,14 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>LearnSQL</title>
   <link rel="stylesheet" href="./stylesheets/style.css" media="screen">
-  <link rel="stylesheet" href="./stylesheets/font-awesome.min.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css"
+        integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp"
+        crossorigin="anonymous">
   <link rel="stylesheet" href="./stylesheets/bootstrap.css">
   <link rel="stylesheet" href="./stylesheets/angular-datatables.css">
   <link href='https://fonts.googleapis.com/css?family=Alegreya:400,700,700i' rel='stylesheet'>
   <link href="https://fonts.googleapis.com/css?family=Merriweather:400,700" rel="stylesheet">
+  <link rel="shortcut icon" href="../views/imgs/database-solid..png" type="image/png" />
 
 </head>
 <body ng-app="LearnSQL">
@@ -28,6 +31,7 @@
     <div class="container-fluid">
       <!-- navbar header -->
       <h2 class="font-weight-bold">
+          <img src="../views/imgs/database-solid..png" alt="db" style="width: 26px; height: 20px;">
         <a href="http://localhost:3000/" class="navbar-brand text-primary">LearnSQL</a>
       </h2>
       <!-- end of navbar header -->
@@ -76,7 +80,6 @@
             <li class="nav-item">
               <a href="views/workshop.html" class="nav-link border-right px-4">Workshop</a>
             </li>
-          </span>
           </span>
           <span ng-show="currentUser">
             <li class="nav-item">

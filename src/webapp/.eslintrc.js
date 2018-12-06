@@ -8,6 +8,8 @@ module.exports = {
         "no-multiple-empty-lines": [1,{"max":3}],
         "no-unused-vars": ["error", { "argsIgnorePattern": "next", "argsIgnorePattern": "req" }],
         "linebreak-style": 0,
+        "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }],
+        "no-param-reassign": 0,
       },
     "globals": {
         "app": 1,

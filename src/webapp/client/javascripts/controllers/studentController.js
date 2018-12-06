@@ -7,7 +7,6 @@
  * This file contains the angularJS controller used for the student functionality
  *  on the LearnSQL website
  */
-/* eslint-disable no-param-reassign */
 
 
 app.controller('studentCtrl', ($scope, $http, $window) => {

@@ -7,7 +7,6 @@
  * This file contains the angularJS controller used for the teacher functionality
  *  on the LearnSQL website
  */
-/* eslint-disable no-param-reassign */
 
 // Converts the date from PostgreSQL format to readable format
 function convertDate(inputDateString) {

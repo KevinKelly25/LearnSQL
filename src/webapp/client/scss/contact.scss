@@ -19,10 +19,17 @@
     background-color: #1C2331;
   }
   
-  #footer-header {
-    color: #ac4142;
-  }
-  
   #contact-us-button {
     background-color: #ac4142;
+  }
+
+  body {
+    padding-bottom: 120px;
+  }
+
+  footer {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
   }

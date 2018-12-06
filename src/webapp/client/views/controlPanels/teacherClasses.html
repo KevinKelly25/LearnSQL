@@ -21,13 +21,12 @@
         crossorigin="anonymous">
     <link rel="stylesheet" href="../../stylesheets/angular-datatables.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.css" />
-    <link rel="stylesheet" href="../../stylesheets/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css"> 
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.1/semantic.min.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/dataTables.semanticui.min.css">
     <link rel="stylesheet" href="../../stylesheets/bootstrap.css">
     <link rel="stylesheet" href="../../stylesheets/teacher.css">
-
+    <link rel="shortcut icon" href="../imgs/database-solid..png" type="image/png" />
 </head>
 <body ng-app="LearnSQL">
 
@@ -36,6 +35,7 @@
         <div class="container-fluid">
             <!-- navbar header -->
             <h2 class="font-weight-bold">
+                <img src="../imgs/database-solid..png" alt="db" style="width: 26px; height: 20px;">
                 <a href="http://localhost:3000/" class="navbar-brand text-primary">LearnSQL</a>
             </h2>
             <!-- end of navbar header -->
@@ -94,20 +94,23 @@
 
     <!-- PAGE CONTENT -->
     <section id="page-content" class="mt-5 container" ng-controller="teacherCtrl" data-ng-init="initClasses()">
+        <!-- page title -->
+        <h1 class="text-center font-weight-bold text-primary">Teacher's Classes</h1>
+
         <!-- addClass Modal -->
-        <div class="modal fade" id="addClass" tabindex="-1" role="dialog">
+        <div class="modal fade" id="addClass" role="dialog">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
-                <div class="modal-header">
+                    <div class="modal-header">
         
-                    <h5 class="modal-title" >Add Class</h5>
+                        <h5 class="modal-title text-white" >Add Class</h5>
         
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
+                        <button type="button" class="close text-light" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
                 
-                <span ng-show="error">
+                    <span ng-show="error">
                         <div class="alert alert-danger">
                             {{ message }}
                         </div>
@@ -116,55 +119,89 @@
                         <div class="alert alert-success">
                             {{ message }}
                         </div>
-                </span>
-                <div class="modal-body">
-                    <form>
-                    <div class="form-group">
-                        <label for="recipient-name" class="col-form-label">Class Name:</label>
-                        <input type="text" class="form-control" ng-model="className">
+                    </span>
+                    <div class="modal-body">
+                        <form>
+                            <label for="recipient-name" class="col-form-label" for="inlineFormInputGroup"></label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text"><i class="fas fa-database pr-1"></i></div>
+                                </div>
+                                <input type="text" class="form-control" ng-model="className" placeholder="Class Name">
+                            </div>
+                    
+
+                            <label for="recipient-name" class="col-form-label" for="inlineFormInputGroup"></label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text"><i class="fas fa-edit"></i></div>
+                                </div>
+                                <input type="text" class="form-control" ng-model="section" placeholder="Section">
+                            </div>
+                    
+
+                            <label for="recipient-name" class="col-form-label" for="inlineFormInputGroup"></label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text"><i class="fas fa-clock pr-1"></i></div>
+                                </div>
+                                <input type="text" class="form-control" ng-model="times" placeholder="Meeting Times">
+                            </div>
+                    
+
+                            <label for="recipient-name" class="col-form-label" for="inlineFormInputGroup"></label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text"><i class="fas fa-calendar pr-1"></i></div>
+                                </div>
+                                <input type="text" class="form-control" ng-model="days" placeholder="Days">
+                            </div>
+                    
+
+                            <label for="recipient-name" class="col-form-label" for="inlineFormInputGroup"></label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text"><i class="fas fa-calendar-alt pr-1"></i></div>
+                                </div>
+                                <input type="text" class="form-control" ng-model="startDate" placeholder="Start Date">
+                            </div>
+                    
+
+                            <label for="recipient-name" class="col-form-label" for="inlineFormInputGroup"></label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text"><i class="fas fa-calendar-alt pr-1"></i></div>
+                                </div>
+                                <input type="text" class="form-control" ng-model="endDate" placeholder="End Date">
+                            </div>
+                    
+
+                            <label for="recipient-name" class="col-form-label" for="inlineFormInputGroup"></label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text"><i class="fas fa-lock pr-1"></i></div>
+                                </div>
+                                <input type="password" class="form-control" ng-model="password" placeholder="Password">
+                            </div>
+                        </form>
                     </div>
-                    <div class="form-group">
-                        <label for="recipient-name" class="col-form-label">Section:</label>
-                        <input type="text" class="form-control" ng-model="section">
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary" ng-click="addClass()">Add Class</button>
                     </div>
-                    <div class="form-group">
-                        <label for="recipient-name" class="col-form-label">Meeting Times:</label>
-                        <input type="text" class="form-control" ng-model="times">
-                    </div>
-                    <div class="form-group">
-                        <label for="recipient-name" class="col-form-label">Days:</label>
-                        <input type="text" class="form-control" ng-model="days">
-                    </div>
-                    <div class="form-group">
-                        <label for="recipient-name" class="col-form-label">Start Date:</label>
-                        <input type="text" class="form-control" ng-model="startDate">
-                    </div>
-                    <div class="form-group">
-                        <label for="recipient-name" class="col-form-label">End Date:</label>
-                        <input type="text" class="form-control" ng-model="endDate">
-                    </div>
-                    <div class="form-group">
-                        <label for="recipient-name" class="col-form-label">Join Password:</label>
-                        <input type="password" class="form-control" ng-model="password">
-                    </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary" ng-click="addClass()">Add Class</button>
-                </div>
                 </div>
             </div>
-            </div>
-            <!-- End addClass Modal -->
-            <!-- dropClass Modal -->
+        </div>
+        <!-- End addClass Modal -->
+
+        <!-- dropClass Modal -->
         <div class="modal fade" id="dropClassModal" tabindex="-1" role="dialog">
                 <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" >Remove Class</h5>
+                            <h5 class="modal-title text-light" >Remove Class</h5>
                 
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <button type="button" class="close text-light" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
@@ -179,8 +216,8 @@
                                 </div>
                         </span>
                         <div class="modal-body">
-                            <h3>Are You sure you want to remove {{ dropClass.name }} ?</h3>
-                            <p> <span class="font-weight-bold text-primary">WARNING:</span> Database cannot be recovered if removed</p>
+                            <h3 class="text-light">Are You sure you want to remove {{ dropClass.name }} ?</h3>
+                            <p class="text-light"> <span class="font-weight-bold text-danger">WARNING:</span> Database cannot be recovered if removed</p>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
@@ -258,8 +295,8 @@
                     <div class="modal-content">
                         <div class="modal-header">
                 
-                            <h5 class="modal-title" >Join Class</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <h5 class="modal-title text-light" >Join Class</h5>
+                            <button type="button" class="close text-light" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
@@ -276,30 +313,23 @@
                           </span>
     
                         <div class="modal-body">
-                            <form>
-                                <!-- Note: `type=date` is incompatible with Internet Explorer 11 -->
-                                <div class="input-group input-group-lg">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text"> 
-                                            <span class="fa fa-group"></span>
-                                        </span>
-                                        <span class="input-group-text" id="inputGroup-sizing-lg">Class ID</span>
-                                    </div>
-                                    <input type="text" class="form-control" ng-model="classID">
-                                </div> 
-                                <div>&nbsp;</div>
-    
-                                <div class="input-group input-group-lg">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text"> 
-                                           <span class="fa fa-lock"></span>
-                                        </span>
-                                        <span class="input-group-text" id="inputGroup-sizing-lg">Join Password</span>
-                                    </div>
-                                    <input type="password" class="form-control" ng-model="classPassword">
-                                </div>  
-                            </form>
+                            <!-- Note: `type=date` is incompatible with Internet Explorer 11 -->
+                            <div class="input-group input-group-lg">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text"><i class="fas fa-users"></i></div>
+                                </div>
+                                <input type="text" class="form-control" ng-model="classID" placeholder="Class ID">
+                            </div> 
+                            <div>&nbsp;</div>
+
+                            <div class="input-group input-group-lg">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text"><i class="fas fa-lock pr-2"></i></div>
+                                </div>
+                                <input type="password" class="form-control" ng-model="classPassword" placeholder="Password">
+                            </div>  
                         </div>
+
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                             <button type="button" class="btn btn-primary" ng-click="joinClassFromPage()">Join Class</button>
