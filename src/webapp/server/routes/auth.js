@@ -43,10 +43,12 @@ function handleResponse(res, code, statusMsg) {
  * This method create user using a helper function. If an error is encountered
  *  an error status code and message is returned
  */
-router.post('/register', authHelpers.loginRedirect, (req, res) => authHelpers.createUser(req, res)
-  .catch(() => {
-    handleResponse(res, 500, 'error');
-  }));
+router.post('/register', authHelpers.loginRedirect, (req, res) => {
+  authHelpers.createUser(req, res)
+    .catch(() => {
+      handleResponse(res, 500, 'error');
+    });
+});
 
 
 
@@ -104,12 +106,14 @@ router.get('/check', (req, res) => res.status(200).json(req.user));
  */
 // TODO: add timeout for verification token
 router.get('/verification/:token/:username', (req, res) => {
-  db.task(t => t.one('SELECT Username, Token FROM UserData WHERE Username = $1', [req.params.username])
+  db.task(t => t.one('SELECT Username, Token FROM LearnSQL.UserData '
+                   + 'WHERE Username = $1', [req.params.username])
     .then((data) => {
       if (!authHelpers.compareHashed(req.params.token, data.token)) {
         throw new Error('Token hashes do not match');
       } else {
-        return t.none('UPDATE UserData SET isVerified = true WHERE Username = $1', [data.username]);
+        return t.none('UPDATE LearnSQL.UserData SET isVerified = true '
+                    + ' WHERE Username = $1', [data.username]);
       }
     }))
     .then(() => {
@@ -146,7 +150,7 @@ router.post('/forgotPasswordEmail', (req, res) => authHelpers.forgotPassword(req
  *  to be appended to the end of the link after #?token=. For example
  *  http://localhost:3000/auth/resetPassword/#?token=59ff4734c92f789058b2
  */
-router.get('/resetPassword/', (res) => {
+router.get('/resetPassword/', (req, res) => {
   res.sendFile(path.join(
     __dirname, '..', '..', 'client', 'views', 'account', 'resetPassword.html',
   ));
@@ -164,10 +168,21 @@ router.get('/resetPassword/', (res) => {
  * @param {string} token Token needed for the new password reset
  * @return Http response with status message stating whether reset was successful
  */
-router.post('/resetPassword', (req, res) => authHelpers.resetPassword(req, res)
-  .catch((err) => {
-    handleResponse(res, 500, err);
-  }));
+router.post('/resetPassword', (req, res) => {
+  db.func('LearnSQL.forgotPasswordReset',
+    [req.body.username, req.body.token, req.body.password])
+    .then(() => res.status(200).json('Password Reset Successfully'))
+    .catch((error) => {
+    // if known error send that known error back, otherwise send back general
+    //  server error response
+      if (error.message === 'Token has expired'
+          || error.message === 'Token is incorrect') {
+        return res.status(400).json(error.message);
+      }
+      logger.error(`forgotPasswordReset: \n${error}`);
+      return res.status(500).json('Server Error - Password could not be reset');
+    });
+});
 
 
 

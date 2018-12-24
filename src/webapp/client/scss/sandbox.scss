@@ -1,0 +1,33 @@
+/* ---------------------------------------------------
+  sandbox.scss - LearnSQL
+
+  Christopher Innaco, Michael Torres
+  Web Applications and Databases for Education (WADE)
+
+  This file contains the Scss for the sandbox.html page
+----------------------------------------------------- */
+
+$primary-color: #ac4142;
+$secondary-color: #45526e;
+
+#commandHistory {
+  font-family: 'Consolas', 'Lucida Consolas', 'Lucida Sans Regular';
+  background-color: black;
+  white-space: pre;
+  overflow-wrap: normal;
+  overflow-x: scroll;
+  resize:vertical;
+}
+
+#userQuery {
+  font-family: 'Consolas', 'Lucida Consolas', 'Lucida Sans Regular';
+  background-color: black;
+  white-space: pre;
+  overflow-wrap: normal;
+  overflow-x: scroll;
+  resize:vertical;
+}
+
+#page-title {
+  color: $primary-color; 
+}

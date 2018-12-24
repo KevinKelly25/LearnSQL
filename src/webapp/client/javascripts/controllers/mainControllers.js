@@ -1,15 +1,35 @@
 /**
  * mainControllers.js - LearnSQL
  *
- * Kevin Kelly
+ * Kevin Kelly, Michael Torres
  * Web Applications and Databases for Education (WADE)
  *
  * This file contains the Main angularJS controllers that are used throughout the
  * LearnSQL website
  */
 
-const app = angular.module('LearnSQL', ['datatables']);
+const app = angular.module('LearnSQL', ['datatables', 'luegg.directives']);
 
+/**
+ * This provides the functionality of creating a new directive using the
+ *  .directive function syntaxHighlight
+ */
+app.directive('syntaxHighlight', [function () { // eslint-disable-line func-names
+  return {
+    restrict: 'C', // determines that a directive can be used only on a class.
+    scope: {
+      source: '@', // @ reads the attribute value
+    },
+    link(scope, element) { // DOM manipulation
+      scope.$watch('source', (v) => {
+        if (v) {
+          Prism.highlightElement(element.find('code')[0]); // eslint-disable-line no-undef
+        }
+      });
+    },
+    template: "<code ng-bind='source'></code>",
+  };
+}]);
 
 /**
  * This controller is used to dynamically display the navbar of the website
@@ -28,7 +48,7 @@ app.controller('NavCtrl', ($scope, $http, $window) => {
   $scope.logout = () => {
     $http.get('/auth/logout')
       .success(() => {
-        $window.location.href = 'http://localhost:3000';// eslint-disable-line no-param-reassign
+        $window.location.href = 'http://localhost:3000';
       });
   };
 

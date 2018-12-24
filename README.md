@@ -1,9 +1,38 @@
 <a href="https://postgresql.org"><img src="https://img.shields.io/badge/Powered%20by-PostgreSQL-blue.svg"/></a>
+<a href="#"><img src="https://img.shields.io/badge/Powered%20by-JavaScript-orange.svg"/></a>
 <a href="https://github.com"><img src="https://img.shields.io/badge/Hosted%20on-GitHub-brightgreen.svg"/></a>
 <a href="https://zenhub.com"><img src="https://raw.githubusercontent.com/ZenHubIO/support/master/zenhub-badge.png"/></a>
 
 # LearnSQL
 
-LearnSQL is an easy to use and easy to access Web Class Database that is specialized for learning SQL. This site currently has one main section that is a sandbox environment for students to practice SQL. Teachers are able to create these "sandbox" databases for each of their classes. For each database the instructor can view all their students work in that database. However, all students are only allowed to see thier own work. Teachers are also allowed to see student connections history and DDL activity. This is all done by using specialized databases using ClassDB. See here for more info: https://github.com/DASSL/ClassDB 
+LearnSQL is a web-based database application which provides a user-friendly environment for institutions to allow their students to experiment with relational data. This platform relies on [ClassDB](https://github.com/DASSL/ClassDB) which is produced through the efforts of ([DASSL](https://dassl.github.io/https://dassl.github.io/), read _dazzle_) at Western Connecticut State University.
 
-Another planned section is the learning section where there is a large amount of tutorials about SQL. In these tutorials we bring students the SQL standard definitions. After the written tutorial there are questions based on the tutorial the student just did. In these questions the students will write there own SQL statements and submit these statments to a live database to see if their answers are correct. These answers will provide real database responses so students are exposed to the real situations they may see out in the working world.
+## Product Mission Statement
+
+The main topics which comprise the focal point of the application are categorized by end-user role:
+ - Teachers are:
+    - Able to create and drop courses
+    - Supplied with an interface to view student database objects including tables, views, indexes, triggers, functions and their code
+    - Manage teams of students within a class who share a schema
+    - Examine student connection history and DDL activity
+    - Interact and manipulate their class databases in addition to a personally owned schema
+ - Students can:
+    - View their own database objects including tables, views, indexes, triggers, functions and their code
+    - Experiment with SQL and PL/pgSQL in the Workshop section where access is granted only to their personal and team schemas
+
+## Documentation
+
+- [Installation Guide](https://github.com/KevinKelly25/LearnSQL/wiki/Installing-LearnSQL-locally)
+- [Application Architecture](https://github.com/KevinKelly25/LearnSQL/wiki/LearnSQL-Architecture)
+- [Workshop Design and Documentation](https://github.com/KevinKelly25/LearnSQL/wiki/Workshop-Design-and-Documentation)
+- [Webpage Interconnectivity](https://github.com/KevinKelly25/LearnSQL/wiki/Class-Section-Overview)
+- [Coding Standards](https://github.com/KevinKelly25/LearnSQL/wiki/Coding-Standards)
+- [EER Schema](https://github.com/KevinKelly25/LearnSQL/wiki/ER-Schema)
+- [Dependent Node.JS modules](https://github.com/KevinKelly25/LearnSQL/wiki/Node.JS-Modules-utilized)
+
+## Major Contributors
+
+- Kevin Kelly
+- Christopher Innaco
+- Michael Torres
+  

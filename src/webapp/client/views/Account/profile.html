@@ -23,6 +23,7 @@
   <link rel="stylesheet" href="../../stylesheets/bootstrap.css">
   <link rel="stylesheet" href="../../stylesheets/angular-datatables.css">
   <link rel="stylesheet" href="../../stylesheets/profile.css">
+  <link rel="shortcut icon" href="../imgs/database-solid..png" type="image/png" />
 </head>
 <body ng-app="LearnSQL">
 
@@ -31,7 +32,8 @@
     <div class="container-fluid">
         <!-- Navbar header -->
         <h2 class="font-weight-bold">
-            <a href="http://localhost:3000/" class="navbar-brand text-primary">LearnSQL</a>
+          <img src="../imgs/database-solid..png" alt="db" style="width: 26px; height: 20px;">
+          <a href="http://localhost:3000/" class="navbar-brand text-primary">LearnSQL</a>
         </h2>
         <!-- End Navbar header -->
         
@@ -45,14 +47,19 @@
                     <a href="/views/learn/select.html" id="learn-tab" class="nav-link border-right px-4">Learn</a>
                 </li>
                 <span ng-show="currentUser.isteacher">
-                  <li class="nav-item">
-                    <a href="/views/controlPanels/teacherClasses.html" class="nav-link border-right px-4">Classes</a>
-                  </li>
+                    <li class="nav-item">
+                        <a href="/views/controlPanels/teacherClasses.html" class="nav-link border-right px-4">Class Info</a>
+                    </li>
                 </span>
                 <span ng-show="currentUser.isstudent">
-                  <li class="nav-item">
+                <li class="nav-item">
                     <a href="/views/controlPanels/studentClasses.html" class="nav-link border-right px-4">Classes</a>
-                  </li>
+                </li>
+                </span>
+                <span ng-show="currentUser && !currentUser.isteacher && !currentUser.isstudent">
+                    <li class="nav-item">
+                    <a href="/views/controlPanels/joinClass.html" class="nav-link border-right px-4">Classes</a>
+                    </li>
                 </span>
                 <span ng-show="!currentUser">
                     <li class="nav-item">
@@ -62,6 +69,11 @@
                 <span ng-show="currentUser.isadmin">
                     <li class="nav-item">
                       <a href="/views/controlPanels/admin.html" class="nav-link border-right px-4">Admin Control Panel</a>
+                    </li>
+                </span>
+                <span ng-show="currentUser">
+                    <li class="nav-item">
+                        <a href="/views/workshop.html" class="nav-link border-right px-4">Workshop</a>
                     </li>
                 </span>
                 <span ng-show="currentUser">
@@ -88,13 +100,12 @@
     <!-- Page content -->
     <section id="page-content">
 
-      <h1 id="page-title" class="text-center font-weight-bold">My Profile</h1>
+      <h1 class="text-center font-weight-bold text-primary">My Profile</h1>
 
       <section id="page-body">
 
         <!-- Info section -->
-
-        <div class="container-fluid"> 
+        <div class="container"> 
 
           <table class="table table-dark table-striped">   
             <tbody>
@@ -333,24 +344,6 @@
 
     <!-- End Dynamic Alert messages -->
 
-    <!-- Footer -->
-    <footer id="main-footer" class="bg-light mt-3 fixed-bottom">
-        <div class="container">
-            <div class="row">
-                <div class="col text-center">
-                    <div class="py-4">
-                        <h1 id="learnSQLFooterHeader" class="h3">
-                            <a href="http://localhost:3000/" id="footer-header">LearnSQL</a>
-                        </h1>
-                        <p>Copyright &copy; 2018</p>
-                        <a href="../contact.html" id="contact-us-button" class="btn text-white shadow" role="button">Contact Us</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </footer>
-    <!-- End Footer-->
-
     <script src="../../javascripts/jquery.min.js"></script>
     <script src="../../javascripts/jquery.dataTables.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.6/angular.min.js"></script>
@@ -359,6 +352,25 @@
     <script src="../../javascripts/angular-datatables.min.js"></script>
     <script src="../../javascripts/popper.min.js"></script>
     <script src="../../javascripts/bootstrap.min.js"></script>
+    <script src="../../javascripts/scrollglue.js"></script>
 
 </body>
+
+  <!-- FOOTER -->
+  <footer class="bg-light fixed-bottom mt-2">
+    <div class="container">
+        <div class="row">
+            <div class="col text-center">
+                <div class="py-4">
+                    <h1 id="learnSQLFooterHeader" class="h3">
+                        <a href="http://localhost:3000/" class="text-primary">LearnSQL</a>
+                    </h1>
+                    <p>Copyright &copy; 2018</p>
+                    <a href="../contact.html" class="btn btn-primary text-white shadow" role="button">Contact Us</a>
+                </div>
+            </div>
+        </div>
+    </div>
+  </footer>
+  <!-- END OF FOOTER -->
 </html>

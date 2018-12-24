@@ -39,10 +39,25 @@ function handleResponse(res, code, statusMsg) {
  *          object which has the classes the user is in and relevant class
  *          information
  */
-router.get('/getClasses', authHelpers.studentRequired, (req, res) => studentHelpers.getClasses(req, res)
+router.get('/getClasses', authHelpers.loginRequired, (req, res) => studentHelpers.getClasses(req, res)
   .catch((err) => {
     handleResponse(res, 500, err);
   }));
+
+
+/**
+ * This method returns class information from a ClassDB database. Most
+ *  functionality is in `studentControlPanel.js` getClass function.
+ *
+ * @param {string} classID The classID of the class the teams are in
+ * @return Http response on of all teams student is in for a given class
+ */
+router.post('/getTeams', authHelpers.loginRequired, (req, res) => {
+  studentHelpers.getTeams(req, res)
+    .catch((err) => {
+      handleResponse(res, 500, err);
+    });
+});
 
 
 /**

@@ -7,7 +7,6 @@
  * This file contains the angularJS controllers that are used throughout the
  * LearnSQL website
  */
-/* eslint-disable no-param-reassign */
 
 /**
  * This controller is used to display and use the login operations
@@ -63,7 +62,7 @@ app.controller('LoginCtrl', ($scope, $http, $location, $window) => {
         .error((error) => {
           $scope.success = false;
           $scope.error = true;
-          $scope.message = error.status;
+          $scope.message = error;
         });
     }
   };
@@ -80,7 +79,7 @@ app.controller('LoginCtrl', ($scope, $http, $location, $window) => {
       $scope.message = 'Please Fill Out All Fields';
       return;
     }
-    this.user.username = $scope.username;
+    this.user.username = angular.lowercase($scope.username);
     this.user.password = $scope.password;
     $http.post('/auth/login', this.user)
       .success(() => {

@@ -73,7 +73,7 @@ function sendEmail(req, res) {
     // Secure: false, // true for 465, false for other ports
     auth: {
       user: 'learnsqltesting@gmail.com', // email used for sending the message (will need to be changed)
-      pass: 'testing123!',
+      pass: process.env.EMAIL_PASSWORD,
     },
     tls: {
       // RejectUnauthorized:false will probably need to be changed for production because
@@ -106,11 +106,10 @@ function sendEmail(req, res) {
 
 /**
  * This function creates a user in the database. A username is given by
- *  the user and has to be unique for the database. The password is then salted and
- *  hashed. Using pg-promise the user information is then inserted into the UserData
- *  table. If successful a success response and message is returned. If there was an
- *  error because email already exists that message is returned. Otherwise, the
- *  database error is returned
+ *  the user and has to be unique for the database. Using pg-promise the user
+ *  information is then inserted into the UserData via the CreateUser function
+ *  in the database. If successful a success response and message is returned.
+ *  If there was an error the database error is returned
  *
  * @param {string} password The password the user wants to use
  * @param {string} username The username the user wants to use
@@ -121,38 +120,34 @@ function sendEmail(req, res) {
 function createUser(req, res) {
   return handleErrors(req)
     .then(() => {
-      const passSalt = bcrypt.genSaltSync();
-      const hashedPass = bcrypt.hashSync(req.body.password, passSalt);
       const token = cryptoRandomString(20);
-      const hashSalt = bcrypt.genSaltSync();
-      const hashedToken = bcrypt.hashSync(token, hashSalt);
       const { email } = req.body;
-      ldb.none('INSERT INTO UserData(Username, FullName, Password, Email, token) '
-               + 'VALUES($1, $2, $3, $4, $5)', [
-        req.body.username, req.body.fullName, hashedPass, req.body.email,
-        hashedToken,
-      ])
+      // Create user with CreateUser function on db
+      ldb.func('LearnSQL.createUser',
+        [req.body.username, req.body.fullName, req.body.password, email, token])
         .then(() => {
           req.body = {
             receiver: email,
             prompt: 'Click this link to verify your account',
             content: `http://localhost:3000/auth/verification/${token}/${
               req.body.username}<br>`
-                      + 'Link will expire in 30 minutes',
+                    + 'Link will expire in 30 minutes',
             emailTitle: 'LearnSQL Email Verification',
             successMessage: 'Email Verification Sent',
           };
           sendEmail(req, res);
         })
         .catch((error) => {
-          if (error.code === '23505' && error.constraint === 'idx_unique_email') { // UNIQUE VIOLATION
-            return res.status(400).json({ status: 'Email Already Exists' });
+          // If known error send that known error back, otherwise send back general
+          //  server error response
+          if (error.constraint === 'idx_unique_email') {
+            return res.status(400).json('Email Already Exists');
           }
-          if (error.code === '23505' && error.constraint === 'userdata_t_pkey') { // UNIQUE VIOLATION
-            return res.status(400).json({ status: 'Username Already Exists' });
+          if (error.constraint === 'idx_unique_username') {
+            return res.status(400).json('Username Already Exists');
           }
           logger.error(`createUser: \n${error}`);
-          return res.status(400).json({ status: error });
+          return res.status(500).json('Server Error - User could not be added');
         });
     });
 }
@@ -171,7 +166,7 @@ function createUser(req, res) {
 // TODO: add timeout for verification token
 function forgotPassword(req, res) {
   return new Promise((resolve, reject) => ldb.task(
-    t => t.oneOrNone('SELECT Email FROM UserData WHERE Email = $1 ',
+    t => t.oneOrNone('SELECT Email FROM LearnSQL.UserData WHERE Email = $1 ',
       [req.body.email])
       .then((result) => {
         if (result) {
@@ -179,7 +174,7 @@ function forgotPassword(req, res) {
           const { salt } = bcrypt.genSaltSync();
           const hashedToken = bcrypt.hashSync(token, salt);
           const { email } = result;
-          return t.none('UPDATE USERDATA SET Token = $1, forgotPassword '
+          return t.none('UPDATE LearnSQL.USERDATA SET Token = $1, forgotPassword '
                           + '= true WHERE Email = $2 ', [hashedToken, email])
             .then(() => {
               req.body = {
@@ -214,44 +209,6 @@ function forgotPassword(req, res) {
 
 
 /**
- * This function resets a password of a user. When given a username it extracts
- *  what is supposed to be the correct hashed token and compares the given token
- *  to the hashed token. If matched and forgotPassword is true the password is
- *  updated to the given new password
- *
- * @param {string} username The username that needs password reset
- * @param {string} password The new password of the user
- * @param {string} token Token needed for the new password reset
- * @return Http response with status message stating whether reset was successful
- */
-// TODO: add timeout for verification token
-function resetPassword(req, res) {
-  return new Promise((resolve, reject) => {
-    ldb.task(t => t.one('SELECT Username, Token, forgotPassword FROM UserData '
-                   + ' WHERE Username = $1', [req.body.username])
-      .then((data) => {
-        if (!compareHashed(req.body.token, data.token)) {
-          throw new Error('Token hashes do not match');
-        } else if (!data.forgotpassword) {
-          throw new Error('ForgotPassword not true');
-        } else {
-          const passSalt = bcrypt.genSaltSync();
-          const hashedPass = bcrypt.hashSync(req.body.password, passSalt);
-          return t.none('UPDATE UserData SET forgotPassword = false, password = $1'
-                        + ' WHERE Username = $2', [hashedPass, data.username]);
-        }
-      }))
-      .then(() => res.status(200).json('Password Reset Successfully'))
-      .catch((error) => {
-        logger.error(`reset Password: \n${error}`);
-        reject(new Error('Username or Token does not match'));
-      });
-  });
-}
-
-
-
-/**
  * If a user is not logged in returns a 401 status code and a status that says
  *  to log in.
  */
@@ -268,10 +225,10 @@ function loginRequired(req, res, next) {
  */
 function adminRequired(req, res, next) {
   if (!req.user) return res.status(401).json({ status: 'Please log in' });
-  return ldb.one('SELECT isAdmin FROM UserData WHERE Username = $1',
+  return ldb.func('LearnSQL.isAdmin',
     [req.user.username])
-    .then((user) => {
-      if (!user.isadmin) {
+    .then((isAdmin) => {
+      if (!isAdmin) {
         return res.status(401).json({ status: 'You are not authorized' });
       }
       return next();
@@ -288,8 +245,11 @@ function adminRequired(req, res, next) {
  */
 function teacherRequired(req, res, next) {
   if (!req.user) return res.status(401).json({ status: 'Please log in' });
-  return ldb.one('SELECT isAdmin, isTeacher FROM UserData WHERE Username = $1',
-    [req.user.username])
+  return ldb.one(
+    'SELECT isAdmin, isTeacher FROM LearnSQL.UserData '
+  + ' WHERE Username = $1',
+    [req.user.username],
+  )
     .then((user) => {
       if (!user.isadmin && !user.isteacher) {
         return res.status(401).json({ status: 'You are not authorized' });
@@ -308,8 +268,11 @@ function teacherRequired(req, res, next) {
  */
 function studentRequired(req, res, next) {
   if (!req.user) return res.status(401).json({ status: 'Please log in' });
-  return ldb.one('SELECT isAdmin, isstudent FROM UserData WHERE Username = $1',
-    [req.user.username])
+  return ldb.one(
+    'SELECT isAdmin, isStudent '
+  + 'FROM LearnSQL.UserData WHERE Username = $1',
+    [req.user.username],
+  )
     .then((user) => {
       if (!user.isadmin && !user.isstudent) {
         return res.status(401).json({ status: 'You are not authorized' });
@@ -345,5 +308,4 @@ module.exports = {
   studentRequired,
   loginRedirect,
   forgotPassword,
-  resetPassword,
 };

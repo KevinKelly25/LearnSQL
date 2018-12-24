@@ -181,6 +181,11 @@
                 </li>
               </span>
               <span ng-show="currentUser">
+                  <li class="nav-item">
+                    <a href="../workshop.html" class="nav-link border-right px-4">Workshop</a>
+                  </li>
+              </span>
+              <span ng-show="currentUser">
               <li class="nav-item">
                 <a href="../account/profile.html" class="nav-link border-right px-4">Profile</a>
               </li>
@@ -320,7 +325,6 @@ CustomerId, CustomerName, CustomerAddress, CustomerState, and CustomerPostalCode
                           <br>
                           <button id="submitButton" type="submit" class="btn btn-lg btn-block text-white" ng-init="statementInHTML = 'select * from customer_t'" ng-click="answerQuestion()">Submit</button>
                         </form>
-                        <h3 id="problem-one-font" style="color:{{backgroundColor}}" class="text-center">{{ answer }}</h3>
                       </div>
                     </div>
                   </div>
@@ -426,6 +430,7 @@ Customerid, Customername, CustomerAddress, CustomerCity, CustomerState, and Cust
   <script src="../../javascripts/angular-datatables.min.js"></script>
   <script src="../../javascripts/popper.min.js"></script>
   <script src="../../javascripts/bootstrap.min.js"></script>
+  <script src="../../javascripts/scrollglue.js"></script>
 
   <!-- THE CURRENT YEAR OF THE COPYRIGHT -->
   <script>

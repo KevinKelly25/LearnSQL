@@ -53,14 +53,34 @@
               <a href="../Account/signIn.html" class="nav-link text-dark">Sign in</a>
             </li>
             </span>
+            <span ng-show="currentUser.isteacher">
+                <li class="nav-item">
+                    <a href="../views/controlPanels/teacherClasses.html" class="nav-link border-right px-4">Class Info</a>
+                </li>
+            </span>
+            <span ng-show="currentUser.isstudent">
+            <li class="nav-item">
+                <a href="../views/controlPanels/studentClasses.html" class="nav-link border-right px-4">Classes</a>
+            </li>
+            </span>
+            <span ng-show="currentUser && !currentUser.isteacher && !currentUser.isstudent">
+                <li class="nav-item">
+                <a href="../views/controlPanels/joinClass.html" class="nav-link border-right px-4">Classes</a>
+                </li>
+            </span>
 						<span ng-show="currentUser.isadmin">
 						<li class="nav-item">
-							<a href="views/controlPanels/admin.html" class="nav-link border-right px-4">Admin Control Panel</a>
+							<a href="../views/controlPanels/admin.html" class="nav-link border-right px-4">Admin Control Panel</a>
 						</li>
-						</span>
+            </span>
+            <span ng-show="currentUser">
+                <li class="nav-item">
+                    <a href="../workshop.html" class="nav-link border-right px-4">Workshop</a>
+                </li>
+            </span>
             <span ng-show="currentUser">
             <li class="nav-item">
-              <a href="../account/profile.html" class="nav-link text-dark">Profile</a>
+              <a href="../Account/profile.html" class="nav-link text-dark">Profile</a>
             </li>
             </span>
             <span ng-show="currentUser">
@@ -117,6 +137,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
   <script src="../../javascripts/popper.min.js"></script>
   <script src="../../javascripts/bootstrap.min.js"></script>
+  <script src="../../javascripts/scrollglue.js"></script>
   
 </body>
 </html>
